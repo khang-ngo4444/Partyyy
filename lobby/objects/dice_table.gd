@@ -27,13 +27,6 @@ func _ready() -> void:
 	board.text = "NEM XUC XAC LEN BAN"
 
 
-## Chỗ đặt viên xúc xắc thứ i lúc mới sinh ra.
-func slot(i: int) -> Vector3:
-	var a := TAU * i / 2.0
-	return global_position + Vector3(sin(a) * table_radius * 0.4, table_height + 0.08,
-			cos(a) * table_radius * 0.4)
-
-
 func _process(delta: float) -> void:
 	_acc += delta
 	if _acc < REFRESH:
@@ -67,15 +60,7 @@ func _doc() -> String:
 
 
 func _build_table() -> void:
-	var body := StaticBody3D.new()
-	var shape := CollisionShape3D.new()
-	var cs := CylinderShape3D.new()
-	cs.radius = table_radius
-	cs.height = table_height
-	shape.shape = cs
-	shape.position.y = table_height * 0.5
-	body.add_child(shape)
-	add_child(body)
+	# Va chạm bàn: node StaticSurface_Table trong dice_table.tscn.
 
 	var top := MeshInstance3D.new()
 	var cm := CylinderMesh.new()

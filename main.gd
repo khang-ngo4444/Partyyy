@@ -23,6 +23,7 @@ const PLACEHOLDER_SCENES := {
 	"Hammer": HAMMER_SCENE,
 	"Basketball": BASKETBALL_SCENE,
 	"Dart": DART_SCENE,
+	"Die": DIE_SCENE,
 }
 
 ## Tran so quan caro. Van caro tren ban 28x28 co the dung toi 150-200 quan, moi quan la mot
@@ -125,22 +126,9 @@ func _on_room_joined() -> void:
 	if NetManager.is_master() and get_tree().get_first_node_in_group("match_state") == null:
 		spawner.spawn(MATCH_STATE_SCENE)
 		_spawn_set(_board().mode)
-		_spawn_xuc_xac()
 		_spawn_placeholders(placeholders)
 	for p in placeholders:
 		p.queue_free()
-
-
-## Hai vien xuc xac nam san tren ban, KHONG co nut gieo. Nhat len va nem la mot cu gieo —
-## Mat ngua do vat ly quyet; master doc mat luc vien nam yen (xem Die).
-func _spawn_xuc_xac() -> void:
-	var ban := get_tree().get_first_node_in_group("dice_table") as DiceTable
-	if ban == null:
-		return
-	for i in 2:
-		var d: Die = spawner.spawn(DIE_SCENE)
-		d.tint = "red" if i == 0 else "yellow"
-		d.global_position = ban.slot(i)
 
 
 ## Master sinh vat mang tai dung vi tri/huong cua tung placeholder (xep bang Editor / Physics Placer).
@@ -153,6 +141,10 @@ func _spawn_placeholders(placeholders: Array[Node]) -> void:
 			push_error("Placeholder khong ro vat: %s" % p.name)
 			continue
 		var vat: Pickable = spawner.spawn(scene)
+		# Thuoc tinh rieng tung vat (vd `tint` cua xuc xac) = metadata cua placeholder, sua trong Inspector.
+		for k in p.get_meta_list():
+			if not String(k).begins_with("_"):
+				vat.set(k, p.get_meta(k))
 		vat.global_transform = Transform3D(p.global_basis.orthonormalized(), p.global_position)
 		vat.cho_mac_dinh = vat.global_position
 
