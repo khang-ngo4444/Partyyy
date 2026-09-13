@@ -6,7 +6,6 @@ extends Pickable
 ##
 ## Luc danh lay tu chinh thanh nap luc san co: nap day (15 m/s) ra bong di ~6.7 m/s.
 
-const DAI := 0.95
 ## Bong nam trong tam nay truoc mat nguoi cam thi vut trung.
 const TAM_VUT := 1.0
 ## Doi bao lau ke tu luc bat dau vung moi cham bong.
@@ -37,9 +36,6 @@ func _init() -> void:
 func _ready() -> void:
 	super()
 	add_to_group("putter")
-	var hop := BoxShape3D.new()
-	hop.size = Vector3(0.1, 0.1, DAI)
-	_dat_hinh(hop)
 
 
 ## Ghi de Pickable: gay khong bay, tha E la vut bong.

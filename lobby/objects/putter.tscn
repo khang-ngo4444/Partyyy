@@ -1,11 +1,17 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/putter.gd" id="1_putter"]
 [ext_resource type="FusionReplicationConfig" path="res://lobby/objects/pickable_replication.tres" id="2_cfg"]
 [ext_resource type="PackedScene" uid="uid://ww5bfwimbbhk" path="res://asset/kenney_minigolf-kit/Models/GLB format/club-red.glb" id="3_model"]
 
+[sub_resource type="BoxShape3D" id="Shape_hinh"]
+size = Vector3(0.1, 0.1, 0.95)
+
 [node name="Putter" type="RigidBody3D"]
 script = ExtResource("1_putter")
+
+[node name="HinhVaCham" type="CollisionShape3D" parent="."]
+shape = SubResource("Shape_hinh")
 
 [node name="Replicator" type="FusionSharedReplicator" parent="."]
 root_path = NodePath("..")

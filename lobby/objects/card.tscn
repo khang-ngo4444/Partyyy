@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/card.gd" id="1_card"]
 [ext_resource type="FusionReplicationConfig" path="res://lobby/objects/card_replication.tres" id="2_cfg"]
@@ -31,9 +31,15 @@ shading_mode = 0
 albedo_texture = ExtResource("5_back")
 texture_filter = 0
 
+[sub_resource type="BoxShape3D" id="Shape_hinh"]
+size = Vector3(0.26, 0.012, 0.26)
+
 [node name="Card" type="RigidBody3D"]
 script = ExtResource("1_card")
 bo_bai = ExtResource("3_deck")
+
+[node name="HinhVaCham" type="CollisionShape3D" parent="."]
+shape = SubResource("Shape_hinh")
 
 [node name="Visual" type="Node3D" parent="."]
 

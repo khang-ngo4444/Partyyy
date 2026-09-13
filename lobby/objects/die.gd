@@ -6,11 +6,8 @@ extends Pickable
 ## Mat ngua do VAT LY quyet, khong ai chon truoc. Chi master mo phong nen moi may thay dung mot
 ## ket qua: vi tri va goc xoay deu tu master replicate sang. Master doc mat ngua luc vien nam yen
 ## roi ghi vao `value` (replicate) cho ban xuc xac cong diem.
-
-## Hinh vien: 4 mau la 4 node con cua `Visual` trong die.tscn, ten node = `tint`. Model canh 0.75
-## don vi, scale 0.19 ra vien 0.14 m — co model trong editor thi sua ca hai so nay (hinh va cham).
-const DIE_SCALE := 0.19
-const CANH_MODEL := 0.75
+##
+## Hinh 4 mau: node con cua `Visual` trong die.tscn, ten node = `tint`. Hinh va cham: `HinhVaCham`.
 
 ## Truc cua vien nao chi len troi thi mat do ngua. DO TU HINH HOC CHAM cua D6_A, khong doan:
 ##     +X=2  -X=5  +Y=6  -Y=1  +Z=3  -Z=4
@@ -51,9 +48,6 @@ func _ready() -> void:
 	super()
 	add_to_group("die")
 	_build()
-	var hop := BoxShape3D.new()
-	hop.size = Vector3.ONE * CANH_MODEL * DIE_SCALE
-	_dat_hinh(hop)
 
 
 func _khi_bat_dau_bay() -> void:

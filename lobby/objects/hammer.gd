@@ -38,9 +38,6 @@ func _ready() -> void:
 	super()
 	add_to_group("hammer")
 	_build()
-	var hop := BoxShape3D.new()
-	hop.size = Vector3(0.14, 0.14, DAI)
-	_dat_hinh(hop)
 
 
 ## Ghi de Pickable: bua khong bay di, tha E la vung.

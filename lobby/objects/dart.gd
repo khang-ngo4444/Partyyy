@@ -39,9 +39,6 @@ func _ready() -> void:
 	super()
 	add_to_group("dart")
 	_build()
-	var hop := BoxShape3D.new()
-	hop.size = Vector3(0.02, 0.02, DAI)
-	_dat_hinh(hop)
 
 
 func _khi_bat_dau_bay() -> void:

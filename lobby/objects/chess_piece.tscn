@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/chess_piece.gd" id="1_piece"]
 [ext_resource type="FusionReplicationConfig" path="res://lobby/objects/chess_piece_replication.tres" id="2_cfg"]
@@ -15,9 +15,17 @@
 [ext_resource type="PackedScene" path="res://lobby/objects/chess/queen_black.tscn" id="3_c10"]
 [ext_resource type="PackedScene" path="res://lobby/objects/chess/king_black.tscn" id="3_c11"]
 
+[sub_resource type="CylinderShape3D" id="Shape_hinh"]
+height = 0.24
+radius = 0.06
+
 [node name="ChessPiece" type="RigidBody3D"]
 script = ExtResource("1_piece")
 chess_scenes = Array[PackedScene]([ExtResource("3_c0"), ExtResource("3_c1"), ExtResource("3_c2"), ExtResource("3_c3"), ExtResource("3_c4"), ExtResource("3_c5"), ExtResource("3_c6"), ExtResource("3_c7"), ExtResource("3_c8"), ExtResource("3_c9"), ExtResource("3_c10"), ExtResource("3_c11")])
+
+[node name="HinhVaCham" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
+shape = SubResource("Shape_hinh")
 
 [node name="Visual" type="Node3D" parent="."]
 

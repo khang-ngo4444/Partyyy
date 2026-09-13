@@ -4,7 +4,7 @@ extends Pickable
 ## Qua bong ro. Nhat len, giu E nap luc, tha E nem — bay va nay bang vat ly that.
 ##
 ## Hinh bong: node `Model` trong basketball.tscn (glb gop bong + ro, `ring` an, chi hien `Sphere`).
-## Bong ro that ~0.24 m duong kinh. Hinh va cham theo so nay — co model trong editor thi sua ca so nay.
+## Bong ro that ~0.24 m duong kinh (san dat bong tinh theo so nay). Hinh va cham: node `HinhVaCham`.
 const TARGET_DIAMETER := 0.24
 
 
@@ -22,6 +22,3 @@ func _init() -> void:
 func _ready() -> void:
 	super()
 	add_to_group("basketball")
-	var cau := SphereShape3D.new()
-	cau.radius = TARGET_DIAMETER * 0.5
-	_dat_hinh(cau)

@@ -19,6 +19,3 @@ func _init() -> void:
 func _ready() -> void:
 	super()
 	add_to_group("golf_ball")
-	var cau := SphereShape3D.new()
-	cau.radius = BAN_KINH
-	_dat_hinh(cau)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/die.gd" id="1_die"]
 [ext_resource type="FusionReplicationConfig" path="res://lobby/objects/die_replication.tres" id="2_cfg"]
@@ -7,8 +7,14 @@
 [ext_resource type="PackedScene" uid="uid://gjr3s3eoec3" path="res://asset/kaykit_boardgame/Models/D6_A_green.gltf" id="3_green"]
 [ext_resource type="PackedScene" uid="uid://ccv0nghcc0vhx" path="res://asset/kaykit_boardgame/Models/D6_A_yellow.gltf" id="3_yellow"]
 
+[sub_resource type="BoxShape3D" id="Shape_hinh"]
+size = Vector3(0.1425, 0.1425, 0.1425)
+
 [node name="Die" type="RigidBody3D"]
 script = ExtResource("1_die")
+
+[node name="HinhVaCham" type="CollisionShape3D" parent="."]
+shape = SubResource("Shape_hinh")
 
 [node name="Replicator" type="FusionSharedReplicator" parent="."]
 root_path = NodePath("..")
