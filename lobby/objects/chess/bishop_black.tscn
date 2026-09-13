@@ -5,4 +5,4 @@
 [node name="BishopBlack" type="Node3D" unique_id=2015496352]
 
 [node name="Model" type="Node3D" parent="." unique_id=493333801 instance=ExtResource("1_l4mln")]
-transform = Transform3D(2.0860638e-08, 0, 0.15, 0, 0.15, 0, -0.15, 0, 2.0860638e-08, 0, 0, 0)
+transform = Transform3D(3.1290957e-08, 0, 0.225, 0, 0.225, 0, -0.225, 0, 3.1290957e-08, 0, 0, 0)
