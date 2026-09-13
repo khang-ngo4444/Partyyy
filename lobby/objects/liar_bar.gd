@@ -19,13 +19,8 @@ extends Node3D
 
 enum Pha { CHO, DEM_NGUOC, CHOI, LAT, XONG }
 
-const DIR_BAI := "res://asset/kenney_playing-cards/PNG/Cards (medium)/"
-const AM_VA := "res://asset/kenney_impact-sounds/Audio/"
-const AM_GIAO_DIEN := "res://asset/kenney_interface-sounds/Audio/"
-const ANH_BAI := {
-	"K": "card_spades_K.png", "Q": "card_hearts_Q.png", "A": "card_diamonds_A.png",
-	"J": "card_joker_red.png",
-}
+## Chat -> chi so la trong card_deck.tres (xem CardDeck.anh): K bich, Q co, A ro; J la joker.
+const ANH_BAI := {"K": 51, "Q": 37, "A": 13, "J": -1}
 const TEN_BAI := {"K": "KING", "Q": "QUEEN", "A": "ACE", "J": "JOKER"}
 const CHAT_BAN := ["K", "Q", "A"]
 const SO_GHE := 4
@@ -34,6 +29,8 @@ const SO_O_DAN := 6
 ## Moi luot danh toi da may la.
 const TOI_DA_MOT_LUOT := 3
 
+## Anh bai: card_deck.tres, gan trong Inspector cua liar_bar.tscn.
+@export var bo_bai: CardDeck
 @export var cao_ban := 0.95
 @export var ban_kinh := 1.0
 @export var co_bai := 0.2
@@ -72,8 +69,6 @@ var _bang_ghe: Array[Label3D] = []
 var _o_hien: Array[Node3D] = []
 var _dem: Label3D
 var _giua: Node3D
-var _loa: AudioStreamPlayer3D
-var _tieng: Dictionary = {}
 var _chon: Array[int] = []
 var _giay_dem := -1
 
@@ -81,7 +76,6 @@ var _giay_dem := -1
 func _ready() -> void:
 	add_to_group("liar_bar")
 	Fusion.register_broadcast_receiver(self)
-	_nap_tieng()
 	_dung_ban()
 	_dung_nut()
 	_dung_bang()
@@ -548,15 +542,12 @@ func _than_bai(goc: Node3D, la: String) -> void:
 	mat.albedo_color = Color("f4f1ea")
 	than.material_override = mat
 	goc.add_child(than)
-	_mot_mat(than, DIR_BAI + (ANH_BAI.get(la, "card_back.png") if la != "" else "card_back.png"),
+	_mot_mat(than, bo_bai.anh(ANH_BAI[la]) if ANH_BAI.has(la) else bo_bai.lung,
 			0.0025, -90.0, Vector2(co_bai * 0.72, co_bai))
-	_mot_mat(than, DIR_BAI + "card_back.png", -0.0025, 90.0, Vector2(co_bai * 0.72, co_bai))
+	_mot_mat(than, bo_bai.lung, -0.0025, 90.0, Vector2(co_bai * 0.72, co_bai))
 
 
-func _mot_mat(goc: Node3D, duong: String, y: float, xoay: float, co: Vector2) -> void:
-	var tex := load(duong) as Texture2D
-	if tex == null:
-		return
+func _mot_mat(goc: Node3D, tex: Texture2D, y: float, xoay: float, co: Vector2) -> void:
 	var m := MeshInstance3D.new()
 	var q := QuadMesh.new()
 	q.size = co
@@ -584,34 +575,15 @@ func _bam_bai(k: int) -> void:
 	_keu("chon")
 
 
-func _keu(su_kien: String) -> void:
-	var ds: Array = _tieng.get(su_kien, [])
-	if ds.is_empty():
-		return
-	_loa.stream = ds.pick_random()
-	_loa.play()
+## Tiếng sự kiện: node `Tieng/<ten>` (AudioStreamPlayer3D) trong scene — đổi âm thanh trong Inspector,
+## không sửa code. Bộ nhiều biến thể dùng AudioStreamRandomizer.
+func _keu(ten: String) -> void:
+	var loa := get_node_or_null("Tieng/" + ten) as AudioStreamPlayer3D
+	if loa != null:
+		loa.play()
 
 
 # ---------------------------------------------------------------- dung hinh
-
-func _nap_tieng() -> void:
-	var danh: Array = []
-	for i in 5:
-		danh.append(load(AM_VA + "impactPlate_light_%03d.ogg" % i))
-	_tieng = {
-		"danh": danh,
-		"chon": [load(AM_GIAO_DIEN + "click_001.ogg")],
-		"ngoi": [load(AM_GIAO_DIEN + "select_001.ogg")],
-		"liar": [load(AM_GIAO_DIEN + "error_004.ogg")],
-		"chet": [load(AM_VA + "impactMetal_heavy_000.ogg")],
-		"hut": [load(AM_VA + "impactMetal_light_000.ogg")],
-		"dem": [load(AM_GIAO_DIEN + "tick_001.ogg")],
-		"bat_dau": [load(AM_GIAO_DIEN + "bong_001.ogg")],
-		"lam_lai": [load(AM_GIAO_DIEN + "drop_002.ogg")],
-	}
-	_loa = AudioStreamPlayer3D.new()
-	_loa.position.y = cao_ban
-	add_child(_loa)
 
 
 func _dung_ban() -> void:

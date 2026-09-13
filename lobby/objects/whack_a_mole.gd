@@ -14,8 +14,6 @@ extends Node3D
 enum Pha { CHO, DEM_NGUOC, CHOI, XONG }
 enum Lenh { BAT_DAU, LAM_LAI }
 
-const AM_VA := "res://asset/kenney_impact-sounds/Audio/"
-const AM_GIAO_DIEN := "res://asset/kenney_interface-sounds/Audio/"
 
 ## Cho nam cai lo tren mat may, do luc may cao CAO_DO met. Doi model la phai do lai.
 const LO_MAY := [
@@ -68,8 +66,6 @@ var _anim: Array[AnimationPlayer] = []
 var _bang: Label3D
 var _dem: Label3D
 var _no: CPUParticles3D
-var _loa: AudioStreamPlayer3D
-var _tieng: Dictionary = {}
 var _giay_dem := -1
 ## Xoay va dich cua model may — de doi toa do lo do duoc sang toa do node nay.
 var _goc_may := Basis.IDENTITY
@@ -79,7 +75,6 @@ var _dich_may := Vector3.ZERO
 func _ready() -> void:
 	add_to_group("whack_a_mole")
 	Fusion.register_broadcast_receiver(self)
-	_nap_tieng()
 	_dung_may()        # phai chay truoc: cho dat chuot, nut, bang deu bam theo may
 	_dung_chuot()
 	_dung_bang()
@@ -394,31 +389,15 @@ func _hieu_ung(su_kien: String) -> void:
 			_no.restart()
 
 
+## Tiếng sự kiện: node `Tieng/<ten>` (AudioStreamPlayer3D) trong scene — đổi âm thanh trong Inspector,
+## không sửa code. Bộ nhiều biến thể dùng AudioStreamRandomizer.
 func _keu(ten: String) -> void:
-	var ds: Array = _tieng.get(ten, [])
-	if ds.is_empty():
-		return
-	_loa.stream = ds.pick_random()
-	_loa.play()
+	var loa := get_node_or_null("Tieng/" + ten) as AudioStreamPlayer3D
+	if loa != null:
+		loa.play()
 
 
 # ---------------------------------------------------------------- dung hinh
-
-func _nap_tieng() -> void:
-	var dap: Array = []
-	for i in 5:
-		dap.append(load(AM_VA + "impactPunch_medium_%03d.ogg" % i))
-	_tieng = {
-		"chuot": [load(AM_GIAO_DIEN + "pluck_001.ogg"), load(AM_GIAO_DIEN + "pluck_002.ogg")],
-		"dap": dap,
-		"dem": [load(AM_GIAO_DIEN + "tick_001.ogg")],
-		"bat_dau": [load(AM_GIAO_DIEN + "bong_001.ogg")],
-		"lam_lai": [load(AM_GIAO_DIEN + "drop_002.ogg")],
-		"thang": [load(AM_GIAO_DIEN + "confirmation_002.ogg")],
-	}
-	_loa = AudioStreamPlayer3D.new()
-	_loa.position.y = 1.0
-	add_child(_loa)
 
 
 ## May arcade: node `May` trong whack_a_mole.tscn, mat choi huong ve +Z. Lo, chuot, nut, bang

@@ -10,10 +10,10 @@
 [ext_resource type="PackedScene" path="res://lobby/objects/card_table.tscn" id="8_card"]
 [ext_resource type="PackedScene" path="res://lobby/objects/basketball_court.tscn" id="9_bcourt"]
 [ext_resource type="PackedScene" path="res://lobby/objects/dartboard.tscn" id="11_dboard"]
-[ext_resource type="Script" path="res://lobby/objects/hanoi_tower.gd" id="12_hanoi"]
+[ext_resource type="PackedScene" path="res://lobby/objects/hanoi_tower.tscn" id="12_hanoi"]
 [ext_resource type="PackedScene" path="res://lobby/objects/whack_a_mole.tscn" id="13_whack"]
 [ext_resource type="PackedScene" path="res://lobby/objects/mini_golf.tscn" id="15_golf"]
-[ext_resource type="Script" path="res://lobby/objects/liar_bar.gd" id="16_liar"]
+[ext_resource type="PackedScene" path="res://lobby/objects/liar_bar.tscn" id="16_liar"]
 
 [sub_resource type="ProceduralSkyMaterial" id="skymat"]
 sky_horizon_color = Color(0.05, 0.06, 0.12, 1)
@@ -175,9 +175,8 @@ target_width = 5.5
 [node name="Dartboard" parent="." instance=ExtResource("11_dboard")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 14.4, 0, -6.5)
 
-[node name="HanoiTower" type="Node3D" parent="."]
+[node name="HanoiTower" parent="." instance=ExtResource("12_hanoi")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 8.0, 0, 0)
-script = ExtResource("12_hanoi")
 
 [node name="WhackAMole" parent="." instance=ExtResource("13_whack")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.0, 0, -8.0)
@@ -185,9 +184,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.0, 0, -8.0)
 [node name="MiniGolf" parent="." instance=ExtResource("15_golf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, -6.0)
 
-[node name="LiarBar" type="Node3D" parent="."]
+[node name="LiarBar" parent="." instance=ExtResource("16_liar")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, 5.5)
-script = ExtResource("16_liar")
 
 [node name="SpawnPoints" type="Node3D" parent="."]
 

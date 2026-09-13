@@ -8,7 +8,6 @@ extends Pickable
 ## tiến lên, phỏm, hay bất cứ trò gì nhóm bạn tự nghĩ ra. Có luật thì chỉ chơi được một trò,
 ## mà lại phải cãi nhau xem luật nào đúng.
 
-const DIR := "res://asset/kenney_playing-cards/PNG/Cards (medium)/"
 const SUITS := ["clubs", "diamonds", "hearts", "spades"]
 const RANKS := ["A", "02", "03", "04", "05", "06", "07", "08", "09", "10", "J", "Q", "K"]
 const DECK_SIZE := 52
@@ -41,6 +40,12 @@ const DECK_SIZE := 52
 		_queue_build()
 
 @onready var visual: Node3D = $Visual
+@onready var _than: MeshInstance3D = $Visual/Than
+@onready var _tren: MeshInstance3D = $Visual/Tren
+@onready var _duoi: MeshInstance3D = $Visual/Duoi
+
+## Ảnh bài: card_deck.tres, gán trong Inspector của card.tscn.
+@export var bo_bai: CardDeck
 
 var _build_queued := false
 ## Lá này có được LẬT RIÊNG cho người ở máy NÀY xem không.
@@ -121,51 +126,18 @@ func lo_cuc_bo(on: bool) -> void:
 
 
 func _build() -> void:
-	for c in visual.get_children():
-		c.queue_free()
-
-	# Thân bài: hộp mỏng màu trắng, để nhìn nghiêng vẫn thấy độ dày.
-	var than := MeshInstance3D.new()
-	var bm := BoxMesh.new()
-	bm.size = Vector3(card_size, thickness, card_size)
-	than.mesh = bm
-	than.material_override = _mat_color(Color("f4f1ea"))
-	visual.add_child(than)
-
+	(_than.mesh as BoxMesh).size = Vector3(card_size, thickness, card_size)
 	var up := face_down and not _lo_cho_toi
-	var tren := "card_back.png" if up else "card_%s.png" % ten()
-	var duoi := "card_%s.png" % ten() if up else "card_back.png"
-	_mat_face(DIR + tren, thickness * 0.5 + 0.001, -90.0)
-	_mat_face(DIR + duoi, -thickness * 0.5 - 0.001, 90.0)
+	var mat := bo_bai.anh(card_index)
+	_mat_face(_tren, bo_bai.lung if up else mat)
+	_mat_face(_duoi, mat if up else bo_bai.lung)
 	var hop := BoxShape3D.new()
 	hop.size = Vector3(card_size, thickness, card_size)
 	_dat_hinh(hop)
 
 
-## Một mặt bài: QuadMesh nằm ngang, dán ảnh. Quad mặc định đứng thẳng (mặt phẳng XY) nên
-## phải quay 90° quanh X cho nó nằm ngửa.
-func _mat_face(path: String, y: float, pitch_deg: float) -> void:
-	var tex := load(path) as Texture2D
-	if tex == null:
-		push_error("Card: không nạp được " + path)
-		return
-	var m := MeshInstance3D.new()
-	var q := QuadMesh.new()
-	q.size = Vector2(card_size, card_size)
-	m.mesh = q
-	var mat := StandardMaterial3D.new()
-	mat.albedo_texture = tex
-	# Ảnh là pixel art 64×64. Lọc mịn làm nhoè hết chấm — phải để NEAREST.
-	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	m.material_override = mat
-	m.position.y = y
-	m.rotation_degrees.x = pitch_deg
-	visual.add_child(m)
-
-
-func _mat_color(c: Color) -> StandardMaterial3D:
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = c
-	return mat
+## Một mặt bài: node `Tren`/`Duoi` trong card.tscn — vị trí, hướng, vật liệu đặt trong scene.
+## Code chỉ chọn ảnh theo lá (card_index / úp) và cỡ theo `card_size` (master đặt, replicate).
+func _mat_face(m: MeshInstance3D, tex: Texture2D) -> void:
+	(m.mesh as QuadMesh).size = Vector2(card_size, card_size)
+	(m.material_override as StandardMaterial3D).albedo_texture = tex

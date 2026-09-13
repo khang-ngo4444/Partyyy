@@ -1,10 +1,39 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/card.gd" id="1_card"]
 [ext_resource type="FusionReplicationConfig" path="res://lobby/objects/card_replication.tres" id="2_cfg"]
+[ext_resource type="Resource" path="res://lobby/objects/card_deck.tres" id="3_deck"]
+[ext_resource type="Texture2D" uid="uid://moe8ewssvxed" path="res://asset/kenney_playing-cards/PNG/Cards (medium)/card_clubs_A.png" id="4_face"]
+[ext_resource type="Texture2D" uid="uid://bqmvowx2n3tve" path="res://asset/kenney_playing-cards/PNG/Cards (medium)/card_back.png" id="5_back"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_than"]
+resource_local_to_scene = true
+size = Vector3(0.26, 0.012, 0.26)
+
+[sub_resource type="StandardMaterial3D" id="Mat_than"]
+albedo_color = Color(0.956863, 0.945098, 0.917647, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_mat"]
+resource_local_to_scene = true
+size = Vector2(0.26, 0.26)
+
+[sub_resource type="StandardMaterial3D" id="Mat_tren"]
+resource_local_to_scene = true
+transparency = 1
+shading_mode = 0
+albedo_texture = ExtResource("4_face")
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="Mat_duoi"]
+resource_local_to_scene = true
+transparency = 1
+shading_mode = 0
+albedo_texture = ExtResource("5_back")
+texture_filter = 0
 
 [node name="Card" type="RigidBody3D"]
 script = ExtResource("1_card")
+bo_bai = ExtResource("3_deck")
 
 [node name="Visual" type="Node3D" parent="."]
 
@@ -15,3 +44,17 @@ owner_mode = 0
 root_replication_mode = 1
 root_interpolation_mode = 2
 root_forecast_gravity = false
+
+[node name="Than" type="MeshInstance3D" parent="Visual"]
+material_override = SubResource("Mat_than")
+mesh = SubResource("BoxMesh_than")
+
+[node name="Tren" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.007, 0)
+material_override = SubResource("Mat_tren")
+mesh = SubResource("QuadMesh_mat")
+
+[node name="Duoi" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, -0.007, 0)
+material_override = SubResource("Mat_duoi")
+mesh = SubResource("QuadMesh_mat")

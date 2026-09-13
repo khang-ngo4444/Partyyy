@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://lobby/objects/community_board.gd" id="1_script"]
+[ext_resource type="Resource" path="res://lobby/objects/card_deck.tres" id="2_deck"]
+
+[node name="CommunityBoard" type="Node3D"]
+script = ExtResource("1_script")
+bo_bai = ExtResource("2_deck")

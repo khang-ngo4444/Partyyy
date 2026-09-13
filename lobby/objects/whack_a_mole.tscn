@@ -1,8 +1,32 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/whack_a_mole.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://c01veiknsok0i" path="res://asset/sketchfab/whack_em_allwhack_a_mole_machine.glb" id="2_may"]
 [ext_resource type="PackedScene" uid="uid://b4ghfyt072tql" path="res://asset/sketchfab/whack-a-mole_animations.glb" id="3_chuot"]
+[ext_resource type="AudioStream" uid="uid://ct4ymmianciat" path="res://asset/kenney_interface-sounds/Audio/pluck_001.ogg" id="snd_0"]
+[ext_resource type="AudioStream" uid="uid://8als7syx4qu" path="res://asset/kenney_interface-sounds/Audio/pluck_002.ogg" id="snd_1"]
+[ext_resource type="AudioStream" uid="uid://buudc3w786ewc" path="res://asset/kenney_impact-sounds/Audio/impactPunch_medium_000.ogg" id="snd_2"]
+[ext_resource type="AudioStream" uid="uid://bn0qacnry5tgh" path="res://asset/kenney_impact-sounds/Audio/impactPunch_medium_001.ogg" id="snd_3"]
+[ext_resource type="AudioStream" uid="uid://cbm3l0vys2e0i" path="res://asset/kenney_impact-sounds/Audio/impactPunch_medium_002.ogg" id="snd_4"]
+[ext_resource type="AudioStream" uid="uid://cgqcfagsoaixa" path="res://asset/kenney_impact-sounds/Audio/impactPunch_medium_003.ogg" id="snd_5"]
+[ext_resource type="AudioStream" uid="uid://dqd2jj5407p42" path="res://asset/kenney_impact-sounds/Audio/impactPunch_medium_004.ogg" id="snd_6"]
+[ext_resource type="AudioStream" uid="uid://2ojqjeqlii2q" path="res://asset/kenney_interface-sounds/Audio/tick_001.ogg" id="snd_7"]
+[ext_resource type="AudioStream" uid="uid://c7xna4n7xroy7" path="res://asset/kenney_interface-sounds/Audio/bong_001.ogg" id="snd_8"]
+[ext_resource type="AudioStream" uid="uid://cvlvyoon42alj" path="res://asset/kenney_interface-sounds/Audio/drop_002.ogg" id="snd_9"]
+[ext_resource type="AudioStream" uid="uid://dse2vvq61vplw" path="res://asset/kenney_interface-sounds/Audio/confirmation_002.ogg" id="snd_10"]
+
+[sub_resource type="AudioStreamRandomizer" id="Rand_chuot"]
+streams_count = 2
+stream_0/stream = ExtResource("snd_0")
+stream_1/stream = ExtResource("snd_1")
+
+[sub_resource type="AudioStreamRandomizer" id="Rand_dap"]
+streams_count = 5
+stream_0/stream = ExtResource("snd_2")
+stream_1/stream = ExtResource("snd_3")
+stream_2/stream = ExtResource("snd_4")
+stream_3/stream = ExtResource("snd_5")
+stream_4/stream = ExtResource("snd_6")
 
 [node name="WhackAMole" type="Node3D"]
 script = ExtResource("1_script")
@@ -59,3 +83,24 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2025, 0)
 
 [node name="Chuot" parent="Lo4/Than" instance=ExtResource("3_chuot")]
 transform = Transform3D(0.04420114, 0, 0, 0, 0.04420114, 0, 0, 0, 0.04420114, 0, 0.118768424, 0)
+
+[node name="Tieng" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+
+[node name="chuot" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = SubResource("Rand_chuot")
+
+[node name="dap" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = SubResource("Rand_dap")
+
+[node name="dem" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = ExtResource("snd_7")
+
+[node name="bat_dau" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = ExtResource("snd_8")
+
+[node name="lam_lai" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = ExtResource("snd_9")
+
+[node name="thang" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = ExtResource("snd_10")

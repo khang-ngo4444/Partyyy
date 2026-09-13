@@ -14,7 +14,8 @@ extends Node3D
 ## một bảng. Thêm một object mạng nữa chỉ để hiển thị là tốn băng thông vô ích, và tạo thêm
 ## một nguồn sự thật thứ hai có thể lệch với bàn.
 
-const DIR := "res://asset/kenney_playing-cards/PNG/Cards (medium)/"
+## Ảnh bài: card_deck.tres, gán trong Inspector của community_board.tscn.
+@export var bo_bai: CardDeck
 
 @export var card_w := 0.08
 @export var card_h := 0.12
@@ -135,9 +136,8 @@ func _mat_tron(c: Color) -> StandardMaterial3D:
 
 
 func _mat_bai(idx: int, up: bool) -> StandardMaterial3D:
-	var ten := "card_back" if up else "card_%s" % Card.ten_cua(idx)
 	var mat := StandardMaterial3D.new()
-	mat.albedo_texture = load(DIR + ten + ".png") as Texture2D
+	mat.albedo_texture = bo_bai.lung if up else bo_bai.anh(idx)
 	# Ảnh là pixel art 64×64. Lọc mịn làm nhoè hết chấm — phải để NEAREST.
 	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA

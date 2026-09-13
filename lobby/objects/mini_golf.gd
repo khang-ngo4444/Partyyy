@@ -11,8 +11,6 @@ extends Node3D
 ##
 ## Mot qua bong chung: ai vut cung duoc, moi cu tinh vao so gay cua chinh nguoi do.
 
-const AM_VA := "res://asset/kenney_impact-sounds/Audio/"
-const AM_GIAO_DIEN := "res://asset/kenney_interface-sounds/Audio/"
 const PAR := 3
 ## Ten ket qua theo so gay so voi par.
 const TEN_DIEM := {-2: "EAGLE", -1: "BIRDIE", 0: "PAR", 1: "BOGEY", 2: "DOUBLE BOGEY"}
@@ -30,15 +28,12 @@ var _thong_bao := ""
 var _cho_dat_lai := 0.0
 
 var _bang: Label3D
-var _loa: AudioStreamPlayer3D
-var _tieng: Dictionary = {}
 var _no: CPUParticles3D
 
 
 func _ready() -> void:
 	add_to_group("mini_golf")
 	Fusion.register_broadcast_receiver(self)
-	_nap_tieng()
 	_dung_san()
 	_dung_bang()
 	_dung_nut()
@@ -211,28 +206,15 @@ func _ve_bang() -> void:
 	_bang.text = "\n".join(dong)
 
 
+## Tiếng sự kiện: node `Tieng/<ten>` (AudioStreamPlayer3D) trong scene — đổi âm thanh trong Inspector,
+## không sửa code. Bộ nhiều biến thể dùng AudioStreamRandomizer.
 func _keu(ten: String) -> void:
-	var ds: Array = _tieng.get(ten, [])
-	if ds.is_empty():
-		return
-	_loa.stream = ds.pick_random()
-	_loa.play()
+	var loa := get_node_or_null("Tieng/" + ten) as AudioStreamPlayer3D
+	if loa != null:
+		loa.play()
 
 
 # ---------------------------------------------------------------- dung hinh
-
-func _nap_tieng() -> void:
-	var vut: Array = []
-	for i in 5:
-		vut.append(load(AM_VA + "impactPlate_light_%03d.ogg" % i))
-	_tieng = {
-		"vut": vut,
-		"vao_lo": [load(AM_GIAO_DIEN + "confirmation_002.ogg")],
-		"lam_lai": [load(AM_GIAO_DIEN + "drop_002.ogg")],
-	}
-	_loa = AudioStreamPlayer3D.new()
-	_loa.position.y = 0.5
-	add_child(_loa)
 
 
 func _dung_san() -> void:

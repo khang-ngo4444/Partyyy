@@ -15,8 +15,6 @@ extends Node3D
 enum Pha { CHO, DEM_NGUOC, CHOI, XONG }
 enum Lenh { COC, BAT_DAU, LAM_LAI, SO_DIA }
 
-const AM_VA := "res://asset/kenney_impact-sounds/Audio/"
-const AM_GIAO_DIEN := "res://asset/kenney_interface-sounds/Audio/"
 const MAU_DIA: Array[Color] = [
 	Color("e5484d"), Color("f76b15"), Color("f5d90a"), Color("46a758"),
 	Color("00b8d9"), Color("3e63dd"), Color("8e4ec6"), Color("d6409f"),
@@ -67,8 +65,6 @@ var _nut_so_dia: Pressable
 var _bang: Label3D
 var _dem: Label3D
 var _no: CPUParticles3D
-var _loa: AudioStreamPlayer3D
-var _tieng: Dictionary = {}
 var _giay_dem := -1
 var _kiem_nguoi := 0.0
 
@@ -76,7 +72,6 @@ var _kiem_nguoi := 0.0
 func _ready() -> void:
 	add_to_group("hanoi_tower")
 	Fusion.register_broadcast_receiver(self)
-	_nap_tieng()
 	_dung_ban()
 	_dung_coc()
 	_dung_bang()
@@ -419,36 +414,15 @@ func _hieu_ung(su_kien: String) -> void:
 			tw.tween_callback(bat.queue_free)
 
 
+## Tiếng sự kiện: node `Tieng/<ten>` (AudioStreamPlayer3D) trong scene — đổi âm thanh trong Inspector,
+## không sửa code. Bộ nhiều biến thể dùng AudioStreamRandomizer.
 func _keu(ten: String) -> void:
-	var ds: Array = _tieng.get(ten, [])
-	if ds.is_empty():
-		return
-	_loa.stream = ds.pick_random()
-	_loa.play()
+	var loa := get_node_or_null("Tieng/" + ten) as AudioStreamPlayer3D
+	if loa != null:
+		loa.play()
 
 
 # ---------------------------------------------------------------- dung hinh
-
-func _nap_tieng() -> void:
-	_tieng = {
-		"nhat": _bo_tieng(AM_VA + "impactWood_light_%03d.ogg", 5),
-		"dat": _bo_tieng(AM_VA + "impactWood_medium_%03d.ogg", 5),
-		"sai": [load(AM_GIAO_DIEN + "error_004.ogg")],
-		"dem": [load(AM_GIAO_DIEN + "tick_001.ogg")],
-		"bat_dau": [load(AM_GIAO_DIEN + "bong_001.ogg")],
-		"thang": [load(AM_GIAO_DIEN + "confirmation_002.ogg")],
-		"lam_lai": [load(AM_GIAO_DIEN + "drop_002.ogg")],
-	}
-	_loa = AudioStreamPlayer3D.new()
-	_loa.position.y = ban_cao + 0.3
-	add_child(_loa)
-
-
-func _bo_tieng(mau: String, n: int) -> Array:
-	var ds := []
-	for i in n:
-		ds.append(load(mau % i))
-	return ds
 
 
 func _dung_ban() -> void:

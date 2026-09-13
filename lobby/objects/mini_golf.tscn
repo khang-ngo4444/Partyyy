@@ -1,10 +1,37 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/mini_golf.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://dstksms1tlrrf" path="res://asset/kenney_minigolf-kit/Models/GLB format/flag-red.glb" id="2_flag"]
+[ext_resource type="AudioStream" uid="uid://d3k3yqwnkxv1r" path="res://asset/kenney_impact-sounds/Audio/impactPlate_light_000.ogg" id="snd_0"]
+[ext_resource type="AudioStream" uid="uid://bs16xhv18mib4" path="res://asset/kenney_impact-sounds/Audio/impactPlate_light_001.ogg" id="snd_1"]
+[ext_resource type="AudioStream" uid="uid://dut8os8d0rbrt" path="res://asset/kenney_impact-sounds/Audio/impactPlate_light_002.ogg" id="snd_2"]
+[ext_resource type="AudioStream" uid="uid://bdhqbjyxw6fa4" path="res://asset/kenney_impact-sounds/Audio/impactPlate_light_003.ogg" id="snd_3"]
+[ext_resource type="AudioStream" uid="uid://fn5jq42ieaiy" path="res://asset/kenney_impact-sounds/Audio/impactPlate_light_004.ogg" id="snd_4"]
+[ext_resource type="AudioStream" uid="uid://dse2vvq61vplw" path="res://asset/kenney_interface-sounds/Audio/confirmation_002.ogg" id="snd_5"]
+[ext_resource type="AudioStream" uid="uid://cvlvyoon42alj" path="res://asset/kenney_interface-sounds/Audio/drop_002.ogg" id="snd_6"]
+
+[sub_resource type="AudioStreamRandomizer" id="Rand_vut"]
+streams_count = 5
+stream_0/stream = ExtResource("snd_0")
+stream_1/stream = ExtResource("snd_1")
+stream_2/stream = ExtResource("snd_2")
+stream_3/stream = ExtResource("snd_3")
+stream_4/stream = ExtResource("snd_4")
 
 [node name="MiniGolf" type="Node3D"]
 script = ExtResource("1_script")
 
 [node name="Flag" parent="." instance=ExtResource("2_flag")]
 transform = Transform3D(0.8293533, 0, 0, 0, 0.8293533, 0, 0, 0, 0.8293533, 0.135, 0.12, -1.7)
+
+[node name="Tieng" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="vut" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = SubResource("Rand_vut")
+
+[node name="vao_lo" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = ExtResource("snd_5")
+
+[node name="lam_lai" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = ExtResource("snd_6")

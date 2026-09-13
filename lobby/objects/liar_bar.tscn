@@ -1,0 +1,59 @@
+[gd_scene load_steps=17 format=3]
+
+[ext_resource type="Script" path="res://lobby/objects/liar_bar.gd" id="1_script"]
+[ext_resource type="Resource" path="res://lobby/objects/card_deck.tres" id="2_deck"]
+[ext_resource type="AudioStream" uid="uid://d3k3yqwnkxv1r" path="res://asset/kenney_impact-sounds/Audio/impactPlate_light_000.ogg" id="snd_0"]
+[ext_resource type="AudioStream" uid="uid://bs16xhv18mib4" path="res://asset/kenney_impact-sounds/Audio/impactPlate_light_001.ogg" id="snd_1"]
+[ext_resource type="AudioStream" uid="uid://dut8os8d0rbrt" path="res://asset/kenney_impact-sounds/Audio/impactPlate_light_002.ogg" id="snd_2"]
+[ext_resource type="AudioStream" uid="uid://bdhqbjyxw6fa4" path="res://asset/kenney_impact-sounds/Audio/impactPlate_light_003.ogg" id="snd_3"]
+[ext_resource type="AudioStream" uid="uid://fn5jq42ieaiy" path="res://asset/kenney_impact-sounds/Audio/impactPlate_light_004.ogg" id="snd_4"]
+[ext_resource type="AudioStream" uid="uid://bb3xpjvstm65h" path="res://asset/kenney_interface-sounds/Audio/click_001.ogg" id="snd_5"]
+[ext_resource type="AudioStream" uid="uid://bm0f7o42lujep" path="res://asset/kenney_interface-sounds/Audio/select_001.ogg" id="snd_6"]
+[ext_resource type="AudioStream" uid="uid://cb6fnv3lkrm6h" path="res://asset/kenney_interface-sounds/Audio/error_004.ogg" id="snd_7"]
+[ext_resource type="AudioStream" uid="uid://b55m5ud28q7lx" path="res://asset/kenney_impact-sounds/Audio/impactMetal_heavy_000.ogg" id="snd_8"]
+[ext_resource type="AudioStream" uid="uid://c8ssh3wlf0lra" path="res://asset/kenney_impact-sounds/Audio/impactMetal_light_000.ogg" id="snd_9"]
+[ext_resource type="AudioStream" uid="uid://2ojqjeqlii2q" path="res://asset/kenney_interface-sounds/Audio/tick_001.ogg" id="snd_10"]
+[ext_resource type="AudioStream" uid="uid://c7xna4n7xroy7" path="res://asset/kenney_interface-sounds/Audio/bong_001.ogg" id="snd_11"]
+[ext_resource type="AudioStream" uid="uid://cvlvyoon42alj" path="res://asset/kenney_interface-sounds/Audio/drop_002.ogg" id="snd_12"]
+
+[sub_resource type="AudioStreamRandomizer" id="Rand_danh"]
+streams_count = 5
+stream_0/stream = ExtResource("snd_0")
+stream_1/stream = ExtResource("snd_1")
+stream_2/stream = ExtResource("snd_2")
+stream_3/stream = ExtResource("snd_3")
+stream_4/stream = ExtResource("snd_4")
+
+[node name="LiarBar" type="Node3D"]
+script = ExtResource("1_script")
+bo_bai = ExtResource("2_deck")
+
+[node name="Tieng" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+
+[node name="danh" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = SubResource("Rand_danh")
+
+[node name="chon" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = ExtResource("snd_5")
+
+[node name="ngoi" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = ExtResource("snd_6")
+
+[node name="liar" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = ExtResource("snd_7")
+
+[node name="chet" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = ExtResource("snd_8")
+
+[node name="hut" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = ExtResource("snd_9")
+
+[node name="dem" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = ExtResource("snd_10")
+
+[node name="bat_dau" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = ExtResource("snd_11")
+
+[node name="lam_lai" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = ExtResource("snd_12")

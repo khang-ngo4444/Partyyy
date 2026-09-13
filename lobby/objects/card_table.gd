@@ -25,6 +25,7 @@ const CARD_GAP_CHUNG := 0.36
 const CARD_SIZE_CHUNG := 0.34
 ## Ghế là scene riêng (model gán sẵn trong card_seat.tscn); số ghế theo `seats` nên vẫn sinh bằng code.
 const SEAT_SCENE := preload("res://lobby/objects/card_seat.tscn")
+const BOARD_SCENE := preload("res://lobby/objects/community_board.tscn")
 
 @export var poker := false
 ## Bộ bài nào. Phải KHÁC NHAU giữa hai bàn, nếu không chia ở bàn này lại hết bài ở bàn kia.
@@ -314,7 +315,7 @@ func _build_table() -> void:
 		_spot_cai.size = Vector2(CARD_GAP_CHUNG * 4 + CARD_SIZE_CHUNG + 0.1,
 				CARD_SIZE_CHUNG + 0.1)
 		# Bảng đứng ở MÉP bàn phía nhà cái: bài nằm phẳng nhìn từ ghế thì bị bẹp, cần dựng lên.
-		var bang := CommunityBoard.new()
+		var bang := BOARD_SCENE.instantiate() as CommunityBoard
 		bang.spot = _spot_cai
 		bang.position = Vector3(0.0, table_height, -(radius - 0.16))
 		add_child(bang)

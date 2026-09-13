@@ -1,0 +1,61 @@
+[gd_scene load_steps=19 format=3]
+
+[ext_resource type="Script" path="res://lobby/objects/hanoi_tower.gd" id="1_script"]
+[ext_resource type="AudioStream" uid="uid://dqg8vlqiajh2m" path="res://asset/kenney_impact-sounds/Audio/impactWood_light_000.ogg" id="snd_0"]
+[ext_resource type="AudioStream" uid="uid://154hqawghglk" path="res://asset/kenney_impact-sounds/Audio/impactWood_light_001.ogg" id="snd_1"]
+[ext_resource type="AudioStream" uid="uid://jm33tbg56tcd" path="res://asset/kenney_impact-sounds/Audio/impactWood_light_002.ogg" id="snd_2"]
+[ext_resource type="AudioStream" uid="uid://b2i1jdwr2msf" path="res://asset/kenney_impact-sounds/Audio/impactWood_light_003.ogg" id="snd_3"]
+[ext_resource type="AudioStream" uid="uid://dmf36ta542k16" path="res://asset/kenney_impact-sounds/Audio/impactWood_light_004.ogg" id="snd_4"]
+[ext_resource type="AudioStream" uid="uid://clt0pj0n4125s" path="res://asset/kenney_impact-sounds/Audio/impactWood_medium_000.ogg" id="snd_5"]
+[ext_resource type="AudioStream" uid="uid://uf44bumlx874" path="res://asset/kenney_impact-sounds/Audio/impactWood_medium_001.ogg" id="snd_6"]
+[ext_resource type="AudioStream" uid="uid://culldj5od5lye" path="res://asset/kenney_impact-sounds/Audio/impactWood_medium_002.ogg" id="snd_7"]
+[ext_resource type="AudioStream" uid="uid://c5dd0q75er13i" path="res://asset/kenney_impact-sounds/Audio/impactWood_medium_003.ogg" id="snd_8"]
+[ext_resource type="AudioStream" uid="uid://6w0bsbtfb4b8" path="res://asset/kenney_impact-sounds/Audio/impactWood_medium_004.ogg" id="snd_9"]
+[ext_resource type="AudioStream" uid="uid://cb6fnv3lkrm6h" path="res://asset/kenney_interface-sounds/Audio/error_004.ogg" id="snd_10"]
+[ext_resource type="AudioStream" uid="uid://2ojqjeqlii2q" path="res://asset/kenney_interface-sounds/Audio/tick_001.ogg" id="snd_11"]
+[ext_resource type="AudioStream" uid="uid://c7xna4n7xroy7" path="res://asset/kenney_interface-sounds/Audio/bong_001.ogg" id="snd_12"]
+[ext_resource type="AudioStream" uid="uid://dse2vvq61vplw" path="res://asset/kenney_interface-sounds/Audio/confirmation_002.ogg" id="snd_13"]
+[ext_resource type="AudioStream" uid="uid://cvlvyoon42alj" path="res://asset/kenney_interface-sounds/Audio/drop_002.ogg" id="snd_14"]
+
+[sub_resource type="AudioStreamRandomizer" id="Rand_nhat"]
+streams_count = 5
+stream_0/stream = ExtResource("snd_0")
+stream_1/stream = ExtResource("snd_1")
+stream_2/stream = ExtResource("snd_2")
+stream_3/stream = ExtResource("snd_3")
+stream_4/stream = ExtResource("snd_4")
+
+[sub_resource type="AudioStreamRandomizer" id="Rand_dat"]
+streams_count = 5
+stream_0/stream = ExtResource("snd_5")
+stream_1/stream = ExtResource("snd_6")
+stream_2/stream = ExtResource("snd_7")
+stream_3/stream = ExtResource("snd_8")
+stream_4/stream = ExtResource("snd_9")
+
+[node name="HanoiTower" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="Tieng" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+
+[node name="nhat" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = SubResource("Rand_nhat")
+
+[node name="dat" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = SubResource("Rand_dat")
+
+[node name="sai" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = ExtResource("snd_10")
+
+[node name="dem" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = ExtResource("snd_11")
+
+[node name="bat_dau" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = ExtResource("snd_12")
+
+[node name="thang" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = ExtResource("snd_13")
+
+[node name="lam_lai" type="AudioStreamPlayer3D" parent="Tieng"]
+stream = ExtResource("snd_14")
