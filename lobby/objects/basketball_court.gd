@@ -27,11 +27,6 @@ func _ready() -> void:
 	_build()
 
 
-## Chỗ để sẵn quả bóng thứ i: trên sân, gần đầu sân phía xa rổ.
-func cho_bong(i: int) -> Vector3:
-	return to_global(Vector3(-0.4 + 0.8 * i, 0.01 + Basketball.TARGET_DIAMETER * 0.5, sau - 0.3))
-
-
 func _build() -> void:
 	# Mặt sân nhô 1 cm khỏi sàn phòng — trùng mặt sàn thì hai mặt giành nhau từng pixel.
 	var nen := MeshInstance3D.new()
@@ -42,14 +37,7 @@ func _build() -> void:
 	nen.position = Vector3(0, 0.0, sau * 0.5)
 	add_child(nen)
 
-	var body := StaticBody3D.new()
-	var cs := CollisionShape3D.new()
-	var bs := BoxShape3D.new()
-	bs.size = Vector3(rong, 0.02, sau)
-	cs.shape = bs
-	cs.position = nen.position
-	body.add_child(cs)
-	add_child(body)
+	# Va chạm mặt sân: node StaticSurface_Floor trong basketball_court.tscn.
 
 	# Khu cấm địa sơn xanh.
 	_vach(Vector3(0.9, 0.003, 1.2), Vector3(0, 0.011, 0.6), MAU_KE)

@@ -15,7 +15,8 @@ const VANH_CACH_BANG := 0.38
 const BAN_KINH_3_DIEM := 1.45
 
 ## Thấp hơn rổ thật (3.05 m) để dễ ném trong game.
-## Đổi số này thì dời cả vành `Model/RootNode/ring` trong basketball_hoop.tscn cho khớp.
+## Đổi số này thì dời cả vành `Model/RootNode/ring`, `StaticSurface_Hoop` và `ScoreZone` trong
+## basketball_hoop.tscn cho khớp.
 @export var rim_height := 2.5
 @export var pole_radius := 0.06
 
@@ -38,15 +39,14 @@ func tam_vanh() -> Vector3:
 func _build() -> void:
 	var trang := _mat(Color("f2efe6"))
 	var xam := _mat(Color("3a3a3f"))
-	var body := StaticBody3D.new()
-	add_child(body)
+	# Va chạm trụ, tay đòn, bảng, 16 viên cầu vành: node StaticSurface_Hoop trong basketball_hoop.tscn.
 
 	# Trụ phía sau bảng + tay đòn chìa ra đỡ bảng.
 	var cao_tru := rim_height + 0.6
-	_hop(body, Vector3(pole_radius * 2, cao_tru, pole_radius * 2), Vector3(0, cao_tru * 0.5, -0.45), xam)
-	_hop(body, Vector3(0.08, 0.08, 0.45), Vector3(0, rim_height + 0.35, -0.225), xam)
+	_hop(Vector3(pole_radius * 2, cao_tru, pole_radius * 2), Vector3(0, cao_tru * 0.5, -0.45), xam)
+	_hop(Vector3(0.08, 0.08, 0.45), Vector3(0, rim_height + 0.35, -0.225), xam)
 	# Bảng: đáy bảng thấp hơn vành 0.15 m như bảng thật.
-	_hop(body, Vector3(1.2, 0.8, 0.04), Vector3(0, rim_height + 0.25, 0.0), trang)
+	_hop(Vector3(1.2, 0.8, 0.04), Vector3(0, rim_height + 0.25, 0.0), trang)
 	# Ô vuông đỏ trên bảng, ngay trên vành.
 	var o := MeshInstance3D.new()
 	var om := BoxMesh.new()
@@ -56,33 +56,12 @@ func _build() -> void:
 	o.position = Vector3(0, rim_height + 0.15, 0.022)
 	add_child(o)
 
-	# Vành: va chạm là 16 viên cầu nhỏ xếp vòng. Mặt lưới tam giác mảnh như vành thì bóng nhanh
-	# xuyên qua; cầu thì va chạm ổn định và bóng nảy ra đúng hướng.
 	var r_vanh := TARGET_RING_DIAMETER * 0.5
-	for i in 16:
-		var a := TAU * i / 16.0
-		var cs := CollisionShape3D.new()
-		var sp := SphereShape3D.new()
-		sp.radius = 0.018
-		cs.shape = sp
-		cs.position = Vector3(cos(a) * r_vanh, rim_height, VANH_CACH_BANG + sin(a) * r_vanh)
-		body.add_child(cs)
 	# Thanh nối vành vào bảng (chỉ hình, không va chạm).
-	_hop(null, Vector3(0.03, 0.02, VANH_CACH_BANG - r_vanh), Vector3(0, rim_height, (VANH_CACH_BANG - r_vanh) * 0.5), xam)
+	_hop(Vector3(0.03, 0.02, VANH_CACH_BANG - r_vanh), Vector3(0, rim_height, (VANH_CACH_BANG - r_vanh) * 0.5), xam)
 
-	# Vùng bắt bóng: dưới vành một chút. Bóng rơi XUỐNG qua đây mới tính.
-	var vung := Area3D.new()
-	# Bong nam o lop vat nhat duoc, khong phai lop the gioi.
-	vung.collision_mask = Pickable.LOP_VAT
-	var vcs := CollisionShape3D.new()
-	var cyl := CylinderShape3D.new()
-	cyl.radius = r_vanh - 0.07
-	cyl.height = 0.08
-	vcs.shape = cyl
-	vung.add_child(vcs)
-	vung.position = Vector3(0, rim_height - 0.2, VANH_CACH_BANG)
-	vung.body_entered.connect(_khi_bong_vao)
-	add_child(vung)
+	# Vùng bắt bóng (dưới vành, chỉ bắt lớp vật nhặt được): node ScoreZone trong scene.
+	$ScoreZone.body_entered.connect(_khi_bong_vao)
 
 	_bang_diem = Label3D.new()
 	_bang_diem.text = "BONG RO\nvao ro: 2 diem, ngoai vach: 3 diem"
@@ -162,7 +141,7 @@ func _net_ghi_ban(nguoi: int, cong: int, tong: String) -> void:
 	tw.tween_callback(bat.queue_free)
 
 
-func _hop(body: StaticBody3D, kt: Vector3, vt: Vector3, mat: Material) -> void:
+func _hop(kt: Vector3, vt: Vector3, mat: Material) -> void:
 	var mi := MeshInstance3D.new()
 	var bm := BoxMesh.new()
 	bm.size = kt
@@ -170,13 +149,6 @@ func _hop(body: StaticBody3D, kt: Vector3, vt: Vector3, mat: Material) -> void:
 	mi.material_override = mat
 	mi.position = vt
 	add_child(mi)
-	if body != null:
-		var cs := CollisionShape3D.new()
-		var bs := BoxShape3D.new()
-		bs.size = kt
-		cs.shape = bs
-		cs.position = vt
-		body.add_child(cs)
 
 
 func _mat(c: Color) -> StandardMaterial3D:

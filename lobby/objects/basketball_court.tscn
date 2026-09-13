@@ -1,10 +1,27 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/basketball_court.gd" id="1_court"]
 [ext_resource type="PackedScene" path="res://lobby/objects/basketball_hoop.tscn" id="2_hoop"]
+
+[sub_resource type="BoxShape3D" id="Shape_Floor"]
+size = Vector3(3, 0.02, 2)
 
 [node name="BasketballCourt" type="Node3D"]
 script = ExtResource("1_court")
 
 [node name="Hoop" parent="." instance=ExtResource("2_hoop")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.1)
+
+[node name="StaticSurface_Floor" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+shape = SubResource("Shape_Floor")
+
+[node name="SpawnPlaceholders" type="Node3D" parent="."]
+
+[node name="Placeholder_Basketball_0" type="Node3D" parent="SpawnPlaceholders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0.5, 1.7)
+
+[node name="Placeholder_Basketball_1" type="Node3D" parent="SpawnPlaceholders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.5, 1.7)

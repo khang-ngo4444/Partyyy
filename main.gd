@@ -21,6 +21,7 @@ const PLACEHOLDER_SCENES := {
 	"GolfBall": GOLF_BALL_SCENE,
 	"Putter": PUTTER_SCENE,
 	"Hammer": HAMMER_SCENE,
+	"Basketball": BASKETBALL_SCENE,
 }
 
 ## Tran so quan caro. Van caro tren ban 28x28 co the dung toi 150-200 quan, moi quan la mot
@@ -124,7 +125,6 @@ func _on_room_joined() -> void:
 		spawner.spawn(MATCH_STATE_SCENE)
 		_spawn_set(_board().mode)
 		_spawn_xuc_xac()
-		_spawn_basketballs()
 		_spawn_darts()
 		_spawn_placeholders(placeholders)
 	for p in placeholders:
@@ -141,17 +141,6 @@ func _spawn_xuc_xac() -> void:
 		var d: Die = spawner.spawn(DIE_SCENE)
 		d.tint = "red" if i == 0 else "yellow"
 		d.global_position = ban.slot(i)
-
-
-## Hai quả để sẵn trên nửa sân — chỗ để lấy theo SÂN, dời sân trong lobby.tscn là bóng theo.
-func _spawn_basketballs() -> void:
-	var san := _lobby.get_node_or_null("BasketballCourt") as BasketballCourt
-	if san == null:
-		return
-	for i in 2:
-		var b: Basketball = spawner.spawn(BASKETBALL_SCENE)
-		b.global_position = san.cho_bong(i)
-		b.cho_mac_dinh = b.global_position
 
 
 ## Ba cây phi tiêu nằm sau vạch ném — chỗ để lấy theo BIA.
