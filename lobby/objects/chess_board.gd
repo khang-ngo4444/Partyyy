@@ -83,7 +83,8 @@ func flip_to(new_mode: int, duration := 1.2) -> void:
 
 func rebuild() -> void:
 	for c in get_children():
-		c.queue_free()
+		if c.name != &"StaticSurface_Board":
+			c.queue_free()
 	match mode:
 		Mode.CHESS: _build_chess()
 		Mode.CARO: _build_caro()
@@ -92,17 +93,15 @@ func rebuild() -> void:
 
 
 ## Mat ban co va cham duoc: quan co la RigidBody that, khong co mat nay thi quan roi xuyen xuong
-## san phong, nam lun duoi mat ban 4 cm. Lat mat ban thi dung lai theo kich thuoc moi.
+## san phong, nam lun duoi mat ban 4 cm. Node StaticSurface_Board trong chess_board.tscn; lat mat ban
+## thi chi doi co hinh theo luoi moi (gan hinh MOI — hai ban dung chung scene, khong sua hinh chung).
 func _dung_mat_va_cham() -> void:
 	var le := 0.0 if mode == Mode.CHESS else cell_size
 	var hop := BoxShape3D.new()
 	hop.size = Vector3(_half(cols()) * 2.0 + le, 0.04, _half(rows()) * 2.0 + le)
-	var hinh := CollisionShape3D.new()
+	var hinh := $StaticSurface_Board/CollisionShape3D as CollisionShape3D
 	hinh.shape = hop
 	hinh.position = Vector3(0.0, surface_y, 0.0)
-	var than := StaticBody3D.new()
-	than.add_child(hinh)
-	add_child(than)
 
 
 ## Cờ vua: 8×8 ô xen kẽ hai màu, dựng bằng code thay vì vẽ một texture bàn cờ.

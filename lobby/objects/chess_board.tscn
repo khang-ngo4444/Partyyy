@@ -1,6 +1,15 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/chess_board.gd" id="1_board"]
 
+[sub_resource type="BoxShape3D" id="Shape_Board"]
+size = Vector3(8.4, 0.04, 8.4)
+
 [node name="ChessBoard" type="Node3D"]
 script = ExtResource("1_board")
+
+[node name="StaticSurface_Board" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Board"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
+shape = SubResource("Shape_Board")
