@@ -22,6 +22,7 @@ const PLACEHOLDER_SCENES := {
 	"Putter": PUTTER_SCENE,
 	"Hammer": HAMMER_SCENE,
 	"Basketball": BASKETBALL_SCENE,
+	"Dart": DART_SCENE,
 }
 
 ## Tran so quan caro. Van caro tren ban 28x28 co the dung toi 150-200 quan, moi quan la mot
@@ -125,7 +126,6 @@ func _on_room_joined() -> void:
 		spawner.spawn(MATCH_STATE_SCENE)
 		_spawn_set(_board().mode)
 		_spawn_xuc_xac()
-		_spawn_darts()
 		_spawn_placeholders(placeholders)
 	for p in placeholders:
 		p.queue_free()
@@ -141,17 +141,6 @@ func _spawn_xuc_xac() -> void:
 		var d: Die = spawner.spawn(DIE_SCENE)
 		d.tint = "red" if i == 0 else "yellow"
 		d.global_position = ban.slot(i)
-
-
-## Ba cây phi tiêu nằm sau vạch ném — chỗ để lấy theo BIA.
-func _spawn_darts() -> void:
-	var bia := _lobby.get_node_or_null("Dartboard") as Dartboard
-	if bia == null:
-		return
-	for i in 3:
-		var d: Dart = spawner.spawn(DART_SCENE)
-		d.global_position = bia.cho_phi_tieu(i)
-		d.cho_mac_dinh = d.global_position
 
 
 ## Master sinh vat mang tai dung vi tri/huong cua tung placeholder (xep bang Editor / Physics Placer).

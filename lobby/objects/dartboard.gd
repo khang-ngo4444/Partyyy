@@ -26,11 +26,6 @@ func _ready() -> void:
 	_build()
 
 
-## Chỗ để sẵn cây phi tiêu thứ i: trên sàn, ngay sau vạch ném.
-func cho_phi_tieu(i: int) -> Vector3:
-	return to_global(Vector3(-0.15 + 0.15 * i, 0.03, VACH_NEM + 0.3))
-
-
 ## Điểm tại một điểm chạm (toạ độ thế giới). Trả [điểm, tên ô].
 func diem_tai(diem_cham: Vector3) -> Array:
 	var p := to_local(diem_cham)
@@ -80,25 +75,12 @@ func _build() -> void:
 	go.albedo_color = Color("6b4a2f")
 	go.roughness = 0.85
 	# Giá đứng: đế + trụ sau bia. Có va chạm thường (lớp 1) để người không đi xuyên.
-	var body := StaticBody3D.new()
-	add_child(body)
-	_hop(body, Vector3(0.6, 0.04, 0.45), Vector3(0, 0.02, -0.1), go)
-	_hop(body, Vector3(0.08, TAM_CAO + 0.25, 0.08), Vector3(0, (TAM_CAO + 0.25) * 0.5, -0.08), go)
-	_hop(body, Vector3(0.52, 0.52, 0.03), Vector3(0, TAM_CAO, -0.035), go)
+	# Va chạm giá: node StaticSurface_Stand trong dartboard.tscn.
+	_hop(Vector3(0.6, 0.04, 0.45), Vector3(0, 0.02, -0.1), go)
+	_hop(Vector3(0.08, TAM_CAO + 0.25, 0.08), Vector3(0, (TAM_CAO + 0.25) * 0.5, -0.08), go)
+	_hop(Vector3(0.52, 0.52, 0.03), Vector3(0, TAM_CAO, -0.035), go)
 
-	# Mặt bia để phi tiêu cắm: CHỈ nằm ở lớp 3 (xem Dart.LOP_BIA). Người và bóng không va với nó.
-	var mat := StaticBody3D.new()
-	mat.collision_layer = Dart.LOP_BIA
-	mat.collision_mask = 0
-	var cs := CollisionShape3D.new()
-	var cyl := CylinderShape3D.new()
-	cyl.radius = DUONG_KINH * 0.5
-	cyl.height = 0.04
-	cs.shape = cyl
-	cs.rotation_degrees.x = 90.0
-	cs.position = Vector3(0, TAM_CAO, 0.0)
-	mat.add_child(cs)
-	add_child(mat)
+	# Mặt bia để phi tiêu cắm: node StaticSurface_Target (CHỈ lớp 3 = Dart.LOP_BIA, mask 0) trong scene.
 
 	# Vạch ném trên sàn.
 	var vach := MeshInstance3D.new()
@@ -130,7 +112,7 @@ func _build() -> void:
 	add_child(_bang)
 
 
-func _hop(body: StaticBody3D, kt: Vector3, vt: Vector3, mat: Material) -> void:
+func _hop(kt: Vector3, vt: Vector3, mat: Material) -> void:
 	var mi := MeshInstance3D.new()
 	var bm := BoxMesh.new()
 	bm.size = kt
@@ -138,9 +120,3 @@ func _hop(body: StaticBody3D, kt: Vector3, vt: Vector3, mat: Material) -> void:
 	mi.material_override = mat
 	mi.position = vt
 	add_child(mi)
-	var cs := CollisionShape3D.new()
-	var bs := BoxShape3D.new()
-	bs.size = kt
-	cs.shape = bs
-	cs.position = vt
-	body.add_child(cs)

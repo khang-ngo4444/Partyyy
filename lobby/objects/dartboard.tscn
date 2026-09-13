@@ -1,10 +1,56 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/dartboard.gd" id="1_board"]
 [ext_resource type="PackedScene" uid="uid://b4sfnjx8u5o7u" path="res://asset/Dartboard by Jarlan Perez - drNqt_5ReeP.glb" id="2_model"]
+
+[sub_resource type="BoxShape3D" id="Shape_Base"]
+size = Vector3(0.6, 0.04, 0.45)
+
+[sub_resource type="BoxShape3D" id="Shape_Pole"]
+size = Vector3(0.08, 1.75, 0.08)
+
+[sub_resource type="BoxShape3D" id="Shape_Back"]
+size = Vector3(0.52, 0.52, 0.03)
+
+[sub_resource type="CylinderShape3D" id="Shape_Target"]
+height = 0.04
+radius = 0.225
 
 [node name="Dartboard" type="Node3D"]
 script = ExtResource("1_board")
 
 [node name="Model" parent="." instance=ExtResource("2_model")]
 transform = Transform3D(-1.1370013e-08, 0, -0.2601156, 0, 0.2601156, 0, 0.2601156, 0, -1.1370013e-08, -0.0009926952, 1.7016054, -0.0065084565)
+
+[node name="StaticSurface_Stand" type="StaticBody3D" parent="."]
+
+[node name="Base" type="CollisionShape3D" parent="StaticSurface_Stand"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, -0.1)
+shape = SubResource("Shape_Base")
+
+[node name="Pole" type="CollisionShape3D" parent="StaticSurface_Stand"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, -0.08)
+shape = SubResource("Shape_Pole")
+
+[node name="Back" type="CollisionShape3D" parent="StaticSurface_Stand"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -0.035)
+shape = SubResource("Shape_Back")
+
+[node name="StaticSurface_Target" type="StaticBody3D" parent="."]
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Target"]
+transform = Transform3D(1, 0, 0, 0, -4e-08, -1, 0, 1, -4e-08, 0, 1.5, 0)
+shape = SubResource("Shape_Target")
+
+[node name="SpawnPlaceholders" type="Node3D" parent="."]
+
+[node name="Placeholder_Dart_0" type="Node3D" parent="SpawnPlaceholders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.5, 2.67)
+
+[node name="Placeholder_Dart_1" type="Node3D" parent="SpawnPlaceholders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0.5, 2.67)
+
+[node name="Placeholder_Dart_2" type="Node3D" parent="SpawnPlaceholders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 0.5, 2.67)
