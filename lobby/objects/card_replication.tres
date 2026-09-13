@@ -1,0 +1,34 @@
+[gd_resource type="FusionReplicationConfig" format=3]
+
+[resource]
+property_count = 5
+properties/0/path = NodePath(":holder_id")
+properties/0/max_array_capacity = 0
+properties/0/interface_tag = ""
+properties/0/interpolate = 0
+properties/0/element_type = 0
+properties/0/element_class_name = ""
+properties/1/path = NodePath(":card_index")
+properties/1/max_array_capacity = 0
+properties/1/interface_tag = ""
+properties/1/interpolate = 0
+properties/1/element_type = 0
+properties/1/element_class_name = ""
+properties/2/path = NodePath(":deck_id")
+properties/2/max_array_capacity = 0
+properties/2/interface_tag = ""
+properties/2/interpolate = 0
+properties/2/element_type = 0
+properties/2/element_class_name = ""
+properties/3/path = NodePath(":face_down")
+properties/3/max_array_capacity = 0
+properties/3/interface_tag = ""
+properties/3/interpolate = 0
+properties/3/element_type = 0
+properties/3/element_class_name = ""
+properties/4/path = NodePath(":card_size")
+properties/4/max_array_capacity = 0
+properties/4/interface_tag = ""
+properties/4/interpolate = 0
+properties/4/element_type = 0
+properties/4/element_class_name = ""

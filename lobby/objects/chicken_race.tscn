@@ -1,0 +1,65 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://lobby/objects/chicken_race.gd" id="1_race"]
+[ext_resource type="PackedScene" uid="uid://dusnydw127vnc" path="res://asset/polypizza/chicken.glb" id="2_model"]
+
+[node name="ChickenRace" type="Node3D"]
+script = ExtResource("1_race")
+
+[node name="Result" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.55, 0)
+pixel_size = 0.004
+billboard = 1
+no_depth_test = true
+font_size = 44
+outline_size = 12
+
+[node name="Chickens" type="Node3D" parent="."]
+
+[node name="Ga0" type="Node3D" parent="Chickens"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.91, 0.95, -1.1)
+
+[node name="Model" parent="Chickens/Ga0" instance=ExtResource("2_model")]
+transform = Transform3D(-3.931296e-11, 0, 0.0008993757, 0, 0.0008993757, 0, -0.0008993757, 0, -3.931296e-11, 0, 0, 0)
+
+[node name="Ga1" type="Node3D" parent="Chickens"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.65, 0.95, -1.1)
+
+[node name="Model" parent="Chickens/Ga1" instance=ExtResource("2_model")]
+transform = Transform3D(-3.931296e-11, 0, 0.0008993757, 0, 0.0008993757, 0, -0.0008993757, 0, -3.931296e-11, 0, 0, 0)
+
+[node name="Ga2" type="Node3D" parent="Chickens"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.39, 0.95, -1.1)
+
+[node name="Model" parent="Chickens/Ga2" instance=ExtResource("2_model")]
+transform = Transform3D(-3.931296e-11, 0, 0.0008993757, 0, 0.0008993757, 0, -0.0008993757, 0, -3.931296e-11, 0, 0, 0)
+
+[node name="Ga3" type="Node3D" parent="Chickens"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.13, 0.95, -1.1)
+
+[node name="Model" parent="Chickens/Ga3" instance=ExtResource("2_model")]
+transform = Transform3D(-3.931296e-11, 0, 0.0008993757, 0, 0.0008993757, 0, -0.0008993757, 0, -3.931296e-11, 0, 0, 0)
+
+[node name="Ga4" type="Node3D" parent="Chickens"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.13, 0.95, -1.1)
+
+[node name="Model" parent="Chickens/Ga4" instance=ExtResource("2_model")]
+transform = Transform3D(-3.931296e-11, 0, 0.0008993757, 0, 0.0008993757, 0, -0.0008993757, 0, -3.931296e-11, 0, 0, 0)
+
+[node name="Ga5" type="Node3D" parent="Chickens"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.39, 0.95, -1.1)
+
+[node name="Model" parent="Chickens/Ga5" instance=ExtResource("2_model")]
+transform = Transform3D(-3.931296e-11, 0, 0.0008993757, 0, 0.0008993757, 0, -0.0008993757, 0, -3.931296e-11, 0, 0, 0)
+
+[node name="Ga6" type="Node3D" parent="Chickens"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.65, 0.95, -1.1)
+
+[node name="Model" parent="Chickens/Ga6" instance=ExtResource("2_model")]
+transform = Transform3D(-3.931296e-11, 0, 0.0008993757, 0, 0.0008993757, 0, -0.0008993757, 0, -3.931296e-11, 0, 0, 0)
+
+[node name="Ga7" type="Node3D" parent="Chickens"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.91, 0.95, -1.1)
+
+[node name="Model" parent="Chickens/Ga7" instance=ExtResource("2_model")]
+transform = Transform3D(-3.931296e-11, 0, 0.0008993757, 0, 0.0008993757, 0, -0.0008993757, 0, -3.931296e-11, 0, 0, 0)

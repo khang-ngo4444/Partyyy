@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://b0b0vp7u8wld2"]
+
+[node name="TestPhysicsPlacer" type="Node3D" unique_id=935072472]
+
+[node name="Ground" type="CSGBox3D" parent="." unique_id=965984601]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+size = Vector3(20, 1, 20)
+
+[node name="Block1" type="CSGBox3D" parent="." unique_id=84438578]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2, 0)
+
+[node name="Block2" type="CSGBox3D" parent="." unique_id=637315670]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+
+[node name="Block3" type="CSGBox3D" parent="." unique_id=160913882]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2, 0)
+
+[node name="Sphere" type="CSGSphere3D" parent="." unique_id=1560750931]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -5)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1957551794]
+transform = Transform3D(1, 0, 0, 0, 0.9553365, 0.29552022, 0, -0.29552022, 0.9553365, 0, 5, 15)

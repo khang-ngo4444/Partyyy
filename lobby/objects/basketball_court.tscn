@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://lobby/objects/basketball_court.gd" id="1_court"]
+[ext_resource type="PackedScene" path="res://lobby/objects/basketball_hoop.tscn" id="2_hoop"]
+
+[node name="BasketballCourt" type="Node3D"]
+script = ExtResource("1_court")
+
+[node name="Hoop" parent="." instance=ExtResource("2_hoop")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.1)

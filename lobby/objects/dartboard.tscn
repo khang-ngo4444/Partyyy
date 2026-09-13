@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://lobby/objects/dartboard.gd" id="1_board"]
+[ext_resource type="PackedScene" uid="uid://b4sfnjx8u5o7u" path="res://asset/Dartboard by Jarlan Perez - drNqt_5ReeP.glb" id="2_model"]
+
+[node name="Dartboard" type="Node3D"]
+script = ExtResource("1_board")
+
+[node name="Model" parent="." instance=ExtResource("2_model")]
+transform = Transform3D(-1.1370013e-08, 0, -0.2601156, 0, 0.2601156, 0, 0.2601156, 0, -1.1370013e-08, -0.0009926952, 1.7016054, -0.0065084565)

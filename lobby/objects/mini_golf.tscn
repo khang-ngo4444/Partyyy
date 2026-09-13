@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://lobby/objects/mini_golf.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://dstksms1tlrrf" path="res://asset/kenney_minigolf-kit/Models/GLB format/flag-red.glb" id="2_flag"]
+
+[node name="MiniGolf" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="Flag" parent="." instance=ExtResource("2_flag")]
+transform = Transform3D(0.8293533, 0, 0, 0, 0.8293533, 0, 0, 0, 0.8293533, 0.135, 0.12, -1.7)

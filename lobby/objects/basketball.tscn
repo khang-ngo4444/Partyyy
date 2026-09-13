@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://lobby/objects/basketball.gd" id="1_ball"]
+[ext_resource type="FusionReplicationConfig" path="res://lobby/objects/pickable_replication.tres" id="2_cfg"]
+[ext_resource type="PackedScene" uid="uid://ckbxqlkwfrpbo" path="res://asset/Basket ball and hoop by Armory_3D - i3LLacyQP4.glb" id="3_model"]
+
+[node name="Basketball" type="RigidBody3D"]
+script = ExtResource("1_ball")
+
+[node name="Replicator" type="FusionSharedReplicator" parent="."]
+root_path = NodePath("..")
+replication_config = ExtResource("2_cfg")
+owner_mode = 0
+root_replication_mode = 1
+root_interpolation_mode = 2
+root_forecast_gravity = false
+
+[node name="Model" parent="." instance=ExtResource("3_model")]
+
+[node name="ring" parent="Model/RootNode" index="0"]
+visible = false
+
+[node name="Sphere" parent="Model/RootNode" index="1"]
+transform = Transform3D(21.718002, 0, 0, 0, 21.718002, 0, 0, 0, 21.718002, 0, 0, 0)
+
+[editable path="Model"]

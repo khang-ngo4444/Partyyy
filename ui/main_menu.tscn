@@ -1,0 +1,75 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ui/main_menu.gd" id="1_menu"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_menu")
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Center"]
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Center/VBox"]
+layout_mode = 2
+text = "PARTYBASH"
+horizontal_alignment = 1
+
+[node name="NameRow" type="HBoxContainer" parent="Center/VBox"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="Center/VBox/NameRow"]
+layout_mode = 2
+text = "Tên"
+
+[node name="NameEdit" type="LineEdit" parent="Center/VBox/NameRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_length = 14
+
+[node name="HostBtn" type="Button" parent="Center/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "TẠO PHÒNG"
+
+[node name="Sep" type="HSeparator" parent="Center/VBox"]
+layout_mode = 2
+
+[node name="RoomsTitle" type="Label" parent="Center/VBox"]
+layout_mode = 2
+text = "VÀO PHÒNG"
+
+[node name="EmptyHint" type="Label" parent="Center/VBox"]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.5)
+layout_mode = 2
+text = "Chưa có phòng nào đang mở."
+
+[node name="RoomList" type="VBoxContainer" parent="Center/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Sep2" type="HSeparator" parent="Center/VBox"]
+layout_mode = 2
+
+[node name="Status" type="Label" parent="Center/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3

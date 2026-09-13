@@ -1,0 +1,61 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://lobby/objects/whack_a_mole.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://c01veiknsok0i" path="res://asset/sketchfab/whack_em_allwhack_a_mole_machine.glb" id="2_may"]
+[ext_resource type="PackedScene" uid="uid://b4ghfyt072tql" path="res://asset/sketchfab/whack-a-mole_animations.glb" id="3_chuot"]
+
+[node name="WhackAMole" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="May" parent="." instance=ExtResource("2_may")]
+transform = Transform3D(-3.6080023e-09, 0, -0.08254147, 0, 0.08254147, 0, 0.08254147, 0, -3.6080023e-09, -1.024416, -0.0013312289, 0.41552424)
+
+[node name="Lo0" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18558407, 0.66616875, 0.2592743)
+
+[node name="Than" type="Node3D" parent="Lo0"]
+visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2025, 0)
+
+[node name="Chuot" parent="Lo0/Than" instance=ExtResource("3_chuot")]
+transform = Transform3D(0.04420114, 0, 0, 0, 0.04420114, 0, 0, 0, 0.04420114, 0, 0.118768424, 0)
+
+[node name="Lo1" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15816593, 0.66616875, 0.2592743)
+
+[node name="Than" type="Node3D" parent="Lo1"]
+visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2025, 0)
+
+[node name="Chuot" parent="Lo1/Than" instance=ExtResource("3_chuot")]
+transform = Transform3D(0.04420114, 0, 0, 0, 0.04420114, 0, 0, 0, 0.04420114, 0, 0.118768424, 0)
+
+[node name="Lo2" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.27308404, 0.82366884, -0.045725673)
+
+[node name="Than" type="Node3D" parent="Lo2"]
+visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2025, 0)
+
+[node name="Chuot" parent="Lo2/Than" instance=ExtResource("3_chuot")]
+transform = Transform3D(0.04420114, 0, 0, 0, 0.04420114, 0, 0, 0, 0.04420114, 0, 0.118768424, 0)
+
+[node name="Lo3" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.008084059, 0.82366884, -0.045725673)
+
+[node name="Than" type="Node3D" parent="Lo3"]
+visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2025, 0)
+
+[node name="Chuot" parent="Lo3/Than" instance=ExtResource("3_chuot")]
+transform = Transform3D(0.04420114, 0, 0, 0, 0.04420114, 0, 0, 0, 0.04420114, 0, 0.118768424, 0)
+
+[node name="Lo4" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.26191592, 0.82366884, -0.045725703)
+
+[node name="Than" type="Node3D" parent="Lo4"]
+visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2025, 0)
+
+[node name="Chuot" parent="Lo4/Than" instance=ExtResource("3_chuot")]
+transform = Transform3D(0.04420114, 0, 0, 0, 0.04420114, 0, 0, 0, 0.04420114, 0, 0.118768424, 0)

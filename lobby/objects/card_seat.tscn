@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://lobby/objects/card_seat.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://upcxsn31wdgn" path="res://asset/Chair by Quaternius - iMNqRzPwwe.glb" id="2_model"]
+
+[node name="CardSeat" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="Model" parent="." instance=ExtResource("2_model")]
+transform = Transform3D(0.509115, 0, 0, 0, 0.509115, 0, 0, 0, 0.509115, 0, 0.0016889608, 0.016218396)

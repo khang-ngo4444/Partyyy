@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://lobby/objects/dice_table.gd" id="1_dice"]
+
+[node name="DiceTable" type="Node3D"]
+script = ExtResource("1_dice")
+
+[node name="Result" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85, 0)
+pixel_size = 0.008
+billboard = 1
+font_size = 64
+outline_size = 12

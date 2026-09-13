@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://lobby/objects/card.gd" id="1_card"]
+[ext_resource type="FusionReplicationConfig" path="res://lobby/objects/card_replication.tres" id="2_cfg"]
+
+[node name="Card" type="RigidBody3D"]
+script = ExtResource("1_card")
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="Replicator" type="FusionSharedReplicator" parent="."]
+root_path = NodePath("..")
+replication_config = ExtResource("2_cfg")
+owner_mode = 0
+root_replication_mode = 1
+root_interpolation_mode = 2
+root_forecast_gravity = false

@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://net/match_state.gd" id="1_ms"]
+[ext_resource type="FusionReplicationConfig" path="res://net/match_state_replication.tres" id="2_cfg"]
+
+[node name="MatchState" type="Node3D"]
+script = ExtResource("1_ms")
+
+[node name="Replicator" type="FusionSharedReplicator" parent="."]
+root_path = NodePath("..")
+replication_config = ExtResource("2_cfg")
+owner_mode = 3

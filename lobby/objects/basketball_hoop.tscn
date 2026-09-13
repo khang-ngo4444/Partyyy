@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://lobby/objects/basketball_hoop.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://ckbxqlkwfrpbo" path="res://asset/Basket ball and hoop by Armory_3D - i3LLacyQP4.glb" id="2_model"]
+
+[node name="BasketballHoop" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="Model" parent="." instance=ExtResource("2_model")]
+
+[node name="ring" parent="Model/RootNode" index="0"]
+transform = Transform3D(38.38885, 0, 0, 0, -1.67803e-06, 38.38885, 0, -38.38885, -1.67803e-06, 0.0043474208, 2.5000002, 0.37989286)
+
+[node name="Sphere" parent="Model/RootNode" index="1"]
+visible = false
+
+[editable path="Model"]

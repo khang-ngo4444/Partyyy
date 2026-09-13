@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://lobby/objects/penguin_cross.gd" id="1_pc"]
+[ext_resource type="PackedScene" uid="uid://ccyjywo6gkyo0" path="res://asset/polypizza/penguin.glb" id="2_model"]
+
+[node name="PenguinCross" type="Node3D"]
+script = ExtResource("1_pc")
+
+[node name="Board" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, 0)
+pixel_size = 0.0028
+billboard = 1
+font_size = 40
+outline_size = 12
+
+[node name="Penguin" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.91, -1.36)
+
+[node name="Model" parent="Penguin" instance=ExtResource("2_model")]
+transform = Transform3D(0.0014781966, 0, 0, 0, 0.0014781966, 0, 0, 0, 0.0014781966, 0, 0.13000274, 0)
