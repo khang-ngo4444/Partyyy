@@ -618,15 +618,7 @@ func _dung_ban() -> void:
 	chan.material_override = go
 	chan.position.y = (cao_ban - 0.08) * 0.5
 	add_child(chan)
-	var than := StaticBody3D.new()
-	var cs := CollisionShape3D.new()
-	var cyl := CylinderShape3D.new()
-	cyl.radius = ban_kinh + 0.25
-	cyl.height = cao_ban
-	cs.shape = cyl
-	cs.position.y = cao_ban * 0.5
-	than.add_child(cs)
-	add_child(than)
+	# Va cham ban: node StaticSurface_Table trong liar_bar.tscn.
 
 	for i in SO_GHE:
 		var goc := _goc_ghe(i)
@@ -692,6 +684,7 @@ func _dung_nut() -> void:
 	var huong := Vector3(sin(goc), 0.0, cos(goc))
 	var ngang := Vector3(cos(goc), 0.0, -sin(goc))
 	var tam := huong * (ban_kinh + 1.35)
+	# Va cham bang dieu khien: StaticSurface_ButtonStand trong liar_bar.tscn.
 	_hop(tam + Vector3.UP * 0.45, Vector3(1.5, 0.9, 0.5), _mat(Color("3d4150")), goc)
 	for j in nut.size():
 		var b: Pressable = packed.instantiate()
@@ -736,15 +729,6 @@ func _hop(vt: Vector3, kt: Vector3, mat: Material, xoay: float) -> void:
 	mi.position = vt
 	mi.rotation.y = xoay
 	add_child(mi)
-	var body := StaticBody3D.new()
-	var cs := CollisionShape3D.new()
-	var bs := BoxShape3D.new()
-	bs.size = kt
-	cs.shape = bs
-	body.position = vt
-	body.rotation.y = xoay
-	body.add_child(cs)
-	add_child(body)
 
 
 func _mat(c: Color) -> StandardMaterial3D:

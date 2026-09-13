@@ -89,11 +89,6 @@ func _gio() -> float:
 	return Time.get_ticks_msec() / 1000.0
 
 
-## Cho dat bua thu i, main.gd goi luc spawn. Bua roi xuong san truoc may.
-func cho_bua(i: int) -> Vector3:
-	return to_global(Vector3(-0.45 + 0.9 * i, 0.4, 0.95))
-
-
 ## Ti le giua may that va luc do toa do lo.
 func _ti() -> float:
 	return may_cao / CAO_DO
@@ -401,14 +396,11 @@ func _keu(ten: String) -> void:
 
 
 ## May arcade: node `May` trong whack_a_mole.tscn, mat choi huong ve +Z. Lo, chuot, nut, bang
-## deu bam theo xoay/dich cua node do.
+## deu bam theo xoay/dich cua node do. Va cham may: StaticSurface_Machine (826 tam giac bake tu model).
 func _dung_may() -> void:
 	var may := $May as Node3D
 	_goc_may = Basis(Vector3.UP, may.rotation.y)
 	_dich_may = may.position
-	# Va cham theo dung hinh may (826 tam giac) — nguoi khong di xuyen qua, bua co cho cham.
-	for m: MeshInstance3D in may.find_children("*", "MeshInstance3D", true, false):
-		m.create_trimesh_collision()
 
 
 ## Chuot: `Lo0`..`Lo4` / `Than` / `Chuot` trong whack_a_mole.tscn. `Than` an san, truot len xuong khi choi.
@@ -483,7 +475,7 @@ func _dung_nut() -> void:
 		add_child(b)
 	_hop(Vector3(x, (_mat_choi() - 0.05) * 0.5, 0.0),
 			Vector3(0.45, _mat_choi() - 0.05, 0.8), _mat(Color("3d4150")))
-	_hop_va_cham(Vector3(x, _mat_choi() * 0.5, 0.0), Vector3(0.45, _mat_choi(), 0.8))
+	# Va cham bang nut: StaticSurface_ButtonStand trong whack_a_mole.tscn.
 
 
 func _hop(vt: Vector3, kt: Vector3, mat: Material) -> void:
@@ -494,17 +486,6 @@ func _hop(vt: Vector3, kt: Vector3, mat: Material) -> void:
 	mi.material_override = mat
 	mi.position = vt
 	add_child(mi)
-
-
-func _hop_va_cham(vt: Vector3, kt: Vector3) -> void:
-	var body := StaticBody3D.new()
-	var cs := CollisionShape3D.new()
-	var bs := BoxShape3D.new()
-	bs.size = kt
-	cs.shape = bs
-	body.position = vt
-	body.add_child(cs)
-	add_child(body)
 
 
 func _mat(c: Color) -> StandardMaterial3D:

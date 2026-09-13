@@ -428,17 +428,16 @@ func _keu(ten: String) -> void:
 func _dung_ban() -> void:
 	var go := _mat(Color("8a5a3b"))
 	var go_toi := _mat(Color("4a3020"))
-	_hop(Vector3(0.0, ban_cao - 0.03, 0.0), Vector3(DAI_BAN, 0.06, SAU_BAN), go, false)
+	_hop(Vector3(0.0, ban_cao - 0.03, 0.0), Vector3(DAI_BAN, 0.06, SAU_BAN), go)
 	for sx in [-1.0, 1.0]:
 		for sz in [-1.0, 1.0]:
 			_hop(Vector3(sx * (DAI_BAN * 0.5 - 0.06), (ban_cao - 0.06) * 0.5, sz * (SAU_BAN * 0.5 - 0.06)),
-					Vector3(0.06, ban_cao - 0.06, 0.06), go_toi, false)
-	# Khoi va cham lap day gam ban: nguoi khong chui duoc qua.
-	_hop_va_cham(Vector3(0.0, ban_cao * 0.5, 0.0), Vector3(DAI_BAN, ban_cao, SAU_BAN))
+					Vector3(0.06, ban_cao - 0.06, 0.06), go_toi)
+	# Va cham ban: node StaticSurface_Table trong hanoi_tower.tscn.
 	# De go dai giu ba coc.
 	_hop(Vector3(0.0, ban_cao + DE_DAY * 0.5, 0.0),
 			Vector3(khoang_coc * 2.0 + ban_kinh_lon * 2.0 + 0.12, DE_DAY, ban_kinh_lon * 2.0 + 0.1),
-			_mat(Color("c08a5b")), false)
+			_mat(Color("c08a5b")))
 
 
 
@@ -532,8 +531,8 @@ func _dung_bang() -> void:
 ## Nut o bang dieu khien BEN PHAI ban, cach coc C gan 1 m — ngam coc khong trung nut.
 func _dung_nut() -> void:
 	var x_tu := DAI_BAN * 0.5 + 0.68
-	_hop(Vector3(x_tu, 0.5, 0.0), Vector3(1.05, 1.0, 0.45), _mat(Color("3d4150")), false)
-	_hop_va_cham(Vector3(x_tu, 0.5, 0.0), Vector3(1.05, 1.0, 0.45))
+	_hop(Vector3(x_tu, 0.5, 0.0), Vector3(1.05, 1.0, 0.45), _mat(Color("3d4150")))
+	# Va cham bang dieu khien: StaticSurface_ButtonStand trong hanoi_tower.tscn.
 	var packed := load("res://lobby/objects/pressable.tscn") as PackedScene
 	var nut := [
 		["HanoiBatDau", "BAT DAU", Color("46a758"), Lenh.BAT_DAU],
@@ -582,7 +581,7 @@ func _dung_dia() -> void:
 		_dia[k].position = _dich_dia(k)
 
 
-func _hop(vt: Vector3, kt: Vector3, mat: Material, va_cham: bool) -> void:
+func _hop(vt: Vector3, kt: Vector3, mat: Material) -> void:
 	var mi := MeshInstance3D.new()
 	var bm := BoxMesh.new()
 	bm.size = kt
@@ -590,19 +589,6 @@ func _hop(vt: Vector3, kt: Vector3, mat: Material, va_cham: bool) -> void:
 	mi.material_override = mat
 	mi.position = vt
 	add_child(mi)
-	if va_cham:
-		_hop_va_cham(vt, kt)
-
-
-func _hop_va_cham(vt: Vector3, kt: Vector3) -> void:
-	var body := StaticBody3D.new()
-	var cs := CollisionShape3D.new()
-	var bs := BoxShape3D.new()
-	bs.size = kt
-	cs.shape = bs
-	body.position = vt
-	body.add_child(cs)
-	add_child(body)
 
 
 func _mat(c: Color) -> StandardMaterial3D:

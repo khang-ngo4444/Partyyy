@@ -16,6 +16,12 @@ const DART_SCENE := preload("res://lobby/objects/dart.tscn")
 const HAMMER_SCENE := preload("res://lobby/objects/hammer.tscn")
 const GOLF_BALL_SCENE := preload("res://lobby/objects/golf_ball.tscn")
 const PUTTER_SCENE := preload("res://lobby/objects/putter.tscn")
+## Ten vat trong `Placeholder_<Ten>_<so>` -> scene vat mang. Them loai vat moi: them mot dong o day.
+const PLACEHOLDER_SCENES := {
+	"GolfBall": GOLF_BALL_SCENE,
+	"Putter": PUTTER_SCENE,
+	"Hammer": HAMMER_SCENE,
+}
 
 ## Tran so quan caro. Van caro tren ban 28x28 co the dung toi 150-200 quan, moi quan la mot
 ## object mang — day se la phep thu lon nhat cua du an. De o day de ha xuong ma khong sua code.
@@ -111,14 +117,18 @@ func _on_room_joined() -> void:
 
 	# MatchState do master giu. Chi spawn neu chua co — master moi duoc bau se thay
 	# cai cu qua replication chu khong spawn them cai thu hai.
+	# Moc toa do `Placeholder_<Vat>_<so>` trong cac scene mini-game: master sinh vat mang tai do,
+	# may nao cung xoa moc ngay sau (xem _spawn_placeholders).
+	var placeholders := _lobby.find_children("Placeholder_*", "Node3D", true, false)
 	if NetManager.is_master() and get_tree().get_first_node_in_group("match_state") == null:
 		spawner.spawn(MATCH_STATE_SCENE)
 		_spawn_set(_board().mode)
 		_spawn_xuc_xac()
 		_spawn_basketballs()
 		_spawn_darts()
-		_spawn_bua()
-		_spawn_golf()
+		_spawn_placeholders(placeholders)
+	for p in placeholders:
+		p.queue_free()
 
 
 ## Hai vien xuc xac nam san tren ban, KHONG co nut gieo. Nhat len va nem la mot cu gieo —
@@ -155,29 +165,18 @@ func _spawn_darts() -> void:
 		d.cho_mac_dinh = d.global_position
 
 
-## Mot qua bong golf o cho phat va hai cay gay dung canh san.
-func _spawn_golf() -> void:
-	var san := _lobby.get_node_or_null("MiniGolf") as MiniGolf
-	if san == null:
-		return
-	var bong: GolfBall = spawner.spawn(GOLF_BALL_SCENE)
-	bong.global_position = san.cho_bong()
-	bong.cho_mac_dinh = bong.global_position
-	for i in 2:
-		var gay: Putter = spawner.spawn(PUTTER_SCENE)
-		gay.global_position = san.cho_gay(i)
-		gay.cho_mac_dinh = gay.global_position
-
-
-## Hai cai bua de san canh ban dap chuot.
-func _spawn_bua() -> void:
-	var may := _lobby.get_node_or_null("WhackAMole") as WhackAMole
-	if may == null:
-		return
-	for i in 2:
-		var b: Hammer = spawner.spawn(HAMMER_SCENE)
-		b.global_position = may.cho_bua(i)
-		b.cho_mac_dinh = b.global_position
+## Master sinh vat mang tai dung vi tri/huong cua tung placeholder (xep bang Editor / Physics Placer).
+## Cho de lai (`cho_mac_dinh`) cung lay tu do. Placeholder bi xoa ngay sau, o _on_room_joined.
+func _spawn_placeholders(placeholders: Array[Node]) -> void:
+	for p: Node3D in placeholders:
+		var ten := String(p.name).trim_prefix("Placeholder_").get_slice("_", 0)
+		var scene: PackedScene = PLACEHOLDER_SCENES.get(ten)
+		if scene == null:
+			push_error("Placeholder khong ro vat: %s" % p.name)
+			continue
+		var vat: Pickable = spawner.spawn(scene)
+		vat.global_transform = Transform3D(p.global_basis.orthonormalized(), p.global_position)
+		vat.cho_mac_dinh = vat.global_position
 
 
 func _spawn_chess_set() -> void:

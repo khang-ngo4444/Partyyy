@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=19 format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/whack_a_mole.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://c01veiknsok0i" path="res://asset/sketchfab/whack_em_allwhack_a_mole_machine.glb" id="2_may"]
@@ -14,6 +14,7 @@
 [ext_resource type="AudioStream" uid="uid://c7xna4n7xroy7" path="res://asset/kenney_interface-sounds/Audio/bong_001.ogg" id="snd_8"]
 [ext_resource type="AudioStream" uid="uid://cvlvyoon42alj" path="res://asset/kenney_interface-sounds/Audio/drop_002.ogg" id="snd_9"]
 [ext_resource type="AudioStream" uid="uid://dse2vvq61vplw" path="res://asset/kenney_interface-sounds/Audio/confirmation_002.ogg" id="snd_10"]
+[ext_resource type="ConcavePolygonShape3D" path="res://lobby/objects/whack_a_mole_machine_shape.res" id="surf_0"]
 
 [sub_resource type="AudioStreamRandomizer" id="Rand_chuot"]
 streams_count = 2
@@ -27,6 +28,9 @@ stream_1/stream = ExtResource("snd_3")
 stream_2/stream = ExtResource("snd_4")
 stream_3/stream = ExtResource("snd_5")
 stream_4/stream = ExtResource("snd_6")
+
+[sub_resource type="BoxShape3D" id="Shape_StaticSurface_ButtonStand"]
+size = Vector3(0.45, 0.6675, 0.8)
 
 [node name="WhackAMole" type="Node3D"]
 script = ExtResource("1_script")
@@ -104,3 +108,22 @@ stream = ExtResource("snd_9")
 
 [node name="thang" type="AudioStreamPlayer3D" parent="Tieng"]
 stream = ExtResource("snd_10")
+
+[node name="StaticSurface_Machine" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Machine"]
+shape = ExtResource("surf_0")
+
+[node name="StaticSurface_ButtonStand" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.85, 0.33374998, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_ButtonStand"]
+shape = SubResource("Shape_StaticSurface_ButtonStand")
+
+[node name="SpawnPlaceholders" type="Node3D" parent="."]
+
+[node name="Placeholder_Hammer_0" type="Node3D" parent="SpawnPlaceholders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45, 0.5, 0.95)
+
+[node name="Placeholder_Hammer_1" type="Node3D" parent="SpawnPlaceholders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 0.5, 0.95)

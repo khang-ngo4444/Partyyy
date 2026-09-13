@@ -256,15 +256,7 @@ func _goc(i: int) -> float:
 
 
 func _build_table() -> void:
-	var body := StaticBody3D.new()
-	var shape := CollisionShape3D.new()
-	var cs := CylinderShape3D.new()
-	cs.radius = radius
-	cs.height = table_height
-	shape.shape = cs
-	shape.position.y = table_height * 0.5
-	body.add_child(shape)
-	add_child(body)
+	# Va chạm bàn: node StaticSurface_Table trong card_table.tscn.
 
 	var felt := MeshInstance3D.new()
 	var cm := CylinderMesh.new()

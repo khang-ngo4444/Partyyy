@@ -147,14 +147,7 @@ func _build_rail() -> void:
 	var rong := rail_width + 0.5
 	var sau := dai + step_length + 0.3
 
-	var body := StaticBody3D.new()
-	var shape := CollisionShape3D.new()
-	var bs := BoxShape3D.new()
-	bs.size = Vector3(rong, _mat_ray(), sau)
-	shape.shape = bs
-	shape.position.y = _mat_ray() * 0.5
-	body.add_child(shape)
-	add_child(body)
+	# Va chạm bàn: node StaticSurface_Table trong penguin_cross.tscn.
 
 	# Chân bàn
 	_khoi(Vector3(0.0, table_height * 0.5, 0.0), Vector3(rong * 0.5, table_height, sau * 0.5),

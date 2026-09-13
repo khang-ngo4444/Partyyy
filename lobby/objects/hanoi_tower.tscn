@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3]
+[gd_scene load_steps=21 format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/hanoi_tower.gd" id="1_script"]
 [ext_resource type="AudioStream" uid="uid://dqg8vlqiajh2m" path="res://asset/kenney_impact-sounds/Audio/impactWood_light_000.ogg" id="snd_0"]
@@ -33,6 +33,12 @@ stream_2/stream = ExtResource("snd_7")
 stream_3/stream = ExtResource("snd_8")
 stream_4/stream = ExtResource("snd_9")
 
+[sub_resource type="BoxShape3D" id="Shape_StaticSurface_Table"]
+size = Vector3(1.8, 0.9, 0.7)
+
+[sub_resource type="BoxShape3D" id="Shape_StaticSurface_ButtonStand"]
+size = Vector3(1.05, 1.0, 0.45)
+
 [node name="HanoiTower" type="Node3D"]
 script = ExtResource("1_script")
 
@@ -59,3 +65,15 @@ stream = ExtResource("snd_13")
 
 [node name="lam_lai" type="AudioStreamPlayer3D" parent="Tieng"]
 stream = ExtResource("snd_14")
+
+[node name="StaticSurface_Table" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Table"]
+shape = SubResource("Shape_StaticSurface_Table")
+
+[node name="StaticSurface_ButtonStand" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.58, 0.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_ButtonStand"]
+shape = SubResource("Shape_StaticSurface_ButtonStand")

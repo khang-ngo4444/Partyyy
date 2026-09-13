@@ -45,18 +45,8 @@ func _gio() -> float:
 	return Time.get_ticks_msec() / 1000.0
 
 
-## Cho phat bong (tee).
-func cho_bong() -> Vector3:
-	return to_global(Vector3(0.0, co_cao + GolfBall.BAN_KINH + 0.01, dai * 0.5 - 0.6))
-
-
 func tam_lo() -> Vector3:
 	return to_global(Vector3(0.0, co_cao, -dai * 0.5 + 0.8))
-
-
-## Cho dat gay luc bat dau.
-func cho_gay(i: int) -> Vector3:
-	return to_global(Vector3(rong * 0.5 + 0.35, 0.6, dai * 0.5 - 0.4 - i * 0.5))
 
 
 # ---------------------------------------------------------------- mang
@@ -185,8 +175,8 @@ func _dat_lai_bong() -> void:
 	bong.linear_velocity = Vector3.ZERO
 	bong.angular_velocity = Vector3.ZERO
 	bong.nguoi_nem = 0
-	bong.global_transform = Transform3D(Basis.IDENTITY, cho_bong())
-	bong.cho_mac_dinh = cho_bong()
+	# Cho phat = cho bong duoc sinh ra (Placeholder_GolfBall_0 trong mini_golf.tscn).
+	bong.global_transform = Transform3D(Basis.IDENTITY, bong.cho_mac_dinh)
 
 
 func _bong() -> GolfBall:
@@ -222,8 +212,9 @@ func _dung_san() -> void:
 	var vien := _mat(Color("6b4a2f"))
 
 	# Mat co khoet lo THAT bang CSG: bong lot xuong duoi mat co thi tinh la vao lo.
+	# Va cham mat co (ca lo): node StaticSurface_Green trong mini_golf.tscn, bake tu CSG nay —
+	# doi kich thuoc san thi bake lai hinh do.
 	var khoi := CSGCombiner3D.new()
-	khoi.use_collision = true
 	add_child(khoi)
 	var mat_co := CSGBox3D.new()
 	mat_co.size = Vector3(rong, co_cao, dai)
@@ -238,19 +229,19 @@ func _dung_san() -> void:
 	lo.position = Vector3(0.0, co_cao * 0.5, -dai * 0.5 + 0.8)
 	khoi.add_child(lo)
 	# Day lo: bong roi xuong thi nam lai day, khong xuyen qua san.
-	_hop(Vector3(0.0, -0.06, -dai * 0.5 + 0.8), Vector3(0.3, 0.04, 0.3), _mat(Color("14161c")), true)
+	_hop(Vector3(0.0, -0.06, -dai * 0.5 + 0.8), Vector3(0.3, 0.04, 0.3), _mat(Color("14161c")))
 
 	# Thanh chan bon phia.
 	for s: float in [-1.0, 1.0]:
 		_hop(Vector3(s * (rong + 0.1) * 0.5, co_cao + thanh_cao * 0.5, 0.0),
-				Vector3(0.1, thanh_cao, dai + 0.2), vien, true)
+				Vector3(0.1, thanh_cao, dai + 0.2), vien)
 		_hop(Vector3(0.0, co_cao + thanh_cao * 0.5, s * (dai + 0.1) * 0.5),
-				Vector3(rong + 0.2, thanh_cao, 0.1), vien, true)
+				Vector3(rong + 0.2, thanh_cao, 0.1), vien)
 
 	# Vat can BEN CANH duong bong, khong nam chan giua: bong golf ban kinh 3 cm khong treo noi
 	# mot buc cao 10 cm, dat giua san la khong cach nao vao lo.
-	_hop(Vector3(-0.7, co_cao + 0.09, 0.3), Vector3(0.9, 0.18, 0.12), _mat(Color("6b4a2f")), true)
-	_hop(Vector3(0.75, co_cao + 0.09, -0.7), Vector3(0.7, 0.18, 0.12), _mat(Color("6b4a2f")), true)
+	_hop(Vector3(-0.7, co_cao + 0.09, 0.3), Vector3(0.9, 0.18, 0.12), _mat(Color("6b4a2f")))
+	_hop(Vector3(0.75, co_cao + 0.09, -0.7), Vector3(0.7, 0.18, 0.12), _mat(Color("6b4a2f")))
 
 	# Vach phat bong.
 	var vach := MeshInstance3D.new()
@@ -309,10 +300,10 @@ func _dung_nut() -> void:
 	b.pressed.connect(_xin_lam_lai)
 	add_child(b)
 	_hop(Vector3(-(rong * 0.5 + 0.4), 0.45, dai * 0.5 - 0.5), Vector3(0.4, 0.9, 0.5),
-			_mat(Color("3d4150")), true)
+			_mat(Color("3d4150")))
 
 
-func _hop(vt: Vector3, kt: Vector3, mat: Material, va_cham: bool) -> void:
+func _hop(vt: Vector3, kt: Vector3, mat: Material) -> void:
 	var mi := MeshInstance3D.new()
 	var bm := BoxMesh.new()
 	bm.size = kt
@@ -320,16 +311,6 @@ func _hop(vt: Vector3, kt: Vector3, mat: Material, va_cham: bool) -> void:
 	mi.material_override = mat
 	mi.position = vt
 	add_child(mi)
-	if not va_cham:
-		return
-	var body := StaticBody3D.new()
-	var cs := CollisionShape3D.new()
-	var bs := BoxShape3D.new()
-	bs.size = kt
-	cs.shape = bs
-	body.position = vt
-	body.add_child(cs)
-	add_child(body)
 
 
 func _mat(c: Color) -> StandardMaterial3D:

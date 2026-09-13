@@ -1,7 +1,10 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/penguin_cross.gd" id="1_pc"]
 [ext_resource type="PackedScene" uid="uid://ccyjywo6gkyo0" path="res://asset/polypizza/penguin.glb" id="2_model"]
+
+[sub_resource type="BoxShape3D" id="Shape_StaticSurface_Table"]
+size = Vector3(0.92, 0.91, 3.36)
 
 [node name="PenguinCross" type="Node3D"]
 script = ExtResource("1_pc")
@@ -18,3 +21,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.91, -1.36)
 
 [node name="Model" parent="Penguin" instance=ExtResource("2_model")]
 transform = Transform3D(0.0014781966, 0, 0, 0, 0.0014781966, 0, 0, 0, 0.0014781966, 0, 0.13000274, 0)
+
+[node name="StaticSurface_Table" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Table"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.455, 0)
+shape = SubResource("Shape_StaticSurface_Table")

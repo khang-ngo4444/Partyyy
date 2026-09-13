@@ -195,15 +195,7 @@ func _build_cabinet() -> void:
 	var than_cao := bed_height
 	var sau := track_length + 0.5
 
-	# Thân tủ + khối va chạm: người chơi không đi xuyên qua được.
-	var body := StaticBody3D.new()
-	var shape := CollisionShape3D.new()
-	var bs := BoxShape3D.new()
-	bs.size = Vector3(w + 0.5, than_cao + bed_rise, sau)
-	shape.shape = bs
-	shape.position.y = (than_cao + bed_rise) * 0.5
-	body.add_child(shape)
-	add_child(body)
+	# Va chạm thân tủ: node StaticSurface_Table trong chicken_race.tscn.
 
 	_khoi(Vector3(0.0, than_cao * 0.5, 0.0), Vector3(w + 0.5, than_cao, sau), Color("6b2d3a"))
 
