@@ -5,4 +5,4 @@
 [node name="QueenWhite" type="Node3D" unique_id=1890767823]
 
 [node name="Model" type="Node3D" parent="." unique_id=374463428 instance=ExtResource("1_8gh5u")]
-transform = Transform3D(1.1924881e-09, 0, -0.1, 0, 0.1, 0, 0.1, 0, 1.1924881e-09, 0, 0, 0)
+transform = Transform3D(1.7887322e-09, 0, -0.15, 0, 0.15, 0, 0.15, 0, 1.7887322e-09, 0, 0, 0)
