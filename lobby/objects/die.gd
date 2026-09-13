@@ -7,8 +7,8 @@ extends Pickable
 ## ket qua: vi tri va goc xoay deu tu master replicate sang. Master doc mat ngua luc vien nam yen
 ## roi ghi vao `value` (replicate) cho ban xuc xac cong diem.
 
-const MODEL := "res://asset/kaykit_boardgame/Models/D6_A_%s.gltf"
-## Model canh 0.75 don vi. Nhan so nay ra vien 0.14 m — cam vua tay, dung doc duoc.
+## Hinh vien: 4 mau la 4 node con cua `Visual` trong die.tscn, ten node = `tint`. Model canh 0.75
+## don vi, scale 0.19 ra vien 0.14 m — co model trong editor thi sua ca hai so nay (hinh va cham).
 const DIE_SCALE := 0.19
 const CANH_MODEL := 0.75
 
@@ -33,6 +33,8 @@ const XOAY_TOI_DA := 16.0
 ## Mat dang ngua, 0 = dang lan. Master ghi; may khac nhan qua replication.
 @export var value: int = 1
 
+@onready var visual: Node3D = $Visual
+
 var _yen := 0.0
 
 
@@ -49,6 +51,9 @@ func _ready() -> void:
 	super()
 	add_to_group("die")
 	_build()
+	var hop := BoxShape3D.new()
+	hop.size = Vector3.ONE * CANH_MODEL * DIE_SCALE
+	_dat_hinh(hop)
 
 
 func _khi_bat_dau_bay() -> void:
@@ -82,16 +87,5 @@ func mat_ngua() -> int:
 
 
 func _build() -> void:
-	for c in get_children():
-		if c is Node3D and not (c is FusionSharedReplicator) and not (c is CollisionShape3D):
-			c.queue_free()
-	var packed := load(MODEL % tint) as PackedScene
-	if packed == null:
-		push_error("Die: khong nap duoc " + MODEL % tint)
-		return
-	var inst := packed.instantiate() as Node3D
-	inst.scale = Vector3.ONE * DIE_SCALE
-	add_child(inst)
-	var hop := BoxShape3D.new()
-	hop.size = Vector3.ONE * CANH_MODEL * DIE_SCALE
-	_dat_hinh(hop)
+	for c: Node3D in visual.get_children():
+		c.visible = c.name == tint

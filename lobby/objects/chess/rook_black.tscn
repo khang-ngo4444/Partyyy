@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://asset/chess_set/gLTF/black/rock_black.glb" id="1_umhme"]
+
+[node name="RookBlack" type="Node3D" unique_id=1932035831]
+
+[node name="Model" type="Node3D" parent="." unique_id=649515348 instance=ExtResource("1_umhme")]
+transform = Transform3D(1.3907092e-08, 0, 0.1, 0, 0.1, 0, -0.1, 0, 1.3907092e-08, 0, 0, 0)

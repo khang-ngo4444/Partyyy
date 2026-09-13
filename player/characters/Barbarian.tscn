@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://asset/KayKit_Adventurers_2.0_FREE/Characters/gltf/Barbarian.glb" id="1_4ge7i"]
+
+[node name="Barbarian" type="Node3D" unique_id=976739356]
+
+[node name="Model" type="Node3D" parent="." unique_id=40388770 instance=ExtResource("1_4ge7i")]
+transform = Transform3D(-0.751, 0, -6.5654504e-08, 0, 0.751, 0, 6.5654504e-08, 0, -0.751, 0, 0, 0)

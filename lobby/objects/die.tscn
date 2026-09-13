@@ -1,7 +1,11 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/die.gd" id="1_die"]
 [ext_resource type="FusionReplicationConfig" path="res://lobby/objects/die_replication.tres" id="2_cfg"]
+[ext_resource type="PackedScene" uid="uid://3lntiuh4fl0r" path="res://asset/kaykit_boardgame/Models/D6_A_red.gltf" id="3_red"]
+[ext_resource type="PackedScene" uid="uid://bpc8yade4yka5" path="res://asset/kaykit_boardgame/Models/D6_A_blue.gltf" id="3_blue"]
+[ext_resource type="PackedScene" uid="uid://gjr3s3eoec3" path="res://asset/kaykit_boardgame/Models/D6_A_green.gltf" id="3_green"]
+[ext_resource type="PackedScene" uid="uid://ccv0nghcc0vhx" path="res://asset/kaykit_boardgame/Models/D6_A_yellow.gltf" id="3_yellow"]
 
 [node name="Die" type="RigidBody3D"]
 script = ExtResource("1_die")
@@ -13,3 +17,20 @@ owner_mode = 0
 root_replication_mode = 1
 root_interpolation_mode = 2
 root_forecast_gravity = false
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="red" parent="Visual" instance=ExtResource("3_red")]
+transform = Transform3D(0.19, 0, 0, 0, 0.19, 0, 0, 0, 0.19, 0, 0, 0)
+
+[node name="blue" parent="Visual" instance=ExtResource("3_blue")]
+transform = Transform3D(0.19, 0, 0, 0, 0.19, 0, 0, 0, 0.19, 0, 0, 0)
+visible = false
+
+[node name="green" parent="Visual" instance=ExtResource("3_green")]
+transform = Transform3D(0.19, 0, 0, 0, 0.19, 0, 0, 0, 0.19, 0, 0, 0)
+visible = false
+
+[node name="yellow" parent="Visual" instance=ExtResource("3_yellow")]
+transform = Transform3D(0.19, 0, 0, 0, 0.19, 0, 0, 0, 0.19, 0, 0, 0)
+visible = false

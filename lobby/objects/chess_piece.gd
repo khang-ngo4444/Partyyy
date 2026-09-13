@@ -22,24 +22,10 @@ const XIANGQI_GLYPHS := [
 	["卒", "砲", "車", "馬", "象", "士", "將"],
 ]
 
-const CHESS_MODEL_DIR := "res://asset/chess_set/gLTF/"
-const CHESS_SIDE_NAMES := ["white", "black"]
-const CHESS_KIND_FILES := {
-	Kind.PAWN: "pawn", Kind.ROOK: "rock", Kind.BISHOP: "bishop",
-	Kind.KNIGHT: "knight", Kind.QUEEN: "queen", Kind.KING: "king",
-}
-## Model đo bằng blender-unit riêng của bộ này. Đo AABB: vua cao 4.49, hậu 5.58, mã 5.17,
-## tốt 2.38; mã rộng nhất 3.49. Ô bàn trong lobby.tscn: `cell_size = 0.85`.
-##
-## Ở 0.2 vua cao 0.90 m, hậu 1.12 m — to lấn cả người chơi. 0.1 → vua 0.45 m, hậu 0.56 m,
-## tốt 0.24 m, mã rộng 0.35 m trong ô 0.85 m.
-const CHESS_MODEL_SCALE := 0.1
-
-## Model đứng thẳng nhưng mặt (quân nào cũng có mặt trước rõ, kiểu tượng hoạt hình) không
-## quay đúng vào phía đối phương — chỉnh góc này trong Inspector của chess_piece.tscn cho tới
-## khi hai bên nhìn vào nhau đúng hướng. Quân đen tự động quay thêm 180° so với quân trắng
-## để hai bên đối mặt nhau qua bàn, không cần chỉnh riêng từng bên.
-@export var facing_yaw_deg := 270.0
+## Quân cờ vua: mỗi quân một scene trong lobby/objects/chess/ — cỡ và hướng mặt chỉnh ngay trong
+## scene đó. Thứ tự: trắng tốt, xe, tượng, mã, hậu, vua; rồi đen cùng thứ tự. Gán trong Inspector
+## của chess_piece.tscn.
+@export var chess_scenes: Array[PackedScene] = []
 
 @export var game: int = Game.CHESS:
 	set(value):
@@ -112,10 +98,10 @@ func _build() -> void:
 			_build_caro()
 			_dat_hinh(_tru(caro_radius, 0.09), Vector3(0.0, 0.045, 0.0))
 		_:
-			visual.scale = Vector3.ONE * CHESS_MODEL_SCALE
+			visual.scale = Vector3.ONE
 			_build_chess()
 			# Model co vua hinh la: hinh loi bam theo luoi de quan nga, lan dung dang.
-			_dat_hinh(_hinh_loi_tu_luoi(visual, "%d|%d|%s|%s" % [kind, side, CHESS_MODEL_SCALE, facing_yaw_deg]))
+			_dat_hinh(_hinh_loi_tu_luoi(visual, "%d|%d" % [kind, side]))
 
 
 func _tru(ban_kinh: float, cao: float) -> CylinderShape3D:
@@ -140,20 +126,10 @@ func _build_caro() -> void:
 
 
 func _build_chess() -> void:
-	if not CHESS_KIND_FILES.has(kind):
+	var i := side % 2 * 6 + kind
+	if kind < 0 or kind > Kind.KING or i >= chess_scenes.size():
 		return                      # giá trị chưa khớp nhau, chờ lần dựng sau
-	# Kiểu ghi TƯỜNG MINH: hằng mảng/từ điển không khai kiểu phần tử, lấy phần tử ra là
-	# Variant — `:=` không suy được kiểu, cả script lỗi phân tích và MỌI quân cờ sinh ra trần.
-	var color: String = CHESS_SIDE_NAMES[side % 2]
-	var piece_name: String = CHESS_KIND_FILES[kind]
-	var path := "%s%s/%s_%s.glb" % [CHESS_MODEL_DIR, color, piece_name, color]
-	var packed := load(path) as PackedScene
-	if packed == null:
-		push_error("ChessPiece: không nạp được " + path)
-		return
-	var inst := packed.instantiate() as Node3D
-	inst.rotation_degrees.y = facing_yaw_deg + (180.0 if side % 2 == 1 else 0.0)
-	visual.add_child(inst)
+	visual.add_child(chess_scenes[i].instantiate())
 
 
 ## Quân cờ tướng: trụ dẹt + chữ Hán nổi nằm ngửa trên mặt. Font mặc định của Godot vẽ

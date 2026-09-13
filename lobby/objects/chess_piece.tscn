@@ -1,10 +1,23 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/chess_piece.gd" id="1_piece"]
 [ext_resource type="FusionReplicationConfig" path="res://lobby/objects/chess_piece_replication.tres" id="2_cfg"]
+[ext_resource type="PackedScene" path="res://lobby/objects/chess/pawn_white.tscn" id="3_c0"]
+[ext_resource type="PackedScene" path="res://lobby/objects/chess/rook_white.tscn" id="3_c1"]
+[ext_resource type="PackedScene" path="res://lobby/objects/chess/bishop_white.tscn" id="3_c2"]
+[ext_resource type="PackedScene" path="res://lobby/objects/chess/knight_white.tscn" id="3_c3"]
+[ext_resource type="PackedScene" path="res://lobby/objects/chess/queen_white.tscn" id="3_c4"]
+[ext_resource type="PackedScene" path="res://lobby/objects/chess/king_white.tscn" id="3_c5"]
+[ext_resource type="PackedScene" path="res://lobby/objects/chess/pawn_black.tscn" id="3_c6"]
+[ext_resource type="PackedScene" path="res://lobby/objects/chess/rook_black.tscn" id="3_c7"]
+[ext_resource type="PackedScene" path="res://lobby/objects/chess/bishop_black.tscn" id="3_c8"]
+[ext_resource type="PackedScene" path="res://lobby/objects/chess/knight_black.tscn" id="3_c9"]
+[ext_resource type="PackedScene" path="res://lobby/objects/chess/queen_black.tscn" id="3_c10"]
+[ext_resource type="PackedScene" path="res://lobby/objects/chess/king_black.tscn" id="3_c11"]
 
 [node name="ChessPiece" type="RigidBody3D"]
 script = ExtResource("1_piece")
+chess_scenes = Array[PackedScene]([ExtResource("3_c0"), ExtResource("3_c1"), ExtResource("3_c2"), ExtResource("3_c3"), ExtResource("3_c4"), ExtResource("3_c5"), ExtResource("3_c6"), ExtResource("3_c7"), ExtResource("3_c8"), ExtResource("3_c9"), ExtResource("3_c10"), ExtResource("3_c11")])
 
 [node name="Visual" type="Node3D" parent="."]
 

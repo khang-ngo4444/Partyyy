@@ -7,41 +7,14 @@ extends CharacterBody3D
 ## Máy không sở hữu: không xử lý input, không có camera, vị trí do replicator ghi vào
 ## (Root Replication Mode = Auto tự đồng bộ position + rotation + velocity).
 
-const KENNEY_DIR := "res://asset/kenney_mini-characters/Models/GLB format/"
-const ADVENTURERS_DIR := "res://asset/KayKit_Adventurers_2.0_FREE/Characters/gltf/"
-const SKELETONS_DIR := "res://asset/KayKit_Skeletons_1.1_FREE/characters/gltf/"
-
-## Mỗi bộ model một chiều cao gốc khác nhau (đo từ bounding box glTF), nên mỗi mục tự mang
-## theo scale riêng để quy về đúng 1.8 m — không còn dùng chung MỘT hệ số như trước.
-## Kenney cao 0.671 đơn vị, KayKit Adventurers ~2.397, KayKit Skeletons ~2.166.
+## Mỗi nhân vật là một scene riêng trong player/characters/ — cỡ (quy về 1.8 m) và hướng xoay đã
+## chỉnh sẵn trong scene đó (Kenney quay mặt về +Z nên xoay 180°). Thêm/đổi nhân vật: sửa mảng
+## này trong Inspector của player.tscn.
 ##
 ## KayKit không có animation nhúng sẵn trong model nhân vật (animation nằm riêng ở thư mục
 ## Animations/, dùng chung cho cả bộ) — `_apply_model()` không tìm thấy AnimationPlayer thì
 ## cứ đứng yên, không animation, vẫn hiển thị model bình thường.
-const MODEL_LIST := [
-	{"dir": KENNEY_DIR, "file": "character-male-a", "scale": 2.68},
-	{"dir": KENNEY_DIR, "file": "character-female-a", "scale": 2.68},
-	{"dir": KENNEY_DIR, "file": "character-male-b", "scale": 2.68},
-	{"dir": KENNEY_DIR, "file": "character-female-b", "scale": 2.68},
-	{"dir": KENNEY_DIR, "file": "character-male-c", "scale": 2.68},
-	{"dir": KENNEY_DIR, "file": "character-female-c", "scale": 2.68},
-	{"dir": KENNEY_DIR, "file": "character-male-d", "scale": 2.68},
-	{"dir": KENNEY_DIR, "file": "character-female-d", "scale": 2.68},
-	{"dir": KENNEY_DIR, "file": "character-male-e", "scale": 2.68},
-	{"dir": KENNEY_DIR, "file": "character-female-e", "scale": 2.68},
-	{"dir": KENNEY_DIR, "file": "character-male-f", "scale": 2.68},
-	{"dir": KENNEY_DIR, "file": "character-female-f", "scale": 2.68},
-	{"dir": ADVENTURERS_DIR, "file": "Barbarian", "scale": 0.751},
-	{"dir": ADVENTURERS_DIR, "file": "Knight", "scale": 0.751},
-	{"dir": ADVENTURERS_DIR, "file": "Mage", "scale": 0.751},
-	{"dir": ADVENTURERS_DIR, "file": "Ranger", "scale": 0.751},
-	{"dir": ADVENTURERS_DIR, "file": "Rogue", "scale": 0.751},
-	{"dir": ADVENTURERS_DIR, "file": "Rogue_Hooded", "scale": 0.751},
-	{"dir": SKELETONS_DIR, "file": "Skeleton_Mage", "scale": 0.831},
-	{"dir": SKELETONS_DIR, "file": "Skeleton_Minion", "scale": 0.831},
-	{"dir": SKELETONS_DIR, "file": "Skeleton_Rogue", "scale": 0.831},
-	{"dir": SKELETONS_DIR, "file": "Skeleton_Warrior", "scale": 0.831},
-]
+@export var models: Array[PackedScene] = []
 ## glTF import vào Godot mặc định KHÔNG lặp — animation chạy một lượt rồi dừng, im lặng.
 ## Mọi animation dùng làm TRẠNG THÁI đều phải có ở đây; chỉ animation một phát mới để nguyên.
 const LOOPING_ANIMS := ["idle", "walk", "sprint", "fall", "crouch", "sit",
@@ -58,15 +31,6 @@ const LOOPING_ANIMS := ["idle", "walk", "sprint", "fall", "crouch", "sit",
 ## So lan nhay lien tiep truoc khi cham dat. 2 = nhay doi.
 @export var so_lan_nhay := 2
 @export var gravity := 20.0
-## Model Kenney QUAY MẶT VỀ +Z, còn "phía trước" của Godot là −Z — lệch đúng nửa vòng.
-##
-## Đo được từ xương, không phải đoán: `arm-left` ở x = +0.100, `arm-right` ở x = −0.100.
-## Nhân vật quay mặt về −Z thì tay PHẢI phải nằm ở +X (right = forward × up). Ở đây ngược.
-##
-## Triệu chứng khi để 0: camera nhìn đúng hướng đi, nhưng NGƯỜI KHÁC thấy mình quay lưng
-## về phía mình đang nhìn. Mình không tự phát hiện được — phải hai người mới thấy.
-@export var model_yaw_deg := 180.0
-
 ## Xanh cyan. Không vật nào trong phòng có màu này nên nó không lẫn vào nền.
 const VIEN_MAU := Color("00ffff")
 ## Vỏ sáng to hơn vật chừng này. Chỉ 6% — đủ để thấy quầng sáng ló ra quanh mép, chưa đủ để
@@ -181,7 +145,7 @@ var _loaded_model := -1
 ## giống hệt cách `color_index` đã làm lúc vào phòng.
 func next_model() -> void:
 	if is_mine:
-		model_index = (model_index + 1) % MODEL_LIST.size()
+		model_index = (model_index + 1) % models.size()
 
 
 func _ready() -> void:
@@ -192,7 +156,7 @@ func _ready() -> void:
 	if is_mine:
 		player_name = NetManager.player_name
 		color_index = (NetManager.local_id() - 1) % NetManager.PLAYER_COLORS.size()
-		model_index = (NetManager.local_id() - 1) % MODEL_LIST.size()
+		model_index = (NetManager.local_id() - 1) % models.size()
 
 	_apply_model()
 	_apply_name()
@@ -557,16 +521,7 @@ func _apply_model() -> void:
 	_meshes.clear()
 	_anim = null
 
-	var entry: Dictionary = MODEL_LIST[model_index % MODEL_LIST.size()]
-	var path := "%s%s.glb" % [entry.dir, entry.file]
-	var scene := load(path) as PackedScene
-	if scene == null:
-		push_error("Không nạp được model: " + path)
-		return
-
-	var inst := scene.instantiate() as Node3D
-	inst.scale = Vector3.ONE * (entry.scale as float)
-	inst.rotation.y = deg_to_rad(model_yaw_deg)
+	var inst := models[model_index % models.size()].instantiate() as Node3D
 	model_root.add_child(inst)
 
 	_anim = inst.find_child("AnimationPlayer", true, false) as AnimationPlayer

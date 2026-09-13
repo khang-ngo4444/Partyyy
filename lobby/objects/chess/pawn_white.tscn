@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://asset/chess_set/gLTF/white/pawn_white.glb" id="1_lo3dq"]
+
+[node name="PawnWhite" type="Node3D" unique_id=1154800348]
+
+[node name="Model" type="Node3D" parent="." unique_id=246650807 instance=ExtResource("1_lo3dq")]
+transform = Transform3D(1.1924881e-09, 0, -0.1, 0, 0.1, 0, 0.1, 0, 1.1924881e-09, 0, 0, 0)

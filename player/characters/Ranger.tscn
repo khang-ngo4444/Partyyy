@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://asset/KayKit_Adventurers_2.0_FREE/Characters/gltf/Ranger.glb" id="1_shf3y"]
+
+[node name="Ranger" type="Node3D" unique_id=1338873731]
+
+[node name="Model" type="Node3D" parent="." unique_id=142311952 instance=ExtResource("1_shf3y")]
+transform = Transform3D(-0.751, 0, -6.5654504e-08, 0, 0.751, 0, 6.5654504e-08, 0, -0.751, 0, 0, 0)
