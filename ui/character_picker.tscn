@@ -1,0 +1,135 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://ui/character_picker.gd" id="1_picker"]
+
+[sub_resource type="StyleBoxFlat" id="panel_bg"]
+bg_color = Color(0.09, 0.09, 0.12, 0.97)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 28.0
+content_margin_top = 22.0
+content_margin_right = 28.0
+content_margin_bottom = 22.0
+
+[node name="CharacterPicker" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_picker")
+
+[node name="Dim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.55)
+
+[node name="Panel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -340.0
+offset_top = -320.0
+offset_right = 340.0
+offset_bottom = 320.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("panel_bg")
+
+[node name="Scroll" type="ScrollContainer" parent="Panel"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="Body" type="VBoxContainer" parent="Panel/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 14
+
+[node name="Head" type="HBoxContainer" parent="Panel/Scroll/Body"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Panel/Scroll/Body/Head"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 26
+text = "CHỌN NHÂN VẬT"
+
+[node name="PickerName" type="Label" parent="Panel/Scroll/Body/Head"]
+unique_name_in_owner = true
+layout_mode = 2
+modulate = Color(1, 1, 1, 0.6)
+theme_override_font_sizes/font_size = 18
+text = "—"
+vertical_alignment = 1
+
+[node name="ModelLabel" type="Label" parent="Panel/Scroll/Body"]
+layout_mode = 2
+modulate = Color(1, 1, 1, 0.7)
+text = "Nhân vật"
+
+[node name="ModelScroll" type="ScrollContainer" parent="Panel/Scroll/Body"]
+custom_minimum_size = Vector2(0, 240)
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="ModelGrid" type="GridContainer" parent="Panel/Scroll/Body/ModelScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 8
+
+[node name="ColorLabel" type="Label" parent="Panel/Scroll/Body"]
+layout_mode = 2
+modulate = Color(1, 1, 1, 0.7)
+text = "Màu"
+
+[node name="ColorGrid" type="GridContainer" parent="Panel/Scroll/Body"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 10
+
+[node name="BubbleLabel" type="Label" parent="Panel/Scroll/Body"]
+layout_mode = 2
+modulate = Color(1, 1, 1, 0.7)
+text = "Bong bóng chat"
+
+[node name="BubbleGrid" type="GridContainer" parent="Panel/Scroll/Body"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 4
+
+[node name="Foot" type="HBoxContainer" parent="Panel/Scroll/Body"]
+layout_mode = 2
+alignment = 2
+
+[node name="Hint" type="Label" parent="Panel/Scroll/Body/Foot"]
+layout_mode = 2
+size_flags_horizontal = 3
+modulate = Color(1, 1, 1, 0.45)
+theme_override_font_sizes/font_size = 14
+text = "Chọn là đổi ngay, mọi người thấy liền. Esc để đóng."
+vertical_alignment = 1
+
+[node name="CloseButton" type="Button" parent="Panel/Scroll/Body/Foot"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(130, 42)
+layout_mode = 2
+text = "XONG"

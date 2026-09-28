@@ -1,0 +1,18 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="PackedScene" path="res://minigame/chung/san_dau.tscn" id="1_st"]
+[ext_resource type="PackedScene" path="res://minigame/chung/san_tron.tscn" id="2_sr"]
+[ext_resource type="Environment" path="res://materials/env_san_sang.tres" id="3_env"]
+[ext_resource type="PackedScene" path="res://minigame/crown/vuong_mien.tscn" id="4_vm"]
+
+[node name="SanMien" type="Node3D"]
+
+[node name="SanDau" parent="." instance=ExtResource("1_st")]
+
+[node name="Cam" parent="SanDau" index="0"]
+environment = ExtResource("3_env")
+
+[node name="SanTron" parent="." instance=ExtResource("2_sr")]
+
+[node name="Mien" parent="." instance=ExtResource("4_vm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)

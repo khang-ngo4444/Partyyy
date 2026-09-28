@@ -62,9 +62,57 @@ func _init() -> void:
 	ham_xoay = 0.8
 
 
+## Duoi toc do nay, va da cham mat, thi coi la da dung han -> giong ve o gan nhat.
+const NGUONG_DUNG := 0.35
+const NGUONG_XOAY := 1.2
+
+
 func _ready() -> void:
 	super()
 	_build()
+
+
+## Giong quan ve dung o khi no roi xuong xong.
+##
+## Chi MASTER chay (day la moc `_khi_bay_vat_ly` cua Pickable), roi vi tri replicate di —
+## khong co chuyen hai may giong ve hai o khac nhau.
+##
+## Khong giong ngay luc tha: luc do quan con dang bay, chua biet no se dung o dau. Doi no
+## nam yen HAN roi moi keo ve, nen nem manh van lan vai o nhu binh thuong.
+##
+## Dung `lerp` thay vi dat thang toa do: dat thang thi quan giat mot cai sang o ben canh,
+## nhin nhu loi mang. Keo mem trong vai khung hinh thi giong nhu no tu truot vao cho.
+func _khi_bay_vat_ly(delta: float) -> void:
+	if linear_velocity.length() > NGUONG_DUNG or angular_velocity.length() > NGUONG_XOAY:
+		return
+	if get_contact_count() == 0:
+		return                          # dang lo lung, chua cham gi
+	var ban := _ban_cua_minh()
+	if ban == null:
+		return
+
+	var dich := ban.nearest_point(global_position)
+	dich.y = global_position.y          # do cao de vat ly lo, chi gion XZ
+	var k := clampf(delta * 10.0, 0.0, 1.0)
+	var moi := global_position.lerp(dich, k)
+
+	# Dung THANG DAY: quan co tien tron, nga ra la lan mai khong dung day duoc.
+	var huong := global_basis.get_rotation_quaternion()
+	var thang := Quaternion(Vector3.UP, global_rotation.y)
+	global_transform = Transform3D(Basis(huong.slerp(thang, k)), moi)
+	linear_velocity = Vector3.ZERO
+	angular_velocity = Vector3.ZERO
+
+
+## Ban co CUA MINH: quan caro giong ve ban caro, quan co vua/tuong ve ban co. Hai ban cung
+## nam trong nhom `snap_surface` nen khong loc thi quan co vua dung nham len ban caro.
+func _ban_cua_minh() -> ChessBoard:
+	for b: ChessBoard in get_tree().get_nodes_in_group("snap_surface"):
+		if (b.mode == ChessBoard.Mode.CARO) != (game == Game.CARO):
+			continue
+		if b.contains(global_position):
+			return b
+	return null
 
 
 ## Fusion gửi từng property về RIÊNG LẺ và KHÔNG đảm bảo thứ tự. Dựng ngay trong setter thì

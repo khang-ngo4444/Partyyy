@@ -5,4 +5,4 @@
 [node name="SkeletonWarrior" type="Node3D" unique_id=1917813002]
 
 [node name="Model" type="Node3D" parent="." unique_id=1580141900 instance=ExtResource("1_p8831")]
-transform = Transform3D(-0.831, 0, -7.264833e-08, 0, 0.831, 0, 7.264833e-08, 0, -0.831, 0, 0, 0)
+transform = Transform3D(-0.6710, 0, -5.30129535e-08, 0, 0.6710, 0, 5.30129535e-08, 0, -0.6710, 0, 0, 0)

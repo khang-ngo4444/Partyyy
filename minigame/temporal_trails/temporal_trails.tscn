@@ -1,0 +1,21 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://minigame/temporal_trails/temporal_trails.gd" id="1_tt"]
+[ext_resource type="PackedScene" path="res://minigame/temporal_trails/san_vet.tscn" id="2_san"]
+[ext_resource type="PackedScene" path="res://minigame/temporal_trails/vet.tscn" id="3_vet"]
+[ext_resource type="Material" path="res://materials/o_nguoi/mat_o_nguoi_0.tres" id="m0"]
+[ext_resource type="Material" path="res://materials/o_nguoi/mat_o_nguoi_1.tres" id="m1"]
+[ext_resource type="Material" path="res://materials/o_nguoi/mat_o_nguoi_2.tres" id="m2"]
+[ext_resource type="Material" path="res://materials/o_nguoi/mat_o_nguoi_3.tres" id="m3"]
+[ext_resource type="Material" path="res://materials/o_nguoi/mat_o_nguoi_4.tres" id="m4"]
+[ext_resource type="Material" path="res://materials/o_nguoi/mat_o_nguoi_5.tres" id="m5"]
+[ext_resource type="Material" path="res://materials/o_nguoi/mat_o_nguoi_6.tres" id="m6"]
+[ext_resource type="Material" path="res://materials/o_nguoi/mat_o_nguoi_7.tres" id="m7"]
+[ext_resource type="Material" path="res://materials/o_nguoi/mat_o_nguoi_8.tres" id="m8"]
+[ext_resource type="Material" path="res://materials/o_nguoi/mat_o_nguoi_9.tres" id="m9"]
+
+[node name="TemporalTrails" type="Node"]
+script = ExtResource("1_tt")
+san_scene = ExtResource("2_san")
+vet_scene = ExtResource("3_vet")
+vat_lieu_nguoi = Array[StandardMaterial3D]([ExtResource("m0"), ExtResource("m1"), ExtResource("m2"), ExtResource("m3"), ExtResource("m4"), ExtResource("m5"), ExtResource("m6"), ExtResource("m7"), ExtResource("m8"), ExtResource("m9")])

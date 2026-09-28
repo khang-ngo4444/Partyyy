@@ -1,0 +1,10 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://minigame/word_wars/word_wars.gd" id="1_ww"]
+[ext_resource type="PackedScene" path="res://minigame/word_wars/san_chu.tscn" id="2_san"]
+[ext_resource type="PackedScene" path="res://minigame/word_wars/khoi_chu.tscn" id="3_khoi"]
+
+[node name="WordWars" type="Node"]
+script = ExtResource("1_ww")
+san_scene = ExtResource("2_san")
+khoi_scene = ExtResource("3_khoi")

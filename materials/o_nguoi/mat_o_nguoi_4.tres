@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "mat_o_nguoi_4"
+albedo_color = Color(0.8392, 0.2510, 0.6235, 1)
+roughness = 0.8
+emission_enabled = true
+emission = Color(0.8392, 0.2510, 0.6235, 1)
+emission_energy_multiplier = 0.45

@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://minigame/magma/cau_lua.gd" id="1_cl"]
+[ext_resource type="Material" path="res://materials/mat_o_nguy_hiem.tres" id="2_m"]
+
+[sub_resource type="SphereMesh" id="Sph_cau"]
+radius = 0.45
+height = 0.9
+
+[sub_resource type="SphereShape3D" id="Shape_cau"]
+radius = 0.45
+
+[node name="CauLua" type="Area3D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_cl")
+
+[node name="Mat" type="MeshInstance3D" parent="."]
+mesh = SubResource("Sph_cau")
+material_override = ExtResource("2_m")
+
+[node name="Hinh" type="CollisionShape3D" parent="."]
+shape = SubResource("Shape_cau")
+
+[node name="Sang" type="OmniLight3D" parent="."]
+light_color = Color(1, 0.55, 0.2, 1)
+light_energy = 2.5
+omni_range = 5.0

@@ -3748,6 +3748,419 @@ Doi Liar Bar sang (8.5, 0, 5.5) — cho duong bowling vua bo trong. Cach Thap Ha
 poker 0.7 m, san bong ro 1.33 m, xa moi diem spawn. Quet lai: Liar Bar khong con giao voi gi.
 
 
+## 1bt. Xuat ban 0.0.3
+
+```
+build/PartyBash-0.0.3/
+  PartyBash.exe                                        104 MB
+  PartyBash.pck                                         78 MB   (lan dau 107 MB)
+  libfusion.windows.template_release.x86_64.release.dll  2 MB
+  DOC-TRUOC-KHI-CHAY.txt
+-> build/PartyBash-0.0.3.zip
+```
+
+- Truoc khi xuat: kiem loi script (`--headless --import`, 0 loi); xoa 6 file rac
+  `~libfusion...dll~RF*.TMP` trong `addons/fusion/bin/` (muc 1ad).
+- `.pck` lan dau 111.8 MB — 14 lan ban 0.0.2 (7.8 MB). `export_filter = all_resources` dong goi
+  MOI tai nguyen da import, ke ca kit khong ai dung. KHONG doi sang "scenes": game nap rat nhieu
+  thu bang `load("res://...")` chuoi luc chay (am thanh, mat bai, model nhan vat) — che do do se
+  bo sot va ban build hong.
+- Thay vao do: quet `.gd/.tscn/.tres`, thu nao **khong duoc tham chieu** thi them vao
+  `exclude_filter` (KHONG xoa file — kit do nguoi dung tai, co the sap dung): city-kit-commercial,
+  graveyard-kit, castle-kit, mini-arcade, pa_grapes_wooden_mallet, chess all_pieces_board, san bong
+  ro Poly, Bowling pins. Giu furniture-kit, train-kit, nature-kit (lobby.tscn dang dung).
+  **Them model/kit moi vao scene thi kiem lai `exclude_filter`** — thu bi loai tru se thieu trong
+  build ma editor van chay binh thuong.
+- Phan con lai la tai nguyen DANG DUNG: KayKit Adventurers/Skeletons (ca bo vu khi di kem), bo co,
+  anh Sketchfab.
+- Chay thu ban xuat `--headless`: nap DLL, ket noi Photon.
+- **Mini Golf khong co trong ban nay:** `lobby.tscn` hien khong con node MiniGolf (nguoi dung dang
+  chuyen do sang scene). File `mini_golf.tscn` van nam trong `lobby/objects/`.
+
+
+## 1bu. Minigame — 18 trò gom về 5 KHUÔN. KẾ HOẠCH, chưa code
+
+> 📄 **Bản chính giờ nằm ở `MINIGAME.md` mục 9.** Ở đó nó đứng cạnh phần kiến trúc pha 3 (hợp
+> đồng, ba kiểu đồng bộ, khung `MiniGameDiem`). Mục này giữ lại để không mất bối cảnh lịch sử;
+> **sửa thì sửa bên `MINIGAME.md`**, đừng sửa hai chỗ rồi để chúng trôi khác nhau.
+
+Chốt sau một buổi bàn. Tham khảo Pummel Party (~48 trò) và Lunars. Phần lớn ý tưởng lấy từ
+Pummel Party; **Lunars không liệt kê được** — Steam, trang chủ, bài preview và wiki đều chỉ nói
+"30+ minigame", không nơi nào có danh sách tên. Cần người dùng tự kể lại.
+
+### Điều đắt nhất là số KHUÔN, không phải số TRÒ
+
+| Khuôn | Trò | Xây một lần |
+|---|---|---|
+| **T1 — sàn đẩy nhau** | Magma & Mages · Snowy Spin · Acidic Atoll · Explosive Exchange · Crown Capture | cam trên cao · di chuyển theo cam · 1 nút đòn (tầm/hình/lực/hồi chiêu là config) · rơi khỏi sàn tự khai tử · sàn co dần bật-tắt |
+| **T2 — né chướng ngại** | Breaking Blocks · Laser Leap · Searing Spotlights · Slippery Sprint | cùng cam + điều khiển T1, bỏ nút đòn · chướng ngại = hàm của hạt giống + thời gian mạng |
+| **T3 — lưới ô** | Bounding Blocks · Temporal Trails · Word Wars | sàn chia ô · giẫm lên thì ô đổi chủ · đếm ô |
+| **T4 — làn chạy, cam sau lưng** | Sidestep Slope · Nhặt quà né rác · Slippery Sprint | đường cuộn · vật cản sinh theo quãng đường từ hạt giống |
+| **T5 — mỗi người một bàn riêng** | Fractured Faces · Rockin Rhythm · Đếm thú · Bóng chày | chia khu riêng · cùng chuỗi đề từ hạt giống · cuối ván gửi đúng một con số |
+
+**13/18 trò dùng chung đúng một camera.** 3 trò cam sau lưng dùng lại `CameraRig` của phòng chờ.
+2 trò là overlay 2D dùng chung một bố cục hàng ngang. Tổng cộng phải viết **3 kiểu camera**.
+
+**8 trò gửi 0 gói tin** trong lúc chơi.
+
+### Bảng chốt
+
+| # | Trò | Khuôn | Camera | Tính điểm | Gói tin |
+|---|---|---|---|---|---|
+| 1 | Magma & Mages | T1 | trên cao | loại trừ: chết thứ *i* → `n−i` | 1/phát cầu lửa |
+| 2 | Snowy Spin | T1 | trên cao | `n−i` mỗi vòng, cộng **3 vòng × 20 s** | 1/đòn + 1/vòng |
+| 3 | Acidic Atoll | T1 | trên cao | loại trừ | 1/quả bom |
+| 4 | Explosive Exchange | T1 | trên cao | loại trừ theo thứ tự nổ | `ai_om` do master |
+| 5 | Crown Capture | T1 | trên cao | **1 đ/giây giữ**, 60 s | `ai_giu` do master |
+| 6 | Breaking Blocks | T2 | trên cao | thời gian sống, 60 s | chỉ "tôi chết" |
+| 7 | Laser Leap | T2 | trên cao | thời gian sống, **không giới hạn giờ** | chỉ "tôi chết" |
+| 8 | Searing Spotlights | T2 | trên cao, **tối hoàn toàn** | thời gian sống · **100 máu, −40/giây trong đèn** | chỉ "tôi chết" |
+| 9 | Slippery Sprint | T2/T4 | **sau lưng riêng** | thứ hạng về đích; chưa về thì theo quãng đường | chỉ "tôi chết" |
+| 10 | Bounding Blocks | T3 | trên cao | số ô lúc hết giờ, 60 s | **0** — suy từ vị trí |
+| 11 | Temporal Trails | T3 | trên cao | loại trừ | **0** — suy từ vị trí |
+| 12 | Word Wars | T3 | trên cao | số từ ghép xong, 60 s | 1/cú đấm |
+| 13 | Sidestep Slope | T4 | **sau lưng riêng** | quãng đường đi được | **0** |
+| 14 | Nhặt quà né rác | T4 | **sau lưng riêng** | quà +1 · quà to +3 · rác −1 (cho âm) · **băng riêng mỗi người** | **0** |
+| 15 | Fractured Faces | T5 | trên cao, khu riêng | thứ hạng hoàn thành; chưa xong thì số mảnh đúng | **0** + 1 gói cuối |
+| 16 | Đếm thú | T5 | trên cao, **không render người chơi** | 5 vòng, đếm 1 loại giữa 3 loại · đúng +1 sai 0 | **0** + 1 gói/vòng |
+| 17 | Rockin Rhythm | T5 | **overlay 2D, hàng ngang** | Perfect 3 · Good 1 · Miss 0 · combo ×1.5 sau 10 nốt | 1 gói/giây/người |
+| 18 | Bóng chày | T5 | **overlay 2D, hàng ngang** | tâm ±40 ms **3đ** · ±100 ms **2đ** · ±180 ms **1đ** · trật 0 · 15 quả | 1 gói cuối |
+
+### Searing Spotlights — tối là tối HẲN
+
+Không thấy nhân vật nào, kể cả của mình. Đèn quét là nguồn sáng duy nhất: ai lọt vào thì vừa bị
+lộ cho cả phòng thấy, vừa mất máu. Hai thứ bắt buộc, thiếu thì trò thành ngẫu nhiên chứ không
+thành khó:
+
+- **Thanh máu luôn hiện trên HUD** — tín hiệu duy nhất báo "đang bị nướng, chạy đi".
+- **Sàn có mốc định hướng mờ** (viền phát sáng yếu, vài vạch chìm). Là NÚM CHỈNH: càng mờ càng
+  căng. Không có gì để bám thì đi trong tối là tung xúc xắc.
+
+### Rockin Rhythm là 2D, không phải 3D
+
+Mỗi người một hàng ngang, avatar 2D của nhân vật bên trái (chụp sẵn 12 ảnh bằng `SubViewport`,
+lấy theo `model_index` đã replicate — không render lúc chạy), nốt chạy từ phải sang vạch phán định.
+
+Xếp hàng ngang mới là thứ làm trò này hay: liếc sang thấy hàng người khác đang ăn combo. Bản 3D
+mỗi người một khu thì mất sạch cái đó.
+
+**Hàng của mình phải khác hẳn** — cao hơn, sáng hơn, có khung. Tám hàng giống nhau là người chơi
+bấm theo nhầm hàng, rồi nghĩ game hỏng chứ không nghĩ mình nhìn nhầm.
+
+**Đừng gửi từng nốt.** 4 nốt/giây × 8 người = 32 gói/giây, một mình trò này ăn gần hết ngân sách.
+Gửi `(id, điểm, combo)` mỗi giây một lần. Nốt trên hàng người khác tất định từ hạt giống; người
+xem cần thấy ĐIỂM LEO, không cần thấy từng cú bấm.
+
+**Cảnh báo còn nguyên:** đổi sang 2D sửa phần CODE, không sửa phần NỘI DUNG. Vẫn cần một bài nhạc
+dùng được và một bản đồ nốt khớp nhạc làm tay. Chỉ làm **một bài**.
+
+### Explosive Exchange phải có hồi chiêu chuyền ~1 s
+
+Không có thì hai người dính nhau là quả bom nảy qua lại mỗi khung hình → bão RPC → lỗi 1035.
+
+### Temporal Trails: lệch vài cm là chấp nhận được
+
+Vệt vẽ từ vị trí nội suy nên có thể có khung hình mà máy A thấy mình chạm, máy B thấy không. Vì
+NGƯỜI BỊ NẠN TỰ NHẬN nên không bao giờ mâu thuẫn — chỉ là "thoát chết trong mắt người khác" đúng
+một khung.
+
+### Đồng hạng: hoà thì hoà THẬT
+
+**Đừng sắp thứ tự giả bằng `player_id`.** Người chơi thấy "1. A, 2. B" trong khi cả hai cùng 5
+điểm là họ nghĩ game thiên vị — và họ đúng. `player_id` chỉ dùng để mảng sort ổn định.
+
+Hoà thì cùng nhận thưởng hạng đó, hạng sau nhảy cóc (5đ, 5đ, 3đ → hạng 1, 1, 3). Lạm phát thưởng
+là giá phải trả, chấp nhận — chia đôi rồi làm tròn thì đẻ ra một mớ luật vặt để tiết kiệm một cái
+chìa khoá.
+
+Nhưng trước khi cho hoà, mỗi trò phải hết tiebreak CÓ NGHĨA. Quy tắc: **điểm là số nguyên nhỏ thì
+chắc chắn sẽ hoà** → phải có tiebreak; **điểm là thời gian/quãng đường** → bỏ qua.
+
+| Trò | Tiebreak |
+|---|---|
+| Loại trừ, thời gian sống | **Thứ tự master nhận gói "tôi chết"** — miễn phí, master vốn nhận tuần tự |
+| Đếm thú | **Tổng thời gian chốt đáp án.** Bắt buộc — 8 người cùng đúng 5/5 là chuyện thường |
+| Bóng chày | số cú trúng tâm |
+| Rockin Rhythm | combo dài nhất |
+| Bounding Blocks | ai chiếm ô cuối muộn hơn |
+| Word Wars | tổng số nút giẫm đúng |
+| Nhặt quà né rác | số quà to |
+| Snowy Spin | hạng ở vòng cuối |
+| Fractured Faces | thời điểm gắn mảnh đúng cuối cùng |
+| Crown Capture · Sidestep Slope · Slippery Sprint | không cần — điểm là số thực |
+
+Trên bàn cờ, nếu hạng minigame quyết thứ tự đi lượt sau: hai người đồng hạng thì **giữ nguyên thứ
+tự tương đối của lượt trước** — một phép sort ổn định, không phải luật mới.
+
+### Kiến trúc: RIÊNG scene, nhưng CHUNG code
+
+Pummel Party làm mỗi minigame một map độc lập, ẩn board rồi load map minigame qua màn hình chờ.
+Fusion làm được y hệt — `Fusion.load_scene()` / `unload_scene(index)`, và `SCENE_LOAD_CUSTOM` sinh
+ra đúng để có màn hình loading (xem mục 1g). Cái `CanvasLayer` mà `QuanTroMiniGame` đang dùng
+KHÔNG phải giới hạn của Fusion; nó là lựa chọn hợp lý cho Tank — một trò 2D không có nhân vật.
+
+- **Riêng:** file `.tscn`, camera, luật, cách tính điểm
+- **Chung:** script điều khiển nhân vật chế độ trên-cao, cách teleport vào, hợp đồng `MiniGame`,
+  hàm sort bảng điểm
+
+Hợp đồng `MiniGame.xong(xep_hang)` **giữ nguyên, không sửa dòng nào** — mỗi trò tính điểm kiểu gì
+tuỳ nó, chỉ phải trả ra cùng một mảng ở mọi máy.
+
+### ⚠️ CHƯA XÁC MINH — hỏi trước khi cam kết
+
+**Người chơi do `FusionSpawner` spawn có sống sót khi `unload_scene()` gỡ scene phòng chờ không?**
+Họ gắn vào `scene_parent` chứ không gắn vào slot scene, nên *có lẽ* sống — nhưng chưa ai kiểm.
+Trang *Large Scenes* của doc Fusion Godot có thể trả lời.
+
+**Không cần đợi đáp án:** v1 giữ phòng chờ **load nhưng ẩn**, chỉ `load_scene` thêm scene minigame.
+Doc nói rõ nhiều scene cùng lúc là chuyện bình thường, và replicator đứng yên gần như không tốn
+băng thông (mục 1h). Tốn ít RAM, đổi lại không phụ thuộc câu chưa xác minh.
+
+### Thứ tự làm
+
+```
+1. T2   Breaking Blocks · Laser Leap · Searing Spotlights      (3 tro)
+        -> dung khuon: san + cam tren cao + dieu khien theo cam + tu khai tu
+2. T1   Magma&Mages · Snowy Spin · Acidic Atoll · Explosive · Crown   (5 tro)
+        -> them 1 nut don, bang config 5 dong
+3. T3   Bounding Blocks · Temporal Trails · Word Wars          (3 tro)
+4. T4   Sidestep Slope · Nhat qua · Slippery Sprint            (3 tro)
+5. T5   Bong chay · Rockin Rhythm · Dem thu · Fractured Faces   (4 tro)
+```
+
+Hết bước 2 là **8 trò chạy được**, đủ quay demo. Cắt thì cắt ngược từ T5 — mỗi trò T5 là một game
+nhỏ tự thân, đắt nhất về công sức dù rẻ nhất về mạng.
+
+---
+
+## 1bv. Bàn party — máu, chìa, cốc, vật phẩm. ĐÃ CODE, CHƯA TEST 2 MÁY
+
+Trước đây `BanDuong` khai đủ 8 loại ô nhưng **chưa ô nào có hiệu ứng** — `ban.loai(o)` chỉ dùng để
+in chữ lên HUD. Đây là điền vào chỗ đã chừa sẵn.
+
+Giả định: **Q1 = chìa khoá → mở rương → lấy cốc, nhiều cốc nhất thì thắng.** Bàn đã có ô `RUONG`
+và `ASSET-CAN-THEM.md` ghi "rương + cốc" nên coi như đã chốt theo hướng đó.
+
+### Máu — chết là MẤT, không phải BỊ LOẠI
+
+| | |
+|---|---|
+| Máu tối đa | 10, ai cũng bắt đầu đầy |
+| Hết máu | về **Nghĩa địa gần nhất**, hồi đầy, **mất toàn bộ chìa chưa tiêu và mọi vật phẩm** |
+| Không mất | **CỐC.** Mở rương rồi thì không ai lấy lại được |
+
+Cái trần "mất chìa nhưng không mất cốc" là thứ giữ cho ván không vô nghĩa. Không có nó thì người
+dẫn đầu bị cả phòng đập về 0 và hai mươi phút vừa chơi thành công cốc.
+
+**Không bao giờ loại người chơi khỏi bàn.** Ngồi xem 20 phút là hỏng cả buổi.
+
+### Tám ô
+
+| Ô | Hiệu ứng |
+|---|---|
+| `TRONG` | không gì |
+| `CHIA` | +1 chìa |
+| `SAT_THUONG` | −2 máu (`@export`) |
+| `NGUY_HIEM` | −4 máu (`@export`) |
+| `NGHIA_DIA` | hồi đầy máu · là điểm hồi sinh (`gan_nhat_loai()` đã viết sẵn cho việc này) |
+| `BI_AN` | master rút 1 trong 4 thẻ: +2 chìa · −1 chìa · +1 Bom · hồi đầy máu |
+| `CUA_HANG` | mua vật phẩm **bằng chìa** |
+| `RUONG` | tiêu `chia_mo_ruong` chìa → +1 cốc |
+
+**Cửa hàng bán bằng chìa khoá — không có loại tiền thứ hai.** Tiêu thứ dùng để thắng để đổi lấy
+sức mạnh là một quyết định khó thật sự, và nó tiết kiệm nguyên một hệ thống xu + ô kiếm xu + UI xu.
+
+### Vật phẩm — bốn món, mỗi món một trục
+
+| Món | Hiệu ứng | Giá (chìa) |
+|---|---|---|
+| Bom | ô tâm −4, hai ô kề −2 | 1 |
+| Khiên | chặn **trọn vẹn** một đòn tiếp theo, kể cả đòn to hơn máu đang có | 2 |
+| Bom lớn | tầm 2: tâm −5, kề 1 ô −3, kề 2 ô −1 | 3 |
+
+Xúc xắc đôi (trục di chuyển) chưa làm.
+
+**Tầm vụ nổ trên bàn vòng kín là số Ô, không phải mét.** `ban.tien()` / `posmod` lo phần vòng.
+Đổi tầm = sửa đúng mảng `BAC_BOM`, thuật toán không cần biết tầm là bao nhiêu.
+
+> ⚠️ **Hai chiều có thể cham CÙNG một ô.** Trên bàn nhỏ, ô cách tâm k bước sang trái và sang phải
+> là cùng một ô. Lấy **MAX** chứ không cộng dồn và không ghi đè — một quả bom không đánh một ô hai
+> lần, và bậc xa không được xoá bậc gần. Đã có assert cho đúng ca này.
+
+> **Đừng làm hệ nâng cấp tầm nổ trên bàn cờ.** Bomberman có nó vì bạn nhặt buff trong một ván 60
+> giây rồi mất sạch. Trên bàn cờ, "tôi đang có tầm mấy" là trạng thái phải nhớ suốt 20 phút —
+> người chơi quên, rồi ngạc nhiên. Hai món riêng biệt rẻ hơn và đọc được ngay.
+
+### Đồng bộ — MỘT gói, không phải mười loại sự kiện
+
+Bản trước phát SỰ KIỆN rồi mỗi máy diễn lại. Thêm máu/vật phẩm vào kiểu đó là mỗi món một loại RPC,
+và kết quả phụ thuộc trạng thái nên lệch dần. Đã chuyển sang **mẫu mục 8 của `GUIDE.md`** — mẫu mà
+cả sáu minigame hiện có đang dùng.
+
+```
+{"luot":2, "thu_tu":[1,3,2],
+ "o":{"1":5,...}, "mau":{...}, "chia":{...}, "coc":{...}, "do":{"1":["bom"],...},
+ "su_kien":"Khang: MO RUONG +1 coc"}
+```
+
+Tám người ra khoảng 800 byte. GUIDE đã đo `String` RPC 3000 byte tới đủ → an toàn, miễn là chỉ
+phát KHI CÓ SỰ KIỆN. Đổi sang mẫu này cho không hai thứ: người vào muộn xin đúng một gói, và đổi
+master giữa ván không mất gì.
+
+Mọi hành động đi một đường: `xin_*` → master kiểm luật → master phát nguyên gói. `main.gd` bỏ được
+hẳn RPC `_net_thu_tu_moi` — thứ tự lượt giờ nằm trong cùng gói đó.
+
+### ⚠️ Khoá của mọi bảng theo người chơi là CHUỖI
+
+`JSON.parse_string()` trả Dictionary khoá CHUỖI. Master ghi `tt["mau"][5]` còn máy nhận đọc
+`tt["mau"]["5"]` thì tra không thấy, trả về null — **không lỗi, không cảnh báo**, bảng chỉ hiện ai
+cũng 0 máu. Mọi chỗ đụng tới bảng theo người chơi đều đi qua `_k()`.
+
+### Đã đơn giản hoá có chủ đích (`ponytail:` trong code)
+
+- **Cửa hàng tự mua món đắt nhất mua nổi** — bản đủ mở bảng cho người chơi chọn. Thêm khi có UI.
+- **Bom tự nhắm vào người kế tiếp trong thứ tự lượt** — bản đủ cho chỉ vào một ô bất kỳ. Luật nổ
+  bên dưới không đổi một dòng khi thêm UI.
+- **Dùng đồ chỉ trong lượt mình, phím 1..9**, đọc thẳng keycode chứ không thêm action vào
+  `project.godot`. Một cửa sổ duy nhất, master duyệt tuần tự → không có tranh chấp nào để giải.
+
+### Đã kiểm (headless, assert)
+
+Tầm nổ · vòng kín · lấy MAX khi hai chiều trùng ô · khiên chặn trọn đòn rồi bị tiêu · máu kẹt ở 0 ·
+chết mất chìa và đồ nhưng **giữ cốc** · rương thiếu chìa thì không trừ chìa · cửa hàng mua món đắt
+nhất mua nổi · ô sát thương/nguy hiểm/nghĩa địa. Tất cả xanh. File test đã xoá theo quy ước.
+
+> `--script` KHÔNG nạp autoload → `NetManager` không tồn tại → mọi script phụ thuộc nó không biên
+> dịch được. Test phải chạy bằng **scene**: `godot --headless --path . res://_test_x.tscn`.
+
+### Tái cấu trúc theo ba yêu cầu — vật thể là NODE, scene tách việc, logic tách riêng
+
+**Trước:** `ban_duong.gd` dựng 24 ô bằng code — mỗi ô 6 node (`Node3D.new()`, `BoxMesh`,
+`StandardMaterial3D`, `StaticBody3D`, `CollisionShape3D`, `Label3D`). Vị trí tính từ các node
+mốc `Moc*` theo độ dài cung. Muốn đổi một ô là phải đọc code.
+
+**Sau:**
+
+| File | Việc duy nhất |
+|---|---|
+| `board/o_ban.tscn` + `o_ban.gd` | MỘT ô. Script chỉ gán `material_override` và `Label3D.text` theo `loai` |
+| `board/ban_party.tscn` | Bản đồ: 24 instance của `o_ban.tscn`, mỗi ô mang `so` + `loai`, **kéo được trong editor** |
+| `board/ban_duong.gd` | Hỏi đáp về bàn. Đọc các node `OBan` con, sắp theo `so`. **Không dựng gì** |
+| `board/luat_ban.gd` | Luật chơi — **hàm thuần**, không node, không Fusion, không autoload |
+| `board/pha_ban_co.gd` | Mạng + vòng lượt + cây scene |
+| `ui/bang_ban.tscn` + `.gd` | Bảng trạng thái góc phải, tách khỏi `hud.tscn` |
+
+Tám màu ô thành tám `materials/mat_o_*.tres` — sửa màu là sửa tài nguyên, không sửa code.
+
+Đổi bản đồ = làm `.tscn` khác rồi trỏ `PhaBanCo.ban_scene` sang. `Moc*` đã bỏ vì hết ai đọc.
+`board/demo_map.tscn` còn dùng API cũ và **không ai trỏ tới** — để nguyên, chờ người dùng quyết.
+
+`LuatBan` không đụng autoload nên chạy được `godot --headless --script`. Đây là phép thử thật
+cho việc tách: file nào chạm `NetManager` là `--script` không biên dịch nổi.
+
+### Hai lỗi tìm ra khi chạy thử 6 người thật
+
+> ⚠️ **Sáu người chồng lên nhau thành một cục.** Ai cũng xuất phát ở ô 0 và `_dat_len_o` đặt
+> tất cả vào đúng tâm ô — nhìn ra một đống thịt không phân biệt được ai. Chữa: rải đều quanh
+> tâm ô theo THỨ TỰ LƯỢT (`_cho_dung`). Chỗ đứng ổn định, mọi máy tính ra y hệt, **0 byte mạng**.
+>
+> Kèm một bẫy nhỏ: `thu_tu` đi qua JSON nên phần tử là **float**, `ds.find(id)` với `id` kiểu
+> int không bao giờ khớp. Phải `int(ds[i]) == id`.
+
+> ⚠️ **Bàn party vẫn chạy lượt TRONG LÚC minigame đang mở.** Minigame là một `CanvasLayer` phủ
+> lên, không phải scene khác — `PhaBanCo` vẫn sống nguyên vẹn bên dưới và vẫn ăn
+> `_unhandled_input`. Bấm Space giữa ván Tank là **vừa bắn tank vừa tung xúc xắc**.
+>
+> Chữa: `QuanTroMiniGame` thêm tín hiệu `bat_dau`, `main.gd` bật/tắt cờ `PhaBanCo.tam_dung`.
+> Bàn không cần biết lớp phủ đó là cái gì — chỉ cần biết mình đang bị che. Cờ chặn cả
+> `_unhandled_input` lẫn hai RPC, vì gói `_net_tung` có thể còn đang bay lúc minigame vừa phủ.
+
+### Cách chạy thử nhiều người trên một máy
+
+`_test_flow.tscn` bọc `main.tscn` + một node điều khiển; host tạo phòng rồi ghi tên phòng ra
+file, khách đợi file CÓ NỘI DUNG rồi mới vào. Phím bấm đi qua `Input.parse_input_event()` nên
+kiểm luôn đường input thật chứ không gọi tắt vào RPC.
+
+> ⚠️ **Đừng khởi động nhiều bản cùng lúc.** Sáu bản Godot bật một lượt thì frame đầu dài tới
+> mức Photon không được phục vụ và nó ngắt thật — **lỗi 1040**, đã dính hai lần. Giãn 6–10 giây
+> mỗi bản, và **đợi vài giây sau frame đầu rồi mới gọi `connect_to_photon()`**, đừng gọi ngay
+> trong `_ready()` của scene test.
+
+### ĐÃ NỐI: điều kiện kết thúc ván
+
+`PhaBanCo.coc_de_thang` (mặc định 3, đặt 0 = chơi vô hạn). Master kiểm mốc trong `_ket_luot`
+**ngay sau hiệu ứng ô**, trước khi sang lượt kế — mở rương xong là thắng ngay, không phải chờ
+hết vòng. Luật nằm ở `LuatBan.nguoi_thang()` (hàm thuần, kiểm bằng `assert` không cần dựng
+phòng); hoà thì người đứng trước trong vòng lượt thắng.
+
+Cờ `thang` đi trong chính gói trạng thái, nên MỌI máy tự biết mà không cần thêm một RPC nào:
+`PhaBanCo` phát `van_thang`, `main.gd` hiện `ui/bang_thang.tscn` 6 giây rồi `dong()` bàn, kéo
+nhân vật về phòng chờ, master đặt phòng về `PHASE_LOBBY`.
+
+> ⚠️ `dong()` phải xoá **hẳn** `tt`, không chỉ đặt `luot = -1`. `LuatBan.trang_thai_moi()` giữ
+> lại giá trị cũ của ai đã có (đúng cho "vòng mới"), nên còn giữ `tt` là ván sau mở ra ai cũng
+> sẵn 3 cốc và thắng ngay lập tức.
+
+Bước ra khỏi ô sẵn sàng tự tắt `is_ready`, nên kéo người về phòng chờ cũng là cách huỷ đếm
+ngược — không cần đặt lại cờ nào.
+
+### ĐÃ LÀM: camera bàn party là GÓC BA TỪ TRÊN XUỐNG
+
+`CameraRig.set_ban_co()` — lùi 12 m, cúi 35°, FOV 72, tween 0.5 s. `PhaBanCo._che_do_ban_co()`
+bật/tắt cùng lúc với khoá WASD, và chỉ đụng tới `is_mine`.
+
+> ⚠️ **Độ cao phải do GÓC CÚI lo, không cộng vào `nang_cao`.** `nang_cao` là offset trong hệ
+> của rig, mà rig đã nghiêng theo góc cúi: `nang_cao = 6` + cúi 35° đẩy camera lên 11,5 m
+> nhưng vẫn chỉ cúi 35°, nên tia nhìn vượt qua đầu bàn — chụp lại thấy bàn tụt hẳn xuống góc
+> dưới màn hình. Để `cao_ban = 0` thì camera nằm đúng trên cung tròn bán kính `lui_ban`.
+
+Đã chụp thử ba bộ số trên `ban_party.tscn`: 9 m/28° quá sát (chỉ thấy nửa vòng), 15 m/42° thấy
+cả vòng nhưng quân cờ nhỏ tới mức khó tìm ra mình, **12 m/35°** vừa đủ cả hai.
+
+Chặn gọi lại khi không đổi trạng thái: gói trạng thái tới mỗi lượt vài cái, không chặn thì
+tween khởi động lại liên tục và camera giật theo từng nhịp mạng.
+
+### ĐÃ QUYẾT: rương DI CHUYỂN, không phải mở một lần
+
+Bản đồ có đúng MỘT ô Rương. Ba phương án đã cân:
+
+| Phương án | Vì sao không / có |
+|---|---|
+| Giữ vô hạn, đứng yên | Cả ván là đi vòng vòng về đúng một ô. Ai đang đứng gần nó lúc gom đủ chìa thì thắng — thắng bằng chỗ ngồi |
+| Mỗi rương mở một lần | **Bẫy:** bản đồ một rương thì ván kết thúc ở đúng 1 cốc, không ai đủ 3 cốc để thắng được nữa |
+| **Rương dời chỗ sau mỗi lần mở** ✅ | Mỗi lần mở là cả bàn phải tính lại đường. Không cần thêm ô rương nào trên bản đồ |
+
+Master chọn một ô Trống bất kỳ, ô mới đi trong `tt["o_ruong"]` nên mọi máy dời y hệt — không
+máy nào tự gieo số. `PhaBanCo._ap_ruong()` chạy ở MỌI gói nên người vào giữa ván cũng thấy
+đúng chỗ. `BanDuong.dat_loai()` chỉ gán `OBan.loai`, mà setter của nó tự đổi vật liệu và nhãn
+— không dựng lại node nào, và file `.tscn` không bị sửa.
+
+`o_ruong` mang qua vòng mới (không thì hết mỗi minigame là rương nhảy về chỗ cũ) nhưng **không**
+mang qua ván mới — `dong()` xoá sạch `tt`.
+
+### ĐÃ CHỮA: rời phòng giữa ván làm kẹt vòng lượt
+
+Fusion xoá object player của người rời trên mọi máy, nhưng `thu_tu` thì không tự biết. Tới lượt
+một id không còn ai ngồi sau là **cả bàn đứng im vĩnh viễn** — lượt chỉ sang khi có người bấm
+phím tung xúc xắc, mà không còn ai để bấm.
+
+`PhaBanCo` nghe `node_removed`, master gỡ id khỏi vòng rồi phát lại. Con trỏ lượt phải chỉnh
+theo, `erase` rồi thôi là sai:
+
+- Người rời đứng **trước** người đang tới lượt → mọi người sau tụt một bậc, con trỏ tụt theo,
+  không thì nhảy cóc qua một người.
+- Người rời **chính là** người đang tới lượt → giữ nguyên chỉ số là trúng người kế tiếp;
+  `posmod` lo trường hợp họ đứng cuối vòng.
+- Hết sạch người → `dong()`.
+
+Gỡ luôn `_dang_di`: họ có thể rời giữa đoạn đi, còn treo cờ đó là bàn khoá.
+
+### Chưa làm
+
+- Test hai máy qua Photon thật
+- Xúc xắc đôi, UI chọn mục tiêu bom, UI cửa hàng
+
+
 ## 1c. Câu hỏi mở — CHƯA QUYẾT
 
 Ghi lại để khỏi lạc. Không quyết cái nào cho tới khi bàn tới.
@@ -4241,6 +4654,26 @@ chung nhân vật** — biết trước khi chọn danh sách.
 
 *(Lưu ý: nguyên tắc "một nhân vật, ba nơi" ở mục 1 vẫn đúng cho minigame dạng nhân vật.
 Minigame trừu tượng bước ra ngoài nguyên tắc đó — và đó chính là chỗ chi phí đội lên.)*
+
+### Tank: bản đồ DỰNG TAY, và mọi thứ là node
+
+Bản đầu vẽ cả đấu trường bằng `draw_rect` trong `tank_battle.gd`, tường rải ngẫu nhiên theo
+`rng.randf() < 0.42`. Đã bỏ cả hai:
+
+- **Node, không vẽ bằng code.** 136 ô tường là instance `o_tuong.tscn` nằm trong
+  `ban_do_tank.tscn`, xe là `xe_tang.tscn`, đạn là `dan.tscn` — kéo được trong editor, có
+  sprite thì thay một chỗ là cả bản đồ đổi theo. `tank_battle.gd` 347 → 222 dòng, chỉ còn đọc
+  phím + gói mạng + phán trúng đạn. Đúng mẫu `o_ban.tscn` / `ban_party.tscn` của bàn party.
+- **Bản đồ cố định, đối xứng bốn phía.** Nhiễu ngẫu nhiên thì ván nào cũng có góc hở toang và
+  góc nhốt người trong hốc. Đối xứng thì không chỗ nào lợi hơn chỗ nào, và chơi vài ván là
+  thuộc đường — thuộc đường mới có chỗ cho kỹ năng.
+- **10 chỗ sinh đặt tay** bằng `Marker2D`, xếp sao cho hai chỗ liên tiếp luôn ở xa nhau; hai
+  chỗ giữa bàn có thép chắn nên không bắn thẳng vào nhau được ở giây đầu.
+
+Hạt giống của master giờ chỉ còn xoay thứ tự chỗ sinh — bản đồ không cần nó nữa.
+
+> Lối chạy quanh rìa phải chặn vài ô, không để thẳng suốt: một hành lang 25 ô thông thẳng là
+> một trường bắn tỉa, mà luật ở đây là **một phát chết**.
 
 ### Số người chơi — ĐÃ CHỐT
 

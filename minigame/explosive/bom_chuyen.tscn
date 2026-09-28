@@ -1,0 +1,39 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Material" path="res://materials/mat_o_nguy_hiem.tres" id="1_m"]
+
+[sub_resource type="SphereMesh" id="Sph_bom"]
+radius = 0.55
+height = 1.1
+
+[sub_resource type="SphereShape3D" id="Shape_cham"]
+radius = 1.5
+
+[node name="BomChuyen" type="Node3D"]
+
+[node name="Mat" type="MeshInstance3D" parent="."]
+mesh = SubResource("Sph_bom")
+material_override = ExtResource("1_m")
+
+[node name="Sang" type="OmniLight3D" parent="."]
+light_color = Color(1, 0.45, 0.2, 1)
+light_energy = 3.0
+omni_range = 6.0
+
+[node name="Dem" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+billboard = 1
+no_depth_test = true
+fixed_size = true
+pixel_size = 0.0018
+font_size = 96
+outline_size = 26
+modulate = Color(1, 0.85, 0.5, 1)
+text = "0"
+
+[node name="Vung" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="Hinh" type="CollisionShape3D" parent="Vung"]
+shape = SubResource("Shape_cham")

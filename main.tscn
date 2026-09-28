@@ -1,10 +1,16 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://main.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://ui/main_menu.tscn" id="2_menu"]
 [ext_resource type="PackedScene" path="res://ui/hud.tscn" id="3_hud"]
 [ext_resource type="PackedScene" path="res://ui/pause_menu.tscn" id="4_pause"]
 [ext_resource type="Script" path="res://net/card_dealer.gd" id="5_dealer"]
+[ext_resource type="PackedScene" path="res://ui/character_picker.tscn" id="6_picker"]
+[ext_resource type="PackedScene" path="res://ui/light_picker.tscn" id="7_light"]
+[ext_resource type="PackedScene" path="res://ui/music_picker.tscn" id="8_music"]
+[ext_resource type="Script" path="res://net/music_box.gd" id="9_box"]
+[ext_resource type="PackedScene" path="res://minigame/quan_tro_minigame.tscn" id="10_mg"]
+[ext_resource type="Script" path="res://board/pha_ban_co.gd" id="11_bc"]
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_main")
@@ -16,6 +22,14 @@ script = ExtResource("1_main")
 [node name="CardDealer" type="Node" parent="."]
 script = ExtResource("5_dealer")
 
+[node name="MusicBox" type="Node" parent="."]
+script = ExtResource("9_box")
+
+[node name="BanCo" type="Node" parent="."]
+script = ExtResource("11_bc")
+
+[node name="QuanTro" parent="." instance=ExtResource("10_mg")]
+
 [node name="UILayer" type="CanvasLayer" parent="."]
 
 [node name="MainMenu" parent="UILayer" instance=ExtResource("2_menu")]
@@ -24,3 +38,9 @@ script = ExtResource("5_dealer")
 visible = false
 
 [node name="PauseMenu" parent="UILayer" instance=ExtResource("4_pause")]
+
+[node name="CharacterPicker" parent="UILayer" instance=ExtResource("6_picker")]
+
+[node name="LightPicker" parent="UILayer" instance=ExtResource("7_light")]
+
+[node name="MusicPicker" parent="UILayer" instance=ExtResource("8_music")]

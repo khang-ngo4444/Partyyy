@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://minigame/slippery/slippery.gd" id="1_sl"]
+[ext_resource type="PackedScene" path="res://minigame/chung/san_lan.tscn" id="2_san"]
+
+[node name="SlipperySprint" type="Node"]
+script = ExtResource("1_sl")
+san_scene = ExtResource("2_san")

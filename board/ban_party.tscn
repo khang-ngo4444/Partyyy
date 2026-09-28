@@ -1,0 +1,119 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://board/ban_duong.gd" id="1_bd"]
+[ext_resource type="PackedScene" path="res://board/o_ban.tscn" id="2_o"]
+
+[node name="BanParty" type="Node3D"]
+script = ExtResource("1_bd")
+
+[node name="O_0" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(0.6771, 0, -0.7359, 0, 1, 0, 0.7359, 0, 0.6771, 7, 0, -4.5)
+so = 0
+loai = 5
+
+[node name="O_1" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(0.6771, 0, -0.7359, 0, 1, 0, 0.7359, 0, 0.6771, 5.4794, 0, -5.8989)
+so = 1
+
+[node name="O_2" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, -0, 3.7647, 0, -6.8)
+so = 2
+loai = 1
+
+[node name="O_3" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, -0, 1.6985, 0, -6.8)
+so = 3
+
+[node name="O_4" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, -0, -0.3676, 0, -6.8)
+so = 4
+loai = 3
+
+[node name="O_5" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, -0, -2.4338, 0, -6.8)
+so = 5
+
+[node name="O_6" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, -0, -4.5, 0, -6.8)
+so = 6
+loai = 2
+
+[node name="O_7" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(-0.6771, 0, -0.7359, 0, 1, 0, 0.7359, 0, -0.6771, -6.0206, 0, -5.4011)
+so = 7
+
+[node name="O_8" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -7, 0, -3.7647)
+so = 8
+loai = 1
+
+[node name="O_9" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -7, 0, -1.6985)
+so = 9
+loai = 7
+
+[node name="O_10" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -7, 0, 0.3676)
+so = 10
+
+[node name="O_11" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -7, 0, 2.4338)
+so = 11
+loai = 3
+
+[node name="O_12" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -7, 0, 4.5)
+so = 12
+loai = 4
+
+[node name="O_13" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(-0.6771, 0, 0.7359, 0, 1, 0, -0.7359, 0, -0.6771, -5.4794, 0, 5.8989)
+so = 13
+
+[node name="O_14" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, -0, -3.7647, 0, 6.8)
+so = 14
+loai = 1
+
+[node name="O_15" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, -0, -1.6985, 0, 6.8)
+so = 15
+
+[node name="O_16" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, -0, 0.3676, 0, 6.8)
+so = 16
+loai = 2
+
+[node name="O_17" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, -0, 2.4338, 0, 6.8)
+so = 17
+loai = 6
+
+[node name="O_18" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, -0, 4.5, 0, 6.8)
+so = 18
+
+[node name="O_19" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(0.6771, 0, 0.7359, 0, 1, 0, -0.7359, 0, 0.6771, 6.0206, 0, 5.4011)
+so = 19
+loai = 3
+
+[node name="O_20" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7, 0, 3.7647)
+so = 20
+
+[node name="O_21" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7, 0, 1.6985)
+so = 21
+loai = 1
+
+[node name="O_22" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7, 0, -0.3676)
+so = 22
+loai = 5
+
+[node name="O_23" parent="." instance=ExtResource("2_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7, 0, -2.4338)
+so = 23
+loai = 7
+

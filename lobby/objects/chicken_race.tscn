@@ -11,11 +11,14 @@ script = ExtResource("1_race")
 
 [node name="Result" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.55, 0)
-pixel_size = 0.004
+pixel_size = 0.003
 billboard = 1
-no_depth_test = true
+modulate = Color(0.9608, 0.851, 0.0392, 1)
+outline_modulate = Color(0.1608, 0.0745, 0.098, 1)
 font_size = 44
-outline_size = 12
+outline_size = 26
+autowrap_mode = 3
+width = 760.0
 
 [node name="Chickens" type="Node3D" parent="."]
 

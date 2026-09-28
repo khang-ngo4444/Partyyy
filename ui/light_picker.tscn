@@ -1,0 +1,147 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://ui/light_picker.gd" id="1_lp"]
+
+[sub_resource type="StyleBoxFlat" id="panel_bg"]
+bg_color = Color(0.09, 0.09, 0.12, 0.97)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 22.0
+content_margin_top = 18.0
+content_margin_right = 22.0
+content_margin_bottom = 18.0
+
+[node name="LightPicker" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_lp")
+
+[node name="Dim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.55)
+
+[node name="Panel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -240.0
+offset_top = -280.0
+offset_right = 240.0
+offset_bottom = 280.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("panel_bg")
+
+[node name="Outer" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Panel/Outer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "MÀU ĐÈN PHÒNG"
+
+[node name="Scroll" type="ScrollContainer" parent="Panel/Outer"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Body" type="VBoxContainer" parent="Panel/Outer/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="TwoToggle" type="CheckButton" parent="Panel/Outer/Scroll/Body"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Hai nguồn sáng (pha gradient)"
+
+[node name="Chips" type="HBoxContainer" parent="Panel/Outer/Scroll/Body"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ChipA" type="Button" parent="Panel/Outer/Scroll/Body/Chips"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 46)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "A"
+
+[node name="ChipB" type="Button" parent="Panel/Outer/Scroll/Body/Chips"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 46)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "B"
+
+[node name="GradientPreview" type="TextureRect" parent="Panel/Outer/Scroll/Body"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 26)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 0
+
+[node name="PresetLabel" type="Label" parent="Panel/Outer/Scroll/Body"]
+layout_mode = 2
+modulate = Color(1, 1, 1, 0.7)
+text = "Màu đặt sẵn — gán vào ô đang chọn"
+
+[node name="PresetGrid" type="GridContainer" parent="Panel/Outer/Scroll/Body"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+columns = 8
+
+[node name="MixLabel" type="Label" parent="Panel/Outer/Scroll/Body"]
+layout_mode = 2
+modulate = Color(1, 1, 1, 0.7)
+text = "Tự trộn"
+
+[node name="Wheel" type="ColorPicker" parent="Panel/Outer/Scroll/Body"]
+unique_name_in_owner = true
+layout_mode = 2
+edit_alpha = false
+color_mode = 0
+picker_shape = 1
+
+[node name="Foot" type="HBoxContainer" parent="Panel/Outer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ResetButton" type="Button" parent="Panel/Outer/Foot"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "VỀ MÀU GỐC"
+
+[node name="CloseButton" type="Button" parent="Panel/Outer/Foot"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "ĐÓNG"
+
+[node name="ApplyButton" type="Button" parent="Panel/Outer/Foot"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "ÁP DỤNG"

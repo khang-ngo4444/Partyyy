@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Material" path="res://materials/mat_san_thuong.tres" id="1_m"]
+
+[sub_resource type="CylinderMesh" id="Cyl_san"]
+top_radius = 11.5
+bottom_radius = 11.5
+height = 0.4
+
+[sub_resource type="CylinderShape3D" id="CylShape_san"]
+radius = 11.5
+height = 0.4
+
+[node name="SanTron" type="Node3D"]
+
+[node name="Mat" type="MeshInstance3D" parent="."]
+mesh = SubResource("Cyl_san")
+material_override = ExtResource("1_m")
+
+[node name="Than" type="StaticBody3D" parent="."]
+
+[node name="Hinh" type="CollisionShape3D" parent="Than"]
+shape = SubResource("CylShape_san")

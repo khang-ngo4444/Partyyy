@@ -5,4 +5,4 @@
 [node name="Mage" type="Node3D" unique_id=252569002]
 
 [node name="Model" type="Node3D" parent="." unique_id=713948815 instance=ExtResource("1_yjaei")]
-transform = Transform3D(-0.751, 0, -6.5654504e-08, 0, 0.751, 0, 6.5654504e-08, 0, -0.751, 0, 0, 0)
+transform = Transform3D(-0.6687, 0, -5.84594899e-08, 0, 0.6687, 0, 5.84594899e-08, 0, -0.6687, 0, 0, 0)

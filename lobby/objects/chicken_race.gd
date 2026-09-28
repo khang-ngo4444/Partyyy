@@ -299,6 +299,9 @@ func _build_buttons() -> void:
 	play.button_scale = 0.6
 	play.label_size = 36
 	play.press_range = 2.6
+	# Mot cuoc dua keo 7 giay va phat RPC cho moi may. `_net_chicken_race` da tu choi khi dua
+	# dang chay, nhung chan ngay tu nut thi khong co cai RPC nao phai gui di ca.
+	play.cooldown = 1.5
 	play.position = Vector3(_width() * 0.5 + 0.45, bed_height - 0.05, z + 0.1)
 	add_child(play)
 

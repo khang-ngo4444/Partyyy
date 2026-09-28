@@ -14,6 +14,7 @@ enum Mode { CHESS, XIANGQI, CARO }
 
 ## Chế độ bàn. Đặt từ scene — bàn cờ vua/tướng và bàn caro là HAI instance khác nhau.
 @export var mode: int = Mode.CHESS
+var is_rebuilding = false
 ## Khoảng cách giữa hai ô (cờ vua) hoặc hai giao điểm (cờ tướng, caro).
 ##
 ## Sàn dưới của khoảng cách này là ~0.5 m: người chơi ĐỨNG TRÊN bàn, mắt ở 1.65 m, nên hai
@@ -55,6 +56,23 @@ func point(col: int, row: int) -> Vector3:
 	return to_global(Vector3(_axis(col, cols()), surface_y, _axis(row, rows())))
 
 
+## Ô (hoặc giao điểm) GẦN NHẤT với một điểm trong thế giới. Dùng để gióng quân rơi xuống về
+## đúng chỗ của nó.
+##
+## Là phép NGƯỢC của `_axis`, nên hai chế độ lưới phải tính khác nhau:
+##   Cờ vua   `_axis = (i + 0.5) * cell - half`  ->  i = floor((v + half) / cell)
+##   Cờ tướng `_axis = i * cell - half`          ->  i = round((v + half) / cell)
+## Dùng chung một phép làm tròn cho cả hai thì quân cờ vua lệch nửa ô.
+func nearest_point(world_pos: Vector3) -> Vector3:
+	var local := to_local(world_pos)
+	return point(_chi_so(local.x, cols()), _chi_so(local.z, rows()))
+
+
+func _chi_so(v: float, count: int) -> int:
+	var t := (v + _half(count)) / cell_size
+	return clampi(floori(t) if mode == Mode.CHESS else roundi(t), 0, count - 1)
+
+
 ## Điểm có nằm trên mặt bàn không. Rơi ra ngoài thì vật cứ nằm chỗ nó rơi.
 func contains(world_pos: Vector3) -> bool:
 	var local := to_local(world_pos)
@@ -82,6 +100,9 @@ func flip_to(new_mode: int, duration := 1.2) -> void:
 
 
 func rebuild() -> void:
+	if is_rebuilding:
+		return
+	is_rebuilding = true
 	for c in get_children():
 		if c.name != &"StaticSurface_Board":
 			c.queue_free()
@@ -90,6 +111,7 @@ func rebuild() -> void:
 		Mode.CARO: _build_caro()
 		_: _build_xiangqi()
 	_dung_mat_va_cham()
+	is_rebuilding = false
 
 
 ## Mat ban co va cham duoc: quan co la RigidBody that, khong co mat nay thi quan roi xuyen xuong

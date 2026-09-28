@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://minigame/chung/san_dau.tscn" id="1_st"]
+[ext_resource type="PackedScene" path="res://minigame/chung/san_tron.tscn" id="2_sr"]
+[ext_resource type="Environment" path="res://materials/env_san_sang.tres" id="3_env"]
+
+[node name="SanChu" type="Node3D"]
+
+[node name="SanDau" parent="." instance=ExtResource("1_st")]
+
+[node name="Cam" parent="SanDau" index="0"]
+environment = ExtResource("3_env")
+
+[node name="SanTron" parent="." instance=ExtResource("2_sr")]
+
+[node name="Bang" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, -9)
+billboard = 1
+no_depth_test = true
+fixed_size = true
+pixel_size = 0.0016
+font_size = 120
+outline_size = 32
+modulate = Color(1, 0.95, 0.7, 1)
+text = "..."

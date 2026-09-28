@@ -1,0 +1,64 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="PackedScene" path="res://minigame/chung/san_dau.tscn" id="1_st"]
+[ext_resource type="PackedScene" path="res://minigame/chung/san_tron.tscn" id="2_sr"]
+[ext_resource type="Material" path="res://materials/mat_san_canh_bao.tres" id="3_m"]
+[ext_resource type="Environment" path="res://materials/env_san_sang.tres" id="4_env"]
+
+[sub_resource type="BoxMesh" id="Box_tia"]
+size = Vector3(24, 0.24, 0.7)
+
+[sub_resource type="BoxShape3D" id="Shape_tia"]
+size = Vector3(24, 0.24, 0.7)
+
+[node name="SanLaser" type="Node3D"]
+
+[node name="SanDau" parent="." instance=ExtResource("1_st")]
+
+[node name="Cam" parent="SanDau" index="0"]
+environment = ExtResource("4_env")
+
+[node name="SanTron" parent="." instance=ExtResource("2_sr")]
+
+[node name="Tia0" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+
+[node name="Mat" type="MeshInstance3D" parent="Tia0"]
+mesh = SubResource("Box_tia")
+material_override = ExtResource("3_m")
+
+[node name="Vung" type="Area3D" parent="Tia0"]
+collision_layer = 0
+collision_mask = 2
+
+[node name="Hinh" type="CollisionShape3D" parent="Tia0/Vung"]
+shape = SubResource("Shape_tia")
+
+[node name="Tia1" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+
+[node name="Mat" type="MeshInstance3D" parent="Tia1"]
+mesh = SubResource("Box_tia")
+material_override = ExtResource("3_m")
+
+[node name="Vung" type="Area3D" parent="Tia1"]
+collision_layer = 0
+collision_mask = 2
+
+[node name="Hinh" type="CollisionShape3D" parent="Tia1/Vung"]
+shape = SubResource("Shape_tia")
+
+[node name="Tia2" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+
+[node name="Mat" type="MeshInstance3D" parent="Tia2"]
+mesh = SubResource("Box_tia")
+material_override = ExtResource("3_m")
+
+[node name="Vung" type="Area3D" parent="Tia2"]
+collision_layer = 0
+collision_mask = 2
+
+[node name="Hinh" type="CollisionShape3D" parent="Tia2/Vung"]
+shape = SubResource("Shape_tia")
+

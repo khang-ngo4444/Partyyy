@@ -1,0 +1,6 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "mat_cane"
+albedo_color = Color(0.7882, 0.6431, 0.4431, 1)
+roughness = 0.66

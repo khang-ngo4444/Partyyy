@@ -5,4 +5,4 @@
 [node name="Ranger" type="Node3D" unique_id=1338873731]
 
 [node name="Model" type="Node3D" parent="." unique_id=142311952 instance=ExtResource("1_shf3y")]
-transform = Transform3D(-0.751, 0, -6.5654504e-08, 0, 0.751, 0, 6.5654504e-08, 0, -0.751, 0, 0, 0)
+transform = Transform3D(-0.6687, 0, -5.84594899e-08, 0, 0.6687, 0, 5.84594899e-08, 0, -0.6687, 0, 0, 0)

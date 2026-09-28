@@ -15,6 +15,13 @@ extends Node3D
 const REFRESH := 0.25
 ## Đứng dậy thì đặt người ra NGOÀI ghế chừng này, về phía xa bàn — không đặt vào giữa bàn.
 const RA_XA := 0.9
+## Hộp NGẮM của ghế, trong hệ toạ độ của ghế.
+##
+## Ghế CÓ CHỦ ĐÍCH không có hình va chạm (đi xuyên ghế không còn là ngồi nữa), nên tia ngắm
+## cần một Area3D riêng mới trúng được. Số đo theo ghế Quaternius ở tỉ lệ 0.509 trong
+## card_seat.tscn — đổi model ghế thì chỉnh hai số này, không có cách suy ra tự động.
+@export var hop_ngam := Vector3(0.55, 0.95, 0.55)
+@export var hop_ngam_y := 0.48
 
 ## CardTable gán lúc dựng.
 var deck := 0
@@ -103,6 +110,19 @@ func _build() -> void:
 	_glow.material_override = _mat
 	_glow.position.y = 0.01
 	add_child(_glow)
+
+	var hinh := BoxShape3D.new()
+	hinh.size = hop_ngam
+	var cs := CollisionShape3D.new()
+	cs.shape = hinh
+	cs.position.y = hop_ngam_y
+	var vung := Area3D.new()
+	vung.name = "VungNgam"
+	vung.collision_layer = Player.LOP_NGAM
+	vung.collision_mask = 0
+	vung.monitoring = false
+	vung.add_child(cs)
+	add_child(vung)
 
 	_tag = Label3D.new()
 	_tag.text = "NGOI"

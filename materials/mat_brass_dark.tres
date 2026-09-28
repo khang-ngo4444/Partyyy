@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "mat_brass_dark"
+albedo_color = Color(0.5412, 0.3725, 0.149, 1)
+metallic = 0.95
+roughness = 0.42

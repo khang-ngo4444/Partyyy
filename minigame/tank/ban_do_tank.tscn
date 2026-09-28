@@ -1,0 +1,544 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://minigame/tank/ban_do_tank.gd" id="1_bd"]
+[ext_resource type="PackedScene" path="res://minigame/tank/o_tuong.tscn" id="2_ot"]
+
+[node name="BanDoTank" type="Node2D"]
+script = ExtResource("1_bd")
+rong = 25
+cao = 17
+
+[node name="Nen" type="ColorRect" parent="."]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 800.0
+offset_bottom = 544.0
+color = Color(0.063, 0.063, 0.078, 1)
+
+[node name="Vien" type="Node2D" parent="."]
+
+[node name="Tren" type="ColorRect" parent="Vien"]
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 816.0
+offset_bottom = 0.0
+color = Color(0.353, 0.376, 0.408, 1)
+
+[node name="Duoi" type="ColorRect" parent="Vien"]
+offset_left = -16.0
+offset_top = 544.0
+offset_right = 816.0
+offset_bottom = 560.0
+color = Color(0.353, 0.376, 0.408, 1)
+
+[node name="Trai" type="ColorRect" parent="Vien"]
+offset_left = -16.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 544.0
+color = Color(0.353, 0.376, 0.408, 1)
+
+[node name="Phai" type="ColorRect" parent="Vien"]
+offset_left = 800.0
+offset_top = 0.0
+offset_right = 816.0
+offset_bottom = 544.0
+color = Color(0.353, 0.376, 0.408, 1)
+
+[node name="Tuong" type="Node2D" parent="."]
+
+[node name="T_4_0" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(144, 16)
+loai = 1
+
+[node name="T_20_0" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(656, 16)
+loai = 1
+
+[node name="T_6_1" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(208, 48)
+
+[node name="T_18_1" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(592, 48)
+
+[node name="T_2_2" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(80, 80)
+
+[node name="T_3_2" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(112, 80)
+
+[node name="T_5_2" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(176, 80)
+loai = 1
+
+[node name="T_6_2" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(208, 80)
+loai = 1
+
+[node name="T_8_2" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(272, 80)
+
+[node name="T_9_2" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(304, 80)
+
+[node name="T_11_2" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(368, 80)
+loai = 1
+
+[node name="T_13_2" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(432, 80)
+loai = 1
+
+[node name="T_15_2" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(496, 80)
+
+[node name="T_16_2" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(528, 80)
+
+[node name="T_18_2" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(592, 80)
+loai = 1
+
+[node name="T_19_2" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(624, 80)
+loai = 1
+
+[node name="T_21_2" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(688, 80)
+
+[node name="T_22_2" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(720, 80)
+
+[node name="T_2_3" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(80, 112)
+
+[node name="T_5_3" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(176, 112)
+
+[node name="T_8_3" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(272, 112)
+loai = 1
+
+[node name="T_11_3" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(368, 112)
+
+[node name="T_13_3" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(432, 112)
+
+[node name="T_16_3" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(528, 112)
+loai = 1
+
+[node name="T_19_3" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(624, 112)
+
+[node name="T_22_3" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(720, 112)
+
+[node name="T_0_4" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(16, 144)
+loai = 1
+
+[node name="T_1_4" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(48, 144)
+
+[node name="T_3_4" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(112, 144)
+loai = 1
+
+[node name="T_5_4" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(176, 144)
+
+[node name="T_7_4" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(240, 144)
+loai = 1
+
+[node name="T_8_4" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(272, 144)
+loai = 1
+
+[node name="T_10_4" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(336, 144)
+
+[node name="T_11_4" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(368, 144)
+
+[node name="T_13_4" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(432, 144)
+
+[node name="T_14_4" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(464, 144)
+
+[node name="T_16_4" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(528, 144)
+loai = 1
+
+[node name="T_17_4" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(560, 144)
+loai = 1
+
+[node name="T_19_4" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(624, 144)
+
+[node name="T_21_4" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(688, 144)
+loai = 1
+
+[node name="T_23_4" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(752, 144)
+
+[node name="T_24_4" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(784, 144)
+loai = 1
+
+[node name="T_2_5" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(80, 176)
+
+[node name="T_5_5" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(176, 176)
+
+[node name="T_12_5" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(400, 176)
+loai = 1
+
+[node name="T_19_5" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(624, 176)
+
+[node name="T_22_5" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(720, 176)
+
+[node name="T_2_6" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(80, 208)
+
+[node name="T_3_6" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(112, 208)
+loai = 1
+
+[node name="T_5_6" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(176, 208)
+
+[node name="T_6_6" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(208, 208)
+
+[node name="T_8_6" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(272, 208)
+loai = 1
+
+[node name="T_9_6" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(304, 208)
+loai = 1
+
+[node name="T_15_6" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(496, 208)
+loai = 1
+
+[node name="T_16_6" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(528, 208)
+loai = 1
+
+[node name="T_18_6" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(592, 208)
+
+[node name="T_19_6" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(624, 208)
+
+[node name="T_21_6" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(688, 208)
+loai = 1
+
+[node name="T_22_6" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(720, 208)
+
+[node name="T_5_7" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(176, 240)
+
+[node name="T_8_7" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(272, 240)
+
+[node name="T_11_7" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(368, 240)
+
+[node name="T_13_7" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(432, 240)
+
+[node name="T_16_7" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(528, 240)
+
+[node name="T_19_7" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(624, 240)
+
+[node name="T_2_8" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(80, 272)
+loai = 1
+
+[node name="T_3_8" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(112, 272)
+loai = 1
+
+[node name="T_10_8" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(336, 272)
+loai = 1
+
+[node name="T_14_8" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(464, 272)
+loai = 1
+
+[node name="T_21_8" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(688, 272)
+loai = 1
+
+[node name="T_22_8" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(720, 272)
+loai = 1
+
+[node name="T_5_9" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(176, 304)
+
+[node name="T_8_9" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(272, 304)
+
+[node name="T_11_9" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(368, 304)
+
+[node name="T_13_9" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(432, 304)
+
+[node name="T_16_9" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(528, 304)
+
+[node name="T_19_9" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(624, 304)
+
+[node name="T_2_10" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(80, 336)
+
+[node name="T_3_10" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(112, 336)
+loai = 1
+
+[node name="T_5_10" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(176, 336)
+
+[node name="T_6_10" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(208, 336)
+
+[node name="T_8_10" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(272, 336)
+loai = 1
+
+[node name="T_9_10" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(304, 336)
+loai = 1
+
+[node name="T_15_10" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(496, 336)
+loai = 1
+
+[node name="T_16_10" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(528, 336)
+loai = 1
+
+[node name="T_18_10" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(592, 336)
+
+[node name="T_19_10" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(624, 336)
+
+[node name="T_21_10" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(688, 336)
+loai = 1
+
+[node name="T_22_10" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(720, 336)
+
+[node name="T_2_11" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(80, 368)
+
+[node name="T_5_11" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(176, 368)
+
+[node name="T_12_11" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(400, 368)
+loai = 1
+
+[node name="T_19_11" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(624, 368)
+
+[node name="T_22_11" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(720, 368)
+
+[node name="T_0_12" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(16, 400)
+loai = 1
+
+[node name="T_1_12" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(48, 400)
+
+[node name="T_3_12" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(112, 400)
+loai = 1
+
+[node name="T_5_12" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(176, 400)
+
+[node name="T_7_12" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(240, 400)
+loai = 1
+
+[node name="T_8_12" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(272, 400)
+loai = 1
+
+[node name="T_10_12" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(336, 400)
+
+[node name="T_11_12" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(368, 400)
+
+[node name="T_13_12" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(432, 400)
+
+[node name="T_14_12" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(464, 400)
+
+[node name="T_16_12" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(528, 400)
+loai = 1
+
+[node name="T_17_12" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(560, 400)
+loai = 1
+
+[node name="T_19_12" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(624, 400)
+
+[node name="T_21_12" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(688, 400)
+loai = 1
+
+[node name="T_23_12" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(752, 400)
+
+[node name="T_24_12" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(784, 400)
+loai = 1
+
+[node name="T_2_13" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(80, 432)
+
+[node name="T_5_13" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(176, 432)
+
+[node name="T_8_13" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(272, 432)
+loai = 1
+
+[node name="T_11_13" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(368, 432)
+
+[node name="T_13_13" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(432, 432)
+
+[node name="T_16_13" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(528, 432)
+loai = 1
+
+[node name="T_19_13" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(624, 432)
+
+[node name="T_22_13" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(720, 432)
+
+[node name="T_2_14" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(80, 464)
+
+[node name="T_3_14" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(112, 464)
+
+[node name="T_5_14" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(176, 464)
+loai = 1
+
+[node name="T_6_14" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(208, 464)
+loai = 1
+
+[node name="T_8_14" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(272, 464)
+
+[node name="T_9_14" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(304, 464)
+
+[node name="T_11_14" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(368, 464)
+loai = 1
+
+[node name="T_13_14" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(432, 464)
+loai = 1
+
+[node name="T_15_14" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(496, 464)
+
+[node name="T_16_14" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(528, 464)
+
+[node name="T_18_14" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(592, 464)
+loai = 1
+
+[node name="T_19_14" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(624, 464)
+loai = 1
+
+[node name="T_21_14" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(688, 464)
+
+[node name="T_22_14" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(720, 464)
+
+[node name="T_6_15" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(208, 496)
+
+[node name="T_18_15" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(592, 496)
+
+[node name="T_4_16" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(144, 528)
+loai = 1
+
+[node name="T_20_16" parent="Tuong" instance=ExtResource("2_ot")]
+position = Vector2(656, 528)
+loai = 1
+
+[node name="ChoSinh" type="Node2D" parent="."]
+
+[node name="Cho01" type="Marker2D" parent="ChoSinh"]
+position = Vector2(48, 48)
+
+[node name="Cho02" type="Marker2D" parent="ChoSinh"]
+position = Vector2(752, 496)
+
+[node name="Cho03" type="Marker2D" parent="ChoSinh"]
+position = Vector2(752, 48)
+
+[node name="Cho04" type="Marker2D" parent="ChoSinh"]
+position = Vector2(48, 496)
+
+[node name="Cho05" type="Marker2D" parent="ChoSinh"]
+position = Vector2(400, 48)
+
+[node name="Cho06" type="Marker2D" parent="ChoSinh"]
+position = Vector2(400, 496)
+
+[node name="Cho07" type="Marker2D" parent="ChoSinh"]
+position = Vector2(48, 272)
+
+[node name="Cho08" type="Marker2D" parent="ChoSinh"]
+position = Vector2(752, 272)
+
+[node name="Cho09" type="Marker2D" parent="ChoSinh"]
+position = Vector2(304, 272)
+
+[node name="Cho10" type="Marker2D" parent="ChoSinh"]
+position = Vector2(496, 272)

@@ -2,6 +2,9 @@ extends Control
 
 ## Chỉ hiển thị. Nghe signal, không đọc thẳng vào Player hay MatchState.
 
+## Chat vừa nhận một dòng lệnh. HUD chuyển tiếp cho `main.gd` — nó không tự thi hành gì.
+signal lenh(id_nguoi_gui: int, doi_so: PackedStringArray)
+
 var _peer_count := 0
 
 @onready var room_label: Label = %RoomLabel
@@ -17,9 +20,13 @@ var _peer_count := 0
 @onready var crosshair: Control = %Crosshair
 @onready var luc_nen: ColorRect = %LucNem
 @onready var luc_muc: ColorRect = %LucNemMuc
+@onready var bang_ban: VBoxContainer = $BangBan
+@onready var chat := $Chat
+@onready var bang_thang: Control = $BangThang
 
 
 func _ready() -> void:
+	chat.lenh.connect(func(id: int, ds: PackedStringArray): lenh.emit(id, ds))
 	NetManager.room_joined.connect(_on_room_joined)
 	NetManager.peer_joined.connect(func(_id, _uid): _refresh_peers())
 	NetManager.peer_left.connect(func(_id, _inactive): _refresh_peers())
@@ -100,6 +107,12 @@ func _refresh_peers() -> void:
 ##
 ## Hoi thang cai ghe (`toi_dang_ngoi`) — ghe tu doc trang thai ban master phat ve.
 func _nhac_bai() -> void:
+	# Ghe sofa khong dinh gi toi bai bac (`deck = -1`), nhung van phai nhac cach dung day.
+	for s in get_tree().get_nodes_in_group("card_seat"):
+		if s is GheNgoi and (s as GheNgoi).toi_dang_ngoi:
+			card_prompt.text = "Đang ngồi — [Q] đứng dậy  ·  [ESC] menu"
+			return
+
 	var dealer := get_tree().get_first_node_in_group("card_dealer") as CardDealer
 	if dealer == null:
 		card_prompt.text = ""
@@ -164,6 +177,21 @@ func _nhac_poker() -> void:
 		if raise_slider.value < it or raise_slider.value > het:
 			raise_slider.value = it
 		raise_label.text = "Tố %d chip" % int(raise_slider.value)
+
+
+## Bàn party vừa phát trạng thái mới. `main.gd` nối tín hiệu `PhaBanCo.trang_thai_doi`
+## vào đây, HUD chuyển tiếp cho bảng của nó — main.gd không với sâu vào cây con của HUD.
+func cap_nhat_ban(tt: Dictionary) -> void:
+	bang_ban.cap_nhat(tt)
+
+
+## Hết ván — hiện bảng thắng. `main.gd` gọi, rồi tự gọi `an_thang()` khi đóng bàn.
+func bao_thang(chu: String) -> void:
+	bang_thang.hien(chu)
+
+
+func an_thang() -> void:
+	bang_thang.an()
 
 
 ## Phím poker đọc ở HUD chứ không ở CardDealer: chỉ chỗ này mới biết thanh kéo đang ở mức nào.

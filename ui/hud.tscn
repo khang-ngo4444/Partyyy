@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://ui/hud.gd" id="1_hud"]
 [ext_resource type="Script" path="res://ui/chat.gd" id="2_chat"]
+[ext_resource type="PackedScene" path="res://ui/bang_ban.tscn" id="4_bb"]
+[ext_resource type="PackedScene" path="res://ui/bang_thang.tscn" id="5_bt"]
 
 [node name="HUD" type="Control"]
 layout_mode = 3
@@ -202,13 +204,20 @@ mouse_filter = 2
 alignment = 2
 script = ExtResource("2_chat")
 
-[node name="ChatLog" type="Label" parent="Chat"]
+[node name="ChatLog" type="RichTextLabel" parent="Chat"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/default_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 18
-autowrap_mode = 3
+theme_override_font_sizes/normal_font_size = 18
+theme_override_font_sizes/bold_font_size = 18
+theme_override_font_sizes/italics_font_size = 18
+theme_override_font_sizes/mono_font_size = 18
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
 
 [node name="ChatInput" type="LineEdit" parent="Chat"]
 unique_name_in_owner = true
@@ -216,3 +225,9 @@ visible = false
 layout_mode = 2
 placeholder_text = "Nhập tin — Enter gửi, Esc huỷ"
 max_length = 120
+
+[node name="BangBan" parent="." instance=ExtResource("4_bb")]
+layout_mode = 1
+
+[node name="BangThang" parent="." instance=ExtResource("5_bt")]
+layout_mode = 1

@@ -14,17 +14,23 @@ const DIE_SCENE := preload("res://lobby/objects/die.tscn")
 const BASKETBALL_SCENE := preload("res://lobby/objects/basketball.tscn")
 const DART_SCENE := preload("res://lobby/objects/dart.tscn")
 const HAMMER_SCENE := preload("res://lobby/objects/hammer.tscn")
-const GOLF_BALL_SCENE := preload("res://lobby/objects/golf_ball.tscn")
-const PUTTER_SCENE := preload("res://lobby/objects/putter.tscn")
 ## Ten vat trong `Placeholder_<Ten>_<so>` -> scene vat mang. Them loai vat moi: them mot dong o day.
 const PLACEHOLDER_SCENES := {
-	"GolfBall": GOLF_BALL_SCENE,
-	"Putter": PUTTER_SCENE,
 	"Hammer": HAMMER_SCENE,
 	"Basketball": BASKETBALL_SCENE,
 	"Dart": DART_SCENE,
 	"Die": DIE_SCENE,
 }
+
+## Bang thang nam tren man hinh bao lau truoc khi ca phong ve phong cho, giay.
+const GIAY_XEM_THANG := 6.0
+
+## Vien toi thieu cua chu 3D, tinh theo co chu. Duoi muc nay thi chu mong dinh vao nen va
+## khong doc ra — xem `_sua_chu_3d`.
+const VIEN_CHU_TOI_THIEU := 0.2
+
+## Mau vien chu hien tai. Doi theo mau den ca phong — xem `ap_mau_den`.
+var _vien_chu := Color(0.05, 0.05, 0.07)
 
 ## Tran so quan caro. Van caro tren ban 28x28 co the dung toi 150-200 quan, moi quan la mot
 ## object mang — day se la phep thu lon nhat cua du an. De o day de ha xuong ma khong sua code.
@@ -46,13 +52,26 @@ const XIANGQI_BACK := [
 	ChessPiece.XKind.ELEPHANT, ChessPiece.XKind.HORSE, ChessPiece.XKind.CHARIOT,
 ]
 
-var _lobby: Node3D = null
+var _lobby: Lobby = null
+## Dang don/xep quan co. CA HAI duong (xep lai, lat mat) deu `await` giua chung — bam nhanh
+## hai lan thi lan sau chay XEN VAO giua await cua lan truoc va spawn them mot bo nua: quan
+## bi nhan doi. Mot co chan chung ca hai.
+##
+## ponytail: co CUC BO tung may, khong replicate. Chan duoc nguoi bam lien tay (truong hop
+## that su xay ra). Hai nguoi o hai may bam cung mot phan nghin giay thi van lot — neu gap
+## thi doi sang mot co tren MatchState.
+var _dang_xep := false
 
 @onready var spawner: FusionSpawner = $FusionSpawner
 @onready var scene_root: Node3D = $SceneRoot
 @onready var dealer: CardDealer = $CardDealer
 @onready var menu: Control = $UILayer/MainMenu
 @onready var hud: Control = $UILayer/HUD
+@onready var picker: Control = $UILayer/CharacterPicker
+@onready var light_picker: Control = $UILayer/LightPicker
+@onready var music_picker: Control = $UILayer/MusicPicker
+@onready var quan_tro: QuanTroMiniGame = $QuanTro
+@onready var ban_co: PhaBanCo = $BanCo
 
 
 func _ready() -> void:
@@ -66,14 +85,27 @@ func _ready() -> void:
 	spawner.add_spawnable_scene(BASKETBALL_SCENE)
 	spawner.add_spawnable_scene(DART_SCENE)
 	spawner.add_spawnable_scene(HAMMER_SCENE)
-	spawner.add_spawnable_scene(GOLF_BALL_SCENE)
-	spawner.add_spawnable_scene(PUTTER_SCENE)
 
 	# Nha cai tu dang ky la bo phat RPC va tu khai bao la bai cua no.
 	dealer.setup(spawner)
 
 	# RPC broadcast di toi moi node da dang ky, khong can qua mot object mang cu the.
 	Fusion.register_broadcast_receiver(self)
+
+	get_tree().node_added.connect(_khi_them_node)
+
+	quan_tro.ket_thuc.connect(_khi_xong_minigame)
+	# Minigame la mot LOP PHU, ban party van song nguyen ven ben duoi. Khong ngung no lai
+	# thi mot phim Space vua ban tank vua tung xuc xac.
+	quan_tro.bat_dau.connect(func(): ban_co.tam_dung = true)
+	ban_co.het_vong.connect(_khi_het_vong)
+	ban_co.van_thang.connect(_khi_thang)
+	# HUD chi HIEN THI: no nghe tin hieu chu khong doc thang vao PhaBanCo.
+	ban_co.trang_thai_doi.connect(hud.cap_nhat_ban)
+	hud.lenh.connect(_khi_lenh)
+
+	light_picker.mau_da_chon.connect(request_light)
+	light_picker.xin_mau_goc.connect(request_light_reset)
 
 	NetManager.room_joined.connect(_on_room_joined)
 	NetManager.room_left.connect(_on_room_left)
@@ -82,6 +114,176 @@ func _ready() -> void:
 
 	_show_menu(true)
 	NetManager.connect_to_photon()
+
+
+## Moi node vao cay deu di qua day. Hai viec, deu can bat DUNG LUC no xuat hien chu khong
+## quet mot lan: chu 3D sinh ra rai rac ca phien, con MatchState thi do Fusion spawn va co
+## the toi SAU khi lobby da dung xong.
+func _khi_them_node(n: Node) -> void:
+	_sua_chu_3d(n)
+	var ms := n as MatchState
+	if ms != null and not ms.changed.is_connected(_dong_bo_phong):
+		ms.changed.connect(_dong_bo_phong)
+
+
+## Keo trang thai chung cua phong tu MatchState ve. Chay khi nguoi khac doi mau den, va chay
+## cho nguoi VAO MUON ngay khi MatchState replicate toi.
+##
+## ponytail: moi co mau den. `board_mode` cung nam trong MatchState va cung duoc ghi, nhung
+## hien KHONG ai doc — nguoi vao muon van thay mat ban mac dinh. Them mot dong o day la xong,
+## nhung phai lat ban that cho nguoi do nen de rieng.
+func _dong_bo_phong() -> void:
+	var ms := get_tree().get_first_node_in_group("match_state") as MatchState
+	if ms == null:
+		return
+	ap_mau_sang(ms.light_rgb, ms.light_rgb_b)
+	_theo_pha(ms)
+
+
+## Đường nối giữa TRẠNG THÁI PHÒNG và MINIGAME.
+##
+## `MatchState` (master giữ) tự chạy: ai cũng đứng lên ô sẵn sàng -> đếm ngược -> `PHASE_PLAYING`.
+## Trước đây nhánh `PHASE_PLAYING` của nó là một dòng `pass` — pha đổi rồi nhưng không có gì
+## xảy ra. Đây chính là chỗ còn thiếu.
+##
+## CHỈ master gọi `xin_chay`: bản thân nó đã phát RPC cho cả phòng, mười máy cùng gọi là mười
+## lệnh chạy cho một ván.
+func _theo_pha(ms: MatchState) -> void:
+	if ms.phase != MatchState.PHASE_PLAYING or not NetManager.is_master():
+		return
+	# Vao pha choi thi MO BAN PARTY truoc, khong nhay thang vao minigame.
+	if not ban_co.dang_chay() and not quan_tro.dang_chay():
+		ban_co.xin_mo([])
+
+
+## Thi hành một dòng lệnh gõ trong chat.
+##
+## TẦNG 2 + 3 của lớp xác thực (`LenhChat`): hàm này chạy trên MỌI máy vì lệnh đi RPC tới cả
+## phòng, nhưng `duoc_thi_hanh()` chỉ đúng trên máy đang là master VÀ là máy đã phát lệnh.
+##
+## Máy không đủ quyền vẫn vào tới đây — nó chỉ im lặng đi ra, trừ đúng người gõ thì được báo
+## một câu để biết vì sao lệnh không chạy (tầng 1 đã chặn trước, đây là lưới đỡ).
+func _khi_lenh(id_nguoi_gui: int, doi_so: PackedStringArray) -> void:
+	if doi_so.is_empty():
+		return
+	var ten := doi_so[0]
+	if not LenhChat.duoc_thi_hanh(id_nguoi_gui, NetManager.local_id(), NetManager.is_master()):
+		if id_nguoi_gui == NetManager.local_id():
+			hud.chat.bao(LenhChat.KHONG_PHAI_CHU)
+		return
+
+	match ten:
+		"help":
+			hud.chat.bao(LenhChat.bang_tro_giup())
+		"mg":
+			_lenh_minigame(doi_so.slice(1))
+		_:
+			hud.chat.bao("Không có lệnh '%s'. Gõ /help." % ten)
+
+
+## `/mg` trơ trọi thì liệt kê; `/mg <mã>` thì chạy.
+##
+## Không kiểm `dang_chay()` hộ `QuanTroMiniGame` — nó tự chặn ở `_net_chay`. Kiểm hai nơi là
+## hai chỗ phải sửa khi luật đổi.
+func _lenh_minigame(doi_so: PackedStringArray) -> void:
+	if doi_so.is_empty():
+		hud.chat.bao("Minigame: " + ", ".join(quan_tro.DANH_SACH.keys()))
+		return
+	var ma := doi_so[0].to_lower()
+	if not quan_tro.DANH_SACH.has(ma):
+		hud.chat.bao("Không có minigame '%s'. Có: %s"
+				% [ma, ", ".join(quan_tro.DANH_SACH.keys())])
+		return
+	if quan_tro.dang_chay():
+		hud.chat.bao("Đang có minigame chạy rồi.")
+		return
+	hud.chat.bao("Chạy %s…" % ma)
+	quan_tro.xin_chay(ma)
+
+
+## Het mot vong luot tren ban -> sang Tank. Chi master phat lenh.
+func _khi_het_vong(_thu_tu_cu: Array) -> void:
+	if NetManager.is_master() and not quan_tro.dang_chay():
+		quan_tro.xin_chay("tank")
+
+
+## Hết minigame: master trả phòng về `PHASE_LOBBY`.
+##
+## Ai còn đứng trên ô sẵn sàng thì `MatchState` lại đếm ngược và vào ván kế — đúng vòng lặp
+## của game. Muốn nghỉ thì bước ra khỏi ô.
+##
+## Het minigame: bang xep hang thanh THU TU LUOT cua vong sau — thang minigame thi duoc di truoc.
+##
+## Ban party van mo, khong dong lai. Vong moi bat dau ngay.
+##
+## Khong con RPC rieng o day: `PhaBanCo` tu phat nguyen trang thai ban (thu tu + mau + chia +
+## coc + do) trong MOT goi, nen mot duong dong bo la du cho ca ban.
+func _khi_xong_minigame(xep_hang: Array) -> void:
+	ban_co.tam_dung = false
+	ban_co.xin_thu_tu_moi(xep_hang)
+
+
+## Có người đủ cốc — HẾT VÁN. Hiện bảng thắng, rồi đóng bàn và trả cả phòng về phòng chờ.
+##
+## Chạy trên MỌI máy, và đó là chuyện đúng: bảng thắng, đóng bàn, kéo nhân vật của mình về
+## chỗ đều là việc CỤC BỘ — bàn party được nạp riêng từng máy chứ không phải object mạng.
+## Chỉ mỗi khúc đặt lại pha phòng là của master.
+func _khi_thang(id: int, coc: int) -> void:
+	# Ngưng bàn NGAY. Lượt vẫn đang là của người vừa thắng, và bảng thắng nằm trên màn hình
+	# sáu giây — không chặn thì họ bấm Space tung tiếp được, và master lại chốt thêm một lượt
+	# nữa cho một ván đã xong. `dong()` gỡ cờ này ra.
+	ban_co.tam_dung = true
+	hud.bao_thang("%s THẮNG\n%d cốc" % [Player.ten_theo_id(get_tree(), id), coc])
+	await get_tree().create_timer(GIAY_XEM_THANG).timeout
+	hud.an_thang()
+	ban_co.dong()
+	_ve_phong_cho()
+	var ms := get_tree().get_first_node_in_group("match_state") as MatchState
+	if ms != null and NetManager.is_master():
+		ms.phase = MatchState.PHASE_LOBBY
+
+
+## Dua nhan vat cua may nay ve cho xuat phat trong phong cho.
+##
+## Ban party nam o y = 100; khong keo ve thi het van la ca phong roi tu do. Buoc ra khoi o san
+## sang cung tu tat `is_ready`, nen phong khong dem nguoc vao van moi ngay lap tuc.
+func _ve_phong_cho() -> void:
+	if _lobby == null:
+		return
+	for p: Player in get_tree().get_nodes_in_group("players"):
+		if p.is_mine:
+			p.global_transform = _lobby.spawn_transform(NetManager.local_id() - 1)
+
+
+## Luat vien chung cho MOI chu 3D trong game.
+##
+## Bai hoc tu bien "TRAO NIEM TIN — NHAN TAI LOC" cua truong ga: chu 3D mong tren nen kinh
+## sang thi khong doc ra, va co chu cang to thi vien cang phai day theo — vien 10 px vua du
+## cho chu 40, nhung tren chu 120 no chi con la mot net toc. Do lai ca project: bang diem Thap
+## Ha Noi 120/10 (ti le 0.08), Liar Bar va Whack-a-Mole 120/20, bang ten nguoi choi 64/10, va
+## mot nhan trong lobby.gd khong co vien nao.
+##
+## Chi NANG vien, khong bao gio ha: cho nao da tu dat day hon thi giu nguyen y do.
+##
+## KHONG dung `alpha_cut`: no se lam chu doc depth dung hon, nhung `lobby.gd` dang cho chu mo
+## dan theo khoang cach bang alpha (`VISIBILITY_RANGE_FADE_SELF`) — bat alpha_cut vao la chu
+## bat tat dot ngot thay vi mo dan. Hai co che nay khong di voi nhau duoc.
+##
+## Dung `node_added` chu khong quet mot lan luc nap map: chu sinh ra rai rac ca phien — bang
+## ten nguoi vao muon, bong bong chat, nhan tren la bai vua chia. Quet mot lan la sot.
+##
+## ponytail: tin hieu nay ban cho MOI node vao cay, suot phien. Moi lan chi mot phep ep kieu
+## — khong do thay tren khung hinh. Neu sau nay thanh van de thi goi tay o tung cho dung
+## Label3D thay vi nghe tin hieu.
+func _sua_chu_3d(n: Node) -> void:
+	var chu := n as Label3D
+	if chu == null:
+		return
+	chu.outline_size = maxi(chu.outline_size, roundi(chu.font_size * VIEN_CHU_TOI_THIEU))
+	# Bong bong chat tu tinh mau vien theo mau NEN CUA NO. De mau theo den phong len la chu
+	# den tren bong vang mat sach vien trang — dung cai lam no kho doc.
+	if not chu.is_in_group("chu_rieng"):
+		chu.outline_modulate = _vien_chu
 
 
 func _on_room_joined() -> void:
@@ -100,6 +302,12 @@ func _on_room_joined() -> void:
 			b.pressed.connect(func(): request_stone(0))
 		elif b.name == "CaroBlack":
 			b.pressed.connect(func(): request_stone(1))
+		elif b.name == "MusicButton":
+			b.pressed.connect(music_picker.mo)
+		elif b.name == "LightButton":
+			b.pressed.connect(light_picker.mo)
+		elif b.name == "ModelButton":
+			b.pressed.connect(picker.mo)
 		elif b.name == "CaroReset":
 			b.pressed.connect(request_caro_reset)
 		elif b.name == "PenguinStep":
@@ -129,6 +337,13 @@ func _on_room_joined() -> void:
 		_spawn_placeholders(placeholders)
 	for p in placeholders:
 		p.queue_free()
+
+	# Vao muon thi MatchState co the da nam san trong cay truoc khi lobby dung xong — luc do
+	# `_khi_them_node` da chay qua no roi. Keo lai mot lan o day cho chac.
+	_dong_bo_phong()
+	var mb := get_tree().get_first_node_in_group("music_box") as MusicBox
+	if mb != null:
+		mb.dong_bo_vao_muon()
 
 
 ## Master sinh vat mang tai dung vi tri/huong cua tung placeholder (xep bang Editor / Physics Placer).
@@ -201,11 +416,67 @@ func request_board_reset() -> void:
 
 @rpc("any_peer", "call_local")
 func _net_reset_board() -> void:
-	if not NetManager.is_master():
+	if _dang_xep or not NetManager.is_master():
 		return
+	_dang_xep = true
 	_clear_pieces(false)
 	await get_tree().create_timer(0.3).timeout
 	_spawn_set(_board().mode)
+	_dang_xep = false
+
+
+## Bam nut DOI MAU DEN. Mau den la trang thai CA PHONG nen di qua RPC + MatchState, y het
+## cach `board_mode` lam voi mat ban co — nguoi vao muon cung bat dung mau.
+func request_light(mau_a: Color, mau_b: Color, hai_mau: bool) -> void:
+	Fusion.rpc(_net_light, int(mau_a.to_rgba32() >> 8),
+			int(mau_b.to_rgba32() >> 8) if hai_mau else -1)
+
+
+## Tra anh sang ve mau goc cua map.
+func request_light_reset() -> void:
+	Fusion.rpc(_net_light, -1, -1)
+
+
+@rpc("any_peer", "call_local")
+func _net_light(rgb: int, rgb_b: int) -> void:
+	ap_mau_sang(rgb, rgb_b)
+	if NetManager.is_master():
+		var ms := get_tree().get_first_node_in_group("match_state") as MatchState
+		if ms != null:
+			ms.light_rgb = rgb
+			ms.light_rgb_b = rgb_b
+
+
+## Doi mau den, roi doi mau VIEN CHU cho khoi trung.
+##
+## Den hong thi chu vien den van doc duoc, nhung den tim sam thi vien den chim han vao nen.
+## Lay do sang cua mau den ma quyet: den sang -> vien toi, den toi -> vien sang.
+##
+## Chi dung VIEN, khong dung mau chu: mau chu dang mang nghia (ghe xanh la dang ngoi, xam la
+## dang khoa, moi lan ga mot mau) — de len la xoa sach may tin hieu do.
+func ap_mau_sang(rgb: int, rgb_b: int) -> void:
+	if _lobby == null or (rgb == _lobby.mau_sang() and rgb_b == _lobby.mau_sang_b()):
+		return                 # da dung mau roi — khong quet lai ca cay node vo ich
+	_lobby.dat_mau_sang(rgb, rgb_b)
+	# Vien chu bam theo DIEM GIUA cua gradient: chu 3D rai khap phong, khong the moi cai mot kieu.
+	var mau := Color.WHITE
+	if rgb >= 0:
+		mau = Color.hex((rgb << 8) | 0xFF)
+		if rgb_b >= 0:
+			mau = mau.lerp(Color.hex((rgb_b << 8) | 0xFF), 0.5)
+	_vien_chu = (Color(0.05, 0.05, 0.07) if mau.get_luminance() > 0.45
+			else Color(0.97, 0.97, 1.0))
+	_quet_vien_chu(get_tree().root)
+
+
+## Chu da sinh ra tu truoc thi phai di sua tan noi; chu sinh ra SAU do di qua `_sua_chu_3d`
+## va nhan `_vien_chu` moi ngay luc vao cay.
+func _quet_vien_chu(n: Node) -> void:
+	var chu := n as Label3D
+	if chu != null and not chu.is_in_group("chu_rieng"):
+		chu.outline_modulate = _vien_chu
+	for c in n.get_children():
+		_quet_vien_chu(c)
 
 
 ## Dua ga. Master gieo MOT hat giong roi gui di; moi may tu chay cung mot phep tinh nen ra
@@ -302,8 +573,9 @@ func request_board_flip() -> void:
 @rpc("any_peer", "call_local")
 func _net_flip_board(next_mode: int) -> void:
 	var board := _board()
-	if board == null:
+	if board == null or _dang_xep:
 		return
+	_dang_xep = true
 
 	# Ai dang dung tren ban thi TU hat minh ra. Moi may chi lo cho nguoi choi cua no —
 	# theo dung nguyen tac "thu gi day nguoi choi deu re, mien la ho tu ap len minh".
@@ -324,12 +596,13 @@ func _net_flip_board(next_mode: int) -> void:
 
 	await board.flip_to(next_mode)
 
-	if not NetManager.is_master():
-		return
 	# Spawn SAU khi animation ket thuc han. Luc nay rotation.z da ve 0 va luoi moi da dung
 	# xong, nen board.point() tra ve dung toa do — quan roi dung o cua no ngay tu frame dau.
-	board_state_mode(next_mode)
-	_spawn_set(next_mode)
+	if NetManager.is_master():
+		board_state_mode(next_mode)
+		_spawn_set(next_mode)
+	# Mo co SAU khi da spawn xong, khong phai ngay sau animation.
+	_dang_xep = false
 
 
 ## Ghi mat ban hien tai vao MatchState de nguoi vao muon dung dung mat.
@@ -401,6 +674,9 @@ func _spawn_set(m: int) -> void:
 
 
 func _on_room_left() -> void:
+	picker.visible = false
+	light_picker.visible = false
+	music_picker.visible = false
 	_show_menu(true)
 	if _lobby != null:
 		_lobby.queue_free()

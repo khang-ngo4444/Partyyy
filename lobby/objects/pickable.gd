@@ -21,7 +21,7 @@ extends RigidBody3D
 ## HAI KIEU CAM:
 ##   - SIEU LINH (mac dinh): vat lo lung truoc mat, VAN LA VAT LY — va vao ban, bi tuong chan,
 ##     vat nang tre hon. Master keo no bang mot lo xo mem co gioi han luc (xem `_keo_sieu_linh`).
-##   - TRONG TAY (`sieu_linh = false`): dung cu can nam dung cho — bua, gay golf, phi tieu. Tat
+##   - TRONG TAY (`sieu_linh = false`): dung cu can nam dung cho — bua, phi tieu. Tat
 ##     vat ly, dat thang theo camera nguoi cam.
 ##
 ## Trang thai than vat ly SUY RA moi nhip tu (co ai cam, co bi khoa) — khong bat/tat rai rac o

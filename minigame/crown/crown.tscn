@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://minigame/crown/crown.gd" id="1_cr"]
+[ext_resource type="PackedScene" path="res://minigame/crown/san_mien.tscn" id="2_san"]
+
+[node name="CrownCapture" type="Node"]
+script = ExtResource("1_cr")
+san_scene = ExtResource("2_san")

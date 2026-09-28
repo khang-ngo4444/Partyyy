@@ -1,0 +1,51 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="PackedScene" path="res://minigame/chung/san_dau.tscn" id="1_st"]
+[ext_resource type="PackedScene" path="res://minigame/chung/san_tron.tscn" id="2_sr"]
+[ext_resource type="Environment" path="res://materials/env_san_sang.tres" id="3_env"]
+[ext_resource type="Material" path="res://materials/mat_san_canh_bao.tres" id="4_m"]
+
+[sub_resource type="BoxMesh" id="Box_thanh"]
+size = Vector3(22, 0.55, 0.8)
+
+[sub_resource type="BoxShape3D" id="Shape_thanh"]
+size = Vector3(22, 0.55, 0.8)
+
+[node name="SanTuyet" type="Node3D"]
+
+[node name="SanDau" parent="." instance=ExtResource("1_st")]
+
+[node name="Cam" parent="SanDau" index="0"]
+environment = ExtResource("3_env")
+
+[node name="SanTron" parent="." instance=ExtResource("2_sr")]
+
+[node name="Truc" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+
+[node name="Thanh0" type="Node3D" parent="Truc"]
+
+[node name="Mat" type="MeshInstance3D" parent="Truc/Thanh0"]
+mesh = SubResource("Box_thanh")
+material_override = ExtResource("4_m")
+
+[node name="Vung" type="Area3D" parent="Truc/Thanh0"]
+collision_layer = 0
+collision_mask = 2
+
+[node name="Hinh" type="CollisionShape3D" parent="Truc/Thanh0/Vung"]
+shape = SubResource("Shape_thanh")
+
+[node name="Thanh1" type="Node3D" parent="Truc"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0, 0)
+
+[node name="Mat" type="MeshInstance3D" parent="Truc/Thanh1"]
+mesh = SubResource("Box_thanh")
+material_override = ExtResource("4_m")
+
+[node name="Vung" type="Area3D" parent="Truc/Thanh1"]
+collision_layer = 0
+collision_mask = 2
+
+[node name="Hinh" type="CollisionShape3D" parent="Truc/Thanh1/Vung"]
+shape = SubResource("Shape_thanh")

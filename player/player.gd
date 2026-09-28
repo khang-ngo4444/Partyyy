@@ -20,7 +20,7 @@ extends CharacterBody3D
 const LOOPING_ANIMS := ["idle", "walk", "sprint", "fall", "crouch", "sit",
 		"holding-right", "holding-left", "holding-both"]
 
-## Tầm với để nhặt đồ, đo từ CAMERA (xem _nearest_pickable).
+## Tam voi de nhat do va bam nut, cung la DO DAI TIA NGAM (xem `_ngam`).
 @export var pick_range := 3.2
 ## Ném tích lực: giữ E để nạp, thả E để ném. Tốc độ ném từ min tới max theo thời gian giữ.
 @export var luc_nem_min := 3.0
@@ -31,16 +31,21 @@ const LOOPING_ANIMS := ["idle", "walk", "sprint", "fall", "crouch", "sit",
 ## So lan nhay lien tiep truoc khi cham dat. 2 = nhay doi.
 @export var so_lan_nhay := 2
 @export var gravity := 20.0
-## Xanh cyan. Không vật nào trong phòng có màu này nên nó không lẫn vào nền.
-const VIEN_MAU := Color("00ffff")
-## Vỏ sáng to hơn vật chừng này. Chỉ 6% — đủ để thấy quầng sáng ló ra quanh mép, chưa đủ để
-## nó thành một khối riêng che mất vật.
+## Vo sang lay DO SANG tu chinh vat, chi giu SAC va DO BAO HOA co dinh: quan den ra xanh
+## tham, quan trang ra xanh nhat.
+##
+## Mot mau cyan co dinh cho moi vat thi tren quan trang no gan nhu bien mat (sang tren sang),
+## con tren quan den no choi den muc nuot mat hinh con quan.
+const VIEN_SAC := 0.5              # cyan tren vong mau 0..1
+const VIEN_BAO_HOA := 0.85
+## San do sang. Vat den tuyet doi (luminance 0) van phai con thay duoc vien.
+const VIEN_SANG_TOI_THIEU := 0.28
+## Vo sang to hon vat chung nay. Chi 6% — du de thay quang sang lo ra quanh mep, chua du de
+## no thanh mot khoi rieng che mat vat.
 const VIEN_NOI := 1.06
-## Mờ vừa đủ để nhìn xuyên qua thấy vật thật bên trong.
+## Mo vua du de nhin xuyen qua thay vat that ben trong.
 const VIEN_ALPHA := 0.5
 const VIEN_SANG := 2.5
-## Ngoài 60° so với hướng nhìn thì thôi không tô nữa.
-const NGAM_TOI_THIEU := 0.5
 
 @onready var sync: FusionSharedReplicator = $Replicator
 @onready var rig: CameraRig = $CameraRig
@@ -48,6 +53,51 @@ const NGAM_TOI_THIEU := 0.5
 @onready var model_root: Node3D = $ModelRoot
 
 var is_mine := false
+## Pha ban party khoa WASD lai: di lai do xuc xac quyet, khong do phim.
+var khoa_di_chuyen := false
+
+## Chế độ SÂN ĐẤU (minigame pha 3): camera là một cái CỐ ĐỊNH trên cao, dùng chung cả phòng.
+##
+## Hai thứ đổi cùng lúc, và phải cùng lúc:
+##   1. WASD đi theo **trục thế giới**, không theo hướng thân — không ai có camera riêng để mà
+##      đi theo hướng nhìn của mình nữa.
+##   2. Thân **tự quay theo hướng chạy** — chuột không còn xoay thân, không tự quay thì nhân
+##      vật trượt ngang như bị kéo.
+##
+## Cục bộ, không replicate: góc xoay thân đã nằm trong Auto replication rồi.
+var che_do_san := false
+## Thân quay theo hướng chạy nhanh cỡ nào, radian/giây.
+const XOAY_THEO_HUONG := 12.0
+
+## Vận tốc bị ĐẨY, giữ tách khỏi vận tốc đi lại.
+##
+## `_physics_process` GÁN THẲNG `velocity.x/z` từ phím mỗi khung hình, nên cộng xung lực vào
+## `velocity` là khung sau nó bị xoá sạch — đẩy không ăn thua gì. Phải giữ riêng rồi cộng vào
+## ở bước cuối, và cho tắt dần.
+var _day := Vector3.ZERO
+## Lực đẩy tắt dần bao nhiêu m/s mỗi giây.
+const DAY_TAT_DAN := 9.0
+
+## Sàn trơn tới mức nào: số GIÂY để tăng tốc từ đứng yên lên `speed` — và cũng là số giây để
+## dừng lại. `0` = bám sàn như thường (gán thẳng vận tốc, dừng tức thì). Sân tuyết bật lên,
+## mọi chỗ khác để nguyên 0.
+var truot := 0.0
+## Vận tốc ngang do CHÂN người chơi, không kể lực đẩy. Phải giữ riêng: trên băng, vận tốc là
+## thứ tích luỹ qua nhiều khung hình, mà `velocity` thì bị `_day` cộng vào rồi tắt dần.
+var _van := Vector2.ZERO
+
+
+## Đẩy nhân vật này một xung lực.
+##
+## Luật xuyên suốt dự án: **thứ gì đẩy người chơi đều rẻ, miễn là chính họ tự áp lên mình**.
+## Chỉ gọi hàm này cho nhân vật CỦA MÁY MÌNH — vị trí người khác do replicator lo, đẩy hộ họ
+## là đánh nhau với chính cái replicator đó.
+func day(xung: Vector3) -> void:
+	_day.x += xung.x
+	_day.z += xung.z
+	if xung.y > 0.0:
+		velocity.y = maxf(velocity.y, xung.y)
+
 
 ## Mắt người chơi cao chừng này khi đứng — khớp vị trí CameraRig trong camera_rig.tscn. Máy
 ## khác không có CameraRig của người này (bị queue_free), nên dựng lại camera từ con số này.
@@ -55,6 +105,10 @@ const MAT_CAO := 1.65
 ## Nguoi choi nam o lop va cham rieng. Vat nhat duoc (Pickable.LOP_VAT) khong va voi lop nay:
 ## di ngang ban co khong xo do quan, quan co khong chan chan nguoi.
 const LOP_NGUOI := 1 << 1
+## Lop NGAM: chi de ban tia ngam trung, khong day gi va khong chan gi. Nut bam va ghe khong
+## co than vat ly (co y — nut nam tren mat tu se chan do dat tren do, di xuyen ghe khong con
+## la ngoi), nen chung deo mot Area3D rieng o lop nay de tia co cai ma trung.
+const LOP_NGAM := 1 << 4
 
 ## Góc cúi/ngửa của camera (radian). Máy sở hữu ghi mỗi frame, replicate tới mọi máy — để
 ## vật đang cầm ở máy nào cũng nằm đúng trước MẮT người cầm, kể cả khi họ ngước nhìn rổ.
@@ -106,6 +160,10 @@ func luc_dang_nap() -> float:
 	return lerpf(luc_nem_min, luc_nem_max, maxf(muc_nap(), 0.0))
 var _anim: AnimationPlayer = null
 var _meshes: Array[MeshInstance3D] = []
+## Camera lùi ít hơn chừng này mét thì coi như đang dán vào gáy — phải giấu thân đi.
+const GAN_GAY := 1.0
+## Đang giấu thân hay không. Nhớ lại để không gán `cast_shadow` cho mọi mesh ở mọi khung hình.
+var _dang_giau := false
 var _playing := ""
 var _loaded_model := -1
 
@@ -138,6 +196,11 @@ var _loaded_model := -1
 		model_index = value
 		if is_node_ready():
 			_apply_model()
+
+## Kieu bong bong chat (xem `SpeechBubble.Kieu`). Replicate vi bong bong duoc VE O MAY KHAC:
+## ho phai biet minh chon kieu nao. Khong can setter — `Chat` doc gia tri nay ngay truoc moi
+## lan cho bong bong noi.
+@export var bubble_shape: int = 0
 
 
 ## HUD gọi hàm này khi bấm nút đổi nhân vật. Chỉ đổi được model CỦA CHÍNH MÌNH — gán thẳng
@@ -197,9 +260,13 @@ func _unhandled_input(event: InputEvent) -> void:
 	# đã ghi sẵn "chờ hết ván mới đứng dậy được".
 	if _ghe != null:
 		if event.is_action_pressed("drop"):
-			var d := get_tree().get_first_node_in_group("card_dealer") as CardDealer
-			if d != null:
-				d.request_stand_up(_ghe.deck, _ghe.index)
+			# Ghe sofa dung day duoc ngay; ghe bai phai xin master (dang giua van thi bi tu choi).
+			if _ghe is GheNgoi:
+				(_ghe as GheNgoi).dung_day()
+			else:
+				var d := get_tree().get_first_node_in_group("card_dealer") as CardDealer
+				if d != null:
+					d.request_stand_up(_ghe.deck, _ghe.index)
 		return
 
 	var held := carried()
@@ -240,6 +307,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif _dang_ngam is Pickable:
 		(_dang_ngam as Pickable).request_pick()
 	elif _dang_ngam is CardSeat and (_dang_ngam as CardSeat).con_trong():
+		if _dang_ngam is GheNgoi:
+			# Sofa khong co van bai de tranh luot — ngoi thang, khong xin ai.
+			(_dang_ngam as GheNgoi).ngoi_xuong()
+			return
 		# Chỉ XIN ngồi. Người được đặt lên ghế khi master đồng ý (xem `_theo_ghe`).
 		var d := get_tree().get_first_node_in_group("card_dealer") as CardDealer
 		if d != null:
@@ -260,85 +331,55 @@ func carried() -> Pickable:
 	return null
 
 
-## Đo từ CAMERA chứ không từ điểm cầm: điểm cầm đong đưa theo góc nhìn, nên đo từ nó thì chỉ
-## cần ngước lên một chút là vật dưới chân bỗng ngoài tầm.
+## Vat dang ngam: BAN MOT TIA tu camera. Trung cai gi thi ngam cai do — khong trung gi thi
+## khong ngam gi.
 ##
-## Trong tầm với, chọn vật NẰM GIỮA TẦM NHÌN NHẤT — để giữa đống quân cờ còn lấy đúng con
-## mình đang nhìn.
-func _nearest_pickable() -> Pickable:
+## Truoc day moi loai muc tieu co mot vong quet rieng (`_nearest_pickable`, `_nearest_pressable`,
+## `_nearest_seat`) roi cham diem "nam giua tam nhin toi dau". Nguong la tich vo huong 0.5 —
+## mot hinh NON 60 do. O tam voi 3.2 m, cai non do trum mot vong tron duong kinh 3.7 m: nhin
+## lech han ra ngoai quan co van sang len, va giua chum quan co canh nhau thi khong con nao
+## chi dich danh duoc con nao.
+##
+## Tia lay ca LOP_THE_GIOI vao mat na: tuong, mat ban, mat tu CHAN tia. Khong the ngam xuyen
+## tuong sang vat o phong ben, cung khong nhat duoc quan co nam khuat sau chan ban.
+func _ngam() -> Node3D:
 	if rig == null or not is_instance_valid(rig):
 		return null
-	var eye := rig.camera.global_position
-	var look := -rig.camera.global_transform.basis.z
-	var best: Pickable = null
-	var best_score := -1.0
-	for p: Pickable in get_tree().get_nodes_in_group("pickable"):
-		if p.holder_id != 0:
-			continue
-		var to_obj := p.global_position - eye
-		if to_obj.length() > pick_range:
-			continue
-		var centered := look.dot(to_obj.normalized())
-		if centered < NGAM_TOI_THIEU:
-			continue                      # lệch quá 60° so với hướng nhìn
-		if centered > best_score:
-			best_score = centered
-			best = p
-	return best
-
-
-## Mục tiêu nằm giữa tầm nhìn tới đâu. -1 nghĩa là không có gì.
-func _cham_diem(diem: Vector3, co: bool) -> float:
-	if not co or rig == null or not is_instance_valid(rig):
-		return -1.0
-	var eye := rig.camera.global_position
-	var look := -rig.camera.global_transform.basis.z
-	return look.dot((diem - eye).normalized())
-
-
-## Ghế gần nhất đang nhìn vào.
-func _nearest_seat() -> CardSeat:
-	if rig == null or not is_instance_valid(rig):
+	var cam := rig.camera.global_transform
+	var q := PhysicsRayQueryParameters3D.create(cam.origin, cam.origin - cam.basis.z * pick_range,
+			Pickable.LOP_THE_GIOI | Pickable.LOP_VAT | LOP_NGAM)
+	# Nut va ghe la Area3D, khong phai than vat ly — khong bat cai nay thi tia xuyen qua chung.
+	q.collide_with_areas = true
+	q.exclude = [get_rid()]
+	var trung := get_world_3d().direct_space_state.intersect_ray(q)
+	if trung.is_empty():
 		return null
-	var eye := rig.camera.global_position
-	var look := -rig.camera.global_transform.basis.z
-	var best: CardSeat = null
-	var best_score := 0.75
-	for s in get_tree().get_nodes_in_group("card_seat"):
-		var ghe := s as CardSeat
-		var toi := ghe.global_position + Vector3(0.0, 0.5, 0.0) - eye
-		if toi.length() > 3.2:
-			continue
-		var centered := look.dot(toi.normalized())
-		if centered > best_score:
-			best_score = centered
-			best = ghe
-	return best
+	return _chu_cua(trung["collider"], cam.origin)
 
 
-## Cùng cách chấm điểm với _nearest_pickable: trong tầm, chọn cái nằm giữa tầm nhìn nhất.
-func _nearest_pressable() -> Pressable:
-	if rig == null or not is_instance_valid(rig):
-		return null
-	var eye := rig.camera.global_position
-	var look := -rig.camera.global_transform.basis.z
-	var best: Pressable = null
-	var best_score := 0.55          # phải nhắm khá thẳng vào nút mới tính
-	for b: Pressable in get_tree().get_nodes_in_group("pressable"):
-		var to_btn := b.diem_ngam() - eye
-		if to_btn.length() > b.press_range:
-			continue
-		var centered := look.dot(to_btn.normalized())
-		if centered > best_score:
-			best_score = centered
-			best = b
-	return best
+## Tu thu ma tia trung tro len tim CHU cua no. Hinh va cham cua Pickable nam ngay tren than
+## vat; nut va ghe thi vung ngam la mot Area3D con, phai tro len cha moi ra chu.
+##
+## Tra ve null = trung mot thu khong ngam duoc (tuong, mat ban, vat dang co nguoi cam).
+func _chu_cua(va_cham: Object, mat: Vector3) -> Node3D:
+	var n := va_cham as Node
+	while n != null:
+		if n is Pickable:
+			return n if (n as Pickable).holder_id == 0 else null
+		if n is Pressable:
+			# Tam bam rieng tung nut, co nut chinh xuong 2.2 m — tia dai 3.2 m nen phai loc lai.
+			var nut := n as Pressable
+			return nut if mat.distance_to(nut.diem_ngam()) <= nut.press_range else null
+		if n is CardSeat:
+			return n
+		n = n.get_parent()
+	return null
 
 
 func _physics_process(delta: float) -> void:
 	# Đang ngồi: đứng yên hẳn, không trọng lực, không move_and_slide. Ghế sát bàn nên khối va
 	# chạm của người chạm mép bàn — để move_and_slide chạy là bị đẩy bật khỏi ghế.
-	if _ghe != null:
+	if _ghe != null or khoa_di_chuyen:
 		velocity = Vector3.ZERO
 		return
 	# Đang gõ chat thì WASD và Space là CHỮ. `Input.get_vector` đọc thẳng bàn phím, không quan
@@ -357,9 +398,20 @@ func _physics_process(delta: float) -> void:
 
 	var input := Vector2.ZERO if dang_go else Input.get_vector(
 			"move_left", "move_right", "move_forward", "move_back")
-	var dir := (transform.basis * Vector3(input.x, 0.0, input.y)).normalized()
-	velocity.x = dir.x * speed
-	velocity.z = dir.z * speed
+	var tho := Vector3(input.x, 0.0, input.y)
+	# Sân đấu giữ nguyên trục thế giới; phòng chờ xoay theo hướng thân.
+	var dir := (tho if che_do_san else transform.basis * tho).normalized()
+	var muon := Vector2(dir.x, dir.z) * speed
+	# Trên băng thì chân không ăn sàn: vận tốc bò dần tới thứ mình muốn, và khi buông phím cũng
+	# bò dần về 0 — đó chính là cái trượt.
+	_van = _van.move_toward(muon, speed / truot * delta) if truot > 0.0 else muon
+	velocity.x = _van.x + _day.x
+	velocity.z = _van.y + _day.z
+	_day = _day.move_toward(Vector3.ZERO, DAY_TAT_DAN * delta)
+
+	# Godot coi -Z là hướng trước, nên yaw cần là `atan2(-x, -z)` của hướng chạy.
+	if che_do_san and dir.length_squared() > 0.01:
+		rotation.y = rotate_toward(rotation.y, atan2(-dir.x, -dir.z), XOAY_THEO_HUONG * delta)
 
 	move_and_slide()
 
@@ -371,8 +423,9 @@ func _process(_delta: float) -> void:
 	if is_mine:
 		nhin_doc = rig.rotation.x
 		_theo_ghe()
-		rig.set_holding(holding)
 		_cap_nhat_muc_tieu(holding)
+		# Ở sân đấu camera nhìn từ trên xuống: giấu thân là mất luôn nhân vật của mình.
+		_giau_than(rig.lui_xa < GAN_GAY and not che_do_san)
 
 	if _anim == null:
 		return
@@ -390,18 +443,9 @@ func _cap_nhat_muc_tieu(holding: bool) -> void:
 	var muc_tieu: Node3D = null
 	# Dang cam thi E la NEM, khong phai nhat — dung ngam cai khac.
 	if not holding and _ghe == null:
-		# So DIEM NGAM giua nut va vat, khong uu tien nut vo dieu kien: dung tren ban co nhin thang
-		# vao quan tot ma van bam trung nut cach 2.5 m o ria ban.
-		var nut := _nearest_pressable()
-		var vat := _nearest_pickable()
-		var d_nut := _cham_diem(nut.diem_ngam() if nut != null else Vector3.ZERO, nut != null)
-		var d_vat := _cham_diem(vat.global_position if vat != null else Vector3.ZERO, vat != null)
-		if nut != null and d_nut >= d_vat:
-			muc_tieu = nut
-		elif vat != null:
-			muc_tieu = vat
-		else:
-			muc_tieu = _nearest_seat()
+		# MOT tia quyet dinh tat ca. Khong con man so diem giua nut, vat va ghe — thu nao che
+		# tam mat truoc thi thu do duoc ngam, dung nhu mat nguoi choi thay.
+		muc_tieu = _ngam()
 
 	if muc_tieu != _dang_ngam:
 		_tat_vien()
@@ -420,23 +464,26 @@ func _cap_nhat_muc_tieu(holding: bool) -> void:
 ##   Khung dây 12 cạnh — thấy đủ từ mọi phía, nhưng là một cái hộp thô bao quanh, trông như
 ##   công cụ gỡ lỗi chứ không phải hiệu ứng trong game.
 ##
-## Cách này: nhân bản CHÍNH cái lưới, phóng to 6%, tô cyan trong suốt có phát sáng. Nó ôm
+## Cach nay: nhan ban CHINH cai luoi, phong to 6%, to xanh trong suot co phat sang — do sang
+## cua mau lay tu chinh vat (xem `_mau_vien`). No om
 ## đúng đường nét của vật nên không có cạnh cứng nào, và nhìn góc nào cũng thấy quầng sáng
 ## ló ra quanh mép.
 func _bat_vien(node: Node3D) -> void:
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color(VIEN_MAU.r, VIEN_MAU.g, VIEN_MAU.b, VIEN_ALPHA)
-	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	mat.emission_enabled = true
-	mat.emission = VIEN_MAU
-	mat.emission_energy_multiplier = VIEN_SANG
-	# Vẽ cả hai mặt: lưới hở (quân cờ, lá bài) mà chỉ vẽ một mặt thì nhìn từ phía kia là mất.
-	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
-	# Vẽ SAU vật thật, nếu không lớp trong suốt bị chính vật ghi đè.
-	mat.render_priority = 1
-
 	for m in _luoi_cua(node):
+		# Mot vat lieu RIENG cho tung luoi: mot vat co the co nhieu luoi khac mau (quan co tuong
+		# co dia go va chu muc), va do sang cua vo phai bam theo dung cai luoi no dang boc.
+		var mat := StandardMaterial3D.new()
+		var mau := _mau_vien(m)
+		mat.albedo_color = Color(mau, VIEN_ALPHA)
+		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		mat.emission_enabled = true
+		mat.emission = mau
+		mat.emission_energy_multiplier = VIEN_SANG
+		# Ve ca hai mat: luoi ho (quan co, la bai) ma chi ve mot mat thi nhin tu phia kia la mat.
+		mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+		# Ve SAU vat that, neu khong lop trong suot bi chinh vat ghi de.
+		mat.render_priority = 1
 		var vo := MeshInstance3D.new()
 		vo.mesh = m.mesh
 		vo.material_override = mat
@@ -451,6 +498,24 @@ func _bat_vien(node: Node3D) -> void:
 		vo.position = tam * (1.0 - VIEN_NOI)
 		m.add_child(vo)
 		_vien.append(vo)
+
+
+## Mau vo sang cho MOT luoi: giu sac cyan, lay do sang tu mau goc cua chinh luoi do.
+##
+## `get_active_material` tra ve dung cai vat lieu dang co hieu luc (override > surface override
+## > vat lieu cua mesh), nen quan co — von duoc to bang `material_override` trong
+## `chess_piece.gd` — doc ra dung mau trang/den cua no.
+##
+## ponytail: chi doc `albedo_color`, khong lay mau tu texture. Kit Kenney dung mot atlas chung
+## voi albedo trang, nen do vat giu nguyen mau atlas se deu ra vien sang. Chua thanh van de vi
+## moi thu nhat duoc trong phong deu to bang albedo_color; neu sau nay co thi lay mau trung
+## binh cua texture mot lan roi nho lai.
+func _mau_vien(m: MeshInstance3D) -> Color:
+	var goc := m.get_active_material(0)
+	var sang := 1.0
+	if goc is BaseMaterial3D:
+		sang = (goc as BaseMaterial3D).albedo_color.get_luminance()
+	return Color.from_hsv(VIEN_SAC, VIEN_BAO_HOA, maxf(sang, VIEN_SANG_TOI_THIEU))
 
 
 ## Mọi lưới trong `node`, TRỪ những cái vỏ sáng do chính hàm này đẻ ra.
@@ -532,11 +597,35 @@ func _apply_model() -> void:
 
 	for m: MeshInstance3D in inst.find_children("*", "MeshInstance3D", true, false):
 		_meshes.append(m)
+		# Goc nhin thu BA: khong giau gi ca, ke ca cua chinh minh — thay duoc nhan vat minh dang
+		# dieu khien la diem chinh cua goc nhin nay.
+		#
+		# Chi giau phan dau khi camera dan sat vao gay (`CameraRig.lui_xa` gan 0), xem `_giau_dau`.
 		if is_mine:
-			# Góc nhìn thứ nhất: ẩn hẳn thân mình, kể cả bóng.
-			m.visible = false
+			m.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 
+	# Mesh vua dung lai tu dau: ep `_giau_than` ap lai trang thai o khung hinh sau.
+	_dang_giau = false
 	_apply_tint()
+
+
+## Giấu thân khi camera dán sát vào gáy (góc nhìn thứ nhất).
+##
+## Không đặt `visible = false` mà dùng `SHADOWS_ONLY`: thân biến mất khỏi tầm mắt nhưng **vẫn
+## đổ bóng**, nên người chơi nhìn bóng mình trên sàn là biết mình đang đứng đâu và quay mặt
+## hướng nào. Tắt hẳn thì mất luôn cái mốc đó.
+##
+## Chỉ chạy khi trạng thái ĐỔI — gán `cast_shadow` cho từng mesh mỗi khung hình là việc thừa.
+##
+## Vật đang cầm không bị giấu: điểm cầm gắn vào CAMERA chứ không vào thân (GUIDE mục 1t), nên
+## nó vẫn hiện đúng trước mặt.
+func _giau_than(giau: bool) -> void:
+	if giau == _dang_giau:
+		return
+	_dang_giau = giau
+	for m in _meshes:
+		m.cast_shadow = (GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY if giau
+				else GeometryInstance3D.SHADOW_CASTING_SETTING_ON)
 
 
 ## Kenney dùng một texture atlas chung. Không dùng material_override trơn (mất texture) —
@@ -552,8 +641,6 @@ func _apply_tint() -> void:
 		if mat is StandardMaterial3D:
 			(mat as StandardMaterial3D).albedo_color = tint
 		m.set_surface_override_material(0, mat)
-	if is_mine and rig != null and is_instance_valid(rig):
-		rig.tint_arm(tint)
 
 
 func _apply_name() -> void:

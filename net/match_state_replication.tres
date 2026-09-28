@@ -1,7 +1,7 @@
 [gd_resource type="FusionReplicationConfig" format=3]
 
 [resource]
-property_count = 4
+property_count = 7
 properties/0/path = NodePath(":phase")
 properties/0/max_array_capacity = 0
 properties/0/interface_tag = ""
@@ -26,3 +26,21 @@ properties/3/interface_tag = ""
 properties/3/interpolate = 0
 properties/3/element_type = 0
 properties/3/element_class_name = ""
+properties/4/path = NodePath(":light_rgb")
+properties/4/max_array_capacity = 0
+properties/4/interface_tag = ""
+properties/4/interpolate = 0
+properties/4/element_type = 0
+properties/4/element_class_name = ""
+properties/5/path = NodePath(":light_rgb_b")
+properties/5/max_array_capacity = 0
+properties/5/interface_tag = ""
+properties/5/interpolate = 0
+properties/5/element_type = 0
+properties/5/element_class_name = ""
+properties/6/path = NodePath(":nhac_key")
+properties/6/max_array_capacity = 0
+properties/6/interface_tag = ""
+properties/6/interpolate = 0
+properties/6/element_type = 0
+properties/6/element_class_name = ""

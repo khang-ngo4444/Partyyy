@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://minigame/breaking_blocks/breaking_blocks.gd" id="1_bb"]
+[ext_resource type="PackedScene" path="res://minigame/chung/san_luoi.tscn" id="2_san"]
+
+[node name="BreakingBlocks" type="Node"]
+script = ExtResource("1_bb")
+san_scene = ExtResource("2_san")
+giay_van = 60.0

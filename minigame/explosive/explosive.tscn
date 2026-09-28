@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://minigame/explosive/explosive.gd" id="1_ex"]
+[ext_resource type="PackedScene" path="res://minigame/explosive/san_no.tscn" id="2_san"]
+
+[node name="Explosive" type="Node"]
+script = ExtResource("1_ex")
+san_scene = ExtResource("2_san")

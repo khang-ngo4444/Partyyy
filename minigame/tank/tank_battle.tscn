@@ -1,0 +1,49 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://minigame/tank/tank_battle.gd" id="1_tb"]
+[ext_resource type="PackedScene" path="res://minigame/tank/ban_do_tank.tscn" id="2_bd"]
+[ext_resource type="PackedScene" path="res://minigame/tank/xe_tang.tscn" id="3_xt"]
+[ext_resource type="PackedScene" path="res://minigame/tank/dan.tscn" id="4_dan"]
+
+[node name="TankBattle" type="Node"]
+process_priority = 10
+script = ExtResource("1_tb")
+xe_scene = ExtResource("3_xt")
+dan_scene = ExtResource("4_dan")
+
+[node name="San" type="Node2D" parent="."]
+
+[node name="BanDo" parent="San" instance=ExtResource("2_bd")]
+
+[node name="Xe" type="Node2D" parent="San"]
+
+[node name="Dan" type="Node2D" parent="San"]
+
+[node name="Lop" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="DongHo" type="Label" parent="Lop"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -240.0
+offset_top = -58.0
+offset_right = 240.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 26
+text = ""
+horizontal_alignment = 1
+vertical_alignment = 1

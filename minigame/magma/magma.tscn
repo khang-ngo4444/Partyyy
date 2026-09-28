@@ -1,0 +1,10 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://minigame/magma/magma.gd" id="1_mg"]
+[ext_resource type="PackedScene" path="res://minigame/magma/san_magma.tscn" id="2_san"]
+[ext_resource type="PackedScene" path="res://minigame/magma/cau_lua.tscn" id="3_cau"]
+
+[node name="Magma" type="Node"]
+script = ExtResource("1_mg")
+san_scene = ExtResource("2_san")
+cau_lua_scene = ExtResource("3_cau")

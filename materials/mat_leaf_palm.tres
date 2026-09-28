@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "mat_leaf_palm"
+cull_mode = 2
+albedo_color = Color(0.2431, 0.4196, 0.2706, 1)
+roughness = 0.55
+backlight_enabled = true
+backlight = Color(0.4353, 0.6275, 0.3608, 1)

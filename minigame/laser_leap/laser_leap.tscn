@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://minigame/laser_leap/laser_leap.gd" id="1_ll"]
+[ext_resource type="PackedScene" path="res://minigame/laser_leap/san_laser.tscn" id="2_san"]
+
+[node name="LaserLeap" type="Node"]
+script = ExtResource("1_ll")
+san_scene = ExtResource("2_san")

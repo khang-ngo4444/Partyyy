@@ -1,0 +1,162 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://ui/music_picker.gd" id="1_mp"]
+
+[sub_resource type="StyleBoxFlat" id="panel_bg"]
+bg_color = Color(0.09, 0.09, 0.12, 0.97)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 22.0
+content_margin_top = 18.0
+content_margin_right = 22.0
+content_margin_bottom = 18.0
+
+[node name="MusicPicker" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mp")
+
+[node name="Dim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.55)
+
+[node name="Panel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -360.0
+offset_top = -280.0
+offset_right = 360.0
+offset_bottom = 280.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("panel_bg")
+
+[node name="Outer" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Panel/Outer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "MÁY NHẠC"
+
+[node name="FolderRow" type="HBoxContainer" parent="Panel/Outer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="FolderLabel" type="Label" parent="Panel/Outer/FolderRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+modulate = Color(1, 1, 1, 0.65)
+theme_override_font_sizes/font_size = 14
+text = "— chưa chọn thư mục —"
+text_overrun_behavior = 3
+vertical_alignment = 1
+
+[node name="PickButton" type="Button" parent="Panel/Outer/FolderRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 38)
+layout_mode = 2
+text = "CHỌN THƯ MỤC"
+
+[node name="Split" type="HBoxContainer" parent="Panel/Outer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 14
+
+[node name="Left" type="VBoxContainer" parent="Panel/Outer/Split"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="L1" type="Label" parent="Panel/Outer/Split/Left"]
+layout_mode = 2
+modulate = Color(1, 1, 1, 0.7)
+text = "Nhạc trên máy bạn — bấm để thêm"
+
+[node name="TrackScroll" type="ScrollContainer" parent="Panel/Outer/Split/Left"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="TrackList" type="VBoxContainer" parent="Panel/Outer/Split/Left/TrackScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="Right" type="VBoxContainer" parent="Panel/Outer/Split"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="R1" type="Label" parent="Panel/Outer/Split/Right"]
+layout_mode = 2
+modulate = Color(1, 1, 1, 0.7)
+text = "Hàng đợi của phòng"
+
+[node name="QueueScroll" type="ScrollContainer" parent="Panel/Outer/Split/Right"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="QueueList" type="VBoxContainer" parent="Panel/Outer/Split/Right/QueueScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="StatusLabel" type="Label" parent="Panel/Outer"]
+unique_name_in_owner = true
+layout_mode = 2
+modulate = Color(1, 1, 1, 0.5)
+theme_override_font_sizes/font_size = 14
+text = ""
+
+[node name="Foot" type="HBoxContainer" parent="Panel/Outer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PlayButton" type="Button" parent="Panel/Outer/Foot"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "PHÁT"
+
+[node name="SkipButton" type="Button" parent="Panel/Outer/Foot"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "BỎ QUA BÀI NÀY"
+
+[node name="ClearButton" type="Button" parent="Panel/Outer/Foot"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "DỌN HÀNG ĐỢI"
+
+[node name="CloseButton" type="Button" parent="Panel/Outer/Foot"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "ĐÓNG"
