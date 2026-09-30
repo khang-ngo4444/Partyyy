@@ -185,6 +185,10 @@ func cap_nhat_ban(tt: Dictionary) -> void:
 	bang_ban.cap_nhat(tt)
 
 
+func cap_nhat_chon_huong(noi_dung: String) -> void:
+	bang_ban.cap_nhat_chon_huong(noi_dung)
+
+
 ## Hết ván — hiện bảng thắng. `main.gd` gọi, rồi tự gọi `an_thang()` khi đóng bàn.
 func bao_thang(chu: String) -> void:
 	bang_thang.hien(chu)

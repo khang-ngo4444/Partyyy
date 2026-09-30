@@ -28,10 +28,14 @@ extends Node3D
 @export var vat_lieu: Array[StandardMaterial3D] = []
 
 @onready var _mat: MeshInstance3D = $Mat
+@onready var _rim: MeshInstance3D = $Rim
 @onready var _chu: Label3D = $Chu
+var _rim_mat: StandardMaterial3D
 
 
 func _ready() -> void:
+	_rim_mat = _rim.material_override.duplicate() as StandardMaterial3D
+	_rim.material_override = _rim_mat
 	_ve()
 
 
@@ -40,3 +44,28 @@ func _ve() -> void:
 		_mat.material_override = vat_lieu[loai]
 	var ky: String = BanDuong.KY_HIEU[loai]
 	_chu.text = str(so) if ky == "" else "%d\n%s" % [so, ky]
+
+
+## 0 = bình thường, 1 = điểm đến khác có thể chọn, 2 = lộ trình đang chọn.
+func dat_noi_bat(muc: int) -> void:
+	if not is_node_ready() or _rim_mat == null:
+		return
+	match muc:
+		1:
+			scale = Vector3.ONE * 1.035
+			_rim_mat.albedo_color = Color("#d55cff")
+			_rim_mat.emission = Color("#7d24d9")
+			_rim_mat.emission_energy_multiplier = 1.7
+			_chu.modulate = Color("#ffd9ff")
+		2:
+			scale = Vector3.ONE * 1.085
+			_rim_mat.albedo_color = Color("#33fff0")
+			_rim_mat.emission = Color("#13cfc3")
+			_rim_mat.emission_energy_multiplier = 2.6
+			_chu.modulate = Color("#d9fffb")
+		_:
+			scale = Vector3.ONE
+			_rim_mat.albedo_color = Color("#ff9c1f")
+			_rim_mat.emission = Color("#8b3906")
+			_rim_mat.emission_energy_multiplier = 0.55
+			_chu.modulate = Color("#fff7d1")

@@ -201,10 +201,10 @@ func _ocean() -> void:
 
 func _terrain() -> void:
 	var lobes := [
-		[Vector3(-9, -0.2, -1), 14.5, Vector3(1.20, 1, 0.78)],
-		[Vector3(8, 0.0, 1), 13.8, Vector3(1.08, 1, 0.82)],
-		[Vector3(0, -0.1, -8), 12.2, Vector3(1.18, 1, 0.72)],
-		[Vector3(-1, 0.2, 9), 11.4, Vector3(1.32, 1, 0.70)]
+		[Vector3(-13, -0.2, -1), 21.5, Vector3(1.22, 1, 0.80)],
+		[Vector3(13, 0.0, 1), 21.0, Vector3(1.18, 1, 0.82)],
+		[Vector3(0, -0.1, -13), 18.8, Vector3(1.28, 1, 0.72)],
+		[Vector3(-1, 0.2, 14), 18.2, Vector3(1.35, 1, 0.72)]
 	]
 	for i in lobes.size():
 		var d: Array = lobes[i]
@@ -213,19 +213,19 @@ func _terrain() -> void:
 				float(d[1]) * 0.965, 0.62, _m.rock_hi, 28, d[2])
 		_cylinder("Grass_%d" % i, (d[0] as Vector3) + Vector3.UP * 2.42,
 				float(d[1]) * 0.91, 0.32, _m.grass, 28, d[2])
-	_cylinder("SouthBeach", Vector3(0, GROUND_Y + 0.35, -8.3), 10.4, 0.24, _m.sand, 26,
-			Vector3(1.35, 1, 0.63))
-	_cylinder("HarborBeach", Vector3(-11.3, GROUND_Y + 0.34, -1.3), 7.0, 0.22, _m.sand, 22,
-			Vector3(1.0, 1, 0.72))
-	_cylinder("JunglePlateau", Vector3(-1.2, GROUND_Y + 0.65, 7.0), 8.2, 0.85, _m.grass, 24,
-			Vector3(1.28, 1, 0.72))
-	_cylinder("VolcanoPlateau", Vector3(10, GROUND_Y + 0.52, 1.6), 7.2, 0.64, _m.rock, 22,
-			Vector3(1.05, 1, 0.82))
-	for i in 30:
-		var a := TAU * i / 30.0
-		var r := 22.5 + sin(a * 5.0) * 2.2
+	_cylinder("SouthBeach", Vector3(0, GROUND_Y + 0.35, -12.0), 15.0, 0.24, _m.sand, 30,
+			Vector3(1.42, 1, 0.66))
+	_cylinder("HarborBeach", Vector3(-18.0, GROUND_Y + 0.34, -1.3), 10.0, 0.22, _m.sand, 26,
+			Vector3(1.0, 1, 0.78))
+	_cylinder("JunglePlateau", Vector3(-2.0, GROUND_Y + 0.65, 10.0), 11.2, 0.85, _m.grass, 28,
+			Vector3(1.34, 1, 0.76))
+	_cylinder("VolcanoPlateau", Vector3(13, GROUND_Y + 0.52, 2.0), 10.2, 0.64, _m.rock, 26,
+			Vector3(1.08, 1, 0.86))
+	for i in 44:
+		var a := TAU * i / 44.0
+		var r := 34.5 + sin(a * 5.0) * 3.1
 		_sphere("ShoreRock_%02d" % i,
-				Vector3(cos(a) * r, 0.25 + (i % 4) * 0.16, sin(a) * r * 0.72),
+				Vector3(cos(a) * r, 0.25 + (i % 4) * 0.16, sin(a) * r * 0.74),
 				1.2 + (i % 3) * 0.28, _m.cliff,
 				Vector3(1.0 + (i % 2) * 0.4, 0.75 + (i % 3) * 0.17, 0.85))
 
@@ -236,26 +236,46 @@ func _boardwalk() -> void:
 		if child is OBan:
 			spaces.append(child)
 	spaces.sort_custom(func(a: OBan, b: OBan) -> bool: return a.so < b.so)
+	var board := get_parent() as BanDuong
+	# Đọc hai export của BanDuong để editor và runtime dựng đúng cùng một graph.
+	var edges: Array[Vector2i] = []
+	var vong := mini(int(board.get("so_o_vong_chinh")), spaces.size()) if board != null else 0
+	for i in vong:
+		edges.append(Vector2i(i, (i + 1) % vong))
+	if board != null:
+		var canh_phu: Array[Vector2i] = board.get("canh_them")
+		for edge in canh_phu:
+			edges.append(edge)
+	var bac := PackedInt32Array()
+	bac.resize(spaces.size())
+	for edge in edges:
+		bac[edge.x] += 1
+		bac[edge.y] += 1
 	# Mỗi ô có chân đế riêng: mặt ô không còn lơ lửng hoặc chìm theo các lớp terrain.
 	for space in spaces:
 		_cylinder("TilePedestal_%02d" % (space as OBan).so,
 				Vector3(space.position.x, space.position.y - 0.53, space.position.z),
 				0.94, 0.86, _m.iron, 8)
-	for i in spaces.size():
-		var a := spaces[i].position
-		var b := spaces[(i + 1) % spaces.size()].position
+		if bac[(space as OBan).so] > 2:
+			_torus("Junction_%02d" % (space as OBan).so,
+					space.position + Vector3.UP * 0.39, 1.16, 1.31, _m.cyan, 8, 24)
+	for edge in edges:
+		var a := spaces[edge.x].position
+		var b := spaces[edge.y].position
 		var delta := Vector3(b.x - a.x, 0, b.z - a.z)
 		var length := maxf(delta.length() - 1.75, 0.5)
 		var center := (a + b) * 0.5
 		center.y = (a.y + b.y) * 0.5 - 0.17
 		var yaw := atan2(delta.x, delta.z)
-		_box("Boardwalk_%02d" % i, center, Vector3(1.36, 0.23, length), _m.wood, yaw)
+		_box("Boardwalk_%02d_%02d" % [edge.x, edge.y], center,
+				Vector3(1.36, 0.23, length), _m.wood, yaw)
 		var side := Vector3(cos(yaw), 0, -sin(yaw))
 		for s in [-1.0, 1.0]:
 			_box("Trim", center + side * 0.61 * s + Vector3.UP * 0.14,
 					Vector3(0.09, 0.16, length), _m.gold, yaw)
-		for p in 4:
-			var pos := a.lerp(b, (float(p) + 0.5) / 4.0)
+		var plank_count := maxi(4, ceili(length / 0.52))
+		for p in plank_count:
+			var pos := a.lerp(b, (float(p) + 0.5) / float(plank_count))
 			pos.y = center.y + 0.17
 			_box("Plank", pos, Vector3(1.44, 0.045, 0.065), _m.wood_hi, yaw)
 
@@ -481,8 +501,8 @@ func _preview_camera(current: bool) -> void:
 	var camera := Camera3D.new()
 	camera.name = "ArchipelagoPreviewCamera"
 	camera.current = current
-	camera.position = Vector3(0, 43, 50)
-	camera.fov = 52.0
+	camera.position = Vector3(0, 62, 76)
+	camera.fov = 55.0
 	_root.add_child(camera)
 	camera.look_at_from_position(camera.position, Vector3(0, 3, 0), Vector3.UP)
 

@@ -29,6 +29,8 @@ extends Node
 signal het_vong(thu_tu_cu: Array)
 ## Trạng thái vừa đổi. HUD nghe tín hiệu này, không đọc thẳng vào đây.
 signal trang_thai_doi(tt: Dictionary)
+## Nhắc riêng cho HUD cục bộ trong lúc người chơi chọn lộ trình sau khi tung xúc xắc.
+signal chon_huong_doi(noi_dung: String)
 ## Có người đủ cốc — HẾT VÁN. Phát trên MỌI máy, vì gói trạng thái tới máy nào cũng mang cờ
 ## `thang`. Người điều phối (`main.gd`) lo phần đóng bàn và trả cả phòng về phòng chờ.
 signal van_thang(id: int, coc: int)
@@ -68,6 +70,12 @@ var ban: BanDuong = null
 ## khác đang phủ lên trên — bàn không cần biết lớp đó là cái gì, chỉ cần biết mình đang bị che.
 var tam_dung := false
 var _dang_di := false
+var _dang_chon := false
+var _dice_ready := false
+var _id_dang_tung := -1
+var _so_dang_tung := 0
+var _cac_duong: Array[PackedInt32Array] = []
+var _lua_chon := 0
 ## Xúc xắc là vật thể trình diễn cục bộ, gắn vào camera hiện hành. Kết quả vẫn tới từ cùng
 ## RPC `_net_tung`, vì vậy mọi máy hiển thị đúng một con số và không thêm trạng thái mạng.
 var _xuc_xac: Node3D = null
@@ -122,6 +130,12 @@ func xin_thu_tu_moi(xep_hang: Array) -> void:
 func dong() -> void:
 	tt = {}
 	_dang_di = false
+	_dang_chon = false
+	_dice_ready = false
+	_id_dang_tung = -1
+	_so_dang_tung = 0
+	_cac_duong.clear()
+	chon_huong_doi.emit("")
 	tam_dung = false                    # đóng rồi thì không còn lớp nào che nữa
 	_che_do_ban_co(false)
 	if ban != null and is_instance_valid(ban):
@@ -173,6 +187,23 @@ func _net_trang_thai(json: String) -> void:
 ## Người tới lượt bấm phím: tự gieo số rồi phát cho cả phòng để mọi máy diễn lại cùng một
 ## đoạn đi. Master áp luật ở cuối, xem `_ket_luot`.
 func _unhandled_input(event: InputEvent) -> void:
+	if _dang_chon and _id_dang_tung == NetManager.local_id():
+		if event.is_action_pressed("move_left"):
+			get_viewport().set_input_as_handled()
+			_lua_chon = posmod(_lua_chon - 1, _cac_duong.size())
+			_cap_nhat_lua_chon()
+			return
+		if event.is_action_pressed("move_right"):
+			get_viewport().set_input_as_handled()
+			_lua_chon = posmod(_lua_chon + 1, _cac_duong.size())
+			_cap_nhat_lua_chon()
+			return
+		if event.is_action_pressed("jump") or event.is_action_pressed("interact"):
+			get_viewport().set_input_as_handled()
+			_dang_chon = false
+			chon_huong_doi.emit("Đã chọn — đang chờ xác nhận từ chủ phòng...")
+			Fusion.rpc(_net_xin_chon_duong, NetManager.local_id(), _lua_chon)
+			return
 	if not _den_luot_minh():
 		return
 	if event.is_action_pressed("jump") or event.is_action_pressed("interact"):
@@ -201,9 +232,83 @@ func _net_tung(id: int, so: int) -> void:
 	if int(_thu_tu()[int(tt["luot"])]) != id:
 		return
 	_dang_di = true
+	_dice_ready = false
+	_id_dang_tung = id
+	_so_dang_tung = clampi(so, 1, 6)
 	await _hien_xuc_xac(id, so)
-	await _di(id, so)
+	_dice_ready = true
+	_bat_dau_chon_duong(id, _so_dang_tung)
+
+
+func _bat_dau_chon_duong(id: int, so: int) -> void:
+	var k := LuatBan.khoa(id)
+	var bat_dau := int(_bang("o").get(k, 0))
+	_cac_duong = ban.cac_duong(bat_dau, so)
+	_lua_chon = 0
+	if _cac_duong.is_empty():
+		push_error("BanDuong: khong co lo trinh %d buoc tu o %d" % [so, bat_dau])
+		_dang_di = false
+		return
+	if _cac_duong.size() == 1:
+		if NetManager.is_master():
+			_phat_duong_di(id, _cac_duong[0])
+		return
+	_dang_chon = true
+	if id == NetManager.local_id():
+		_cap_nhat_lua_chon()
+	else:
+		chon_huong_doi.emit("%s đang chọn hướng đi..." % Player.ten_theo_id(get_tree(), id))
+
+
+func _cap_nhat_lua_chon() -> void:
+	if ban == null or _cac_duong.is_empty():
+		return
+	ban.noi_bat_duong(_cac_duong, _lua_chon)
+	var d := _cac_duong[_lua_chon]
+	chon_huong_doi.emit("CHỌN LỘ TRÌNH  %d/%d  → ô %d    [A/D] đổi    [SPACE/E] xác nhận" % [
+			_lua_chon + 1, _cac_duong.size(), int(d[d.size() - 1])])
+
+
+@rpc("any_peer", "call_local")
+func _net_xin_chon_duong(id: int, chi_so: int) -> void:
+	if not NetManager.is_master() or not dang_chay() or not _dang_di:
+		return
+	if id != _id_dang_tung or int(_thu_tu()[int(tt["luot"])]) != id:
+		return
+	var bat_dau := int(_bang("o").get(LuatBan.khoa(id), 0))
+	var hop_le := ban.cac_duong(bat_dau, _so_dang_tung)
+	if chi_so < 0 or chi_so >= hop_le.size():
+		return
+	_phat_duong_di(id, hop_le[chi_so])
+
+
+func _phat_duong_di(id: int, duong: PackedInt32Array) -> void:
+	Fusion.rpc(_net_di_theo_duong, id, JSON.stringify(Array(duong)))
+
+
+@rpc("any_peer", "call_local")
+func _net_di_theo_duong(id: int, json_duong: String) -> void:
+	if not dang_chay() or id != _id_dang_tung:
+		return
+	var raw = JSON.parse_string(json_duong)
+	if not (raw is Array):
+		return
+	var duong := PackedInt32Array()
+	for o in raw:
+		duong.append(int(o))
+	var bat_dau := int(_bang("o").get(LuatBan.khoa(id), 0))
+	if not ban.duong_hop_le(bat_dau, duong, _so_dang_tung):
+		return
+	while not _dice_ready:
+		await get_tree().process_frame
+	_dang_chon = false
+	chon_huong_doi.emit("")
+	ban.xoa_noi_bat()
+	await _di_theo_duong(id, duong)
 	_dang_di = false
+	_id_dang_tung = -1
+	_so_dang_tung = 0
+	_cac_duong.clear()
 	if NetManager.is_master():
 		await get_tree().create_timer(NGHI_GIUA_LUOT).timeout
 		_ket_luot(id)
@@ -290,7 +395,7 @@ func _dung_do(k: String, mon: String) -> String:
 		return "%s để dành, không bấm ra được" % LuatBan.TEN_DO.get(mon, mon)
 
 	var tam := int(_bang("o").get(LuatBan.nguoi_ke_tiep(tt, k), 0))
-	var trung := LuatBan.o_trung_bom(tam, LuatBan.BAC_BOM[mon] as Array, ban.so_luong())
+	var trung := ban.o_trung_bom(tam, LuatBan.BAC_BOM[mon] as Array)
 	var dinh := PackedStringArray()
 	for nguoi in _bang("o").keys():
 		var kk := str(nguoi)
@@ -413,11 +518,11 @@ func _bao_dam_co_ban() -> void:
 
 
 ## Đi từng ô một để nhìn thấy được, không nhảy thẳng tới đích.
-func _di(id: int, so_buoc: int) -> void:
+func _di_theo_duong(id: int, duong: PackedInt32Array) -> void:
 	var k := LuatBan.khoa(id)
 	var p := _nguoi(id)
-	for b in so_buoc:
-		_bang("o")[k] = ban.tien(int(_bang("o")[k]), 1)
+	for i in range(1, duong.size()):
+		_bang("o")[k] = int(duong[i])
 		if p != null:
 			var tw := create_tween()
 			tw.tween_property(p, "global_position", _cho_dung(id, int(_bang("o")[k])),

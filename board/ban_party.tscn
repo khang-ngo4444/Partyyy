@@ -1,215 +1,324 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3 uid="uid://jmi2m3pymqvd"]
 
-[ext_resource type="Script" path="res://board/ban_duong.gd" id="1_bd"]
+[ext_resource type="Script" uid="uid://djcche2g26fq2" path="res://board/ban_duong.gd" id="1_bd"]
 [ext_resource type="PackedScene" path="res://board/o_ban.tscn" id="2_o"]
-[ext_resource type="Script" path="res://board/ban_party_map.gd" id="3_map"]
+[ext_resource type="Script" uid="uid://bssv1duuj6eu0" path="res://board/ban_party_map.gd" id="3_map"]
 
 [node name="BanParty" type="Node3D"]
 script = ExtResource("1_bd")
+so_o_vong_chinh = 40
+canh_them = Array[Vector2i]([Vector2i(4, 40), Vector2i(40, 41), Vector2i(41, 42), Vector2i(42, 43), Vector2i(43, 14), Vector2i(14, 44), Vector2i(44, 45), Vector2i(45, 46), Vector2i(46, 47), Vector2i(47, 24), Vector2i(24, 48), Vector2i(48, 49), Vector2i(49, 50), Vector2i(50, 51), Vector2i(51, 34), Vector2i(34, 52), Vector2i(52, 53), Vector2i(53, 54), Vector2i(54, 55), Vector2i(55, 4)])
 
 [node name="O_0" parent="." instance=ExtResource("2_o")]
-position = Vector3(18.3151, 3.1500, -4.3835)
-rotation = Vector3(0, 0.727442, 0)
-so = 0
-loai = 5
+position = Vector3(30.7890, 3.1500, -4.3576)
+rotation = Vector3(0, 1.711394, 0)
 
 [node name="O_1" parent="." instance=ExtResource("2_o")]
-position = Vector3(20.4310, 3.1500, -2.0070)
-rotation = Vector3(0, 0.476827, 0)
+position = Vector3(32.4677, 3.1500, -0.5789)
+rotation = Vector3(0, 1.588625, 0)
 so = 1
+loai = 1
 
 [node name="O_2" parent="." instance=ExtResource("2_o")]
-position = Vector3(21.8854, 3.1500, 0.8085)
-rotation = Vector3(0, -0.060576, 0)
+position = Vector3(32.7453, 3.1500, 3.4375)
+rotation = Vector3(0, 1.466203, 0)
 so = 2
-loai = 1
 
 [node name="O_3" parent="." instance=ExtResource("2_o")]
-position = Vector3(21.6969, 3.1500, 3.9179)
-rotation = Vector3(0, -0.751646, 0)
+position = Vector3(31.5667, 3.1500, 7.3597)
+rotation = Vector3(0, 1.341740, 0)
 so = 3
-
-[node name="O_4" parent="." instance=ExtResource("2_o")]
-position = Vector3(19.5467, 3.1500, 6.2184)
-rotation = Vector3(0, -1.035490, 0)
-so = 4
-loai = 3
-
-[node name="O_5" parent="." instance=ExtResource("2_o")]
-position = Vector3(16.8075, 3.1500, 7.8429)
-rotation = Vector3(0, -1.029010, 0)
-so = 5
 loai = 2
 
-[node name="O_6" parent="." instance=ExtResource("2_o")]
-position = Vector3(14.0784, 3.1500, 9.4854)
-rotation = Vector3(0, -0.973377, 0)
-so = 6
+[node name="O_4" parent="." instance=ExtResource("2_o")]
+position = Vector3(29.2911, 3.1500, 10.9577)
+rotation = Vector3(0, 1.212817, 0)
+so = 4
 
-[node name="O_7" parent="." instance=ExtResource("2_o")]
-position = Vector3(11.4446, 3.1500, 11.2774)
-rotation = Vector3(0, -0.959793, 0)
-so = 7
+[node name="O_5" parent="." instance=ExtResource("2_o")]
+position = Vector3(26.3830, 3.1500, 14.2018)
+rotation = Vector3(0, 1.076986, 0)
+so = 5
+loai = 3
+
+[node name="O_6" parent="." instance=ExtResource("2_o")]
+position = Vector3(23.0986, 3.1500, 17.1604)
+rotation = Vector3(0, 0.931844, 0)
+so = 6
 loai = 1
 
+[node name="O_7" parent="." instance=ExtResource("2_o")]
+position = Vector3(19.4104, 3.1500, 19.8081)
+rotation = Vector3(0, 0.775257, 0)
+so = 7
+
 [node name="O_8" parent="." instance=ExtResource("2_o")]
-position = Vector3(8.8352, 3.1500, 13.1050)
-rotation = Vector3(0, -0.996959, 0)
+position = Vector3(15.1928, 3.1500, 21.9336)
+rotation = Vector3(0, 0.605789, 0)
 so = 8
 loai = 7
 
 [node name="O_9" parent="." instance=ExtResource("2_o")]
-position = Vector3(6.1601, 3.1500, 14.8342)
-rotation = Vector3(0, -1.101091, 0)
+position = Vector3(10.4762, 3.1500, 23.2502)
+rotation = Vector3(0, 0.423340, 0)
 so = 9
 
 [node name="O_10" parent="." instance=ExtResource("2_o")]
-position = Vector3(3.3221, 3.1500, 16.2747)
-rotation = Vector3(0, -1.341282, 0)
+position = Vector3(5.5280, 3.1500, 23.6279)
+rotation = Vector3(0, 0.229827, 0)
 so = 10
-loai = 3
+loai = 1
 
 [node name="O_11" parent="." instance=ExtResource("2_o")]
-position = Vector3(0.2355, 3.1500, 16.9958)
-rotation = Vector3(0, -1.771750, 0)
+position = Vector3(0.6852, 3.1500, 23.2476)
+rotation = Vector3(0, 0.029466, 0)
 so = 11
 loai = 4
 
 [node name="O_12" parent="." instance=ExtResource("2_o")]
-position = Vector3(-2.8591, 3.1500, 16.3655)
-rotation = Vector3(0, -2.089715, 0)
+position = Vector3(-3.9085, 3.1500, 22.5229)
+rotation = Vector3(0, -0.171822, 0)
 so = 12
-loai = 1
 
 [node name="O_13" parent="." instance=ExtResource("2_o")]
-position = Vector3(-5.6222, 3.1500, 14.7874)
-rotation = Vector3(0, -2.158566, 0)
+position = Vector3(-8.4110, 3.1500, 21.8236)
+rotation = Vector3(0, -0.367865, 0)
 so = 13
-
-[node name="O_14" parent="." instance=ExtResource("2_o")]
-position = Vector3(-8.2733, 3.1500, 13.0209)
-rotation = Vector3(0, -2.119752, 0)
-so = 14
 loai = 5
 
+[node name="O_14" parent="." instance=ExtResource("2_o")]
+position = Vector3(-13.1112, 3.1500, 21.2016)
+rotation = Vector3(0, -0.553844, 0)
+so = 14
+
 [node name="O_15" parent="." instance=ExtResource("2_o")]
-position = Vector3(-10.9906, 3.1500, 11.3588)
-rotation = Vector3(0, -2.053893, 0)
+position = Vector3(-18.0941, 3.1500, 20.3343)
+rotation = Vector3(0, -0.727169, 0)
 so = 15
+loai = 1
 
 [node name="O_16" parent="." instance=ExtResource("2_o")]
-position = Vector3(-13.8113, 3.1500, 9.8792)
-rotation = Vector3(0, -1.999703, 0)
+position = Vector3(-23.0169, 3.1500, 18.7421)
+rotation = Vector3(0, -0.887412, 0)
 so = 16
 loai = 2
 
 [node name="O_17" parent="." instance=ExtResource("2_o")]
-position = Vector3(-16.7083, 3.1500, 8.5544)
-rotation = Vector3(0, -2.011508, 0)
+position = Vector3(-27.2022, 3.1500, 16.1253)
+rotation = Vector3(0, -1.035694, 0)
 so = 17
-loai = 6
 
 [node name="O_18" parent="." instance=ExtResource("2_o")]
-position = Vector3(-19.5887, 3.1500, 7.1959)
-rotation = Vector3(0, -2.497729, 0)
+position = Vector3(-30.0112, 3.1500, 12.5753)
+rotation = Vector3(0, -1.174000, 0)
 so = 18
+loai = 6
 
 [node name="O_19" parent="." instance=ExtResource("2_o")]
-position = Vector3(-21.3902, 3.1500, 4.7957)
-rotation = Vector3(0, 2.819815, 0)
+position = Vector3(-31.2319, 3.1500, 8.5131)
+rotation = Vector3(0, -1.304685, 0)
 so = 19
-loai = 3
 
 [node name="O_20" parent="." instance=ExtResource("2_o")]
-position = Vector3(-20.3879, 3.1500, 1.7892)
-rotation = Vector3(0, 2.737809, 0)
+position = Vector3(-31.1932, 3.1500, 4.4148)
+rotation = Vector3(0, -1.430198, 0)
 so = 20
 loai = 1
 
 [node name="O_21" parent="." instance=ExtResource("2_o")]
-position = Vector3(-19.1364, 3.1500, -1.1400)
-rotation = Vector3(0, 2.800846, 0)
+position = Vector3(-30.5157, 3.1500, 0.5441)
+rotation = Vector3(0, -1.552968, 0)
 so = 21
-loai = 7
+loai = 3
 
 [node name="O_22" parent="." instance=ExtResource("2_o")]
-position = Vector3(-18.0718, 3.1500, -4.1423)
-rotation = Vector3(0, 2.710646, 0)
+position = Vector3(-29.6886, 3.1500, -3.1166)
+rotation = Vector3(0, -1.675390, 0)
 so = 22
 
 [node name="O_23" parent="." instance=ExtResource("2_o")]
-position = Vector3(-16.7459, 3.1500, -7.0263)
-rotation = Vector3(0, 2.306762, 0)
+position = Vector3(-28.7803, 3.1500, -6.7101)
+rotation = Vector3(0, -1.799853, 0)
 so = 23
-loai = 1
-
-[node name="O_24" parent="." instance=ExtResource("2_o")]
-position = Vector3(-14.3979, 3.1500, -9.1530)
-rotation = Vector3(0, 2.137102, 0)
-so = 24
-loai = 3
-
-[node name="O_25" parent="." instance=ExtResource("2_o")]
-position = Vector3(-11.7095, 3.1500, -10.8621)
-rotation = Vector3(0, 2.131440, 0)
-so = 25
-
-[node name="O_26" parent="." instance=ExtResource("2_o")]
-position = Vector3(-9.0114, 3.1500, -12.5561)
-rotation = Vector3(0, 2.081347, 0)
-so = 26
-loai = 2
-
-[node name="O_27" parent="." instance=ExtResource("2_o")]
-position = Vector3(-6.2331, 3.1500, -14.1122)
-rotation = Vector3(0, 1.923104, 0)
-so = 27
-loai = 1
-
-[node name="O_28" parent="." instance=ExtResource("2_o")]
-position = Vector3(-3.2485, 3.1500, -15.2095)
-rotation = Vector3(0, 1.693876, 0)
-so = 28
-
-[node name="O_29" parent="." instance=ExtResource("2_o")]
-position = Vector3(-0.0942, 3.1500, -15.5997)
-rotation = Vector3(0, 1.472810, 0)
-so = 29
-loai = 3
-
-[node name="O_30" parent="." instance=ExtResource("2_o")]
-position = Vector3(3.0710, 3.1500, -15.2886)
-rotation = Vector3(0, 1.287241, 0)
-so = 30
-loai = 5
-
-[node name="O_31" parent="." instance=ExtResource("2_o")]
-position = Vector3(6.1258, 3.1500, -14.3984)
-rotation = Vector3(0, 1.115756, 0)
-so = 31
-loai = 1
-
-[node name="O_32" parent="." instance=ExtResource("2_o")]
-position = Vector3(8.9837, 3.1500, -13.0000)
-rotation = Vector3(0, 0.915112, 0)
-so = 32
 loai = 7
 
-[node name="O_33" parent="." instance=ExtResource("2_o")]
-position = Vector3(11.5032, 3.1500, -11.0620)
-rotation = Vector3(0, 0.720882, 0)
-so = 33
+[node name="O_24" parent="." instance=ExtResource("2_o")]
+position = Vector3(-27.4830, 3.1500, -10.2813)
+rotation = Vector3(0, -1.928776, 0)
+so = 24
 
-[node name="O_34" parent="." instance=ExtResource("2_o")]
-position = Vector3(13.6051, 3.1500, -8.6697)
-rotation = Vector3(0, 0.821775, 0)
-so = 34
+[node name="O_25" parent="." instance=ExtResource("2_o")]
+position = Vector3(-25.4204, 3.1500, -13.6836)
+rotation = Vector3(0, -2.064607, 0)
+so = 25
 loai = 1
 
+[node name="O_26" parent="." instance=ExtResource("2_o")]
+position = Vector3(-22.4584, 3.1500, -16.6847)
+rotation = Vector3(0, -2.209749, 0)
+so = 26
+loai = 4
+
+[node name="O_27" parent="." instance=ExtResource("2_o")]
+position = Vector3(-18.7785, 3.1500, -19.1632)
+rotation = Vector3(0, -2.366335, 0)
+so = 27
+
+[node name="O_28" parent="." instance=ExtResource("2_o")]
+position = Vector3(-14.6876, 3.1500, -21.2044)
+rotation = Vector3(0, -2.535804, 0)
+so = 28
+loai = 5
+
+[node name="O_29" parent="." instance=ExtResource("2_o")]
+position = Vector3(-10.3600, 3.1500, -22.9923)
+rotation = Vector3(0, -2.718253, 0)
+so = 29
+
+[node name="O_30" parent="." instance=ExtResource("2_o")]
+position = Vector3(-5.7509, 3.1500, -24.5804)
+rotation = Vector3(0, -2.911766, 0)
+so = 30
+loai = 1
+
+[node name="O_31" parent="." instance=ExtResource("2_o")]
+position = Vector3(-0.7587, 3.1500, -25.7395)
+rotation = Vector3(0, -3.112127, 0)
+so = 31
+loai = 2
+
+[node name="O_32" parent="." instance=ExtResource("2_o")]
+position = Vector3(4.5182, 3.1500, -26.0368)
+rotation = Vector3(0, 2.969771, 0)
+so = 32
+
+[node name="O_33" parent="." instance=ExtResource("2_o")]
+position = Vector3(9.6787, 3.1500, -25.1129)
+rotation = Vector3(0, 2.773728, 0)
+so = 33
+loai = 3
+
+[node name="O_34" parent="." instance=ExtResource("2_o")]
+position = Vector3(14.1962, 3.1500, -22.9561)
+rotation = Vector3(0, 2.587749, 0)
+so = 34
+
 [node name="O_35" parent="." instance=ExtResource("2_o")]
-position = Vector3(15.9365, 3.1500, -6.5020)
-rotation = Vector3(0, 0.843169, 0)
+position = Vector3(17.7585, 3.1500, -19.9572)
+rotation = Vector3(0, 2.414424, 0)
 so = 35
+loai = 1
+
+[node name="O_36" parent="." instance=ExtResource("2_o")]
+position = Vector3(20.4981, 3.1500, -16.6911)
+rotation = Vector3(0, 2.254181, 0)
+so = 36
+loai = 6
+
+[node name="O_37" parent="." instance=ExtResource("2_o")]
+position = Vector3(22.9038, 3.1500, -13.5772)
+rotation = Vector3(0, 2.105899, 0)
+so = 37
+
+[node name="O_38" parent="." instance=ExtResource("2_o")]
+position = Vector3(25.4520, 3.1500, -10.6649)
+rotation = Vector3(0, 1.967593, 0)
+so = 38
+loai = 7
+
+[node name="O_39" parent="." instance=ExtResource("2_o")]
+position = Vector3(28.2227, 3.1500, -7.6928)
+rotation = Vector3(0, 1.836907, 0)
+so = 39
+
+[node name="O_40" parent="." instance=ExtResource("2_o")]
+position = Vector3(23.0000, 3.1500, 12.0000)
+rotation = Vector3(0, 1.089909, 0)
+so = 40
+loai = 1
+
+[node name="O_41" parent="." instance=ExtResource("2_o")]
+position = Vector3(15.0000, 3.1500, 15.0000)
+rotation = Vector3(0, 0.785398, 0)
+so = 41
+
+[node name="O_42" parent="." instance=ExtResource("2_o")]
+position = Vector3(6.0000, 3.1500, 17.0000)
+rotation = Vector3(0, 0.339293, 0)
+so = 42
+loai = 3
+
+[node name="O_43" parent="." instance=ExtResource("2_o")]
+position = Vector3(-4.0000, 3.1500, 18.2000)
+rotation = Vector3(0, -0.216341, 0)
+so = 43
+
+[node name="O_44" parent="." instance=ExtResource("2_o")]
+position = Vector3(-16.0000, 3.1500, 17.0000)
+rotation = Vector3(0, -0.755104, 0)
+so = 44
+
+[node name="O_45" parent="." instance=ExtResource("2_o")]
+position = Vector3(-21.0000, 3.1500, 12.0000)
+rotation = Vector3(0, -1.051650, 0)
+so = 45
+loai = 1
+
+[node name="O_46" parent="." instance=ExtResource("2_o")]
+position = Vector3(-23.0000, 3.1500, 5.0000)
+rotation = Vector3(0, -1.356736, 0)
+so = 46
+loai = 4
+
+[node name="O_47" parent="." instance=ExtResource("2_o")]
+position = Vector3(-23.0000, 3.1500, -3.0000)
+rotation = Vector3(0, -1.700499, 0)
+so = 47
+
+[node name="O_48" parent="." instance=ExtResource("2_o")]
+position = Vector3(-22.0000, 3.1500, -10.0000)
+rotation = Vector3(0, -1.997424, 0)
+so = 48
+loai = 2
+
+[node name="O_49" parent="." instance=ExtResource("2_o")]
+position = Vector3(-15.0000, 3.1500, -15.0000)
+rotation = Vector3(0, -2.356194, 0)
+so = 49
+
+[node name="O_50" parent="." instance=ExtResource("2_o")]
+position = Vector3(-6.0000, 3.1500, -17.0000)
+rotation = Vector3(0, -2.802300, 0)
+so = 50
+loai = 5
+
+[node name="O_51" parent="." instance=ExtResource("2_o")]
+position = Vector3(4.0000, 3.1500, -18.0000)
+rotation = Vector3(0, 2.922924, 0)
+so = 51
+loai = 1
+
+[node name="O_52" parent="." instance=ExtResource("2_o")]
+position = Vector3(14.0000, 3.1500, -17.0000)
+rotation = Vector3(0, 2.452668, 0)
+so = 52
+
+[node name="O_53" parent="." instance=ExtResource("2_o")]
+position = Vector3(20.0000, 3.1500, -12.0000)
+rotation = Vector3(0, 2.111216, 0)
+so = 53
+loai = 7
+
+[node name="O_54" parent="." instance=ExtResource("2_o")]
+position = Vector3(23.0000, 3.1500, -5.0000)
+rotation = Vector3(0, 1.784857, 0)
+so = 54
+
+[node name="O_55" parent="." instance=ExtResource("2_o")]
+position = Vector3(23.0000, 3.1500, 4.0000)
+rotation = Vector3(0, 1.398606, 0)
+so = 55
+loai = 6
 
 [node name="MapModel" type="Node3D" parent="."]
 script = ExtResource("3_map")

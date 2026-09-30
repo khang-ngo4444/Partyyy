@@ -7,8 +7,10 @@ extends VBoxContainer
 ## trạng thái riêng — trạng thái duy nhất là gói vừa nhận.
 
 @onready var _luot: Label = $Luot
+@onready var _chon_huong: Label = $ChonHuong
 @onready var _bang: RichTextLabel = $Bang
 @onready var _su_kien: Label = $SuKien
+var _dong_luot := "—"
 
 
 func _ready() -> void:
@@ -26,7 +28,8 @@ func cap_nhat(tt: Dictionary) -> void:
 
 	var id_luot := int(thu_tu[int(tt["luot"])])
 	var nhac := "   —  Space tung xúc xắc" if id_luot == NetManager.local_id() else ""
-	_luot.text = "Lượt: %s%s" % [Player.ten_theo_id(get_tree(), id_luot), nhac]
+	_dong_luot = "Lượt: %s%s" % [Player.ten_theo_id(get_tree(), id_luot), nhac]
+	_luot.text = _dong_luot
 
 	var dong := PackedStringArray()
 	for id in thu_tu:
@@ -36,6 +39,12 @@ func cap_nhat(tt: Dictionary) -> void:
 	# `het_vong` là cờ nội bộ cho `main.gd`, không phải câu để người chơi đọc.
 	var su := str(tt.get("su_kien", ""))
 	_su_kien.text = "" if su == "het_vong" else su
+
+
+func cap_nhat_chon_huong(noi_dung: String) -> void:
+	_chon_huong.text = noi_dung
+	_chon_huong.visible = not noi_dung.is_empty()
+	_luot.text = "ĐÃ TUNG XÚC XẮC — CHỌN HƯỚNG" if _chon_huong.visible else _dong_luot
 
 
 ## `can` = số cốc để thắng. 0 nghĩa là ván chơi vô hạn, khi đó không hiện mẫu số — "cốc 2/0"

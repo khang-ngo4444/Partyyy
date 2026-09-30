@@ -53,9 +53,9 @@ extends Node3D
 ## Rumble Reef rộng hơn bàn cũ gần ba lần, nên rig lùi 22 m, nâng nhẹ và cúi 42°. Người chơi
 ## vẫn đọc được ô sắp tới nhưng đồng thời thấy landmark, đảo vệ tinh và đường chân trời. Offset
 ## 1.5 m giữ quân cờ ở nửa dưới khung hình thay vì để hải đăng che tâm ngắm.
-@export var lui_ban := 22.0
-@export var cao_ban := 1.5
-@export var cui_ban_deg := -42.0
+@export var lui_ban := 34.0
+@export var cao_ban := 3.2
+@export var cui_ban_deg := -48.0
 @export var fov_ban := 65.0
 
 var _body: Node3D = null

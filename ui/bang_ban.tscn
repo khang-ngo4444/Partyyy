@@ -22,6 +22,16 @@ theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 20
 text = "—"
 
+[node name="ChonHuong" type="Label" parent="."]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.45, 1, 0.94, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 7
+theme_override_font_sizes/font_size = 18
+autowrap_mode = 3
+text = "CHỌN LỘ TRÌNH"
+
 [node name="Bang" type="RichTextLabel" parent="."]
 layout_mode = 2
 theme_override_colors/default_color = Color(1, 1, 1, 1)
