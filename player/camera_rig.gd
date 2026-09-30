@@ -50,17 +50,13 @@ extends Node3D
 ## vậy"*. Không thu nhỏ model: đổi scale là kéo theo tốc độ, độ cao nhảy, sải chân animation
 ## và chiều cao collision, mà nhân vật thì dùng chung cho cả ba nơi.
 ##
-## Ở góc này người chơi thấy được khúc bàn phía trước — đi 5 bước thì rơi vào ô nào — thay vì
-## chỉ thấy gáy quân cờ của chính mình.
-## Độ cao do GÓC CÚI lo, nên `cao_ban` để 0. `nang_cao` là offset trong hệ của rig, mà rig thì
-## đã nghiêng theo góc cúi — cộng thêm 6 m vào đó là camera bay lên 11 m nhưng vẫn chỉ cúi 35°,
-## nhìn vượt qua đầu bàn ra khoảng không phía sau. Đã thử và chụp lại: bàn tụt hẳn xuống mép
-## dưới màn hình. Để 0 thì camera nằm đúng trên cung tròn bán kính `lui_ban`, ngắm xuyên qua
-## đầu quân cờ xuống mặt bàn.
-@export var lui_ban := 12.0
-@export var cao_ban := 0.0
-@export var cui_ban_deg := -35.0
-@export var fov_ban := 72.0
+## Rumble Reef rộng hơn bàn cũ gần ba lần, nên rig lùi 22 m, nâng nhẹ và cúi 42°. Người chơi
+## vẫn đọc được ô sắp tới nhưng đồng thời thấy landmark, đảo vệ tinh và đường chân trời. Offset
+## 1.5 m giữ quân cờ ở nửa dưới khung hình thay vì để hải đăng che tâm ngắm.
+@export var lui_ban := 22.0
+@export var cao_ban := 1.5
+@export var cui_ban_deg := -42.0
+@export var fov_ban := 65.0
 
 var _body: Node3D = null
 ## Độ cao mắt, FOV, khoảng lùi lúc đứng — đọc từ scene lúc khởi động, không chép cứng số ở đây.
