@@ -2,8 +2,10 @@
 
 [resource]
 resource_name = "mat_o_cua_hang"
-albedo_color = Color(0.2745, 0.6549, 0.3451, 1)
-roughness = 0.85
+albedo_color = Color(0.19, 0.78, 0.46, 1)
+metallic = 0.14
+metallic_specular = 0.64
+roughness = 0.48
 emission_enabled = true
-emission = Color(0.2745, 0.6549, 0.3451, 1)
-emission_energy_multiplier = 0.35
+emission = Color(0.035, 0.40, 0.19, 1)
+emission_energy_multiplier = 0.72

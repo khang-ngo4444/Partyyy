@@ -1,119 +1,146 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://board/ban_duong.gd" id="1_bd"]
 [ext_resource type="PackedScene" path="res://board/o_ban.tscn" id="2_o"]
+[ext_resource type="Script" path="res://board/ban_party_map.gd" id="3_map"]
 
 [node name="BanParty" type="Node3D"]
 script = ExtResource("1_bd")
 
 [node name="O_0" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(0.6771, 0, -0.7359, 0, 1, 0, 0.7359, 0, 0.6771, 7, 0, -4.5)
+position = Vector3(8.35, 1, -3)
+rotation = Vector3(0, -2.524269, 0)
 so = 0
 loai = 5
 
 [node name="O_1" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(0.6771, 0, -0.7359, 0, 1, 0, 0.7359, 0, 0.6771, 5.4794, 0, -5.8989)
+position = Vector3(7.2, 1.05, -4.62)
+rotation = Vector3(0, -2.131960, 0)
 so = 1
 
 [node name="O_2" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, -0, 3.7647, 0, -6.8)
+position = Vector3(5.45, 1.1, -5.72)
+rotation = Vector3(0, -1.761680, 0)
 so = 2
 loai = 1
 
 [node name="O_3" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, -0, 1.6985, 0, -6.8)
+position = Vector3(3.38, 1.04, -6.12)
+rotation = Vector3(0, -1.447614, 0)
 so = 3
 
 [node name="O_4" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, -0, -0.3676, 0, -6.8)
+position = Vector3(1.28, 0.99, -5.86)
+rotation = Vector3(0, -1.131480, 0)
 so = 4
 loai = 3
 
 [node name="O_5" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, -0, -2.4338, 0, -6.8)
+position = Vector3(-0.55, 1.08, -5)
+rotation = Vector3(0, -2.102770, 0)
 so = 5
 
 [node name="O_6" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, -0, -4.5, 0, -6.8)
+position = Vector3(-2.3, 1.16, -6.03)
+rotation = Vector3(0, -1.517961, 0)
 so = 6
 loai = 2
 
 [node name="O_7" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(-0.6771, 0, -0.7359, 0, 1, 0, 0.7359, 0, -0.6771, -6.0206, 0, -5.4011)
+position = Vector3(-4.38, 1.08, -5.92)
+rotation = Vector3(0, -1.007048, 0)
 so = 7
 
 [node name="O_8" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -7, 0, -3.7647)
+position = Vector3(-6.12, 1, -4.82)
+rotation = Vector3(0, -0.667072, 0)
 so = 8
 loai = 1
 
 [node name="O_9" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -7, 0, -1.6985)
+position = Vector3(-7.38, 1.08, -3.22)
+rotation = Vector3(0, -0.173496, 0)
 so = 9
 loai = 7
 
 [node name="O_10" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -7, 0, 0.3676)
+position = Vector3(-7.72, 1.15, -1.28)
+rotation = Vector3(0, 0.321751, 0)
 so = 10
 
 [node name="O_11" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -7, 0, 2.4338)
+position = Vector3(-7.1, 1.05, 0.58)
+rotation = Vector3(0, -0.593750, 0)
 so = 11
 loai = 3
 
 [node name="O_12" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -7, 0, 4.5)
+position = Vector3(-8.18, 0.98, 2.18)
+rotation = Vector3(0, 0.643501, 0)
 so = 12
 loai = 4
 
 [node name="O_13" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(-0.6771, 0, 0.7359, 0, 1, 0, -0.7359, 0, -0.6771, -5.4794, 0, 5.8989)
+position = Vector3(-6.95, 1.06, 3.82)
+rotation = Vector3(0, 0.977152, 0)
 so = 13
 
 [node name="O_14" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, -0, -3.7647, 0, 6.8)
+position = Vector3(-5.32, 1.12, 4.92)
+rotation = Vector3(0, 1.387316, 0)
 so = 14
 loai = 1
 
 [node name="O_15" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, -0, -1.6985, 0, 6.8)
+position = Vector3(-3.38, 1.04, 5.28)
+rotation = Vector3(0, 2.081468, 0)
 so = 15
 
 [node name="O_16" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, -0, 0.3676, 0, 6.8)
+position = Vector3(-1.72, 1.1, 4.35)
+rotation = Vector3(0, 1.004419, 0)
 so = 16
 loai = 2
 
 [node name="O_17" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, -0, 2.4338, 0, 6.8)
+position = Vector3(0.12, 1.17, 5.52)
+rotation = Vector3(0, 1.295167, 0)
 so = 17
 loai = 6
 
 [node name="O_18" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, -0, 4.5, 0, 6.8)
+position = Vector3(2.1, 1.1, 6.08)
+rotation = Vector3(0, 1.748889, 0)
 so = 18
 
 [node name="O_19" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(0.6771, 0, 0.7359, 0, 1, 0, -0.7359, 0, 0.6771, 6.0206, 0, 5.4011)
+position = Vector3(4.1, 1.02, 5.72)
+rotation = Vector3(0, 2.324403, 0)
 so = 19
 loai = 3
 
 [node name="O_20" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7, 0, 3.7647)
+position = Vector3(5.56, 1.08, 4.35)
+rotation = Vector3(0, 2.944197, 0)
 so = 20
 
 [node name="O_21" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7, 0, 1.6985)
+position = Vector3(5.92, 1.16, 2.55)
+rotation = Vector3(0, 2.375673, 0)
 so = 21
 loai = 1
 
 [node name="O_22" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7, 0, -0.3676)
+position = Vector3(7.43, 1.08, 0.98)
+rotation = Vector3(0, 2.652740, 0)
 so = 22
 loai = 5
 
 [node name="O_23" parent="." instance=ExtResource("2_o")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7, 0, -2.4338)
+position = Vector3(8.43, 1.02, -0.9)
+rotation = Vector3(0, -3.103516, 0)
 so = 23
 loai = 7
 
+[node name="MapModel" type="Node3D" parent="."]
+script = ExtResource("3_map")

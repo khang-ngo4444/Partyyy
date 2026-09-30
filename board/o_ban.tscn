@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://board/o_ban.gd" id="1_ob"]
 [ext_resource type="Material" path="res://materials/mat_o_trong.tres" id="2_0"]
@@ -10,28 +10,70 @@
 [ext_resource type="Material" path="res://materials/mat_o_cua_hang.tres" id="2_6"]
 [ext_resource type="Material" path="res://materials/mat_o_nguy_hiem.tres" id="2_7"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_o"]
-size = Vector3(1.4, 0.12, 1.4)
+[sub_resource type="StandardMaterial3D" id="Mat_bezel"]
+albedo_color = Color(0.075, 0.102, 0.145, 1)
+metallic = 0.68
+roughness = 0.38
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_o"]
-size = Vector3(1.4, 0.12, 1.4)
+[sub_resource type="StandardMaterial3D" id="Mat_rim"]
+albedo_color = Color(0.95, 0.62, 0.18, 1)
+metallic = 0.72
+roughness = 0.28
+emission_enabled = true
+emission = Color(0.45, 0.20, 0.025, 1)
+emission_energy_multiplier = 0.34
+
+[sub_resource type="CylinderMesh" id="Mesh_bezel"]
+top_radius = 0.86
+bottom_radius = 0.91
+height = 0.20
+radial_segments = 8
+
+[sub_resource type="CylinderMesh" id="Mesh_face"]
+top_radius = 0.74
+bottom_radius = 0.79
+height = 0.18
+radial_segments = 8
+
+[sub_resource type="TorusMesh" id="Mesh_rim"]
+inner_radius = 0.63
+outer_radius = 0.75
+rings = 8
+ring_segments = 24
+
+[sub_resource type="CylinderShape3D" id="Shape_tile"]
+radius = 0.89
+height = 0.20
 
 [node name="OBan" type="Node3D"]
 script = ExtResource("1_ob")
 vat_lieu = Array[StandardMaterial3D]([ExtResource("2_0"), ExtResource("2_1"), ExtResource("2_2"), ExtResource("2_3"), ExtResource("2_4"), ExtResource("2_5"), ExtResource("2_6"), ExtResource("2_7")])
 
+[node name="Bezel" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.05, 0)
+mesh = SubResource("Mesh_bezel")
+material_override = SubResource("Mat_bezel")
+
 [node name="Mat" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_o")
+position = Vector3(0, 0.045, 0)
+mesh = SubResource("Mesh_face")
+
+[node name="Rim" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.155, 0)
+mesh = SubResource("Mesh_rim")
+material_override = SubResource("Mat_rim")
 
 [node name="Than" type="StaticBody3D" parent="."]
 
 [node name="Than/Hinh" type="CollisionShape3D" parent="Than"]
-shape = SubResource("BoxShape3D_o")
+position = Vector3(0, 0.02, 0)
+shape = SubResource("Shape_tile")
 
 [node name="Chu" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+position = Vector3(0, 0.34, 0)
 billboard = 1
 font_size = 64
-outline_size = 10
-pixel_size = 0.0065
+outline_size = 14
+pixel_size = 0.0055
+modulate = Color(1, 0.97, 0.83, 1)
 text = "0"

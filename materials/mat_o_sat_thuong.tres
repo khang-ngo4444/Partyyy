@@ -2,8 +2,10 @@
 
 [resource]
 resource_name = "mat_o_sat_thuong"
-albedo_color = Color(0.8980, 0.2824, 0.3020, 1)
-roughness = 0.85
+albedo_color = Color(0.93, 0.18, 0.25, 1)
+metallic = 0.14
+metallic_specular = 0.64
+roughness = 0.48
 emission_enabled = true
-emission = Color(0.8980, 0.2824, 0.3020, 1)
-emission_energy_multiplier = 0.35
+emission = Color(0.62, 0.025, 0.045, 1)
+emission_energy_multiplier = 0.72
