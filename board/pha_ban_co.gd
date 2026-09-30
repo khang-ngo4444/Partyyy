@@ -38,10 +38,12 @@ const CAO_BAN := 100.0
 const GIAY_MOI_O := 0.22
 ## Nghỉ sau khi một người đi xong, trước khi tới lượt kế.
 const NGHI_GIUA_LUOT := 0.8
-## Người chơi đứng cao hơn mặt ô chừng này.
-const CAO_DUNG := 0.9
+## Gốc Player nằm ngay dưới chân. Mặt cao nhất của ô (vành Torus) ở khoảng +0.31 m so với
+## gốc OBan, nên đặt chân ở +0.32 m; giá trị 0.9 cũ làm nhân vật lơ lửng hơn nửa mét.
+const CAO_DUNG := 0.32
 ## Nhiều người cùng một ô thì đứng cách tâm ô chừng này. Ô rộng 1.4 m nên 0.45 là vừa trong mép.
 const BAN_KINH_DUNG := 0.45
+const XUC_XAC_SCENE: PackedScene = preload("res://board/xuc_xac_3d.tscn")
 
 ## Bàn party là một SCENE RIÊNG, nạp vào khi cần. Đổi bản đồ = trỏ export này sang scene khác.
 @export var ban_scene: PackedScene = preload("res://board/ban_party.tscn")
@@ -66,6 +68,9 @@ var ban: BanDuong = null
 ## khác đang phủ lên trên — bàn không cần biết lớp đó là cái gì, chỉ cần biết mình đang bị che.
 var tam_dung := false
 var _dang_di := false
+## Xúc xắc là vật thể trình diễn cục bộ, gắn vào camera hiện hành. Kết quả vẫn tới từ cùng
+## RPC `_net_tung`, vì vậy mọi máy hiển thị đúng một con số và không thêm trạng thái mạng.
+var _xuc_xac: Node3D = null
 ## Hạt giống riêng của master cho ô Bí ẩn. KHÔNG replicate: chỉ master gieo, và kết quả đi
 ## trong gói trạng thái nên mọi máy vẫn thấy y hệt.
 var _rng := RandomNumberGenerator.new()
@@ -122,6 +127,9 @@ func dong() -> void:
 	if ban != null and is_instance_valid(ban):
 		ban.queue_free()
 	ban = null
+	if _xuc_xac != null and is_instance_valid(_xuc_xac):
+		_xuc_xac.queue_free()
+	_xuc_xac = null
 	trang_thai_doi.emit(tt)
 
 
@@ -193,11 +201,27 @@ func _net_tung(id: int, so: int) -> void:
 	if int(_thu_tu()[int(tt["luot"])]) != id:
 		return
 	_dang_di = true
+	await _hien_xuc_xac(id, so)
 	await _di(id, so)
 	_dang_di = false
 	if NetManager.is_master():
 		await get_tree().create_timer(NGHI_GIUA_LUOT).timeout
 		_ket_luot(id)
+
+
+## Hiển thị cùng một xúc xắc 3D trước camera từng máy. Nó nảy, xoay rồi dừng đúng mặt
+## `so`; chỉ sau khi người chơi đọc được kết quả quân cờ mới bắt đầu đi.
+func _hien_xuc_xac(id: int, so: int) -> void:
+	var camera := get_viewport().get_camera_3d()
+	if camera == null:
+		await get_tree().create_timer(0.6).timeout
+		return
+	if _xuc_xac == null or not is_instance_valid(_xuc_xac):
+		_xuc_xac = XUC_XAC_SCENE.instantiate() as Node3D
+		camera.add_child(_xuc_xac)
+	elif _xuc_xac.get_parent() != camera:
+		_xuc_xac.reparent(camera, false)
+	await _xuc_xac.tung(clampi(so, 1, 6), Player.ten_theo_id(get_tree(), id))
 
 
 ## Xin dùng món thứ `chi_so` trong túi. Master là người duy nhất kiểm và áp, nên hai người

@@ -236,13 +236,18 @@ func _boardwalk() -> void:
 		if child is OBan:
 			spaces.append(child)
 	spaces.sort_custom(func(a: OBan, b: OBan) -> bool: return a.so < b.so)
+	# Mỗi ô có chân đế riêng: mặt ô không còn lơ lửng hoặc chìm theo các lớp terrain.
+	for space in spaces:
+		_cylinder("TilePedestal_%02d" % (space as OBan).so,
+				Vector3(space.position.x, space.position.y - 0.53, space.position.z),
+				0.94, 0.86, _m.iron, 8)
 	for i in spaces.size():
 		var a := spaces[i].position
 		var b := spaces[(i + 1) % spaces.size()].position
 		var delta := Vector3(b.x - a.x, 0, b.z - a.z)
 		var length := maxf(delta.length() - 1.75, 0.5)
 		var center := (a + b) * 0.5
-		center.y = minf(a.y, b.y) - 0.14
+		center.y = (a.y + b.y) * 0.5 - 0.17
 		var yaw := atan2(delta.x, delta.z)
 		_box("Boardwalk_%02d" % i, center, Vector3(1.36, 0.23, length), _m.wood, yaw)
 		var side := Vector3(cos(yaw), 0, -sin(yaw))
@@ -282,7 +287,7 @@ func _harbor() -> void:
 	_build_ship(Vector3(-20, WATER_Y + 0.85, -6.2), 1.35, true)
 	for i in 6:
 		_cylinder("Barrel_%d" % i, Vector3(-11 + (i % 3) * 0.8, GROUND_Y + 0.75,
-				-3 + (i / 3) * 0.8), 0.38, 0.82, _m.wood, 12)
+				-3 + floorf(float(i) / 3.0) * 0.8), 0.38, 0.82, _m.wood, 12)
 	_cylinder("CranePost", Vector3(-12, GROUND_Y + 2.6, 0.2), 0.24, 4.8, _m.wood_dark, 10)
 	_box("CraneArm", Vector3(-13.4, GROUND_Y + 4.75, 0.2), Vector3(3.3, 0.25, 0.3),
 			_m.wood_hi, 0, Vector3.ONE, deg_to_rad(-8))
@@ -354,16 +359,16 @@ func _props() -> void:
 		_box("Canopy_%d" % i, p + Vector3.UP * 2.65, Vector3(2.5, 0.18, 1.65),
 				_m.red if i % 2 == 0 else _m.purple)
 	for i in 8:
-		var p := Vector3(14 + (i % 4) * 0.8, GROUND_Y + 0.9,
-				6 + (i / 4) * 1.25 + (i % 2) * 0.22)
+		var p := Vector3(9.6 + (i % 4) * 0.72, GROUND_Y + 0.9,
+				4.6 + floorf(float(i) / 4.0) * 1.05 + (i % 2) * 0.18)
 		_box("Grave_%d" % i, p, Vector3(0.55, 1.1 + (i % 3) * 0.2, 0.24),
 				_m.stone, deg_to_rad(-12 + i * 4), Vector3.ONE, deg_to_rad(-6))
-	for d in [[Vector3(-14, GROUND_Y + 0.4, 8), 1.35],
-			[Vector3(-8, GROUND_Y + 0.4, 11), 1.0],
-			[Vector3(15, GROUND_Y + 0.45, -5), 1.25],
-			[Vector3(-15, GROUND_Y + 0.42, -7), 1.15],
+	for d in [[Vector3(-10.8, GROUND_Y + 0.4, 6.8), 1.35],
+			[Vector3(-7, GROUND_Y + 0.4, 8.8), 1.0],
+			[Vector3(11.5, GROUND_Y + 0.45, -3.8), 1.25],
+			[Vector3(-11.5, GROUND_Y + 0.42, -5.2), 1.15],
 			[Vector3(1, GROUND_Y + 0.38, -11), 0.95],
-			[Vector3(16, GROUND_Y + 0.42, 8.5), 0.88]]:
+			[Vector3(11.8, GROUND_Y + 0.42, 6.2), 0.88]]:
 		_palm("Palm", d[0], float(d[1]))
 
 

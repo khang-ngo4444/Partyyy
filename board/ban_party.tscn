@@ -1,178 +1,215 @@
-[gd_scene format=3 uid="uid://nmdsvaxlo4mo"]
+[gd_scene load_steps=4 format=3]
 
-[ext_resource type="Script" uid="uid://djcche2g26fq2" path="res://board/ban_duong.gd" id="1_bd"]
+[ext_resource type="Script" path="res://board/ban_duong.gd" id="1_bd"]
 [ext_resource type="PackedScene" path="res://board/o_ban.tscn" id="2_o"]
-[ext_resource type="Script" uid="uid://bssv1duuj6eu0" path="res://board/ban_party_map.gd" id="3_map"]
+[ext_resource type="Script" path="res://board/ban_party_map.gd" id="3_map"]
 
-[node name="BanParty" type="Node3D" unique_id=450650551]
+[node name="BanParty" type="Node3D"]
 script = ExtResource("1_bd")
 
-[node name="O_0" parent="." unique_id=1412784155 instance=ExtResource("2_o")]
-transform = Transform3D(0.7468778, 0, 0.66496134, 0, 1, 0, -0.66496134, 0, 0.7468778, 18.3151, 2.5951, -4.3835)
+[node name="O_0" parent="." instance=ExtResource("2_o")]
+position = Vector3(18.3151, 3.1500, -4.3835)
+rotation = Vector3(0, 0.727442, 0)
+so = 0
 loai = 5
 
-[node name="O_1" parent="." unique_id=1757673744 instance=ExtResource("2_o")]
-transform = Transform3D(0.8884557, 0, 0.4589624, 0, 1, 0, -0.4589624, 0, 0.8884557, 20.431, 2.7661, -2.007)
+[node name="O_1" parent="." instance=ExtResource("2_o")]
+position = Vector3(20.4310, 3.1500, -2.0070)
+rotation = Vector3(0, 0.476827, 0)
 so = 1
 
-[node name="O_2" parent="." unique_id=1742902212 instance=ExtResource("2_o")]
-transform = Transform3D(0.99816585, 0, -0.06053896, 0, 1, 0, 0.06053896, 0, 0.99816585, 21.8854, 2.8836, 0.8085)
+[node name="O_2" parent="." instance=ExtResource("2_o")]
+position = Vector3(21.8854, 3.1500, 0.8085)
+rotation = Vector3(0, -0.060576, 0)
 so = 2
 loai = 1
 
-[node name="O_3" parent="." unique_id=1358331604 instance=ExtResource("2_o")]
-transform = Transform3D(0.7305659, 0, -0.6828422, 0, 1, 0, 0.6828422, 0, 0.7305659, 21.6969, 2.8955, 3.9179)
+[node name="O_3" parent="." instance=ExtResource("2_o")]
+position = Vector3(21.6969, 3.1500, 3.9179)
+rotation = Vector3(0, -0.751646, 0)
 so = 3
 
-[node name="O_4" parent="." unique_id=1893596650 instance=ExtResource("2_o")]
-transform = Transform3D(0.51010454, 0, -0.8601124, 0, 1, 0, 0.8601124, 0, 0.51010454, 19.5467, 2.845, 6.2184)
+[node name="O_4" parent="." instance=ExtResource("2_o")]
+position = Vector3(19.5467, 3.1500, 6.2184)
+rotation = Vector3(0, -1.035490, 0)
 so = 4
 loai = 3
 
-[node name="O_5" parent="." unique_id=538569605 instance=ExtResource("2_o")]
-transform = Transform3D(0.51566726, 0, -0.85678893, 0, 1, 0, 0.85678893, 0, 0.51566726, 16.8075, 2.8595, 7.8429)
+[node name="O_5" parent="." instance=ExtResource("2_o")]
+position = Vector3(16.8075, 3.1500, 7.8429)
+rotation = Vector3(0, -1.029010, 0)
 so = 5
 loai = 2
 
-[node name="O_6" parent="." unique_id=1796319916 instance=ExtResource("2_o")]
-transform = Transform3D(0.56251067, 0, -0.82679003, 0, 1, 0, 0.82679003, 0, 0.56251067, 14.0784, 2.9375, 9.4854)
+[node name="O_6" parent="." instance=ExtResource("2_o")]
+position = Vector3(14.0784, 3.1500, 9.4854)
+rotation = Vector3(0, -0.973377, 0)
 so = 6
 
-[node name="O_7" parent="." unique_id=1986064450 instance=ExtResource("2_o")]
-transform = Transform3D(0.5736896, 0, -0.81907284, 0, 1, 0, 0.81907284, 0, 0.5736896, 11.4446, 3.0146, 11.2774)
+[node name="O_7" parent="." instance=ExtResource("2_o")]
+position = Vector3(11.4446, 3.1500, 11.2774)
+rotation = Vector3(0, -0.959793, 0)
 so = 7
 loai = 1
 
-[node name="O_8" parent="." unique_id=1964140347 instance=ExtResource("2_o")]
-transform = Transform3D(0.5428587, 0, -0.839824, 0, 1, 0, 0.839824, 0, 0.5428587, 8.8352, 3.0491, 13.105)
+[node name="O_8" parent="." instance=ExtResource("2_o")]
+position = Vector3(8.8352, 3.1500, 13.1050)
+rotation = Vector3(0, -0.996959, 0)
 so = 8
 loai = 7
 
-[node name="O_9" parent="." unique_id=54774797 instance=ExtResource("2_o")]
-transform = Transform3D(0.45262352, 0, -0.8917017, 0, 1, 0, 0.8917017, 0, 0.45262352, 6.1601, 3.0224, 14.8342)
+[node name="O_9" parent="." instance=ExtResource("2_o")]
+position = Vector3(6.1601, 3.1500, 14.8342)
+rotation = Vector3(0, -1.101091, 0)
 so = 9
 
-[node name="O_10" parent="." unique_id=1220601610 instance=ExtResource("2_o")]
-transform = Transform3D(0.2275046, 0, -0.973777, 0, 1, 0, 0.973777, 0, 0.2275046, 3.3221, 2.921, 16.2747)
+[node name="O_10" parent="." instance=ExtResource("2_o")]
+position = Vector3(3.3221, 3.1500, 16.2747)
+rotation = Vector3(0, -1.341282, 0)
 so = 10
 loai = 3
 
-[node name="O_11" parent="." unique_id=2118870230 instance=ExtResource("2_o")]
-transform = Transform3D(-0.19960387, 0, -0.9798767, 0, 1, 0, 0.9798767, 0, -0.19960387, 0.2355, 2.7361, 16.9958)
+[node name="O_11" parent="." instance=ExtResource("2_o")]
+position = Vector3(0.2355, 3.1500, 16.9958)
+rotation = Vector3(0, -1.771750, 0)
 so = 11
 loai = 4
 
-[node name="O_12" parent="." unique_id=1767971339 instance=ExtResource("2_o")]
-transform = Transform3D(-0.49594146, 0, -0.868356, 0, 1, 0, 0.868356, 0, -0.49594146, -2.8591, 2.5305, 16.3655)
+[node name="O_12" parent="." instance=ExtResource("2_o")]
+position = Vector3(-2.8591, 3.1500, 16.3655)
+rotation = Vector3(0, -2.089715, 0)
 so = 12
 loai = 1
 
-[node name="O_13" parent="." unique_id=1945158308 instance=ExtResource("2_o")]
-transform = Transform3D(-0.55450636, 0, -0.8321795, 0, 1, 0, 0.8321795, 0, -0.55450636, -5.6222, 2.7629056, 14.7874)
+[node name="O_13" parent="." instance=ExtResource("2_o")]
+position = Vector3(-5.6222, 3.1500, 14.7874)
+rotation = Vector3(0, -2.158566, 0)
 so = 13
 
-[node name="O_14" parent="." unique_id=1496756705 instance=ExtResource("2_o")]
-transform = Transform3D(-0.5217966, 0, -0.85306996, 0, 1, 0, 0.85306996, 0, -0.5217966, -8.2733, 2.7897499, 13.0209)
+[node name="O_14" parent="." instance=ExtResource("2_o")]
+position = Vector3(-8.2733, 3.1500, 13.0209)
+rotation = Vector3(0, -2.119752, 0)
 so = 14
 loai = 5
 
-[node name="O_15" parent="." unique_id=1050453305 instance=ExtResource("2_o")]
-transform = Transform3D(-0.46452376, 0, -0.88556063, 0, 1, 0, 0.88556063, 0, -0.46452376, -10.9906, 2.7835455, 11.3588)
+[node name="O_15" parent="." instance=ExtResource("2_o")]
+position = Vector3(-10.9906, 3.1500, 11.3588)
+rotation = Vector3(0, -2.053893, 0)
 so = 15
 
-[node name="O_16" parent="." unique_id=95226119 instance=ExtResource("2_o")]
-transform = Transform3D(-0.4158768, 0, -0.90942097, 0, 1, 0, 0.90942097, 0, -0.4158768, -13.8113, 2.7824123, 9.8792)
+[node name="O_16" parent="." instance=ExtResource("2_o")]
+position = Vector3(-13.8113, 3.1500, 9.8792)
+rotation = Vector3(0, -1.999703, 0)
 so = 16
 loai = 2
 
-[node name="O_17" parent="." unique_id=455063546 instance=ExtResource("2_o")]
-transform = Transform3D(-0.42658323, 0, -0.90444833, 0, 1, 0, 0.90444833, 0, -0.42658323, -16.7083, 2.5498, 8.5544)
+[node name="O_17" parent="." instance=ExtResource("2_o")]
+position = Vector3(-16.7083, 3.1500, 8.5544)
+rotation = Vector3(0, -2.011508, 0)
 so = 17
 loai = 6
 
-[node name="O_18" parent="." unique_id=946131827 instance=ExtResource("2_o")]
-transform = Transform3D(-0.79978245, 0, -0.60028994, 0, 1, 0, 0.60028994, 0, -0.79978245, -19.5887, 2.597, 7.1959)
+[node name="O_18" parent="." instance=ExtResource("2_o")]
+position = Vector3(-19.5887, 3.1500, 7.1959)
+rotation = Vector3(0, -2.497729, 0)
 so = 18
 
-[node name="O_19" parent="." unique_id=1596359897 instance=ExtResource("2_o")]
-transform = Transform3D(-0.9486747, 0, 0.31625354, 0, 1, 0, -0.31625354, 0, -0.9486747, -21.3902, 2.5621, 4.7957)
+[node name="O_19" parent="." instance=ExtResource("2_o")]
+position = Vector3(-21.3902, 3.1500, 4.7957)
+rotation = Vector3(0, 2.819815, 0)
 so = 19
 loai = 3
 
-[node name="O_20" parent="." unique_id=603914952 instance=ExtResource("2_o")]
-transform = Transform3D(-0.91958094, 0, 0.3929006, 0, 1, 0, -0.3929006, 0, -0.91958094, -20.3879, 2.5391, 1.7892)
+[node name="O_20" parent="." instance=ExtResource("2_o")]
+position = Vector3(-20.3879, 3.1500, 1.7892)
+rotation = Vector3(0, 2.737809, 0)
 so = 20
 loai = 1
 
-[node name="O_21" parent="." unique_id=181719339 instance=ExtResource("2_o")]
-transform = Transform3D(-0.9425054, 0, 0.33419082, 0, 1, 0, -0.33419082, 0, -0.9425054, -19.1364, 2.6273, -1.14)
+[node name="O_21" parent="." instance=ExtResource("2_o")]
+position = Vector3(-19.1364, 3.1500, -1.1400)
+rotation = Vector3(0, 2.800846, 0)
 so = 21
 loai = 7
 
-[node name="O_22" parent="." unique_id=881052253 instance=ExtResource("2_o")]
-transform = Transform3D(-0.90857065, 0, 0.41773117, 0, 1, 0, -0.41773117, 0, -0.90857065, -18.0718, 2.825, -4.1423)
+[node name="O_22" parent="." instance=ExtResource("2_o")]
+position = Vector3(-18.0718, 3.1500, -4.1423)
+rotation = Vector3(0, 2.710646, 0)
 so = 22
 
-[node name="O_23" parent="." unique_id=556603061 instance=ExtResource("2_o")]
-transform = Transform3D(-0.6713032, 0, 0.74118286, 0, 1, 0, -0.74118286, 0, -0.6713032, -16.7459, 3.07, -7.0263)
+[node name="O_23" parent="." instance=ExtResource("2_o")]
+position = Vector3(-16.7459, 3.1500, -7.0263)
+rotation = Vector3(0, 2.306762, 0)
 so = 23
 loai = 1
 
-[node name="O_24" parent="." unique_id=43742329 instance=ExtResource("2_o")]
-transform = Transform3D(-0.53651804, 0, 0.8438889, 0, 1, 0, -0.8438889, 0, -0.53651804, -14.3979, 3.1152, -9.153)
+[node name="O_24" parent="." instance=ExtResource("2_o")]
+position = Vector3(-14.3979, 3.1500, -9.1530)
+rotation = Vector3(0, 2.137102, 0)
 so = 24
 loai = 3
 
-[node name="O_25" parent="." unique_id=1453353247 instance=ExtResource("2_o")]
-transform = Transform3D(-0.53173137, 0, 0.84691304, 0, 1, 0, -0.84691304, 0, -0.53173137, -11.7095, 2.9874, -10.8621)
+[node name="O_25" parent="." instance=ExtResource("2_o")]
+position = Vector3(-11.7095, 3.1500, -10.8621)
+rotation = Vector3(0, 2.131440, 0)
 so = 25
 
-[node name="O_26" parent="." unique_id=1677026721 instance=ExtResource("2_o")]
-transform = Transform3D(-0.48865777, 0, 0.87247556, 0, 1, 0, -0.87247556, 0, -0.48865777, -9.0114, 2.8385, -12.5561)
+[node name="O_26" parent="." instance=ExtResource("2_o")]
+position = Vector3(-9.0114, 3.1500, -12.5561)
+rotation = Vector3(0, 2.081347, 0)
 so = 26
 loai = 2
 
-[node name="O_27" parent="." unique_id=1445211720 instance=ExtResource("2_o")]
-transform = Transform3D(-0.3450647, 0, 0.9385789, 0, 1, 0, -0.9385789, 0, -0.3450647, -6.2331, 2.7389, -14.1122)
+[node name="O_27" parent="." instance=ExtResource("2_o")]
+position = Vector3(-6.2331, 3.1500, -14.1122)
+rotation = Vector3(0, 1.923104, 0)
 so = 27
 loai = 1
 
-[node name="O_28" parent="." unique_id=226227578 instance=ExtResource("2_o")]
-transform = Transform3D(-0.12276919, 0, 0.9924353, 0, 1, 0, -0.9924353, 0, -0.12276919, -3.2485, 2.7073, -15.2095)
+[node name="O_28" parent="." instance=ExtResource("2_o")]
+position = Vector3(-3.2485, 3.1500, -15.2095)
+rotation = Vector3(0, 1.693876, 0)
 so = 28
 
-[node name="O_29" parent="." unique_id=1033416920 instance=ExtResource("2_o")]
-transform = Transform3D(0.09782957, 0, 0.9952032, 0, 1, 0, -0.9952032, 0, 0.09782957, -0.0942, 2.7194, -15.5997)
+[node name="O_29" parent="." instance=ExtResource("2_o")]
+position = Vector3(-0.0942, 3.1500, -15.5997)
+rotation = Vector3(0, 1.472810, 0)
 so = 29
 loai = 3
 
-[node name="O_30" parent="." unique_id=1928941239 instance=ExtResource("2_o")]
-transform = Transform3D(0.2797708, 0, 0.96006685, 0, 1, 0, -0.96006685, 0, 0.2797708, 3.071, 2.7328, -15.2886)
+[node name="O_30" parent="." instance=ExtResource("2_o")]
+position = Vector3(3.0710, 3.1500, -15.2886)
+rotation = Vector3(0, 1.287241, 0)
 so = 30
 loai = 5
 
-[node name="O_31" parent="." unique_id=642668742 instance=ExtResource("2_o")]
-transform = Transform3D(0.4394985, 0, 0.8982433, 0, 1, 0, -0.8982433, 0, 0.4394985, 6.1258, 2.7134, -14.3984)
+[node name="O_31" parent="." instance=ExtResource("2_o")]
+position = Vector3(6.1258, 3.1500, -14.3984)
+rotation = Vector3(0, 1.115756, 0)
 so = 31
 loai = 1
 
-[node name="O_32" parent="." unique_id=134490604 instance=ExtResource("2_o")]
-transform = Transform3D(0.6097018, 0, 0.7926309, 0, 1, 0, -0.7926309, 0, 0.6097018, 8.9837, 2.6347, -13)
+[node name="O_32" parent="." instance=ExtResource("2_o")]
+position = Vector3(8.9837, 3.1500, -13.0000)
+rotation = Vector3(0, 0.915112, 0)
 so = 32
 loai = 7
 
-[node name="O_33" parent="." unique_id=1161036534 instance=ExtResource("2_o")]
-transform = Transform3D(0.75122386, 0, 0.66004753, 0, 1, 0, -0.66004753, 0, 0.75122386, 11.5032, 2.471, -11.062)
+[node name="O_33" parent="." instance=ExtResource("2_o")]
+position = Vector3(11.5032, 3.1500, -11.0620)
+rotation = Vector3(0, 0.720882, 0)
 so = 33
 
-[node name="O_34" parent="." unique_id=1734138876 instance=ExtResource("2_o")]
-transform = Transform3D(0.6809223, 0, 0.73235565, 0, 1, 0, -0.73235565, 0, 0.6809223, 13.6051, 2.3116, -8.6697)
+[node name="O_34" parent="." instance=ExtResource("2_o")]
+position = Vector3(13.6051, 3.1500, -8.6697)
+rotation = Vector3(0, 0.821775, 0)
 so = 34
 loai = 1
 
-[node name="O_35" parent="." unique_id=435518428 instance=ExtResource("2_o")]
-transform = Transform3D(0.66509974, 0, 0.7467545, 0, 1, 0, -0.7467545, 0, 0.66509974, 15.9365, 2.4109, -6.502)
+[node name="O_35" parent="." instance=ExtResource("2_o")]
+position = Vector3(15.9365, 3.1500, -6.5020)
+rotation = Vector3(0, 0.843169, 0)
 so = 35
 
-[node name="MapModel" type="Node3D" parent="." unique_id=1782713905]
+[node name="MapModel" type="Node3D" parent="."]
 script = ExtResource("3_map")
