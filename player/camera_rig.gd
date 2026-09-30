@@ -50,10 +50,9 @@ extends Node3D
 ## vậy"*. Không thu nhỏ model: đổi scale là kéo theo tốc độ, độ cao nhảy, sải chân animation
 ## và chiều cao collision, mà nhân vật thì dùng chung cho cả ba nơi.
 ##
-## Rumble Reef rộng hơn bàn cũ gần ba lần, nên rig lùi 22 m, nâng nhẹ và cúi 42°. Người chơi
-## vẫn đọc được ô sắp tới nhưng đồng thời thấy landmark, đảo vệ tinh và đường chân trời. Offset
-## 1.5 m giữ quân cờ ở nửa dưới khung hình thay vì để hải đăng che tâm ngắm.
-@export var lui_ban := 34.0
+## Map lớn cần thấy trước các ngã rẽ, nhưng 34 m làm nhân vật quá nhỏ; 29 m giữ được tổng quan
+## mà đưa ô cờ và quân cờ gần hơn rõ rệt. Độ cao/góc cúi giữ nguyên để không mất đường phía trước.
+@export var lui_ban := 15.0
 @export var cao_ban := 3.2
 @export var cui_ban_deg := -48.0
 @export var fov_ban := 65.0
