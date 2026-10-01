@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://main.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://ui/main_menu.tscn" id="2_menu"]
@@ -11,11 +11,14 @@
 [ext_resource type="Script" path="res://net/music_box.gd" id="9_box"]
 [ext_resource type="PackedScene" path="res://minigame/quan_tro_minigame.tscn" id="10_mg"]
 [ext_resource type="Script" path="res://board/pha_ban_co.gd" id="11_bc"]
+[ext_resource type="PackedScene" path="res://ui/menu_background.tscn" id="12_menu_bg"]
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_main")
 
 [node name="FusionSpawner" type="FusionSpawner" parent="."]
+
+[node name="MenuBackground" parent="." instance=ExtResource("12_menu_bg")]
 
 [node name="SceneRoot" type="Node3D" parent="."]
 

@@ -10,7 +10,8 @@ extends Control
 ##
 ## Chuột: nhường quyền cho `PauseMenu` như mọi màn hình khác trong game, xem `_mo`/`dong`.
 
-const CO_O := Vector2(86, 104)
+const CO_O := Vector2(112, 138)
+const CO_MAU := Vector2(48, 36)
 ## Co anh preview, pixel. To hon o nut mot chut cho khoi ro rang khi phong to.
 const CO_ANH := Vector2i(128, 156)
 
@@ -20,12 +21,19 @@ static var _anh: Array[Texture2D] = []
 
 @onready var _luoi_model: GridContainer = %ModelGrid
 @onready var _luoi_mau: GridContainer = %ColorGrid
+@onready var _luoi_nhan: GridContainer = %AccentGrid
 @onready var _luoi_bong: GridContainer = %BubbleGrid
 @onready var _ten: Label = %PickerName
+@onready var _phu_kien: CheckButton = %AccessoryCheck
 
 
 func _ready() -> void:
 	%CloseButton.pressed.connect(dong)
+	_phu_kien.toggled.connect(func(enabled: bool):
+		var p := _toi()
+		if p != null:
+			p.accessory_enabled = enabled
+			NetManager.accessory_enabled = enabled)
 	# `is_inside_tree` la bat buoc: tin hieu nay khong tu ngat khi node roi khoi cay, va
 	# `get_viewport_rect()` tren mot node da roi ra la loi.
 	get_viewport().size_changed.connect(func():
@@ -147,6 +155,7 @@ func _input(event: InputEvent) -> void:
 
 func _dung_luoi(p: Player) -> void:
 	_ten.text = p.player_name if p.player_name != "" else "#%d" % p.player_id()
+	_phu_kien.set_pressed_no_signal(p.accessory_enabled)
 
 	for c in _luoi_model.get_children():
 		c.queue_free()
@@ -159,12 +168,13 @@ func _dung_luoi(p: Player) -> void:
 		if i < _anh.size():
 			b.icon = _anh[i]
 			b.expand_icon = true
-			b.tooltip_text = "Nhan vat %d" % (i + 1)
+			b.tooltip_text = CharacterVisual.ARCHETYPE_NAMES[i]
 		else:
-			b.text = str(i + 1)
+			b.text = CharacterVisual.ARCHETYPE_NAMES[i]
 		var k := i
 		b.pressed.connect(func():
 			p.model_index = k
+			NetManager.model_index = k
 			_dung_luoi(p))
 		_luoi_model.add_child(b)
 
@@ -172,7 +182,7 @@ func _dung_luoi(p: Player) -> void:
 		c.queue_free()
 	for i in NetManager.PLAYER_COLORS.size():
 		var b := Button.new()
-		b.custom_minimum_size = CO_O
+		b.custom_minimum_size = CO_MAU
 		# Nút tô đúng màu nó đại diện: một ô màu bấm được, không cần nhãn.
 		var kieu := StyleBoxFlat.new()
 		kieu.bg_color = NetManager.PLAYER_COLORS[i]
@@ -185,8 +195,29 @@ func _dung_luoi(p: Player) -> void:
 		var k := i
 		b.pressed.connect(func():
 			p.color_index = k
+			NetManager.color_index = k
 			_dung_luoi(p))
 		_luoi_mau.add_child(b)
+
+	for c in _luoi_nhan.get_children():
+		c.queue_free()
+	for i in NetManager.PLAYER_COLORS.size():
+		var b := Button.new()
+		b.custom_minimum_size = CO_MAU
+		var kieu := StyleBoxFlat.new()
+		kieu.bg_color = NetManager.PLAYER_COLORS[i]
+		kieu.set_corner_radius_all(6)
+		if i == p.accent_index:
+			kieu.set_border_width_all(4)
+			kieu.border_color = Color.WHITE
+		for tt in ["normal", "hover", "pressed", "focus"]:
+			b.add_theme_stylebox_override(tt, kieu)
+		var k := i
+		b.pressed.connect(func():
+			p.accent_index = k
+			NetManager.accent_index = k
+			_dung_luoi(p))
+		_luoi_nhan.add_child(b)
 
 	for c in _luoi_bong.get_children():
 		c.queue_free()

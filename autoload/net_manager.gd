@@ -28,6 +28,11 @@ const PLAYER_COLORS: Array[Color] = [
 ## (đã kiểm chứng, xem ROADMAP mục 1f).
 var player_name := ""
 var color_index := 0
+## Ngoại hình cục bộ được chọn trước khi vào phòng. Player copy các giá trị này vào
+## property replicated ngay khi spawn, vì vậy người vào muộn cũng thấy đúng nhân vật.
+var model_index := 0
+var accent_index := 1
+var accessory_enabled := true
 
 ## Photon chi day danh sach phong xuong khi no muon. Nguoi mo menu truoc luc ai do tao
 ## phong co the ngoi nhin danh sach rong. Doc lai ban cache dinh ky cho chac.
@@ -114,6 +119,13 @@ var room_name := ""
 func join_room(ten: String) -> void:
 	room_name = ten
 	Fusion.join_room(ten, null)
+
+
+## Cho UI yeu cau cap nhat ngay thay vi doi nhip tu dong ROOM_LIST_REFRESH.
+## Van chi doc tu Photon khi dang o master server; `_publish_room_list` tu chan trong phong.
+func refresh_room_list() -> void:
+	_refresh_timer = 0.0
+	_publish_room_list()
 
 
 func leave_room() -> void:

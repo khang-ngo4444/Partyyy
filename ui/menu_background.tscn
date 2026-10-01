@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://board/ban_party.tscn" id="1_board"]
+[ext_resource type="Script" path="res://ui/menu_background.gd" id="2_script"]
+
+[node name="MenuBackground" type="Node3D"]
+script = ExtResource("2_script")
+
+[node name="BanPartyPreview" parent="." instance=ExtResource("1_board")]
+
+[node name="CameraRig" type="Node3D" parent="."]
+
+[node name="MenuCamera" type="Camera3D" parent="CameraRig"]
+current = true
+fov = 54.0
+near = 0.2
+far = 350.0

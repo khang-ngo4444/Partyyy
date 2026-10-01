@@ -13,10 +13,12 @@ func _ready() -> void:
 	# `visible = false` nam trong .tscn chu KHONG nam o day. Neu script lai roi ra khoi root
 	# (da dinh ba lan, xem muc 1q) thi menu van sinh ra o trang thai an, khong che man hinh.
 	%ResumeButton.pressed.connect(_dong)
-	leave_button.pressed.connect(func():
+	leave_button.pressed.connect(func(): %LeaveConfirm.popup_centered())
+	%LeaveConfirm.confirmed.connect(func():
 		_dong()
 		NetManager.leave_room())
-	%QuitButton.pressed.connect(get_tree().quit)
+	%QuitButton.pressed.connect(func(): %QuitConfirm.popup_centered())
+	%QuitConfirm.confirmed.connect(get_tree().quit)
 	NetManager.room_joined.connect(func(): leave_button.disabled = false)
 	NetManager.room_left.connect(func(): leave_button.disabled = true)
 	leave_button.disabled = true

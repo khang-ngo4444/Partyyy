@@ -1,0 +1,242 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://ui/character_creator.gd" id="1_creator"]
+
+[sub_resource type="StyleBoxFlat" id="CreatorPanel"]
+bg_color = Color(0.004, 0.022, 0.03, 0.97)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.72, 0.94, 0.9, 0.55)
+content_margin_left = 28.0
+content_margin_top = 24.0
+content_margin_right = 28.0
+content_margin_bottom = 24.0
+
+[sub_resource type="StyleBoxFlat" id="PreviewPanel"]
+bg_color = Color(0.01, 0.055, 0.07, 0.72)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.63, 0.9, 0.84, 0.28)
+
+[node name="CharacterCreator" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_creator")
+
+[node name="Dim" type="ColorRect" parent="."]
+mouse_filter = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.002, 0.012, 0.017, 0.9)
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 42.0
+offset_top = 24.0
+offset_right = -42.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Margin"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("CreatorPanel")
+
+[node name="Columns" type="HBoxContainer" parent="Margin/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="PreviewColumn" type="VBoxContainer" parent="Margin/Panel/Columns"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="Kicker" type="Label" parent="Margin/Panel/Columns/PreviewColumn"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.63, 0.88, 0.83, 0.8)
+theme_override_font_sizes/font_size = 11
+text = "HỒ SƠ NGƯỜI CHƠI  /  NHÂN VẬT 3D"
+
+[node name="ArchetypeName" type="Label" parent="Margin/Panel/Columns/PreviewColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "VỆ BINH"
+
+[node name="PreviewFrame" type="PanelContainer" parent="Margin/Panel/Columns/PreviewColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("PreviewPanel")
+
+[node name="ViewportContainer" type="SubViewportContainer" parent="Margin/Panel/Columns/PreviewColumn/PreviewFrame"]
+layout_mode = 2
+stretch = true
+
+[node name="PreviewViewport" type="SubViewport" parent="Margin/Panel/Columns/PreviewColumn/PreviewFrame/ViewportContainer"]
+unique_name_in_owner = true
+transparent_bg = true
+own_world_3d = true
+handle_input_locally = false
+size = Vector2i(600, 640)
+render_target_update_mode = 4
+
+[node name="PreviewWorld" type="Node3D" parent="Margin/Panel/Columns/PreviewColumn/PreviewFrame/ViewportContainer/PreviewViewport"]
+
+[node name="PreviewAnchor" type="Node3D" parent="Margin/Panel/Columns/PreviewColumn/PreviewFrame/ViewportContainer/PreviewViewport/PreviewWorld"]
+unique_name_in_owner = true
+
+[node name="Camera" type="Camera3D" parent="Margin/Panel/Columns/PreviewColumn/PreviewFrame/ViewportContainer/PreviewViewport/PreviewWorld"]
+unique_name_in_owner = true
+position = Vector3(0, 0.9, 4.2)
+fov = 31.0
+
+[node name="KeyLight" type="DirectionalLight3D" parent="Margin/Panel/Columns/PreviewColumn/PreviewFrame/ViewportContainer/PreviewViewport/PreviewWorld"]
+rotation_degrees = Vector3(-28, -34, 0)
+light_color = Color(0.72, 0.98, 0.94, 1)
+light_energy = 2.0
+
+[node name="RimLight" type="DirectionalLight3D" parent="Margin/Panel/Columns/PreviewColumn/PreviewFrame/ViewportContainer/PreviewViewport/PreviewWorld"]
+rotation_degrees = Vector3(-18, 145, 0)
+light_color = Color(0.32, 0.58, 1, 1)
+light_energy = 1.1
+
+[node name="AnimationName" type="Label" parent="Margin/Panel/Columns/PreviewColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.68, 0.88, 0.84, 0.74)
+theme_override_font_sizes/font_size = 10
+text = "XEM ANIMATION  /  ĐỨNG"
+
+[node name="AnimationButtons" type="HBoxContainer" parent="Margin/Panel/Columns/PreviewColumn"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="IdleBtn" type="Button" parent="Margin/Panel/Columns/PreviewColumn/AnimationButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "ĐỨNG"
+
+[node name="WalkBtn" type="Button" parent="Margin/Panel/Columns/PreviewColumn/AnimationButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "ĐI"
+
+[node name="JumpBtn" type="Button" parent="Margin/Panel/Columns/PreviewColumn/AnimationButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "NHẢY"
+
+[node name="SitBtn" type="Button" parent="Margin/Panel/Columns/PreviewColumn/AnimationButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "NGỒI"
+
+[node name="Options" type="VBoxContainer" parent="Margin/Panel/Columns"]
+custom_minimum_size = Vector2(430, 0)
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Margin/Panel/Columns/Options"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "TÙY BIẾN NGOẠI HÌNH"
+
+[node name="Description" type="Label" parent="Margin/Panel/Columns/Options"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.73, 0.82, 0.81, 0.7)
+theme_override_font_sizes/font_size = 12
+text = "Lựa chọn này được lưu và đồng bộ cho mọi người trong phòng."
+autowrap_mode = 3
+
+[node name="ClassLabel" type="Label" parent="Margin/Panel/Columns/Options"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.67, 0.9, 0.85, 0.84)
+theme_override_font_sizes/font_size = 10
+text = "KIỂU NHÂN VẬT"
+
+[node name="ClassGrid" type="GridContainer" parent="Margin/Panel/Columns/Options"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/v_separation = 6
+columns = 1
+
+[node name="PrimaryLabel" type="Label" parent="Margin/Panel/Columns/Options"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.67, 0.9, 0.85, 0.84)
+theme_override_font_sizes/font_size = 10
+text = "MÀU CHÍNH"
+
+[node name="PrimaryGrid" type="GridContainer" parent="Margin/Panel/Columns/Options"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 7
+theme_override_constants/v_separation = 7
+columns = 5
+
+[node name="AccentLabel" type="Label" parent="Margin/Panel/Columns/Options"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.67, 0.9, 0.85, 0.84)
+theme_override_font_sizes/font_size = 10
+text = "MÀU ĐIỂM NHẤN"
+
+[node name="AccentGrid" type="GridContainer" parent="Margin/Panel/Columns/Options"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 7
+theme_override_constants/v_separation = 7
+columns = 5
+
+[node name="AccessoryCheck" type="CheckButton" parent="Margin/Panel/Columns/Options"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+text = "Hiện phụ kiện đặc trưng"
+button_pressed = true
+
+[node name="Spacer" type="Control" parent="Margin/Panel/Columns/Options"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Hint" type="Label" parent="Margin/Panel/Columns/Options"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.66, 0.75, 0.74, 0.62)
+theme_override_font_sizes/font_size = 11
+text = "Bạn vẫn có thể đổi nhân vật trong lobby bằng phím M."
+
+[node name="Actions" type="HBoxContainer" parent="Margin/Panel/Columns/Options"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CreatorBackBtn" type="Button" parent="Margin/Panel/Columns/Options/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 42)
+layout_mode = 2
+text = "TRỞ LẠI"
+
+[node name="CreatorConfirmBtn" type="Button" parent="Margin/Panel/Columns/Options/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TIẾP TỤC ONLINE  →"

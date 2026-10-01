@@ -66,6 +66,7 @@ var _dang_xep := false
 @onready var scene_root: Node3D = $SceneRoot
 @onready var dealer: CardDealer = $CardDealer
 @onready var menu: Control = $UILayer/MainMenu
+@onready var menu_background: Node3D = $MenuBackground
 @onready var hud: Control = $UILayer/HUD
 @onready var picker: Control = $UILayer/CharacterPicker
 @onready var light_picker: Control = $UILayer/LightPicker
@@ -112,9 +113,27 @@ func _ready() -> void:
 	NetManager.room_left.connect(_on_room_left)
 	menu.host_requested.connect(NetManager.host_room)
 	menu.join_requested.connect(NetManager.join_room)
+	menu.refresh_requested.connect(NetManager.refresh_room_list)
+	menu.camera_motion_changed.connect(menu_background.set_motion_enabled)
 
 	_show_menu(true)
 	NetManager.connect_to_photon()
+
+
+## M o phong cho mo thang bang chon day du (model, mau, bong bong) thay vi xoay tung
+## model mot cach mu. Danh sach van doc tu Player.models va ghi vao property replicate cu.
+func _input(event: InputEvent) -> void:
+	if not event.is_action_pressed("change_model") or _lobby == null or picker.visible:
+		return
+	if $UILayer/PauseMenu.visible or light_picker.visible or music_picker.visible:
+		return
+	var ms := get_tree().get_first_node_in_group("match_state") as MatchState
+	if ms != null and ms.phase != MatchState.PHASE_LOBBY:
+		return
+	if get_viewport().gui_get_focus_owner() is LineEdit:
+		return
+	get_viewport().set_input_as_handled()
+	picker.mo()
 
 
 ## Moi node vao cay deu di qua day. Hai viec, deu can bat DUNG LUC no xuat hien chu khong
@@ -692,5 +711,6 @@ func _on_room_left() -> void:
 
 func _show_menu(show_menu: bool) -> void:
 	menu.visible = show_menu
+	menu_background.set_menu_active(show_menu)
 	hud.visible = not show_menu
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if show_menu else Input.MOUSE_MODE_CAPTURED
