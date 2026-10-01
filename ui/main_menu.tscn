@@ -289,6 +289,234 @@ theme_override_font_sizes/font_size = 11
 text = "Đang kết nối…"
 autowrap_mode = 3
 
+[node name="SetupScreen" type="VBoxContainer" parent="MenuDock"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(370, 0)
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Eyebrow" type="Label" parent="MenuDock/SetupScreen"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.68, 0.92, 0.87, 0.82)
+theme_override_font_sizes/font_size = 10
+text = "ROOM SETUP  /  GAMEPLAY"
+
+[node name="Title" type="Label" parent="MenuDock/SetupScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "CÀI ĐẶT MÀN CHƠI"
+
+[node name="SetupRoom" type="Label" parent="MenuDock/SetupScreen"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.52, 0.96, 0.87, 1)
+text = "PHÒNG —"
+
+[node name="SetupRole" type="Label" parent="MenuDock/SetupScreen"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(370, 34)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.84, 0.82, 0.76)
+text = "Chọn luật rồi xác nhận để mở sảnh."
+autowrap_mode = 3
+
+[node name="SetupControls" type="VBoxContainer" parent="MenuDock/SetupScreen"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="PercentTitle" type="Label" parent="MenuDock/SetupScreen/SetupControls"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "TỶ LỆ 4 LOẠI Ô"
+
+[node name="PercentGrid" type="GridContainer" parent="MenuDock/SetupScreen/SetupControls"]
+layout_mode = 2
+columns = 4
+
+[node name="LandLabel" type="Label" parent="MenuDock/SetupScreen/SetupControls/PercentGrid"]
+layout_mode = 2
+text = "Đất"
+
+[node name="TileLand" type="SpinBox" parent="MenuDock/SetupScreen/SetupControls/PercentGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(86, 0)
+layout_mode = 2
+max_value = 100.0
+value = 40.0
+suffix = "%"
+
+[node name="HealthLabel" type="Label" parent="MenuDock/SetupScreen/SetupControls/PercentGrid"]
+layout_mode = 2
+text = "Máu"
+
+[node name="TileHealth" type="SpinBox" parent="MenuDock/SetupScreen/SetupControls/PercentGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(86, 0)
+layout_mode = 2
+max_value = 100.0
+value = 20.0
+suffix = "%"
+
+[node name="MoneyLabel" type="Label" parent="MenuDock/SetupScreen/SetupControls/PercentGrid"]
+layout_mode = 2
+text = "Tiền"
+
+[node name="TileMoney" type="SpinBox" parent="MenuDock/SetupScreen/SetupControls/PercentGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(86, 0)
+layout_mode = 2
+max_value = 100.0
+value = 25.0
+suffix = "%"
+
+[node name="EquipmentLabel" type="Label" parent="MenuDock/SetupScreen/SetupControls/PercentGrid"]
+layout_mode = 2
+text = "Trang bị"
+
+[node name="TileEquipment" type="SpinBox" parent="MenuDock/SetupScreen/SetupControls/PercentGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(86, 0)
+layout_mode = 2
+max_value = 100.0
+value = 15.0
+suffix = "%"
+
+[node name="RuleTitle" type="Label" parent="MenuDock/SetupScreen/SetupControls"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "NHỊP ĐỘ VÀ PHẦN THƯỞNG"
+
+[node name="RuleScroll" type="ScrollContainer" parent="MenuDock/SetupScreen/SetupControls"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="RuleGrid" type="GridContainer" parent="MenuDock/SetupScreen/SetupControls/RuleScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+
+[node name="MaxHealthLabel" type="Label" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+layout_mode = 2
+text = "Máu tối đa"
+[node name="MaxHealth" type="SpinBox" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 100.0
+value = 10.0
+
+[node name="StartGoldLabel" type="Label" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+layout_mode = 2
+text = "Vàng khởi đầu"
+[node name="StartGold" type="SpinBox" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 9999.0
+
+[node name="HealthGainLabel" type="Label" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+layout_mode = 2
+text = "Máu nhận từ ô"
+[node name="HealthGain" type="SpinBox" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 100.0
+value = 3.0
+
+[node name="MoneyGainLabel" type="Label" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+layout_mode = 2
+text = "Vàng nhận từ ô"
+[node name="MoneyGain" type="SpinBox" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 999.0
+value = 15.0
+
+[node name="ChestCostLabel" type="Label" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+layout_mode = 2
+text = "Giá mở rương"
+[node name="ChestCost" type="SpinBox" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 9999.0
+value = 100.0
+
+[node name="RespawnStepsLabel" type="Label" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+layout_mode = 2
+text = "Bước mở checkpoint"
+[node name="RespawnSteps" type="SpinBox" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 999.0
+value = 18.0
+
+[node name="TaxHealthLabel" type="Label" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+layout_mode = 2
+text = "Thuế máu"
+[node name="TaxHealth" type="SpinBox" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 100.0
+value = 2.0
+
+[node name="TaxMoneyLabel" type="Label" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+layout_mode = 2
+text = "Thuế vàng"
+[node name="TaxMoney" type="SpinBox" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 999.0
+value = 10.0
+
+[node name="SecondGoldLabel" type="Label" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+layout_mode = 2
+text = "Vàng hạng 2 minigame"
+[node name="MinigameSecondGold" type="SpinBox" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 999.0
+value = 30.0
+
+[node name="RewardDropLabel" type="Label" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+layout_mode = 2
+text = "Vàng giảm mỗi hạng"
+[node name="MinigameRewardDrop" type="SpinBox" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 999.0
+value = 10.0
+
+[node name="SetupStatus" type="Label" parent="MenuDock/SetupScreen"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Tổng tỷ lệ ô: 100% — sẵn sàng"
+
+[node name="SetupActions" type="HBoxContainer" parent="MenuDock/SetupScreen"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SetupLeaveBtn" type="Button" parent="MenuDock/SetupScreen/SetupActions"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "RỜI PHÒNG"
+
+[node name="SetupConfirmBtn" type="Button" parent="MenuDock/SetupScreen/SetupActions"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("PrimaryNormal")
+theme_override_styles/hover = SubResource("PrimaryHover")
+text = "XÁC NHẬN & VÀO SẢNH"
+
 [node name="Footer" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 3
@@ -447,7 +675,7 @@ theme_override_colors/default_color = Color(0.83, 0.90, 0.89, 0.90)
 theme_override_font_sizes/normal_font_size = 14
 theme_override_font_sizes/bold_font_size = 14
 bbcode_enabled = true
-text = "[color=#8fe7d4]01  PHÒNG CHỜ[/color]\nChọn nhân vật, khám phá phòng và đứng lên ô giữa sàn khi sẵn sàng.\n\n[color=#8fe7d4]02  BÀN PARTY[/color]\nTới lượt mình: tung xúc xắc, chọn đường và dùng vật phẩm bằng phím số. Thu thập chìa khóa để mở rương và nhận cốc.\n\n[color=#8fe7d4]03  MINIGAME[/color]\nCuối mỗi vòng, cả phòng vào minigame. Xếp hạng quyết định thứ tự lượt vòng sau.\n\n[color=#8fe7d4]MỤC TIÊU[/color]\nNgười đầu tiên đạt đủ số cốc sẽ thắng ván."
+text = "[color=#8fe7d4]01  TẠO PHÒNG[/color]\nChủ phòng chọn tỷ lệ ô, máu, vàng, thuế, checkpoint và phần thưởng rồi mới mở sảnh.\n\n[color=#8fe7d4]02  BÀN PARTY[/color]\nTới lượt mình: tung xúc xắc và chọn đường. Đất chưa có chủ sẽ mang tên bạn; khi người khác ghé, bạn chọn thuế bằng phím 1–4.\n\n[color=#8fe7d4]03  MINIGAME[/color]\nCuối mỗi vòng, cả phòng vào một minigame ngẫu nhiên. Hạng 1 nhận vũ khí; xếp hạng cũng là thứ tự lượt vòng sau.\n\n[color=#8fe7d4]MỤC TIÊU[/color]\nTích đủ vàng, tìm 1 rương thật trong 4 rương và trả phí mở để chiến thắng."
 fit_content = true
 scroll_active = false
 

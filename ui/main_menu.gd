@@ -7,12 +7,15 @@ signal host_requested
 signal join_requested(room_name: String)
 signal refresh_requested
 signal camera_motion_changed(enabled: bool)
+signal gameplay_confirmed(settings: Dictionary)
+signal setup_leave_requested
 
 const SETTINGS_PATH := "user://party_settings.cfg"
 const NETWORK_TIMEOUT := 12.0
 
 @onready var main_screen: VBoxContainer = %MainScreen
 @onready var online_screen: VBoxContainer = %OnlineScreen
+@onready var setup_screen: VBoxContainer = %SetupScreen
 @onready var play_btn: Button = %PlayBtn
 @onready var how_to_btn: Button = %HowToBtn
 @onready var settings_btn: Button = %SettingsBtn
@@ -40,6 +43,28 @@ const NETWORK_TIMEOUT := 12.0
 @onready var camera_motion_check: CheckButton = %CameraMotionCheck
 @onready var click_sound: AudioStreamPlayer = $ClickSound
 @onready var character_creator: CharacterCreator = %CharacterCreator
+@onready var setup_room: Label = %SetupRoom
+@onready var setup_role: Label = %SetupRole
+@onready var setup_controls: Control = %SetupControls
+@onready var setup_status: Label = %SetupStatus
+@onready var setup_confirm_btn: Button = %SetupConfirmBtn
+@onready var setup_leave_btn: Button = %SetupLeaveBtn
+@onready var tile_land: SpinBox = %TileLand
+@onready var tile_health: SpinBox = %TileHealth
+@onready var tile_money: SpinBox = %TileMoney
+@onready var tile_equipment: SpinBox = %TileEquipment
+@onready var max_health: SpinBox = %MaxHealth
+@onready var start_gold: SpinBox = %StartGold
+@onready var health_gain: SpinBox = %HealthGain
+@onready var money_gain: SpinBox = %MoneyGain
+@onready var chest_cost: SpinBox = %ChestCost
+@onready var respawn_steps: SpinBox = %RespawnSteps
+@onready var tax_health: SpinBox = %TaxHealth
+@onready var tax_money: SpinBox = %TaxMoney
+@onready var minigame_second_gold: SpinBox = %MinigameSecondGold
+@onready var minigame_reward_drop: SpinBox = %MinigameRewardDrop
+
+var _gameplay_controls: Dictionary = {}
 
 var _connected := false
 var _busy := false
@@ -73,12 +98,34 @@ func _ready() -> void:
 	camera_motion_check.toggled.connect(_set_camera_motion)
 	character_creator.confirmed.connect(_on_character_confirmed)
 	character_creator.cancelled.connect(func(): play_btn.grab_focus())
+	setup_confirm_btn.pressed.connect(_confirm_gameplay)
+	setup_leave_btn.pressed.connect(func(): setup_leave_requested.emit())
 
 	NetManager.connected.connect(_on_connected)
 	NetManager.connect_failed.connect(_on_connect_failed)
 	NetManager.room_joined.connect(_on_room_joined)
 	NetManager.room_left.connect(func(): _show_main(false))
 	NetManager.room_list_changed.connect(_rebuild_room_list)
+
+	_gameplay_controls = {
+		"tile_land": tile_land,
+		"tile_health": tile_health,
+		"tile_money": tile_money,
+		"tile_equipment": tile_equipment,
+		"max_health": max_health,
+		"start_gold": start_gold,
+		"health_gain": health_gain,
+		"money_gain": money_gain,
+		"chest_cost": chest_cost,
+		"respawn_steps": respawn_steps,
+		"tax_health": tax_health,
+		"tax_money": tax_money,
+		"minigame_second_gold": minigame_second_gold,
+		"minigame_reward_drop": minigame_reward_drop,
+	}
+	for control: SpinBox in _gameplay_controls.values():
+		control.value_changed.connect(func(_value): _refresh_gameplay_total())
+	_set_gameplay_values(GameplaySettings.defaults())
 
 	_show_main(false)
 	_set_connection_text("Đang kết nối tới máy chủ…")
@@ -98,6 +145,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		_close_settings()
 	elif online_screen.visible and not _busy:
 		_show_main()
+	elif setup_screen.visible:
+		setup_leave_requested.emit()
 	else:
 		return
 	get_viewport().set_input_as_handled()
@@ -108,6 +157,7 @@ func _show_main(play_sound := true) -> void:
 		_play_click()
 	main_screen.visible = true
 	online_screen.visible = false
+	setup_screen.visible = false
 	settings_overlay.visible = false
 	how_to_overlay.visible = false
 	quit_overlay.visible = false
@@ -123,6 +173,7 @@ func _show_online(play_sound := true) -> void:
 		_play_click()
 	main_screen.visible = false
 	online_screen.visible = true
+	setup_screen.visible = false
 	_set_online_controls()
 	_refresh_rooms(false)
 	host_btn.grab_focus()
@@ -198,6 +249,56 @@ func _on_room_joined() -> void:
 	_busy = false
 	_request_token += 1
 	_save_settings()
+
+
+func show_room_setup(is_host: bool, current: Dictionary = {}) -> void:
+	main_screen.visible = false
+	online_screen.visible = false
+	setup_screen.visible = true
+	settings_overlay.visible = false
+	setup_room.text = "PHÒNG %s" % NetManager.room_name
+	setup_role.text = ("Chọn luật rồi xác nhận để mở sảnh." if is_host
+			else "Đang chờ chủ phòng chốt luật chơi…")
+	setup_controls.visible = is_host
+	setup_confirm_btn.visible = is_host
+	if not current.is_empty():
+		_set_gameplay_values(current)
+	_refresh_gameplay_total()
+	(setup_confirm_btn if is_host else setup_leave_btn).grab_focus()
+
+
+func _set_gameplay_values(values: Dictionary) -> void:
+	var clean := GameplaySettings.sanitize(values)
+	for key in _gameplay_controls:
+		(_gameplay_controls[key] as SpinBox).value = int(clean[key])
+
+
+func _gameplay_values() -> Dictionary:
+	var values := GameplaySettings.defaults()
+	for key in _gameplay_controls:
+		values[key] = int((_gameplay_controls[key] as SpinBox).value)
+	return GameplaySettings.sanitize(values)
+
+
+func _refresh_gameplay_total() -> void:
+	if not is_node_ready():
+		return
+	var total := GameplaySettings.percent_total(_gameplay_values())
+	setup_status.text = "Tổng tỷ lệ ô: %d%% %s" % [total,
+			"— sẵn sàng" if total == 100 else "— phải bằng 100%"]
+	setup_status.modulate = Color("#9ff4d8") if total == 100 else Color("#ff9b93")
+	setup_confirm_btn.disabled = total != 100
+
+
+func _confirm_gameplay() -> void:
+	var values := _gameplay_values()
+	if not GameplaySettings.valid(values):
+		_refresh_gameplay_total()
+		return
+	_play_click()
+	setup_confirm_btn.disabled = true
+	setup_status.text = "Đang đồng bộ luật chơi…"
+	gameplay_confirmed.emit(values)
 
 
 func _on_connected() -> void:

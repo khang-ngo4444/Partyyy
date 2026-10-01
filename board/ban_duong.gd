@@ -12,13 +12,12 @@ extends Node3D
 ## không biết ô nào nối ô nào. Thiết kế chìa khoá/cốc cần đúng cái nó không có — "tung xúc xắc
 ## đi 5 bước", "bom lan sang ô bên cạnh" đều hỏi *ô kế tiếp là ô nào*.
 
-enum Loai { TRONG, CHIA, SAT_THUONG, BI_AN, RUONG, NGHIA_DIA, CUA_HANG, NGUY_HIEM }
+enum Loai { DAT, MAU, TIEN, TRANG_BI, RUONG, HOI_SINH }
 
-const TEN_LOAI := ["Trống", "Chìa khoá", "Sát thương", "Bí ẩn", "Rương", "Nghĩa địa",
-		"Cửa hàng", "Nguy hiểm"]
+const TEN_LOAI := ["Đất", "Máu", "Tiền", "Trang bị", "Rương", "Hồi sinh"]
 ## Ký hiệu ngắn trên mặt ô. Chữ THƯỜNG chứ không emoji: font mặc định của Godot không có
 ## emoji, nó hiện ra ô vuông rỗng hoặc mất hẳn.
-const KY_HIEU := ["", "CHIA", "-MAU", "?", "RUONG", "HOI SINH", "SHOP", "NGUY"]
+const KY_HIEU := ["DAT", "+MAU", "+VANG", "TRANG BI", "RUONG", "HOI SINH"]
 
 ## Các ô [0, so_o_vong_chinh) tự nối thành vòng kín. Các cạnh còn lại khai báo trong scene.
 @export_range(3, 256) var so_o_vong_chinh := 40
@@ -74,10 +73,10 @@ func so_luong() -> int:
 
 func loai(i: int) -> int:
 	_bao_dam_do_thi()
-	return _o[_chi_so(i)].loai if not _o.is_empty() else Loai.TRONG
+	return _o[_chi_so(i)].loai if not _o.is_empty() else Loai.DAT
 
 
-## Đổi loại một ô LÚC ĐANG CHƠI. Rương di chuyển sau mỗi lần mở, xem `PhaBanCo._ap_ruong()`.
+## Đổi loại nền của một ô lúc đang chơi.
 ##
 ## `OBan.loai` có setter tự đổi vật liệu và nhãn, nên ở đây chỉ gán một giá trị — không dựng
 ## lại node nào. Bản đồ trong `.tscn` không bị sửa: đóng bàn là mọi thứ về như cũ.
@@ -85,6 +84,14 @@ func dat_loai(i: int, l: int) -> void:
 	_bao_dam_do_thi()
 	if not _o.is_empty():
 		_o[_chi_so(i)].loai = l as BanDuong.Loai
+
+
+## Cập nhật cả loại ô lẫn lớp thông tin động (chủ đất, rương, checkpoint).
+func hien_o(i: int, l: int, chu_dat: String, co_ruong: bool,
+		diem_hoi_sinh: PackedStringArray) -> void:
+	_bao_dam_do_thi()
+	if not _o.is_empty():
+		_o[_chi_so(i)].hien_trang_thai(l, chu_dat, co_ruong, diem_hoi_sinh)
 
 
 ## Toạ độ thế giới của mặt ô — chỗ đặt chân người chơi.

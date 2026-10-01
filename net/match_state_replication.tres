@@ -1,7 +1,7 @@
 [gd_resource type="FusionReplicationConfig" format=3]
 
 [resource]
-property_count = 7
+property_count = 9
 properties/0/path = NodePath(":phase")
 properties/0/max_array_capacity = 0
 properties/0/interface_tag = ""
@@ -44,3 +44,15 @@ properties/6/interface_tag = ""
 properties/6/interpolate = 0
 properties/6/element_type = 0
 properties/6/element_class_name = ""
+properties/7/path = NodePath(":gameplay_settings_json")
+properties/7/max_array_capacity = 0
+properties/7/interface_tag = ""
+properties/7/interpolate = 0
+properties/7/element_type = 0
+properties/7/element_class_name = ""
+properties/8/path = NodePath(":setup_complete")
+properties/8/max_array_capacity = 0
+properties/8/interface_tag = ""
+properties/8/interpolate = 0
+properties/8/element_type = 0
+properties/8/element_class_name = ""

@@ -61,6 +61,7 @@ var _lobby: Lobby = null
 ## that su xay ra). Hai nguoi o hai may bam cung mot phan nghin giay thi van lot — neu gap
 ## thi doi sang mot co tren MatchState.
 var _dang_xep := false
+var _dang_vao_sanh := false
 
 @onready var spawner: FusionSpawner = $FusionSpawner
 @onready var scene_root: Node3D = $SceneRoot
@@ -115,6 +116,8 @@ func _ready() -> void:
 	menu.join_requested.connect(NetManager.join_room)
 	menu.refresh_requested.connect(NetManager.refresh_room_list)
 	menu.camera_motion_changed.connect(menu_background.set_motion_enabled)
+	menu.gameplay_confirmed.connect(_khi_xac_nhan_gameplay)
+	menu.setup_leave_requested.connect(NetManager.leave_room)
 
 	_show_menu(true)
 	NetManager.connect_to_photon()
@@ -144,6 +147,7 @@ func _khi_them_node(n: Node) -> void:
 	var ms := n as MatchState
 	if ms != null and not ms.changed.is_connected(_dong_bo_phong):
 		ms.changed.connect(_dong_bo_phong)
+		_dong_bo_phong.call_deferred()
 
 
 ## Keo trang thai chung cua phong tu MatchState ve. Chay khi nguoi khac doi mau den, va chay
@@ -155,6 +159,14 @@ func _khi_them_node(n: Node) -> void:
 func _dong_bo_phong() -> void:
 	var ms := get_tree().get_first_node_in_group("match_state") as MatchState
 	if ms == null:
+		return
+	if not ms.setup_complete:
+		if _lobby == null:
+			menu.show_room_setup(NetManager.is_master(), ms.gameplay_settings())
+		return
+	ban_co.dat_cai_dat(ms.gameplay_settings())
+	if _lobby == null:
+		_vao_sanh()
 		return
 	ap_mau_sang(ms.light_rgb, ms.light_rgb_b)
 	_theo_pha(ms)
@@ -221,10 +233,12 @@ func _lenh_minigame(doi_so: PackedStringArray) -> void:
 	quan_tro.xin_chay(ma)
 
 
-## Het mot vong luot tren ban -> sang Tank. Chi master phat lenh.
+## Hết một vòng lượt trên bàn -> một minigame ngẫu nhiên. Chỉ master phát lệnh.
 func _khi_het_vong(_thu_tu_cu: Array) -> void:
 	if NetManager.is_master() and not quan_tro.dang_chay():
-		quan_tro.xin_chay("tank")
+		var danh_sach := quan_tro.DANH_SACH.keys()
+		if not danh_sach.is_empty():
+			quan_tro.xin_chay(str(danh_sach[randi() % danh_sach.size()]))
 
 
 ## Hết minigame: master trả phòng về `PHASE_LOBBY`.
@@ -236,8 +250,8 @@ func _khi_het_vong(_thu_tu_cu: Array) -> void:
 ##
 ## Ban party van mo, khong dong lai. Vong moi bat dau ngay.
 ##
-## Khong con RPC rieng o day: `PhaBanCo` tu phat nguyen trang thai ban (thu tu + mau + chia +
-## coc + do) trong MOT goi, nen mot duong dong bo la du cho ca ban.
+## `PhaBanCo` tự phát nguyên trạng thái bàn (thứ tự + máu + vàng + đất + đồ) trong một gói,
+## nên một đường đồng bộ là đủ cho cả bàn.
 func _khi_xong_minigame(xep_hang: Array) -> void:
 	ban_co.tam_dung = false
 	ban_co.xin_thu_tu_moi(xep_hang)
@@ -248,12 +262,12 @@ func _khi_xong_minigame(xep_hang: Array) -> void:
 ## Chạy trên MỌI máy, và đó là chuyện đúng: bảng thắng, đóng bàn, kéo nhân vật của mình về
 ## chỗ đều là việc CỤC BỘ — bàn party được nạp riêng từng máy chứ không phải object mạng.
 ## Chỉ mỗi khúc đặt lại pha phòng là của master.
-func _khi_thang(id: int, coc: int) -> void:
+func _khi_thang(id: int) -> void:
 	# Ngưng bàn NGAY. Lượt vẫn đang là của người vừa thắng, và bảng thắng nằm trên màn hình
 	# sáu giây — không chặn thì họ bấm Space tung tiếp được, và master lại chốt thêm một lượt
 	# nữa cho một ván đã xong. `dong()` gỡ cờ này ra.
 	ban_co.tam_dung = true
-	hud.bao_thang("%s THẮNG\n%d cốc" % [Player.ten_theo_id(get_tree(), id), coc])
+	hud.bao_thang("%s THẮNG\nĐã mở đúng rương thật" % Player.ten_theo_id(get_tree(), id))
 	await get_tree().create_timer(GIAY_XEM_THANG).timeout
 	hud.an_thang()
 	ban_co.dong()
@@ -307,6 +321,30 @@ func _sua_chu_3d(n: Node) -> void:
 
 
 func _on_room_joined() -> void:
+	_show_menu(true)
+	var ms := get_tree().get_first_node_in_group("match_state") as MatchState
+	if NetManager.is_master() and ms == null:
+		ms = spawner.spawn(MATCH_STATE_SCENE) as MatchState
+	menu.show_room_setup(NetManager.is_master(),
+			ms.gameplay_settings() if ms != null else GameplaySettings.defaults())
+	if ms != null:
+		_dong_bo_phong()
+
+
+func _khi_xac_nhan_gameplay(value: Dictionary) -> void:
+	if not NetManager.is_master():
+		return
+	var ms := get_tree().get_first_node_in_group("match_state") as MatchState
+	if ms == null:
+		return
+	ms.gameplay_settings_json = GameplaySettings.encode(value)
+	ms.setup_complete = true
+
+
+func _vao_sanh() -> void:
+	if _lobby != null or _dang_vao_sanh:
+		return
+	_dang_vao_sanh = true
 	_show_menu(false)
 
 	# Phòng chờ luôn có mặt nên máy nào cũng tự nạp — chưa cần tới load_scene() của Fusion.
@@ -346,13 +384,10 @@ func _on_room_joined() -> void:
 	var player: Node3D = spawner.spawn(PLAYER_SCENE)
 	player.global_transform = _lobby.spawn_transform(NetManager.local_id() - 1)
 
-	# MatchState do master giu. Chi spawn neu chua co — master moi duoc bau se thay
-	# cai cu qua replication chu khong spawn them cai thu hai.
 	# Moc toa do `Placeholder_<Vat>_<so>` trong cac scene mini-game: master sinh vat mang tai do,
 	# may nao cung xoa moc ngay sau (xem _spawn_placeholders).
 	var placeholders := _lobby.find_children("Placeholder_*", "Node3D", true, false)
-	if NetManager.is_master() and get_tree().get_first_node_in_group("match_state") == null:
-		spawner.spawn(MATCH_STATE_SCENE)
+	if NetManager.is_master():
 		_spawn_set(_board().mode)
 		_spawn_placeholders(placeholders)
 	for p in placeholders:
@@ -364,6 +399,7 @@ func _on_room_joined() -> void:
 	var mb := get_tree().get_first_node_in_group("music_box") as MusicBox
 	if mb != null:
 		mb.dong_bo_vao_muon()
+	_dang_vao_sanh = false
 
 
 ## Master sinh vat mang tai dung vi tri/huong cua tung placeholder (xep bang Editor / Physics Placer).
@@ -694,6 +730,9 @@ func _spawn_set(m: int) -> void:
 
 
 func _on_room_left() -> void:
+	_dang_vao_sanh = false
+	ban_co.dong()
+	quan_tro.huy()
 	picker.visible = false
 	light_picker.visible = false
 	music_picker.visible = false

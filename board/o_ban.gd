@@ -17,7 +17,7 @@ extends Node3D
 		if is_node_ready():
 			_ve()
 
-@export var loai: BanDuong.Loai = BanDuong.Loai.TRONG:
+@export var loai: BanDuong.Loai = BanDuong.Loai.DAT:
 	set(value):
 		loai = value
 		if is_node_ready():
@@ -42,8 +42,24 @@ func _ready() -> void:
 func _ve() -> void:
 	if loai >= 0 and loai < vat_lieu.size() and vat_lieu[loai] != null:
 		_mat.material_override = vat_lieu[loai]
-	var ky: String = BanDuong.KY_HIEU[loai]
+	var ky := (BanDuong.KY_HIEU[loai] as String
+			if loai >= 0 and loai < BanDuong.KY_HIEU.size() else "DAT")
 	_chu.text = str(so) if ky == "" else "%d\n%s" % [so, ky]
+
+
+func hien_trang_thai(loai_moi: int, chu_dat: String, co_ruong: bool,
+		diem_hoi_sinh: PackedStringArray) -> void:
+	loai = loai_moi as BanDuong.Loai
+	var dong := PackedStringArray([str(so)])
+	if co_ruong:
+		dong.append("RUONG ?")
+	elif loai == BanDuong.Loai.DAT:
+		dong.append("DAT" if chu_dat.is_empty() else "DAT · %s" % chu_dat)
+	else:
+		dong.append(BanDuong.KY_HIEU[loai])
+	if not diem_hoi_sinh.is_empty():
+		dong.append("HOI SINH · %s" % ", ".join(diem_hoi_sinh))
+	_chu.text = "\n".join(dong)
 
 
 ## 0 = bình thường, 1 = điểm đến khác có thể chọn, 2 = lộ trình đang chọn.

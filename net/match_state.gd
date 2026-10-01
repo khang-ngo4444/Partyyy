@@ -33,6 +33,18 @@ enum { PHASE_LOBBY, PHASE_COUNTDOWN, PHASE_PLAYING }
 		countdown = value
 		changed.emit()
 
+## Chủ phòng chốt luật trước khi bất kỳ máy nào dựng lobby. Người vào muộn chỉ cần đọc hai
+## property replicate này để vào đúng bước hiện tại và dùng đúng cấu hình.
+@export var gameplay_settings_json: String = "":
+	set(value):
+		gameplay_settings_json = value
+		changed.emit()
+
+@export var setup_complete := false:
+	set(value):
+		setup_complete = value
+		changed.emit()
+
 ## Mat ban co hien tai (0 = co vua, 1 = co tuong). O day chu khong o ChessBoard, vi ban co
 ## nam trong lobby duoc nap cuc bo -> khong phai object mang. Nguoi vao muon doc gia tri nay
 ## de dung dung mat ban.
@@ -87,6 +99,10 @@ func _ready() -> void:
 	add_to_group("match_state")
 
 
+func gameplay_settings() -> Dictionary:
+	return GameplaySettings.decode(gameplay_settings_json)
+
+
 ## Dem so nguoi san sang. Chay duoc tren MOI may — chi doc, khong ghi.
 func ready_count() -> int:
 	var n := 0
@@ -103,6 +119,8 @@ func player_count() -> int:
 func _process(delta: float) -> void:
 	# CHI master duoc ghi. May khac chay ham nay cung khong sao — chung khong qua duoc cong nay.
 	if not sync.has_authority():
+		return
+	if not setup_complete:
 		return
 
 	var total := player_count()
