@@ -144,7 +144,7 @@ func _luat_moi_nhip() -> void:
 	while _ke_tiep < _lich.size() and t >= float(_lich[_ke_tiep]["luc"]):
 		_tha(_lich[_ke_tiep]["cho"] as Vector3)
 		_ke_tiep += 1
-	_bom = _bom.filter(func(b: BomAxit) -> bool: return is_instance_valid(b))
+	_bom.assign(_bom.filter(func(b) -> bool: return is_instance_valid(b)))
 	if con_song(NetManager.local_id()):
 		_giu_trong_bon()
 		_an_mau(t)
