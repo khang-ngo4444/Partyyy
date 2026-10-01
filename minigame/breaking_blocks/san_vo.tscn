@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://minigame/chung/san_dau.tscn" id="1_sd"]
+[ext_resource type="Environment" path="res://materials/env_san_sang.tres" id="2_env"]
+
+[node name="SanVo" type="Node3D"]
+
+[node name="SanDau" parent="." instance=ExtResource("1_sd")]
+
+[node name="Cam" parent="SanDau" index="0"]
+environment = ExtResource("2_env")

@@ -52,17 +52,42 @@ không cái nào đăng ký được vào `DANH_SACH` (lý do ở mục 4).
 
 ---
 
-# 3. Minigame pha 3 — hiện có ĐÚNG MỘT
+# 3. Minigame pha 3 — hiện có 15 TRÒ
 
 ```
-extends MiniGame   →  minigame/tank/tank_battle.gd     ← duy nhất
-DANH_SACH          →  { "tank": ... }                  ← một mục
-main.gd:161        →  quan_tro.xin_chay("tank")        ← tên CỨNG trong code
+extends MiniGame   →  17 script, nhưng 2 trong đó là KHUÔN chứ không phải trò
+DANH_SACH          →  15 mục                           ← danh sách thật
+main.gd            →  xin_chay(DANH_SACH.keys().pick_random())
 ```
 
-> ⚠️ **`main.gd` đang ghi cứng `"tank"`.** Kể cả `DANH_SACH` có 5 trò thì nó vẫn chạy Tank mãi.
-> Phải đổi thành bốc ngẫu nhiên. Rẻ: `xin_chay(ma)` đã phát `ma` qua RPC cho cả phòng, nên
-> master `randi()` chọn một khoá là đủ — không cần thêm cơ chế đồng bộ nào.
+Hai khuôn chung, trò nào cũng đi qua một trong hai:
+
+| Khuôn | File | Làm gì cho lớp con |
+|---|---|---|
+| `MiniGame3D` | `minigame/chung/mini_game_3d.gd` | Dựng sân, đọc giờ, đếm người còn sống, **chốt và phát `xong`** (`_chot_ket_qua` → `_net_xep_hang`) |
+| `MiniGameLan` | `minigame/chung/mini_game_lan.gd` | Kế thừa `MiniGame3D`, 8 làn riêng SÁT NHAU + camera chung bám tốp |
+
+Nên **lớp con không tự phát `xong`** — đừng đi tìm `xong.emit` trong `laser_leap.gd` rồi kết
+luận trò đó chưa xong. Nó nằm ở `mini_game_3d.gd`, một chỗ cho cả 15 trò.
+
+## Chạy lúc nào
+
+```
+pha 2: mọi người đổ xúc xắc xong một lượt
+  → pha_ban_co.gd:_ket_luot    — `luot` vòng về 0, phát `het_vong`
+  → main.gd:_khi_het_vong      — master bốc ngẫu nhiên 1 trong 15
+  → pha 3 chạy, `xong(xep_hang)`
+  → main.gd:_khi_xong_minigame — xếp hạng thành THỨ TỰ LƯỢT vòng sau
+```
+
+Ngẫu nhiên bốc **ở master**, không cần thêm đồng bộ: `xin_chay(ma)` phát chính `ma` đó qua RPC
+cho cả phòng, mọi máy nạp cùng một scene.
+
+`/mg <mã>` trong chat **chỉ để test tay từng trò**, không phải đường chạy thật. `/mg` trơ trọi
+thì liệt kê mã.
+
+> ⚠️ Rút ngẫu nhiên trần, có thể lặp lại trò vừa chơi. Thêm bộ đếm "không lặp N trò gần nhất"
+> khi người chơi bắt đầu thấy nhàm.
 
 ## Hợp đồng
 
@@ -82,7 +107,7 @@ Nhờ vậy thêm một trò không phải sửa dòng nào bên bàn.
 
 | | Vì sao |
 |---|---|
-| **45–90 giây** | Nó chen giữa hai lượt bàn. Dài hơn là người chơi quên mình đang ở ô nào |
+| **30–90 giây** | Nó chen giữa hai lượt bàn. Dài hơn là người chơi quên mình đang ở ô nào. T4 chạy 30 s vì làn chỉ 150 m |
 | **Luật hiểu trong 3 giây** | Đếm ngược chỉ có 3 giây và một dòng chữ. Trò cần giải thích là trò sai |
 | **2–8 người, không chia phe** | Số người là số người đang trong phòng, không đoán trước được |
 | **Xếp hạng GIỐNG NHAU trên mọi máy** | Nó quyết định lượt. Lệch một chỗ là hai người thấy hai bàn khác nhau |
@@ -91,6 +116,59 @@ Nhờ vậy thêm một trò không phải sửa dòng nào bên bàn.
 > ⚠️ **Tank đang vi phạm điều thứ tư.** Lần chạy thử 6 người: master ra `[2,6,3,1,5,4]`, máy
 > khác ra `[1,2,3,4,5,6]`. Hiện chưa gây hại vì chỉ gói của master được phát đi, nhưng
 > `mini_game.gd` ghi rõ `xong()` phải phát **cùng một bảng trên mọi máy**. Cần truy lại.
+
+---
+
+# 3b. Hai trò đã làm lại lõi — và vì sao
+
+Hai trò này từng "chạy xanh" nhưng lõi sai. Ghi lại để không ai vô tình làm lại bản cũ.
+
+## Breaking Blocks — hư theo NGƯỜI ĐỨNG, không theo đồng hồ
+
+| | Bản cũ | Bản mới |
+|---|---|---|
+| Ô tan vì | `trang_thai_o(pha, gio(), chu_ky)` — đồng hồ | `_hu[i]` cộng khi CÓ người đứng trên |
+| Người chơi gây ra gì | Không gì. Đứng yên hay chạy loạn đều như nhau | Ô dưới chân mình nứt dần, rời đi thì vết nứt ở lại |
+| Lưới | 13×13 ô 1,6 m (gần như sàn liền) | 8×8 ô 2,8 m, khe 1,2 m — phải nhảy thật |
+| Gói tin | 0 | Chỉ khi có ô ĐỔI trạng thái, do master phán |
+
+Vỡ do master phán rồi phát đi, vì vỡ là thứ giết người — hai máy lệch vài khung hình mà một bên
+ô đã mất thì có người chết oan. Vết nứt thì mỗi máy tự tính, 0 gói tin.
+
+## Laser Leap — phá NHỊP, không phải cho tia nhanh hơn
+
+Bản cũ cho 3 tia quay cùng tốc, pha cách đều, quanh đúng tâm sàn. Không có góc an toàn — nhưng
+**nhịp cố định**: đo được, hai khoảng tia đi qua liền nhau chỉ lệch **1,6%**. Người chơi tìm ra
+một nhịp nhảy rồi lặp lại là sống hết ván mà không cần nhìn gì. Trò phản xạ thành trò bấm nhịp.
+
+Bản mới thêm **lịch đợt** suy từ hạt giống: mỗi đợt đổi hướng quay, hệ số tốc riêng từng tia, pha
+đầu, và **điểm quay lệch khỏi tâm sàn**. Lệch tâm là thứ phá nhịp mạnh nhất — khoảng giữa hai lần
+tia đi qua một chỗ không còn đều. Đo lại: **62%**.
+
+Lệch tâm đòi thanh tia dài 30 m: tia lệch `d` quét một đĩa bán kính `nửa thanh` quanh điểm lệch,
+muốn phủ kín sàn bán kính 11,5 thì cần `nửa thanh ≥ 11,5 + d`. Thanh ngắn hơn là sinh ra một vành
+sàn tia không bao giờ với tới — đúng cái "chỗ đứng an toàn vĩnh viễn" phải tránh.
+
+## Cả hai đều có bộ kiểm chạy được
+
+```
+godot --headless --path minigame/breaking_blocks --script kiem_luat.gd
+godot --headless --path minigame/laser_leap      --script kiem_luat.gd
+```
+
+Chúng chặn được những thứ KHÔNG thấy bằng mắt trong một ván chơi thử:
+
+- `GIAY_HOI = 9` ở Breaking Blocks → 4 người biết chạy thì 60 giây không một ô nào vỡ, ván nào
+  cũng hết giờ với bốn người sống, xếp hạng thành ngẫu nhiên.
+- 3 người chung một ô cuối ván → cửa sổ cảnh báo co còn 0,27 giây, vỡ gần như cùng lúc đổi màu.
+- Nhịp tia khoá ở Laser Leap — và lần đầu tôi đo bằng độ lệch chuẩn cả ván thì bản cũ ra 34%,
+  **lọt qua**; phải đo hai khoảng liền nhau mới lộ ra 1,6%.
+
+Hằng số trong bộ kiểm **chép tay** từ file trò. Đổi số bên trò thì phải đổi ở đây — và đó là việc
+cố ý: mỗi lần đổi một con số, bộ kiểm buộc phải chạy lại.
+
+> ⚠️ `assert` fail trong `--headless --script` làm Godot **đứng chờ debugger**: 0% CPU, không in
+> một chữ nào. Hai bộ kiểm dùng `ck()` tự viết chứ không dùng `assert` vì lý do đó.
 
 ---
 
@@ -108,7 +186,7 @@ signal xong(xep_hang: Array)                      # không cái nào sinh ra th�
 Và ba thứ nữa lệch về bản chất:
 
 - **Không có giờ.** Tháp Hà Nội chơi tới khi xong, Liar Bar chơi tới khi còn một người, phi
-  tiêu ném bao nhiêu cũng được. Pha 3 phải dừng sau 45–90 giây.
+  tiêu ném bao nhiêu cũng được. Pha 3 phải dừng sau 30–90 giây.
 - **Không phải ai cũng chơi.** Penguin Cross là *một người bước, cả phòng đứng xem*. Tháp Hà
   Nội là một cái tháp dùng chung. Pha 3 cần cả 8 người cùng chơi cùng lúc.
 - **Một bản dùng chung, không phải mỗi người một sân.** Để 8 người cùng đập chuột thì phải có
@@ -215,7 +293,7 @@ Steam, trang chủ, bài preview và wiki đều chỉ nói "30+ minigame", khô
 | **T1 — sàn đẩy nhau** | Magma & Mages · Snowy Spin · Acidic Atoll · Explosive Exchange · Crown Capture | cam trên cao · di chuyển theo cam · 1 nút đòn (tầm/hình/lực/hồi chiêu là config) · rơi khỏi sàn tự khai tử · sàn co dần bật-tắt |
 | **T2 — né chướng ngại** | Breaking Blocks · Laser Leap · Searing Spotlights · Slippery Sprint | cùng cam + điều khiển T1, bỏ nút đòn · chướng ngại = hàm của hạt giống + thời gian mạng |
 | **T3 — lưới ô** | Bounding Blocks · Temporal Trails · Word Wars | sàn chia ô · giẫm lên thì ô đổi chủ · đếm ô |
-| **T4 — làn chạy, cam sau lưng** | Sidestep Slope · Nhặt quà né rác · Slippery Sprint | đường cuộn · vật cản sinh theo quãng đường từ hạt giống |
+| **T4 — làn chạy, cam chung** | Sidestep Slope · Nhặt quà né rác · Slippery Sprint | 8 làn kề vai · vật cản sinh theo quãng đường từ hạt giống |
 | **T5 — mỗi người một bàn riêng** | Fractured Faces · Đếm thú · Rockin Rhythm · Bóng chày | chia khu riêng · cùng chuỗi đề từ hạt giống · cuối ván gửi đúng một con số |
 
 **13/18 trò dùng chung đúng một camera.** 3 trò cam sau lưng dùng lại `CameraRig` của phòng
@@ -233,7 +311,7 @@ Nối với ba kiểu ở mục 5:
 | T1 | **B — sự kiện** | Có va chạm người-người. Chỉ phát lúc đánh, lúc chết |
 | T2 | **A + "tôi chết"** | Chướng ngại tất định từ hạt giống; người bị nạn tự khai tử |
 | T3 | **B, gần 0 gói** | Ô chiếm suy ra từ vị trí người chơi — replicator đã gửi sẵn |
-| T4 | **A** | Vật cản sinh theo quãng đường từ hạt giống; mỗi người một băng riêng |
+| T4 | **A** | Vật cản sinh theo quãng đường từ hạt giống; mỗi người một làn riêng, các làn kề nhau |
 | T5 | **C — điểm số** | Đúng cái khung `MiniGameDiem` ở mục 6 |
 
 ## Bảng chốt 18 trò
@@ -245,15 +323,15 @@ Nối với ba kiểu ở mục 5:
 | 3 | Acidic Atoll | T1 | trên cao | loại trừ | ~~1/quả bom~~ → **0**, lịch rơi từ hạt giống |
 | 4 | Explosive Exchange | T1 | trên cao | loại trừ theo thứ tự nổ | `ai_om` do master |
 | 5 | Crown Capture | T1 | trên cao | **1 đ/giây giữ**, 60 s | `ai_giu` do master |
-| 6 | Breaking Blocks | T2 | trên cao | thời gian sống, 60 s | chỉ "tôi chết" |
-| 7 | Laser Leap | T2 | trên cao | thời gian sống, **không giới hạn giờ** | chỉ "tôi chết" |
+| 6 | Breaking Blocks | T2 | trên cao | thời gian sống, 60 s | "tôi chết" + **ô vỡ/mọc do master phát** |
+| 7 | Laser Leap | T2 | trên cao | thời gian sống, chốt chặn 90 s | chỉ "tôi chết" |
 | 8 | Searing Spotlights | T2 | trên cao, **tối hoàn toàn** | thời gian sống · **100 máu, −40/giây trong đèn** | chỉ "tôi chết" |
-| 9 | Slippery Sprint | T2/T4 | **sau lưng riêng** | thứ hạng về đích; chưa về thì theo quãng đường | chỉ "tôi chết" |
+| 9 | Slippery Sprint | T2/T4 | **cam chung bám tốp** | thứ hạng về đích; chưa về thì theo quãng đường | chỉ "tôi chết" |
 | 10 | Bounding Blocks | T3 | trên cao | số ô lúc hết giờ, 60 s | **0** — suy từ vị trí |
 | 11 | Temporal Trails | T3 | trên cao | loại trừ, 60 s | **0** — suy từ vị trí |
 | 12 | Word Wars | T3 | trên cao | số từ ghép xong, 60 s · **cả phòng chung một từ** | ~~1/cú đấm~~ → **1/từ ghép xong** |
-| 13 | Sidestep Slope | T4 | **sau lưng riêng** | quãng đường đi được | **0** |
-| 14 | Nhặt quà né rác | T4 | **sau lưng riêng** | quà +1 · quà to +3 · rác −1 (cho âm), 60 s · **băng riêng mỗi người** | **0** |
+| 13 | Sidestep Slope | T4 | **cam chung bám tốp** | quãng đường đi được | **0** |
+| 14 | Nhặt quà né rác | T4 | **cam chung bám tốp** | quà +1 · quà to +3 · rác −1 (cho âm), 30 s · **làn riêng, kề nhau** | **0** |
 | 15 | Fractured Faces | T5 | trên cao, khu riêng | thứ hạng hoàn thành; chưa xong thì số mảnh đúng | **0** + 1 gói cuối |
 | 16 | Đếm thú | T5 | trên cao, **không render người chơi** | 5 vòng, đếm 1 loại giữa 3 loại · đúng +1 sai 0 | **0** + 1 gói/vòng |
 | 17 | Rockin Rhythm | T5 | **overlay 2D, hàng ngang** | Perfect 3 · Good 1 · Miss 0 · combo ×1.5 sau 10 nốt | 1 gói/giây/người |
@@ -306,7 +384,8 @@ người chơi đổ lỗi cho game chứ không cho ngón tay.
         -> them 1 nut don, bang config 5 dong
         -> con no: chay thu NHIEU MAY. Moi kiem bang assert + nap scene, chua qua Photon that
 3. T3   Bounding Blocks · Temporal Trails · Word Wars          (3 tro)   ✅ DA DUNG
-        -> luoi 13x13 tach ra `chung/san_luoi.tscn`, Breaking Blocks dung chung
+        -> luoi 13x13 `chung/san_luoi.tscn` gio CHI Bounding Blocks dung
+        -> Breaking Blocks co luoi 8x8 rieng (`o_vo.tscn`, o 2.8 m, dung bang code)
 4. T4   Sidestep Slope · Nhat qua · Slippery Sprint            (3 tro)   ✅ DA DUNG
         -> khung rieng `chung/mini_game_lan.gd`: lan rieng, cam sau lung cua chinh minh
 5. T5   Bong chay · Rockin Rhythm · Dem thu · Fractured Faces   (4 tro)
@@ -345,6 +424,5 @@ bỏ qua.
 
 - **Word Wars ghép chữ tiếng Anh.** Người giỏi tiếng Anh thắng chứ không phải người chơi giỏi.
   Đã hỏi và bạn chọn giữ nguyên — ghi lại để sau không ai tưởng là bỏ sót.
-- **Slippery Sprint** chạy đường thẳng, cam sau lưng từng người — nên nó vừa thuộc T2 vừa dùng
-  khuôn cam của T4.
-- 18 trò là **kế hoạch**, chưa viết dòng nào. Trò pha 3 duy nhất đang chạy vẫn là Tank.
+- **Slippery Sprint** chạy đường thẳng nên nó vừa thuộc T2 vừa dùng khuôn làn của T4.
+- 18 trò là **kế hoạch**; 15 trò đã dựng và đã đăng ký trong `DANH_SACH`.

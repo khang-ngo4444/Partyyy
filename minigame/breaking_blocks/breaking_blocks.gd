@@ -1,84 +1,370 @@
 extends MiniGame3D
 
-## BREAKING BLOCKS — sàn tan rồi mọc lại, đừng rơi xuống.
+## BREAKING BLOCKS — đứng lâu trên ô nào thì ô đó nứt, nứt đủ thì vỡ. Còn một người là xong.
 ##
-## Khuôn T2, trò đầu tiên dựng trên `MiniGame3D` nên cũng là bài kiểm cho cái khung đó.
+## Khuôn T2. **Không có đòn, không có dash, không có chướng ngại** — sàn CHÍNH LÀ trò chơi. Cái
+## người chơi phải nghĩ suốt ván chỉ có một câu: "không đứng đây mãi được."
 ##
-## ## Vì sao trò này tốn ĐÚNG 0 gói tin lúc chơi
+## ## Hư thuộc về Ô, không thuộc về NGƯỜI
 ##
-## Ô nào tan lúc nào là **hàm thuần** của `(pha_cua_o, gio(), chu_ky)`. Pha lấy từ hạt giống
-## master gieo, `gio()` mỗi máy tự đếm. Không máy nào phải kể cho máy nào nghe điều gì.
+## Đây là chỗ dễ làm sai nhất. `_hu[i]` nằm trên ô thứ `i`, không nằm trên người. Rời ô thì vết
+## nứt **ở lại**, và người sau bước vào sẽ gặp đúng vết nứt đó. Ô chỉ lành khi vắng người một
+## lúc, và lành CHẬM hơn hư — không thì chẳng ai có lý do gì phải di chuyển.
 ##
-## Gói duy nhất bay đi cả ván là `"tôi chết"`, và do **chính người rơi** phát.
+## Hệ quả: người chơi tác động lên nhau mà không cần đánh nhau. Ai cũng đang ăn dần chỗ đứng an
+## toàn của người khác, và hai người chung một ô thì ô đó hư nhanh hơn hẳn.
 ##
-## ## Chu kỳ ngắn dần
+## ## Vì sao bản này thay hẳn bản cũ
 ##
-## Để nguyên một nhịp thì phút đầu đã học xong và nửa phút sau chỉ là chờ hết giờ. Chu kỳ co
-## từ `CHU_KY_DAU` xuống `CHU_KY_CUOI` nên ván tự kết thúc kể cả khi ai cũng giỏi.
+## Bản đầu cho ô tan theo ĐỒNG HỒ: `trang_thai_o(pha, gio(), chu_ky)` — hàm thuần, 0 gói tin,
+## rất gọn. Nhưng nó không phải Breaking Blocks: ô tan dù có ai đứng hay không, nên người chơi
+## chỉ đang đọc một cái đồng hồ vô hình chứ không gây ra điều gì. Đứng yên cũng chết, chạy loạn
+## cũng chết, và không quyết định nào của người chơi đổi được kết quả.
+##
+## ## Ai phán ô vỡ
+##
+## Vết nứt thì **mọi máy tự tính** từ vị trí mà replicator đã gửi sẵn — 0 gói tin cho toàn bộ
+## phần hình ảnh. Nhưng lúc VỠ thì **master phán rồi phát đi**, vì vỡ là thứ giết người: hai máy
+## lệch nhau vài khung hình mà một bên ô đã mất thì có người chết oan.
+##
+## Gói chỉ bay khi có ô ĐỔI trạng thái, không bay mỗi khung hình — vài gói một giây, không phải
+## sáu mươi.
+##
+## ## Cảnh báo phải đọc được
+##
+## Thứ tự LÀNH → NỨT NHẸ → NỨT NẶNG → SẮP VỠ → VỠ là bắt buộc, không được rút gọn. Cửa sổ "sắp
+## vỡ" rộng 30% thanh hư, nên kể cả cuối ván (hư nhanh gấp `KHO_CUOI`, lại thêm người chung ô)
+## vẫn còn hơn nửa giây để kịp nhảy đi. `kiem_luat.gd` quét mọi tổ hợp (số người × độ khó) và
+## chặn bản nào phá điều đó.
 
-enum { THUONG, CANH_BAO, TAN }
+enum { LANH, NHE, NANG, SAP_VO }
 
-## Ô biến mất bao lâu mỗi nhịp.
-const GIAY_TAN := 1.1
-## Hiện màu cảnh báo bao lâu TRƯỚC khi tan. Núm chỉnh độ khó quan trọng nhất: ngắn quá thì trò
-## thành tung xúc xắc, dài quá thì đi dạo cũng không chết.
-const GIAY_BAO := 0.9
-const CHU_KY_DAU := 6.0
-const CHU_KY_CUOI := 2.6
-## Chu kỳ co hết cỡ sau chừng này giây.
-const GIAY_CO_HET := 45.0
+## Lưới vuông bao nhiêu ô mỗi cạnh.
+const CANH := 8
+## Bề ngang một ô, mét. Khớp `o_vo.tscn`.
+const RONG_O := 2.8
+## Khe giữa hai ô. Người chơi nhảy cao 1,2 m nên bay 0,69 s, tầm ngang ~4,2 m, lại còn nhảy đôi
+## — 1,2 m là nhảy chắc tới, không phải nhảy chính xác từng centimet.
+const KHE := 1.2
+## Tâm hai ô kề nhau cách nhau bao xa.
+const BUOC := RONG_O + KHE
+
+## Một người đứng yên thì ô vỡ sau bao lâu, lúc ĐẦU ván.
+const GIAY_VO_MOT_NGUOI := 5.5
+## Người thứ hai trở đi, mỗi người cộng thêm bao nhiêu phần tốc hư. Đây là chỗ "chung ô thì
+## nguy hiểm nhanh hơn" — không cần đòn nào mà vẫn tranh nhau chỗ đứng.
+const THEM_MOI_NGUOI := 0.75
+## Rời ô bao lâu thì ô mới bắt đầu lành. Có trễ thì nhảy qua nhảy lại một cặp ô không xoá được
+## vết nứt.
+const TRE_HOI := 1.2
+## Lành từ nứt hết về lành hẳn mất bao lâu. PHẢI lớn hơn `GIAY_VO_MOT_NGUOI` — lành nhanh hơn hư
+## thì đứng một chỗ là xong, chẳng ai cần đi đâu.
+##
+## 9 giây là con số đầu, và nó làm trò KHÔNG CHƠI ĐƯỢC: đo bằng mô phỏng, 4 người biết bỏ chạy
+## thì cả 60 giây **không một ô nào vỡ**, không ai rơi, ván nào cũng hết giờ với bốn người sống
+## và bảng xếp hạng thành ngẫu nhiên.
+##
+## Lý do tính được chứ không phải đoán: 64 ô cho 4 người là 16 ô mỗi người. Người chạy vòng qua
+## 8 ô, mỗi ô đứng 0,7 giây thì mỗi vòng ô đó ăn 0,13 thanh hư nhưng lành được 0,18 — hư không
+## bao giờ đuổi kịp lành. Phải 22 giây thì một vòng 8 ô mới bắt đầu lỗ.
+const GIAY_HOI := 22.0
+## Ô vỡ rồi nằm trống bao lâu mới mọc lại, lúc ĐẦU ván. Không cho mọc lại thì 64 ô bay hết trong
+## nửa phút và ván kết thúc vì hết sàn chứ không vì ai giỏi hơn.
+##
+## Cuối ván con số này DÃN ra theo `kho()`: ô vỡ nằm trống lâu hơn, sàn teo dần, và đó là cách
+## "cuối ván ít chỗ an toàn" xảy ra. Để nguyên một nhịp thì đo được: 4 người chạy 60 giây chỉ vỡ
+## 10 ô và sàn không bao giờ tụt dưới 61/64 — cả ván không ai chết, luôn hết giờ.
+const GIAY_MOC_LAI := 4.5
+
+## Cuối ván hư nhanh gấp mấy lần đầu ván. Cũng là hệ số dãn của thời gian mọc lại và thời gian
+## lành — một núm cho cả ba, để không bao giờ có chuyện hư nhanh hơn mà sàn vẫn hồi như cũ.
+##
+## 4,0 chứ không phải 2,4: với một vòng 8 ô, hư chỉ thắng lành khi tốc hư lên ~0,7/giây, tức
+## phải gấp 4 lần đầu ván. Dưới mức đó thì người chơi chỉ cần đi vòng tròn là bất tử.
+const KHO_CUOI := 4.0
+## Khó hết cỡ sau chừng này giây. Phải NGẮN hơn `giay_van` (60) kha khá, không thì ván hết trước
+## lúc độ khó kịp cắn và trận nào cũng kết thúc bằng tiếng còi.
+const GIAY_KHO_HET := 30.0
+
+## Mốc chuyển trạng thái trên thanh hư 0..1.
+const MOC_NHE := 0.25
+const MOC_NANG := 0.5
+const MOC_SAP_VO := 0.7
+
+## Ô đã vào trạng thái SẮP VỠ thì phải CHỜ ít nhất chừng này giây mới được vỡ, bất kể thanh hư
+## đã đầy từ lúc nào.
+##
+## Không có sàn này thì công bằng vỡ ở chỗ đông người: ba người chung một ô lúc cuối ván làm
+## tốc hư lên 1,09/giây, cửa sổ cảnh báo co còn 0,27 giây — ô vỡ gần như cùng lúc với lúc nó
+## chuyển màu, không ai kịp đọc. Kẹp ở đây là cách duy nhất chặn được mọi tổ hợp (số người) ×
+## (độ khó) trong một dòng, thay vì đi dò lại ba hằng số mỗi lần đổi một cái.
+const GIAY_BAO_TOI_THIEU := 0.6
+
+## Ô sắp vỡ thì rung. Biên độ, mét.
+const RUNG := 0.045
+## Người chơi phải nằm trong khoảng này phía trên mặt ô mới tính là ĐANG ĐỨNG trên nó. Phải cao
+## hơn `jump_height` (1,2 m) — không thì nhảy tại chỗ là ngừng làm hư ô, và trò thành thi nhảy.
+const CAO_TINH := 2.2
+
+## Camera: đủ cao và đủ lùi để thấy cả lưới 8×8 (~31 m) lẫn vết nứt trên từng ô.
+const CAM_CAO := 28.0
+const CAM_LUI := 20.0
+
+@export var o_scene: PackedScene = null
 
 var _o: Array[OSan] = []
-## Pha của từng ô, cùng thứ tự với `_o`. Gieo từ hạt giống nên mọi máy ra y hệt.
-var _pha: PackedFloat32Array = PackedFloat32Array()
+## Tâm từng ô, toạ độ cục bộ trong `san`. Giữ riêng để còn chỗ trả về sau khi rung.
+var _tam: PackedVector3Array = PackedVector3Array()
+## Mức hư từng ô, 0..1. Mọi máy tự tính, dùng cho HÌNH ẢNH.
+var _hu: PackedFloat32Array = PackedFloat32Array()
+## Còn bao lâu nữa ô mới bắt đầu lành. Đếm xuống khi ô vắng người.
+var _cho_hoi: PackedFloat32Array = PackedFloat32Array()
+## Ô còn hay đã vỡ. Do MASTER phán, phát qua `_net_doi`.
+var _con: Array[bool] = []
+## `gio()` lúc ô vỡ. Chỉ master dùng, để biết khi nào cho mọc lại.
+var _vo_luc: PackedFloat32Array = PackedFloat32Array()
+## `gio()` lúc ô bước vào SẮP VỠ; -1 nếu chưa. Dùng để ép đủ `GIAY_BAO_TOI_THIEU`.
+var _bao_tu: PackedFloat32Array = PackedFloat32Array()
+## Vật liệu cho bốn trạng thái, pha trong `_ready()` từ hai vật liệu sẵn có.
+var _mau: Array[StandardMaterial3D] = []
 
 
 func _ready() -> void:
 	super()
 	ten = "BREAKING BLOCKS"
-	luat = "WASD chạy · sàn đỏ là sắp tan · đừng rơi"
+	luat = "WASD chạy · Space nhảy · đứng lâu là sàn nứt rồi vỡ · đừng rơi"
+	_mau = _thang_mau()
 
 
 func _dung_san() -> void:
-	_o.assign(san.find_children("*", "OSan", true, false))
-	_pha.resize(_o.size())
-	# Pha nằm trong khoảng KHÔNG chạm cửa sổ cảnh báo, nên ở `t = 0` mọi ô đều còn nguyên.
-	#
-	# Gieo pha trên cả chu kỳ thì ngay lúc vào sân đã có ~30% sàn biến mất — đo lần chạy đầu:
-	# cả bốn người rơi trong vài giây, ván kết thúc trước cả ảnh chụp thứ hai. Cho ván mở ra
-	# với sàn lành rồi thủng dần vừa công bằng hơn vừa đọc được luật.
-	var toi_da := maxf(CHU_KY_DAU - GIAY_TAN - GIAY_BAO, 0.1)
-	for i in _o.size():
-		_pha[i] = _rng.randf() * toi_da
-		_o[i].dat(true)
-	if _o.is_empty():
-		push_error("BreakingBlocks: san khong co o nao (thieu instance cua o_san.tscn)")
+	_o.clear()
+	var tong := CANH * CANH
+	_tam.resize(tong)
+	_hu.resize(tong)
+	_cho_hoi.resize(tong)
+	_vo_luc.resize(tong)
+	_bao_tu.resize(tong)
+	_con.resize(tong)
+	if o_scene == null:
+		push_error("BreakingBlocks: thieu o_scene (o_vo.tscn)")
+		return
+	# Dựng lưới bằng code chứ không bày 64 node trong `.tscn`: đổi `CANH` một chỗ là xong, và
+	# không ai phải sửa 64 transform bằng tay khi muốn thử lưới khác.
+	for r in CANH:
+		for c in CANH:
+			var i := r * CANH + c
+			var o := o_scene.instantiate() as OSan
+			san.add_child(o)
+			_tam[i] = Vector3(_toa_do(c), 0.0, _toa_do(r))
+			o.position = _tam[i]
+			_o.append(o)
+			_hu[i] = 0.0
+			_cho_hoi[i] = 0.0
+			_vo_luc[i] = 0.0
+			_bao_tu[i] = -1.0
+			_con[i] = true
+			o.dat(true)
+			o.son(_mau[LANH])
+	_dat_camera()
+
+
+## Camera chung của sân, đặt bằng code: lưới này rộng gấp đôi sân vòng tròn của T1/T3 nên để
+## nguyên chỗ đứng mặc định là tràn khung — thấy giữa sân mà mất bốn góc.
+func _dat_camera() -> void:
+	var cam := _cam_san()
+	if cam == null or san == null:
+		return
+	cam.global_position = san.global_position + Vector3(0.0, CAM_CAO, CAM_LUI)
+	cam.look_at(san.global_position)
 
 
 func _luat_moi_nhip() -> void:
+	var d := get_process_delta_time()
 	var t := gio()
-	var ck := chu_ky(t)
+	var dong := _dem_nguoi()
+
 	for i in _o.size():
-		var tt := trang_thai_o(_pha[i], t, ck)
-		_o[i].dat(tt != TAN, tt == CANH_BAO)
+		if not _con[i]:
+			continue
+		var n := int(dong.get(i, 0))
+		if n > 0:
+			_cho_hoi[i] = TRE_HOI
+			_hu[i] = minf(_hu[i] + toc_hu(n, t) * d, 1.0)
+		elif _cho_hoi[i] > 0.0:
+			_cho_hoi[i] -= d
+		else:
+			_hu[i] = maxf(_hu[i] - d / giay_hoi(t), 0.0)
+		# Mốc bắt đầu báo: đặt khi vừa vào SẮP VỠ, xoá khi lành lại xuống dưới mốc đó.
+		if trang_thai(_hu[i]) == SAP_VO:
+			if _bao_tu[i] < 0.0:
+				_bao_tu[i] = t
+		else:
+			_bao_tu[i] = -1.0
+		_ve_o(i)
+
+	if NetManager.is_master():
+		_master_phan(t)
+
+
+## Ô nào đang có bao nhiêu người ĐỨNG trên.
+##
+## Người đã chết không tính: họ không được ăn tiếp chỗ đứng của người còn sống. (Họ cũng đang
+## rơi ở đâu đó dưới sàn, nhưng dựa vào điều đó là dựa vào một thứ tình cờ.)
+func _dem_nguoi() -> Dictionary:
+	var dong := {}
+	for p: Player in get_tree().get_nodes_in_group("players"):
+		if not con_song(p.player_id()):
+			continue
+		var i := _o_duoi_chan(p.global_position)
+		if i >= 0:
+			dong[i] = int(dong.get(i, 0)) + 1
+	return dong
+
+
+## CHỈ master. Ô nào đủ hư thì vỡ, ô nào vỡ đủ lâu thì mọc lại. Chỉ phát khi CÓ đổi.
+func _master_phan(t: float) -> void:
+	var vo := PackedInt32Array()
+	var moc := PackedInt32Array()
+	for i in _o.size():
+		if _con[i]:
+			# Đủ hư VÀ đã báo đủ lâu. Thiếu điều kiện thứ hai là vỡ không kịp báo.
+			if _hu[i] >= 1.0 and _bao_tu[i] >= 0.0 and t - _bao_tu[i] >= GIAY_BAO_TOI_THIEU:
+				vo.append(i)
+		elif t - _vo_luc[i] >= giay_moc_lai(t):
+			moc.append(i)
+	if not vo.is_empty() or not moc.is_empty():
+		Fusion.rpc(_net_doi, vo, moc, t)
+
+
+@rpc("any_peer", "call_local")
+func _net_doi(vo: PackedInt32Array, moc: PackedInt32Array, t: float) -> void:
+	for i in vo:
+		if i < 0 or i >= _o.size() or not _con[i]:
+			continue
+		_con[i] = false
+		_vo_luc[i] = t
+		_hu[i] = 1.0
+		_bao_tu[i] = -1.0
+		_o[i].position = _tam[i]
+		_o[i].dat(false)
+	for i in moc:
+		if i < 0 or i >= _o.size() or _con[i]:
+			continue
+		_con[i] = true
+		_hu[i] = 0.0
+		_cho_hoi[i] = 0.0
+		_bao_tu[i] = -1.0
+		_o[i].position = _tam[i]
+		_o[i].dat(true)
+		_o[i].son(_mau[LANH])
+
+
+## Sơn ô theo mức hư, và rung nếu sắp vỡ.
+func _ve_o(i: int) -> void:
+	var tt := trang_thai(_hu[i])
+	_o[i].son(_mau[tt])
+	if tt == SAP_VO:
+		_o[i].position = _tam[i] + Vector3(
+				randf_range(-RUNG, RUNG), randf_range(-RUNG, RUNG), randf_range(-RUNG, RUNG))
+	else:
+		_o[i].position = _tam[i]
+
+
+# ───────────────────────────── chỗ vào sân ─────────────────────────────
+
+## Rải người quanh sân, cách bờ hai ô. Dùng vòng tròn của lớp cha rồi KÉO VỀ TÂM Ô gần nhất —
+## không kéo thì có người sinh ra đúng cái khe giữa hai ô và rơi trước khi ván kịp bắt đầu.
+func _cho_vao(i: int, tong: int) -> Vector3:
+	var o := _o_gan_nhat(super(i, tong))
+	return Vector3(_toa_do(o.y), 1.0, _toa_do(o.x))
+
+
+## Bán kính vòng sinh. Lưới 8 ô nên bờ ở ~14 m; 8 m là vào hẳn trong, cách bờ hai ô.
+func ban_kinh_vao_san() -> float:
+	return BUOC * 2.0
+
+
+## Ô gần điểm `v` nhất, dưới dạng `(hang, cot)`.
+func _o_gan_nhat(v: Vector3) -> Vector2i:
+	return Vector2i(
+			clampi(roundi(v.z / BUOC + (CANH - 1) * 0.5), 0, CANH - 1),
+			clampi(roundi(v.x / BUOC + (CANH - 1) * 0.5), 0, CANH - 1))
+
+
+## Ô nào ở ngay dưới chân người này; -1 nếu đang trên khe, ngoài sân, hay trên ô đã vỡ.
+##
+## Tính thẳng bằng chỉ số lưới chứ không quét 64 ô: mỗi khung hình, mỗi người, một phép chia.
+func _o_duoi_chan(v: Vector3) -> int:
+	if san == null:
+		return -1
+	var l := v - san.global_position
+	if l.y < -0.5 or l.y > CAO_TINH:
+		return -1
+	var o := _o_gan_nhat(l)
+	# Phải trong MẶT ô, không phải trong khe. Thiếu phép này thì đứng giữa khe cũng làm hư ô
+	# bên cạnh, và người chơi không hiểu vì sao ô mình không đứng lại nứt.
+	if absf(l.x - _toa_do(o.y)) > RONG_O * 0.5 or absf(l.z - _toa_do(o.x)) > RONG_O * 0.5:
+		return -1
+	var i := o.x * CANH + o.y
+	return i if _con[i] else -1
 
 
 # ───────────────────────── luật: hàm thuần, kiểm bằng assert ─────────────────────────
 
-## Chu kỳ tại thời điểm `t`, co tuyến tính rồi dừng.
-static func chu_ky(t: float) -> float:
-	return lerpf(CHU_KY_DAU, CHU_KY_CUOI, clampf(t / GIAY_CO_HET, 0.0, 1.0))
+## Toạ độ tâm của ô thứ `k` trên một cạnh, lấy giữa lưới làm gốc.
+static func _toa_do(k: int) -> float:
+	return (float(k) - (CANH - 1) * 0.5) * BUOC
 
 
-## Trạng thái một ô. `pha` xê dịch mỗi ô một nhịp để cả sàn không tan cùng lúc.
+## Hư nhanh gấp mấy lần so với đầu ván. Đầu ván chậm cho người chơi học luật, cuối ván nhanh để
+## ván tự kết thúc kể cả khi ai cũng giỏi.
+static func kho(t: float) -> float:
+	return lerpf(1.0, KHO_CUOI, clampf(t / GIAY_KHO_HET, 0.0, 1.0))
+
+
+## Ô vỡ nằm trống bao lâu mới mọc lại, tại giây `t`. Dãn theo độ khó: cuối ván sàn teo thật.
+static func giay_moc_lai(t: float) -> float:
+	return GIAY_MOC_LAI * kho(t)
+
+
+## Lành hết vết nứt mất bao lâu, tại giây `t`. Cũng chậm đi cuối ván — hư nhanh hơn mà lành vẫn
+## như cũ thì sàn tự bù lại hết phần khó vừa thêm vào.
+static func giay_hoi(t: float) -> float:
+	return GIAY_HOI * kho(t)
+
+
+## Tốc hư của một ô đang có `n` người đứng, tại giây `t`. Đơn vị: phần thanh hư mỗi giây.
+static func toc_hu(n: int, t: float) -> float:
+	if n <= 0:
+		return 0.0
+	return (1.0 + THEM_MOI_NGUOI * float(n - 1)) * kho(t) / GIAY_VO_MOT_NGUOI
+
+
+## Trạng thái hiện trên mặt ô theo mức hư.
+static func trang_thai(hu: float) -> int:
+	if hu >= MOC_SAP_VO:
+		return SAP_VO
+	if hu >= MOC_NANG:
+		return NANG
+	if hu >= MOC_NHE:
+		return NHE
+	return LANH
+
+
+## Bốn vật liệu LÀNH → SẮP VỠ, pha từ `mat_san_thuong` sang `mat_san_canh_bao`.
 ##
-## Thứ tự kiểm quan trọng: TAN phải xét TRƯỚC CANH_BAO. Xét ngược lại thì khi
-## `GIAY_BAO + GIAY_TAN > chu_ky` (chu kỳ đã co hết), cửa sổ cảnh báo nuốt luôn cửa sổ tan và
-## ô không bao giờ biến mất — trò tự tắt độ khó đúng lúc đáng ra khó nhất.
-static func trang_thai_o(pha: float, t: float, ck: float) -> int:
-	var u := fposmod(t + pha, ck)
-	if u >= ck - GIAY_TAN:
-		return TAN
-	if u >= ck - GIAY_TAN - GIAY_BAO:
-		return CANH_BAO
-	return THUONG
+## Pha bằng code chứ không thêm hai file `.tres`: cả bốn mức là MỘT dải màu, tách ra bốn file
+## thì sửa dải phải mở bốn chỗ và rất dễ lệch nhau.
+static func _thang_mau() -> Array[StandardMaterial3D]:
+	var lanh := load("res://materials/mat_san_thuong.tres") as StandardMaterial3D
+	var bao := load("res://materials/mat_san_canh_bao.tres") as StandardMaterial3D
+	var ds: Array[StandardMaterial3D] = []
+	for k in 4:
+		var m := lanh.duplicate() as StandardMaterial3D
+		var u := float(k) / 3.0
+		m.albedo_color = lanh.albedo_color.lerp(bao.albedo_color, u)
+		m.emission = m.albedo_color
+		m.emission_energy_multiplier = lerpf(
+				lanh.emission_energy_multiplier, bao.emission_energy_multiplier, u)
+		ds.append(m)
+	return ds
