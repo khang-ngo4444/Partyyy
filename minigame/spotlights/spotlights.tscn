@@ -6,7 +6,6 @@
 [node name="Spotlights" type="Node"]
 script = ExtResource("1_sp")
 san_scene = ExtResource("2_san")
-giay_van = 75.0
 
 [node name="Lop" type="CanvasLayer" parent="."]
 visible = false

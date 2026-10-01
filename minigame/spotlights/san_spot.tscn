@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="PackedScene" path="res://minigame/chung/san_dau.tscn" id="1_sd"]
 [ext_resource type="PackedScene" path="res://minigame/chung/san_tron.tscn" id="2_st"]
@@ -11,7 +11,7 @@ inner_radius = 11.2
 outer_radius = 11.5
 
 [sub_resource type="CylinderShape3D" id="Shape_den"]
-radius = 3.9
+radius = 2.66
 height = 6.0
 
 [node name="SanSpot" type="Node3D"]
@@ -41,7 +41,7 @@ transform = Transform3D(1, 0, 0, 0, -4.37e-08, -1, 0, 1, -4.37e-08, 0, 12, 0)
 light_color = Color(1, 0.86, 0.6, 1)
 light_energy = 12.0
 spot_range = 19.0
-spot_angle = 18.0
+spot_angle = 12.5
 
 [node name="Vung" type="Area3D" parent="Den0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
@@ -58,7 +58,7 @@ transform = Transform3D(1, 0, 0, 0, -4.37e-08, -1, 0, 1, -4.37e-08, 0, 12, 0)
 light_color = Color(1, 0.86, 0.6, 1)
 light_energy = 12.0
 spot_range = 19.0
-spot_angle = 18.0
+spot_angle = 12.5
 
 [node name="Vung" type="Area3D" parent="Den1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
@@ -75,7 +75,7 @@ transform = Transform3D(1, 0, 0, 0, -4.37e-08, -1, 0, 1, -4.37e-08, 0, 12, 0)
 light_color = Color(1, 0.86, 0.6, 1)
 light_energy = 12.0
 spot_range = 19.0
-spot_angle = 18.0
+spot_angle = 12.5
 
 [node name="Vung" type="Area3D" parent="Den2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
@@ -85,3 +85,87 @@ collision_mask = 2
 [node name="Hinh" type="CollisionShape3D" parent="Den2/Vung"]
 shape = SubResource("Shape_den")
 
+[node name="Den3" type="Node3D" parent="."]
+
+[node name="Bong" type="SpotLight3D" parent="Den3"]
+transform = Transform3D(1, 0, 0, 0, -4.37e-08, -1, 0, 1, -4.37e-08, 0, 12, 0)
+light_color = Color(1, 0.86, 0.6, 1)
+light_energy = 12.0
+spot_range = 19.0
+spot_angle = 12.5
+
+[node name="Vung" type="Area3D" parent="Den3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+collision_layer = 0
+collision_mask = 2
+
+[node name="Hinh" type="CollisionShape3D" parent="Den3/Vung"]
+shape = SubResource("Shape_den")
+
+[node name="Den4" type="Node3D" parent="."]
+
+[node name="Bong" type="SpotLight3D" parent="Den4"]
+transform = Transform3D(1, 0, 0, 0, -4.37e-08, -1, 0, 1, -4.37e-08, 0, 12, 0)
+light_color = Color(1, 0.86, 0.6, 1)
+light_energy = 12.0
+spot_range = 19.0
+spot_angle = 12.5
+
+[node name="Vung" type="Area3D" parent="Den4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+collision_layer = 0
+collision_mask = 2
+
+[node name="Hinh" type="CollisionShape3D" parent="Den4/Vung"]
+shape = SubResource("Shape_den")
+
+[node name="Den5" type="Node3D" parent="."]
+
+[node name="Bong" type="SpotLight3D" parent="Den5"]
+transform = Transform3D(1, 0, 0, 0, -4.37e-08, -1, 0, 1, -4.37e-08, 0, 12, 0)
+light_color = Color(1, 0.86, 0.6, 1)
+light_energy = 12.0
+spot_range = 19.0
+spot_angle = 12.5
+
+[node name="Vung" type="Area3D" parent="Den5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+collision_layer = 0
+collision_mask = 2
+
+[node name="Hinh" type="CollisionShape3D" parent="Den5/Vung"]
+shape = SubResource("Shape_den")
+
+[node name="Den6" type="Node3D" parent="."]
+
+[node name="Bong" type="SpotLight3D" parent="Den6"]
+transform = Transform3D(1, 0, 0, 0, -4.37e-08, -1, 0, 1, -4.37e-08, 0, 12, 0)
+light_color = Color(1, 0.86, 0.6, 1)
+light_energy = 12.0
+spot_range = 19.0
+spot_angle = 12.5
+
+[node name="Vung" type="Area3D" parent="Den6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+collision_layer = 0
+collision_mask = 2
+
+[node name="Hinh" type="CollisionShape3D" parent="Den6/Vung"]
+shape = SubResource("Shape_den")
+
+[node name="Den7" type="Node3D" parent="."]
+
+[node name="Bong" type="SpotLight3D" parent="Den7"]
+transform = Transform3D(1, 0, 0, 0, -4.37e-08, -1, 0, 1, -4.37e-08, 0, 12, 0)
+light_color = Color(1, 0.86, 0.6, 1)
+light_energy = 12.0
+spot_range = 19.0
+spot_angle = 12.5
+
+[node name="Vung" type="Area3D" parent="Den7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+collision_layer = 0
+collision_mask = 2
+
+[node name="Hinh" type="CollisionShape3D" parent="Den7/Vung"]
+shape = SubResource("Shape_den")

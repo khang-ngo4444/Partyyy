@@ -154,6 +154,7 @@ sàn tia không bao giờ với tới — đúng cái "chỗ đứng an toàn v�
 ```
 godot --headless --path minigame/breaking_blocks --script kiem_luat.gd
 godot --headless --path minigame/laser_leap      --script kiem_luat.gd
+godot --headless --path minigame/spotlights      --script kiem_luat.gd
 ```
 
 Chúng chặn được những thứ KHÔNG thấy bằng mắt trong một ván chơi thử:
@@ -163,6 +164,8 @@ Chúng chặn được những thứ KHÔNG thấy bằng mắt trong một ván
 - 3 người chung một ô cuối ván → cửa sổ cảnh báo co còn 0,27 giây, vỡ gần như cùng lúc đổi màu.
 - Nhịp tia khoá ở Laser Leap — và lần đầu tôi đo bằng độ lệch chuẩn cả ván thì bản cũ ra 34%,
   **lọt qua**; phải đo hai khoảng liền nhau mới lộ ra 1,6%.
+- `TAM_QUET = 7,8` ở Spotlights → đèn rọi ra ngoài sàn và đèn chạy nhanh hơn người. Chơi thử 3
+  đèn thấy thoải mái; tới chu kỳ 6 mới hết chỗ đi, mà lúc đó không ai còn đang test.
 
 Hằng số trong bộ kiểm **chép tay** từ file trò. Đổi số bên trò thì phải đổi ở đây — và đó là việc
 cố ý: mỗi lần đổi một con số, bộ kiểm buộc phải chạy lại.
@@ -325,7 +328,7 @@ Nối với ba kiểu ở mục 5:
 | 5 | Crown Capture | T1 | trên cao | **1 đ/giây giữ**, 60 s | `ai_giu` do master |
 | 6 | Breaking Blocks | T2 | trên cao | thời gian sống, 60 s | "tôi chết" + **ô vỡ/mọc do master phát** |
 | 7 | Laser Leap | T2 | trên cao | thời gian sống, chốt chặn 90 s | chỉ "tôi chết" |
-| 8 | Searing Spotlights | T2 | trên cao, **tối hoàn toàn** | thời gian sống · **100 máu, −40/giây trong đèn** | chỉ "tôi chết" |
+| 8 | Searing Spotlights | T2 | trên cao, **chu kỳ sáng↔tối** | thời gian sống · **100 máu, −40/giây trong đèn** | chỉ "tôi chết" |
 | 9 | Slippery Sprint | T2/T4 | **cam chung bám tốp** | thứ hạng về đích; chưa về thì theo quãng đường | chỉ "tôi chết" |
 | 10 | Bounding Blocks | T3 | trên cao | số ô lúc hết giờ, 60 s | **0** — suy từ vị trí |
 | 11 | Temporal Trails | T3 | trên cao | loại trừ, 60 s | **0** — suy từ vị trí |
@@ -339,13 +342,35 @@ Nối với ba kiểu ở mục 5:
 
 ## Ghi chú riêng vài trò
 
-**Searing Spotlights — tối là tối HẲN.** Không thấy nhân vật nào, kể cả của mình. Đèn quét là
-nguồn sáng duy nhất: ai lọt vào thì vừa bị lộ, vừa mất máu. Hai thứ bắt buộc, thiếu thì trò
-thành ngẫu nhiên chứ không thành khó:
+**Searing Spotlights — nhớ CHỖ MÌNH, không nhớ đường đèn.** Vòng lặp:
 
-- **Thanh máu luôn hiện trên HUD** — tín hiệu duy nhất báo "đang bị nướng, chạy đi".
-- **Sàn có mốc định hướng mờ** (viền phát sáng yếu, vài vạch chìm). Là NÚM CHỈNH: càng mờ càng
-  căng. Không có gì để bám thì đi trong tối là tung xúc xắc.
+```
+SÁNG HẲN 4 s  →  tối dần 1,6 s  →  TỐI HẲN 6,5 s  →  sáng dần 1,4 s  →  chu kỳ sau, +1 đèn
+ (ghi nhớ         (thấy rõ          (đi theo ký ức      (nhận ra mình
+ chỗ mình)       đang tắt)          + vệt đèn)           đang ở đâu)
+```
+
+Đèn chạy Lissajous nên đường đi không khép thành vòng đoán trước được — **nhớ đường đèn là vô
+ích, và đó là cố ý**. Thứ phải nhớ là chỗ của chính mình; vệt đèn chỉ là mốc để định hướng.
+
+Ba thứ bắt buộc, thiếu thì trò thành ngẫu nhiên chứ không thành khó:
+
+- **Phải có chặng SÁNG.** Bản cũ tối từ giây 0 tới hết ván, nên không có lúc nào để mà nhớ —
+  người chơi bị thả vào bóng tối và đi loạn. Cả vòng lặp trên không tồn tại.
+- **Thanh máu luôn hiện trên HUD** — trong tối, đó là tín hiệu duy nhất báo "đang bị nướng".
+- **Viền sàn phát sáng yếu** (`VienSan`). Là NÚM CHỈNH: càng mờ càng căng. Nó cũng là chỗ bức
+  tường vô hình (`BAN_KINH_GIU`) nằm, nên tường đó không bí ẩn.
+
+**Không chết vì rơi.** Lớp cha giết người rơi khỏi sàn, nhưng đây là trò đi trong tối không thấy
+bờ — chết vì chạy quá đà là chết vì không có thông tin. `_toi_thua()` không gọi `super()`, và vị
+trí bị kẹp trong bán kính 11,0.
+
+**Hai con số bản cũ đặt sai, `kiem_luat.gd` mới bắt được:**
+
+| | Cũ | Vì sao sai | Mới |
+|---|---|---|---|
+| `TAM_QUET` | 7,8 | Lissajous hai trục nên tâm đèn ra `7,8·√2` = 11,03 m, cộng vệt là 13,69 m trên sàn 11,5 — đèn rọi ra ngoài sàn. Và tốc đỉnh 6,88 m/s > `Player.speed` 6,0, đèn đuổi được người | **6,2** |
+| `spot_angle` | 18° | Vệt bán kính 3,9 m; 8 đèn là ~92% sàn, hết chỗ đi | **12,5°** (vệt 2,66 m, 8 đèn = 43%) |
 
 **Rockin Rhythm là 2D, không phải 3D.** Mỗi người một hàng ngang, avatar 2D của nhân vật bên
 trái (chụp sẵn 12 ảnh PNG bằng `SubViewport`, lấy theo `model_index` đã replicate — **không
