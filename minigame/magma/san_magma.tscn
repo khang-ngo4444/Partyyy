@@ -1,12 +1,19 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="PackedScene" path="res://minigame/chung/san_dau.tscn" id="1_st"]
 [ext_resource type="PackedScene" path="res://minigame/chung/san_tron.tscn" id="2_sr"]
 [ext_resource type="Environment" path="res://materials/env_san_sang.tres" id="3_env"]
 [ext_resource type="Material" path="res://materials/mat_o_nguy_hiem.tres" id="4_m"]
+[ext_resource type="Material" path="res://materials/mat_san_canh_bao.tres" id="5_b"]
+[ext_resource type="Material" path="res://materials/mat_san_thuong.tres" id="6_a"]
 
 [sub_resource type="PlaneMesh" id="Plane_nham"]
 size = Vector2(90, 90)
+
+[sub_resource type="CylinderMesh" id="Cyl_vung"]
+top_radius = 11.5
+bottom_radius = 11.5
+height = 0.02
 
 [node name="SanMagma" type="Node3D"]
 
@@ -16,6 +23,19 @@ size = Vector2(90, 90)
 environment = ExtResource("3_env")
 
 [node name="SanTron" parent="." instance=ExtResource("2_sr")]
+
+[node name="Mat" parent="SanTron" index="0"]
+material_override = ExtResource("4_m")
+
+[node name="VungBao" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.21, 0)
+mesh = SubResource("Cyl_vung")
+material_override = ExtResource("5_b")
+
+[node name="VungAnToan" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.23, 0)
+mesh = SubResource("Cyl_vung")
+material_override = ExtResource("6_a")
 
 [node name="DungNham" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -6, 0)

@@ -8,3 +8,26 @@
 script = ExtResource("1_mg")
 san_scene = ExtResource("2_san")
 cau_lua_scene = ExtResource("3_cau")
+
+[node name="Lop" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="ThanhMau" type="ColorRect" parent="Lop"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -180.0
+offset_top = -64.0
+offset_right = 180.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0.08, 0.08, 0.1, 0.85)
+
+[node name="Muc" type="ColorRect" parent="Lop/ThanhMau"]
+anchors_preset = 0
+offset_right = 360.0
+offset_bottom = 24.0
+color = Color(0.93, 0.35, 0.22, 1)

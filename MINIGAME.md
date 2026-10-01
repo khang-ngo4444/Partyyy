@@ -155,6 +155,7 @@ sàn tia không bao giờ với tới — đúng cái "chỗ đứng an toàn v�
 godot --headless --path minigame/breaking_blocks --script kiem_luat.gd
 godot --headless --path minigame/laser_leap      --script kiem_luat.gd
 godot --headless --path minigame/spotlights      --script kiem_luat.gd
+godot --headless --path minigame/magma           --script kiem_luat.gd
 ```
 
 Chúng chặn được những thứ KHÔNG thấy bằng mắt trong một ván chơi thử:
@@ -321,7 +322,7 @@ Nối với ba kiểu ở mục 5:
 
 | # | Trò | Khuôn | Camera | Tính điểm | Gói tin |
 |---|---|---|---|---|---|
-| 1 | Magma & Mages | T1 | trên cao | loại trừ: chết thứ *i* → `n−i` | 1/phát cầu lửa |
+| 1 | Magma & Mages | T1 | trên cao | loại trừ · **100 máu, −22/giây trong nham** | 1/phát cầu lửa |
 | 2 | Snowy Spin | T1 | trên cao | ~~`n−i` mỗi vòng, 3 vòng × 20 s~~ → **một ván 60 s, thời gian sống** | **0** |
 | 3 | Acidic Atoll | T1 | trên cao | loại trừ | ~~1/quả bom~~ → **0**, lịch rơi từ hạt giống |
 | 4 | Explosive Exchange | T1 | trên cao | loại trừ theo thứ tự nổ | `ai_om` do master |
@@ -342,7 +343,39 @@ Nối với ba kiểu ở mục 5:
 
 ## Ghi chú riêng vài trò
 
-**Searing Spotlights — nhớ CHỖ MÌNH, không nhớ đường đèn.** Vòng lặp:
+**Magma & Mages — vùng an toàn co theo CHẶNG, sàn không biến mất.**
+
+Bản cũ cho cả `SanTron` co lại: ngoài sàn là hư không, bước ra là rơi và chết ngay. Hai chỗ sai:
+
+- **Dung nham không "ăn" sàn gì cả.** Nó là một mặt phẳng trang trí ở `y = -6`, chỉ để rơi xuống;
+  sàn thì tự biến mất. Không có chặng nào để mà cảnh báo.
+- **Chạm nhẹ là chết ngay.** Lùi quá đà một bước = rơi = hết. Không có chỗ cho "bị hất vào nham,
+  cháy một tí, bò ra" — tức không có chỗ cho chính cái combat của trò này.
+
+Giờ sàn giữ nguyên cỡ và **chính nó là dung nham**; hai đĩa mỏng chồng lên đánh dấu ba vùng:
+
+| Vùng | Node | Nghĩa |
+|---|---|---|
+| Trong `VungAnToan` | đĩa nhạt | an toàn, và còn an toàn qua lần co tới |
+| Vành giữa hai đĩa | đĩa đỏ hở ra | **CẢNH BÁO** — còn an toàn, sắp thành nham |
+| Ngoài `VungBao` | mặt sàn cam | **NHAM** — đứng là mất máu |
+
+Mốc sát thương là `ti_le_san(t) * bán_kính`, đúng bằng mép đĩa `VungBao` nhìn thấy — một công
+thức cho cả hình và sát thương nên chúng không thể lệch nhau.
+
+**Vì sao co theo chặng chứ không co đều.** Co đều từ 1,0 xuống 0,45 trong 43 giây là 0,147 m/s;
+báo trước 4 giây thì vành cảnh báo rộng **0,59 m** — nhìn từ camera trên cao gần như không thấy,
+và nó đọc như một vạch trôi chứ không như "khoanh này sắp mất". Co theo chặng cho vành **1,38 m**,
+hở ra dứt khoát rồi biến thành nham.
+
+Năm lần co: 11,50 → 10,12 → 8,74 → 7,36 → 5,98 → 4,60 m, xong ở giây 54, còn 21 giây đánh nhau
+trong vòng nhỏ nhất. Cuối ván 8 người chia 66 m² = 8,3 m² mỗi người.
+
+**Đòn giữ nguyên hoàn toàn** (E bắn cầu lửa, 1 gói tin một quả, mỗi máy tự áp lực đẩy lên mình).
+Chỉ đổi hệ quả: trước hất xuống vực là chết luôn, giờ hất vào nham — người bị hất có 4,5 giây để
+bò ra, và bò ra xa nhất mất 1,15 giây.
+
+ Vòng lặp:
 
 ```
 SÁNG HẲN 4 s  →  tối dần 1,6 s  →  TỐI HẲN 6,5 s  →  sáng dần 1,4 s  →  chu kỳ sau, +1 đèn
