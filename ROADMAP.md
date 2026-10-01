@@ -3792,7 +3792,7 @@ Pummel Party; **Lunars không liệt kê được** — Steam, trang chủ, bài
 
 | Khuôn | Trò | Xây một lần |
 |---|---|---|
-| **T1 — sàn đẩy nhau** | Magma & Mages · Snowy Spin · Acidic Atoll · Explosive Exchange · Crown Capture | cam trên cao · di chuyển theo cam · 1 nút đòn (tầm/hình/lực/hồi chiêu là config) · rơi khỏi sàn tự khai tử · sàn co dần bật-tắt |
+| **T1 — sàn đẩy nhau** | Magma & Mages · ~~Snowy Spin~~ · Acidic Atoll · Explosive Exchange · Crown Capture | cam trên cao · di chuyển theo cam · 1 nút đòn (tầm/hình/lực/hồi chiêu là config) · rơi khỏi sàn tự khai tử · sàn co dần bật-tắt |
 | **T2 — né chướng ngại** | Breaking Blocks · Laser Leap · Searing Spotlights · Slippery Sprint | cùng cam + điều khiển T1, bỏ nút đòn · chướng ngại = hàm của hạt giống + thời gian mạng |
 | **T3 — lưới ô** | Bounding Blocks · Temporal Trails · Word Wars | sàn chia ô · giẫm lên thì ô đổi chủ · đếm ô |
 | **T4 — làn chạy, cam sau lưng** | Sidestep Slope · Nhặt quà né rác · Slippery Sprint | đường cuộn · vật cản sinh theo quãng đường từ hạt giống |
@@ -3808,7 +3808,7 @@ Pummel Party; **Lunars không liệt kê được** — Steam, trang chủ, bài
 | # | Trò | Khuôn | Camera | Tính điểm | Gói tin |
 |---|---|---|---|---|---|
 | 1 | Magma & Mages | T1 | trên cao | loại trừ: chết thứ *i* → `n−i` | 1/phát cầu lửa |
-| 2 | Snowy Spin | T1 | trên cao | `n−i` mỗi vòng, cộng **3 vòng × 20 s** | 1/đòn + 1/vòng |
+| 2 | ~~Snowy Spin~~ **ĐÃ XOÁ** | T1 | — | — | — |
 | 3 | Acidic Atoll | T1 | trên cao | loại trừ | 1/quả bom |
 | 4 | Explosive Exchange | T1 | trên cao | loại trừ theo thứ tự nổ | `ai_om` do master |
 | 5 | Crown Capture | T1 | trên cao | **1 đ/giây giữ**, 60 s | `ai_giu` do master |
@@ -3885,7 +3885,6 @@ chắc chắn sẽ hoà** → phải có tiebreak; **điểm là thời gian/qu�
 | Bounding Blocks | ai chiếm ô cuối muộn hơn |
 | Word Wars | tổng số nút giẫm đúng |
 | Nhặt quà né rác | số quà to |
-| Snowy Spin | hạng ở vòng cuối |
 | Fractured Faces | thời điểm gắn mảnh đúng cuối cùng |
 | Crown Capture · Sidestep Slope · Slippery Sprint | không cần — điểm là số thực |
 
@@ -3921,7 +3920,7 @@ băng thông (mục 1h). Tốn ít RAM, đổi lại không phụ thuộc câu c
 ```
 1. T2   Breaking Blocks · Laser Leap · Searing Spotlights      (3 tro)
         -> dung khuon: san + cam tren cao + dieu khien theo cam + tu khai tu
-2. T1   Magma&Mages · Snowy Spin · Acidic Atoll · Explosive · Crown   (5 tro)
+2. T1   Magma&Mages · Acidic Atoll · Explosive · Crown   (4 tro, Snowy Spin da xoa)
         -> them 1 nut don, bang config 5 dong
 3. T3   Bounding Blocks · Temporal Trails · Word Wars          (3 tro)
 4. T4   Sidestep Slope · Nhat qua · Slippery Sprint            (3 tro)

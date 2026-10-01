@@ -1,8 +1,0 @@
-[gd_scene load_steps=3 format=3]
-
-[ext_resource type="Script" path="res://minigame/snowy_spin/snowy_spin.gd" id="1_ss"]
-[ext_resource type="PackedScene" path="res://minigame/snowy_spin/san_tuyet.tscn" id="2_san"]
-
-[node name="SnowySpin" type="Node"]
-script = ExtResource("1_ss")
-san_scene = ExtResource("2_san")

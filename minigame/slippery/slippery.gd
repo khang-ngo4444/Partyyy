@@ -20,11 +20,11 @@ extends MiniGameLan
 ##
 ## ## Sàn băng
 ##
-## `Player.truot` — thêm vào từ Snowy Spin, dùng lại nguyên si. `dung_som()` PHẢI tắt lại, không
-## thì người chơi trượt băng giữa phòng chờ.
+## `Player.truot` — số giây để tăng tốc lên `speed`, và cũng là số giây để dừng. `dung_som()`
+## PHẢI tắt lại, không thì người chơi trượt băng giữa phòng chờ.
 
-## Băng trơn cỡ nào: giây để tăng tốc lên `speed`, và cũng là giây để dừng. Trơn hơn Snowy Spin
-## vì ở đây chạy thẳng, không phải xoay xở né thanh.
+## Băng trơn cỡ nào: giây để tăng tốc lên `speed`, và cũng là giây để dừng. Trơn hẳn được vì ở
+## đây chạy thẳng, không phải xoay xở né chướng ngại.
 const TRON := 1.15
 
 var _vach_tai := 145.0

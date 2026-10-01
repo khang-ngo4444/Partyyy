@@ -37,7 +37,6 @@ const DANH_SACH := {
 	"laser_leap": "res://minigame/laser_leap/laser_leap.tscn",
 	"spotlights": "res://minigame/spotlights/spotlights.tscn",
 	"magma": "res://minigame/magma/magma.tscn",
-	"snowy_spin": "res://minigame/snowy_spin/snowy_spin.tscn",
 	"acidic_atoll": "res://minigame/acidic_atoll/acidic_atoll.tscn",
 	"explosive": "res://minigame/explosive/explosive.tscn",
 	"crown": "res://minigame/crown/crown.tscn",

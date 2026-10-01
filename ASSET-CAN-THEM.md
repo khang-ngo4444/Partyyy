@@ -196,10 +196,10 @@ Dung nham **không phải `StaticBody3D`** như guide ghi: rơi khỏi sàn đã
 
 ### T1 — bốn trò còn lại
 
+(Snowy Spin đã bị xoá khỏi trò, nên hàng `san_tuyet.tscn` cũng đi theo.)
+
 | Node | Hiện tại | Cần |
 |---|---|---|
-| `san_tuyet.tscn` → `Truc/Thanh*/Mat` | 🟡 `BoxMesh` 22 m màu đỏ | Thanh gỗ/đá có vân. Sàn cũng nên có texture tuyết thay `mat_san_thuong` |
-| `san_tuyet.tscn` → `Truc/Thanh*/Vung` | ✅ `Area3D` + `BoxShape3D` đúng bằng mesh (có assert) | — |
 | `bom_axit.tscn` → `Qua` | 🟡 `SphereMesh` cam | Quả bom thật + `GPUParticles3D` đuôi khói |
 | `bom_axit.tscn` → `Dau` (vòng đánh dấu) | 🟡 `TorusMesh` đỏ, bán kính đúng bằng vùng nổ | Cố ý — nhưng nên nhấp nháy nhanh dần khi sắp chạm |
 | `bom_axit.tscn` → `Quang` + `No` | ✅ quầng nổ và vùng sát thương cùng 3,6 m (có assert) | Thay quầng cầu bằng `GPUParticles3D` |
@@ -210,7 +210,7 @@ Dung nham **không phải `StaticBody3D`** như guide ghi: rơi khỏi sàn đã
 | Hoạt ảnh "đang ôm bom" / "đang đội miện" | 🔴 chưa có | Model KayKit có sẵn tư thế; cần nối `AnimationPlayer` |
 | UI cho cả 5 trò T1 | 🔴 chưa có | Cùng món nợ `CanvasLayer (UI)` với T2 |
 
-> **Sàn trơn của Snowy Spin nằm trong `Player`, không nằm trong sân.** Thêm `Player.truot` —
+> **Sàn trơn nằm trong `Player`, không nằm trong sân.** `Player.truot` —
 > số giây để tăng tốc lên `speed` và cũng là số giây để dừng. `0` = như cũ. Trò nào cần thì
 > bật, và `dung_som()` PHẢI tắt lại, không thì người chơi trượt băng giữa phòng chờ.
 
@@ -273,7 +273,7 @@ của phòng chờ) và **làn tách rời** cách nhau 40 m.
 > camera lại gắn vào thân, mà thân thì tự xoay theo hướng chạy — camera quay vòng mỗi lần né
 > sang bên. T4 giữ nguyên điều khiển kiểu phòng chờ.
 
-> **Sàn băng của Slippery Sprint dùng lại `Player.truot`** đã thêm cho Snowy Spin, không viết
+> **Sàn băng của Slippery Sprint dùng `Player.truot`**, không viết
 > thêm gì. Về đích dùng lại nguyên đường ống `xin_chet()` của lớp cha — cùng một sự kiện
 > "người chơi rời cuộc tại giây thứ N, do chính máy của họ tuyên", chỉ khác chiều xếp hạng.
 

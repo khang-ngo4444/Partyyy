@@ -2,7 +2,7 @@
 Luật: Pháp sư đứng sàn góc nhìn trên cao, bắn cầu lửa đẩy/hạ đối thủ. Chết thứ i nhận n-i điểm. Mỗi cú bắn gửi 1 gói tin.
 Node Godot: Node3D (Root) -> Camera3D, DirectionalLight3D, WorldEnvironment, StaticBody3D (Sàn/Dung nham: MeshInstance3D, CollisionShape3D), Node3D (Spawner), CharacterBody3D (Player: MeshInstance3D, CollisionShape3D, Marker3D), Area3D (Cầu lửa: MeshInstance3D, CollisionShape3D, GPUParticles3D), CanvasLayer (UI: Control, Label).
 
-2. Snowy Spin
+2. Snowy Spin — ĐÃ XOÁ khỏi trò (giữ lại đây làm bản ghi kế hoạch)
 Luật: 3 vòng x 20s trên sàn trượt. Thanh chướng ngại vật xoay liên tục. Điểm loại trừ n-i mỗi vòng. Gửi 1 gói tin/đòn + 1 gói tin/vòng.
 Node Godot: Node3D (Root) -> Camera3D, Timer (20s), AnimatableBody3D (Thanh xoay: MeshInstance3D, CollisionShape3D), StaticBody3D (Sàn tuyết: MeshInstance3D, CollisionShape3D), CharacterBody3D (Player: MeshInstance3D, CollisionShape3D), CanvasLayer (UI: Label).
 
