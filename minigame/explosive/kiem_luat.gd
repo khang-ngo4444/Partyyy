@@ -105,19 +105,22 @@ func _init() -> void:
 	var lau_tai := 0.0
 	for cach in [2.5, 5.0, 8.0, 12.0, 16.0, duong_kinh]:
 		var g: float = duoi(TOC_OM_THEM, GIAY_CUOI * 3.0, float(cach))
-		ck(g >= 0.0, "+%.1f m/s: KHONG bat duoc tu %.1f m trong %.0f s" % [TOC_OM_THEM, cach, GIAY_CUOI * 3.0])
+		ck(g >= 0.0, "+%.1f m/s: KHONG bat duoc tu %.1f m trong %.0f s" \
+				% [TOC_OM_THEM, cach, GIAY_CUOI * 3.0])
 		if g > lau_nhat:
 			lau_nhat = g
 			lau_tai = float(cach)
 	ck(lau_nhat >= 0.0 and lau_nhat < GIAY_CUOI,
-			"xau nhat bat mat %.2f s nhung bom ngan nhat chi %.1f s - con hai nguoi la nguoi om chet chac"
+			"xau nhat bat %.2f s > bom ngan nhat %.1f s - 1v1 la nguoi om chet chac"
 			% [lau_nhat, GIAY_CUOI])
 	# Nhung cung khong duoc bat NGAY: khong thi ke chay tron khong co dat dien
-	ck(lau_nhat > 1.5, "bat duoc trong %.2f s tu moi cho - ke chay tron khong co co hoi nao" % lau_nhat)
+	ck(lau_nhat > 1.5, "bat duoc trong %.2f s tu moi cho - ke chay tron khong co co hoi nao" \
+			% lau_nhat)
 	# Nguoi VUA NHAN con bao nhieu giay sau khi het nghi chuyen
 	var con_sau_nghi: float = GIAY_CUOI - NGHI_CHUYEN
 	ck(con_sau_nghi > lau_nhat,
-			"vua nhan bom thi con %.2f s nhung bat nguoi khac mat toi %.2f s" % [con_sau_nghi, lau_nhat])
+			"vua nhan bom thi con %.2f s nhung bat nguoi khac mat toi %.2f s" \
+					% [con_sau_nghi, lau_nhat])
 	var bien_co: float = GIAY_CUOI - NGHI_CHUYEN - lau_nhat
 	ck(bien_co >= 2.5,
 			"co boost van chi con %.2f s bien tren bom ngan nhat - chua du de choi" % bien_co)
@@ -138,21 +141,25 @@ func _init() -> void:
 		truoc = g
 		moc.append("%.1f" % g)
 	ck(is_equal_approx(giay_dem(0), GIAY_DAU), "bom dau tien phai %.1f s" % GIAY_DAU)
-	ck(is_equal_approx(giay_dem(SO_LAN_NGAN), GIAY_CUOI), "sau %d lan phai xuong %.1f s" % [SO_LAN_NGAN, GIAY_CUOI])
+	ck(is_equal_approx(giay_dem(SO_LAN_NGAN), GIAY_CUOI), "sau %d lan phai xuong %.1f s" \
+			% [SO_LAN_NGAN, GIAY_CUOI])
 	ck(giay_dem(99) >= GIAY_CUOI, "bom khong duoc ngan hon %.1f s" % GIAY_CUOI)
 
 	# ── 5. DONG HO DU DAI DE CHUYEN DUOC ──
 	# Bom ngan nhat phai chua: nghi chuyen + di bat + bam nut
 	ck(GIAY_CUOI > NGHI_CHUYEN + lau_nhat,
-			"bom ngan nhat %.1f s < nghi %.1f + bat %.2f - khong the chuyen kip" % [GIAY_CUOI, NGHI_CHUYEN, lau_nhat])
+			"bom ngan nhat %.1f s < nghi %.1f + bat %.2f - khong the chuyen kip" \
+					% [GIAY_CUOI, NGHI_CHUYEN, lau_nhat])
 	# Nhung khong duoc dai den muc bo qua duoc bom
 	ck(GIAY_DAU < 25.0, "bom dau %.0f s - du lau de lo bom di choi viec khac" % GIAY_DAU)
 
 	# ── 6. CO CHANG GAP, ke ca tren bom NGAN NHAT ──
-	ck(GIAY_GAP < GIAY_CUOI, "chang gap %.1f s >= bom ngan nhat %.1f s - bom luc nao cung dang gap" % [GIAY_GAP, GIAY_CUOI])
+	ck(GIAY_GAP < GIAY_CUOI, "chang gap %.1f s >= bom ngan %.1f s - luc nao cung gap" \
+			% [GIAY_GAP, GIAY_CUOI])
 	ck(GIAY_GAP >= 2.0, "chang gap chi %.1f s - khong kip nhan ra da gap" % GIAY_GAP)
 	var ti_gap: float = GIAY_GAP / GIAY_CUOI
-	ck(ti_gap <= 0.75, "chang gap chiem %.0f%% bom ngan nhat - gan nhu ca van dang gap" % (ti_gap * 100.0))
+	ck(ti_gap <= 0.75, "chang gap chiem %.0f%% bom ngan nhat - gan nhu ca van dang gap" \
+			% (ti_gap * 100.0))
 
 	# ── 7. NGHI_CHUYEN: chong ping-pong nhung khong giam nguoi vua nhan ──
 	# Hai nguoi dung canh nhau: nghi phai du de nguoi vua nhan chay ra khoi tam chuyen
@@ -164,32 +171,41 @@ func _init() -> void:
 
 	# ── 8. TAM CHUYEN: phai ung voi VONG DO nhin thay, va khong duoc xa vo ly ──
 	ck(is_equal_approx(TAM_CHUYEN, VONG_NGOAI),
-			"Vung/Hinh.radius %.2f khac VongTam.outer_radius %.2f - tam chuyen khong ung voi vong do nhin thay"
+			"Vung.radius %.2f khac VongTam.outer_radius %.2f - tam chuyen khong ung vong"
 			% [TAM_CHUYEN, VONG_NGOAI])
 	var tam_than: float = TAM_CHUYEN + BAN_KINH_NGUOI
 	ck(tam_than <= 2.6, "chuyen duoc tu %.2f m (tam den tam) - xa vo ly" % tam_than)
-	ck(tam_than >= 1.2, "chi chuyen duoc tu %.2f m - phai cham sat moi an, kho den muc nham" % tam_than)
+	ck(tam_than >= 1.2, "chi chuyen duoc tu %.2f m - phai cham sat moi an, kho den muc nham" \
+			% tam_than)
 	# Vung phai phu het than nguoi dung canh: cao 2.2 tu chan nguoi om
 	ck(2.2 >= CAO_NGUOI, "Vung cao 2.2 m < nguoi cao %.1f m - chuyen hut khi dung sat" % CAO_NGUOI)
 
 	# ── 9. CHONG LACH LUAT: khong ai ra duoc khoi san ──
-	ck(KEP < BAN_KINH_SAN, "kep %.1f >= san %.1f - nguoi om bom chay ra ngoai de khoi phai chuyen" % [KEP, BAN_KINH_SAN])
-	ck(BAN_KINH_SAN - KEP >= 0.4, "kep sat bo qua (%.2f m) - than nguoi co the lo ra ngoai" % (BAN_KINH_SAN - KEP))
+	ck(KEP < BAN_KINH_SAN, "kep %.1f >= san %.1f - nguoi om bom chay ra ngoai de khoi phai chuyen" \
+			% [KEP, BAN_KINH_SAN])
+	ck(BAN_KINH_SAN - KEP >= 0.4, "kep sat bo qua (%.2f m) - than nguoi co the lo ra ngoai" \
+			% (BAN_KINH_SAN - KEP))
 	# San du rong de duoi va chay: it nhat vai lan tam chuyen
-	ck(duong_kinh > tam_than * 6.0, "san rong %.1f m chi gap %.1f lan tam chuyen - chay dau cung bi cham" % [duong_kinh, duong_kinh / tam_than])
+	ck(duong_kinh > tam_than * 6.0, "san %.1f m chi gap %.1f lan tam chuyen" \
+			% [duong_kinh, duong_kinh / tam_than])
 
 	# ── 10. BOM TREO TREN DAU, khong lut trong nguoi ──
-	ck(CAO_TREO > CAO_NGUOI, "bom treo %.2f m <= nguoi cao %.1f m - bom lut trong nhan vat" % [CAO_TREO, CAO_NGUOI])
-	ck(CAO_TREO < 3.5, "bom treo %.2f m - cao qua, nhin tu cam tren cao khong biet cua ai" % CAO_TREO)
+	ck(CAO_TREO > CAO_NGUOI, "bom treo %.2f m <= nguoi cao %.1f m - bom lut trong nhan vat" \
+			% [CAO_TREO, CAO_NGUOI])
+	ck(CAO_TREO < 3.5, "bom treo %.2f m - cao qua, nhin tu cam tren cao khong biet cua ai" \
+			% CAO_TREO)
 
-	print("OK  khong boost: bat mat %.2f s -> chi con %.2f s bien (qua sat)" % [khong_boost, bien_khong])
+	print("OK  khong boost: bat mat %.2f s -> chi con %.2f s bien (qua sat)" \
+			% [khong_boost, bien_khong])
 	print("OK  +%.1f m/s: bat mat %.2f s (tu %.1f m) -> con %.2f s bien tren bom ngan nhat %.1f s"
 			% [TOC_OM_THEM, lau_nhat, lau_tai, bien_co, GIAY_CUOI])
-	print("OK  nguoi om nhanh gap %.2f lan; vua nhan con %.2f s sau nghi chuyen" % [ti, con_sau_nghi])
+	print("OK  nguoi om nhanh gap %.2f lan; vua nhan con %.2f s sau nghi chuyen" \
+			% [ti, con_sau_nghi])
 	print("OK  dong ho ngan dan: %s giay" % " -> ".join(PackedStringArray(moc)))
 	print("OK  chang gap %.1f s = %.0f%% bom ngan nhat" % [GIAY_GAP, ti_gap * 100.0])
 	print("OK  nghi chuyen %.2f s vs chay ra khoi tam %.2f s" % [NGHI_CHUYEN, chay_ra])
-	print("OK  tam chuyen %.2f m = vong do; tam den tam %.2f m; san %.1f m" % [TAM_CHUYEN, tam_than, duong_kinh])
+	print("OK  tam chuyen %.2f m = vong do; tam den tam %.2f m; san %.1f m" \
+			% [TAM_CHUYEN, tam_than, duong_kinh])
 	print("OK  bom treo %.2f m tren nguoi cao %.1f m" % [CAO_TREO, CAO_NGUOI])
 	print("--- %d loi ---" % _loi)
 	quit()

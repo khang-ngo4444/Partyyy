@@ -165,14 +165,6 @@ func _chot_ket_qua() -> void:
 
 # ───────────────────────── luật: hàm thuần, kiểm bằng assert ─────────────────────────
 
-## "NHA" -> "N H A". Chữ dính nhau trên bảng cao 7 m thì đọc thành một vệt.
-static func gian_chu(tu: String) -> String:
-	var ra := PackedStringArray()
-	for i in tu.length():
-		ra.append(tu[i])
-	return " ".join(ra)
-
-
 ## Từ thứ mấy đang hiện tại thời điểm `t`.
 static func chi_so_tu(t: float) -> int:
 	return int(t / GIAY_MOI_TU)

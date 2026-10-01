@@ -242,7 +242,7 @@ func _init() -> void:
 		a_vo /= 5.0; a_it /= 5.0; a_roi /= 5.0; a_het /= 5.0; a_song /= 5.0
 		het_theo_kieu[ten] = a_het
 		roi_theo_kieu[ten] = a_roi
-		bao_cao.append("    %-22s %4.1f o vo · san min %4.1f/%d · %.1f roi · het o %4.1f s · con %.1f nguoi"
+		bao_cao.append("    %-20s %4.1f vo · san %4.1f/%d · %.1f roi · het %4.1f s · con %.1f"
 				% [ten, a_vo, a_it, tong, a_roi, a_het, a_song])
 		# Tro phai CO chuyen xay ra: it nhat mot nguoi phai bi loai
 		ck(a_roi >= 1.0, "%s: chi %.1f nguoi roi ca van - san khong nguy hiem" % [ten, a_roi])

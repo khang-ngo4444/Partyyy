@@ -31,7 +31,6 @@ const NGHI_BAN := 0.7
 const BAN_KINH_SAN := 11.5
 const TOC_CAU := 16.0
 const SONG_CAU := 1.6
-const BAN_KINH_CAU := 0.45
 const SPEED := 6.0
 
 var _loi := 0
@@ -90,16 +89,19 @@ func _init() -> void:
 		t += d
 	ck(so_lan_co == SO_CHANG, "co %d lan, cho %d lan" % [so_lan_co, SO_CHANG])
 	ck(is_equal_approx(ban_kinh(0.0), BAN_KINH_SAN), "dau van phai full san")
-	ck(is_equal_approx(ban_kinh(GIAY_VAN - 0.1), CO_CON * BAN_KINH_SAN), "cuoi van phai la %.2f m" % (CO_CON * BAN_KINH_SAN))
+	ck(is_equal_approx(ban_kinh(GIAY_VAN - 0.1), CO_CON * BAN_KINH_SAN), "cuoi van phai la %.2f m" \
+			% (CO_CON * BAN_KINH_SAN))
 
 	# ── 2. BON TRANG THAI: AN TOAN -> CANH BAO -> NHAM, moi lan co phai qua DU ──
 	# Truoc moi lan co, phai co dung GIAY_BAO giay dang bao.
 	for k in SO_CHANG:
 		var luc_co: float = CHO_TRUOC_KHI_CO + float(k) * GIAY_MOI_CHANG
 		ck(not dang_bao(luc_co - GIAY_BAO - 0.1),
-				"giay %.1f da bao roi, som hon %.1f s truoc khi co" % [luc_co - GIAY_BAO - 0.1, GIAY_BAO])
+				"giay %.1f da bao roi, som hon %.1f s truoc khi co" \
+						% [luc_co - GIAY_BAO - 0.1, GIAY_BAO])
 		ck(dang_bao(luc_co - GIAY_BAO + 0.1),
-				"giay %.1f chua bao, dang ra phai bao tu %.1f s" % [luc_co - GIAY_BAO + 0.1, luc_co - GIAY_BAO])
+				"giay %.1f chua bao, dang ra phai bao tu %.1f s" \
+						% [luc_co - GIAY_BAO + 0.1, luc_co - GIAY_BAO])
 		ck(dang_bao(luc_co - 0.05), "ngay truoc lan co o %.1f s ma khong bao" % luc_co)
 		# Vanh duoc bao phai thanh nham dung luc co
 		var r_bao: float = ti_le_bao(luc_co - 0.05) * BAN_KINH_SAN
@@ -140,7 +142,8 @@ func _init() -> void:
 		xa_nhat = maxf(xa_nhat, w)
 	var can_giay: float = xa_nhat / SPEED
 	ck(can_giay < GIAY_BAO,
-			"chay tu mep ngoai vanh vao trong mat %.2f s nhung chi bao %.1f s" % [can_giay, GIAY_BAO])
+			"chay tu mep ngoai vanh vao trong mat %.2f s nhung chi bao %.1f s" \
+					% [can_giay, GIAY_BAO])
 	ck(GIAY_BAO / maxf(can_giay, 0.01) >= 3.0,
 			"chi du %.1fx thoi gian can - gap qua, chua tinh viec dang danh nhau"
 			% (GIAY_BAO / maxf(can_giay, 0.01)))
@@ -149,11 +152,14 @@ func _init() -> void:
 	var dt_dau := dien_tich(0.0)
 	var dt_giua := dien_tich(CHO_TRUOC_KHI_CO + 2.5 * GIAY_MOI_CHANG)
 	var dt_cuoi := dien_tich(GIAY_VAN - 0.1)
-	ck(dt_giua < dt_dau * 0.75, "giua van moi con %.0f%% dien tich - chua ep ai" % (dt_giua / dt_dau * 100.0))
-	ck(dt_cuoi < dt_giua * 0.75, "cuoi van con %.0f%% so voi giua - chua that chat" % (dt_cuoi / dt_giua * 100.0))
+	ck(dt_giua < dt_dau * 0.75, "giua van moi con %.0f%% dien tich - chua ep ai" \
+			% (dt_giua / dt_dau * 100.0))
+	ck(dt_cuoi < dt_giua * 0.75, "cuoi van con %.0f%% so voi giua - chua that chat" \
+			% (dt_cuoi / dt_giua * 100.0))
 	# 8 nguoi cuoi van: moi nguoi bao nhieu m2
 	var moi_nguoi: float = dt_cuoi / 8.0
-	ck(moi_nguoi >= 4.0, "cuoi van chi %.1f m2 moi nguoi (8 nguoi) - chen nhau khong the dung" % moi_nguoi)
+	ck(moi_nguoi >= 4.0, "cuoi van chi %.1f m2 moi nguoi (8 nguoi) - chen nhau khong the dung" \
+			% moi_nguoi)
 	ck(moi_nguoi <= 20.0, "cuoi van con %.1f m2 moi nguoi - chua tao ap luc gi" % moi_nguoi)
 
 	# ── 6. CHAY: dau du de phai bo ra, nhung bi hat vao mot cai KHONG phai la xong ──
@@ -173,8 +179,10 @@ func _init() -> void:
 			"cau lua bay %.1f m nhung san rong %.1f m - khong ban toi nua san ben kia"
 			% [tam_cau, BAN_KINH_SAN * 2.0])
 	# Nguoi phai thay cau lua kip: cau 16 m/s, nguoi phan ung ~0.3 s -> can thay tu >= 5 m
-	ck(TOC_CAU * 0.3 < BAN_KINH_SAN, "cau di %.1f m trong 0.3 s - gan nhu khong ne duoc" % (TOC_CAU * 0.3))
-	ck(TOC_CAU > SPEED, "cau %.1f m/s khong nhanh hon nguoi %.1f m/s - di bo cung ne duoc" % [TOC_CAU, SPEED])
+	ck(TOC_CAU * 0.3 < BAN_KINH_SAN, "cau di %.1f m trong 0.3 s - gan nhu khong ne duoc" \
+			% (TOC_CAU * 0.3))
+	ck(TOC_CAU > SPEED, "cau %.1f m/s khong nhanh hon nguoi %.1f m/s - di bo cung ne duoc" \
+			% [TOC_CAU, SPEED])
 	# Nhip ban: khong duoc thanh voi lua lien mach
 	ck(NGHI_BAN >= 0.4, "nghi ban %.2f s - giu phim la mot voi lua" % NGHI_BAN)
 	var cau_moi_van: float = GIAY_VAN / NGHI_BAN
@@ -196,11 +204,13 @@ func _init() -> void:
 	print("OK  co %d lan: %s" % [so_lan_co, " -> ".join(PackedStringArray(moc))])
 	print("OK  bon trang thai du: bao dung %.1f s truoc moi lan co, vanh bao dung cho" % GIAY_BAO)
 	print("OK  vanh canh bao day %.2f m (ban co deu chi %.2f m)" % [mong_nhat, co_deu])
-	print("OK  kip chay: can %.2f s, duoc bao %.1f s (%.1fx)" % [can_giay, GIAY_BAO, GIAY_BAO / can_giay])
+	print("OK  kip chay: can %.2f s, duoc bao %.1f s (%.1fx)" \
+			% [can_giay, GIAY_BAO, GIAY_BAO / can_giay])
 	print("OK  dien tich %.0f -> %.0f -> %.0f m2; cuoi van %.1f m2 moi nguoi (8 nguoi)"
 			% [dt_dau, dt_giua, dt_cuoi, moi_nguoi])
 	print("OK  chay %.1f s la chet; bo ra xa nhat mat %.2f s" % [giay_chet, giay_bo_ra])
-	print("OK  cau lua bay %.1f m qua san %.1f m; nghi ban %.2f s" % [tam_cau, BAN_KINH_SAN * 2.0, NGHI_BAN])
+	print("OK  cau lua bay %.1f m qua san %.1f m; nghi ban %.2f s" \
+			% [tam_cau, BAN_KINH_SAN * 2.0, NGHI_BAN])
 	print("OK  tran cuoi keo dai %.1f s trong vung %.2f m" % [giay_cuoi, CO_CON * BAN_KINH_SAN])
 	print("--- %d loi ---" % _loi)
 	quit()

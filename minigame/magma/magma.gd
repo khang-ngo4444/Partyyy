@@ -244,4 +244,3 @@ static func ti_le_bao(t: float) -> float:
 	if ke == INF or t < ke - GIAY_BAO:
 		return ti_le_san(t)
 	return lerpf(1.0, CO_CON, float(chang(t) + 1) / float(SO_CHANG))
-

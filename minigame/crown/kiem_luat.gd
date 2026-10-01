@@ -82,12 +82,13 @@ func _init() -> void:
 	var cuoi: int = int(r["cuoi"])
 	var xep := xep_theo_diem(diem)
 	ck(float(diem.get(1, 0.0)) > float(diem.get(2, 0.0)),
-			"dong thoi gian sai: nguoi 1 phai giu lau hon (%.1f vs %.1f)" % [diem.get(1, 0.0), diem.get(2, 0.0)])
+			"dong thoi gian sai: nguoi 1 phai giu lau hon (%.1f vs %.1f)" \
+					% [diem.get(1, 0.0), diem.get(2, 0.0)])
 	ck(cuoi == 2, "dong thoi gian sai: nguoi 2 phai la nguoi giu cuoi")
 	ck(int(xep[0]) == 1,
-			"xep hang cho nguoi %d nhat, dang ra phai la nguoi 1 (giu %.1f s) - dang xep theo nguoi giu CUOI"
+			"nguoi %d nhat, dang ra la nguoi 1 (giu %.1f s) - xep theo nguoi giu CUOI"
 			% [int(xep[0]), diem.get(1, 0.0)])
-	ck(int(xep[0]) != cuoi, "nguoi nhat trung voi nguoi giu cuoi - dong thoi gian khong kiem duoc gi")
+	ck(int(xep[0]) != cuoi, "nguoi nhat trung nguoi giu cuoi - dong thoi gian vo dung")
 
 	# ── 2. DIEM GIU LAI SAU KHI MAT MIEN, va cong tiep khi nhat lai ──
 	var r2 := chay([[0.0, 1], [10.0, 2], [20.0, 1], [30.0, 0]], GIAY_VAN)
@@ -100,7 +101,8 @@ func _init() -> void:
 	var tong := 0.0
 	for id in d2:
 		tong += float(d2[id])
-	ck(tong < GIAY_VAN - 25.0, "tong %.1f s > thoi gian co chu - mien nam dat ma van cong diem" % tong)
+	ck(tong < GIAY_VAN - 25.0, "tong %.1f s > thoi gian co chu - mien nam dat ma van cong diem" \
+			% tong)
 
 	# ── 3. NHAT MIEN KHONG CHO DIEM, chi giu moi cho ──
 	# Nhat roi mat ngay (0 giay giu) thi phai duoc 0 diem.
@@ -128,7 +130,7 @@ func _init() -> void:
 
 	# ── 5. TAM NHAT ung voi VONG nhin thay, khong xa vo ly ──
 	ck(is_equal_approx(TAM_NHAT, VONG_NGOAI),
-			"Vung/Hinh.radius %.2f khac VongNhat.outer_radius %.2f - tam nhat khong ung voi vong nhin thay"
+			"Vung.radius %.2f khac VongNhat.outer_radius %.2f - tam nhat khong ung vong"
 			% [TAM_NHAT, VONG_NGOAI])
 	ck(tam_than <= 2.4, "nhat duoc tu %.2f m (tam den tam) - xa vo ly" % tam_than)
 	ck(tam_than >= 1.2, "chi nhat duoc tu %.2f m - phai dung sat chinh xac" % tam_than)
@@ -139,21 +141,24 @@ func _init() -> void:
 	ck(tam_cau >= duong_kinh * 0.9,
 			"cau lua bay %.1f m nhung san rong %.1f m - khong thach thuc duoc nguoi o xa"
 			% [tam_cau, duong_kinh])
-	ck(TOC_CAU > SPEED, "cau %.1f m/s khong nhanh hon nguoi %.1f m/s - di bo cung ne duoc" % [TOC_CAU, SPEED])
+	ck(TOC_CAU > SPEED, "cau %.1f m/s khong nhanh hon nguoi %.1f m/s - di bo cung ne duoc" \
+			% [TOC_CAU, SPEED])
 	ck(NGHI_BAN >= 0.4, "nghi ban %.2f s - giu phim la mot voi lua" % NGHI_BAN)
 	# Nguoi doi mien phai bi ban trung duoc kha thuong xuyen: moi nguoi ban bao nhieu phat mot van
 	var phat: float = GIAY_VAN / NGHI_BAN
 	ck(phat >= 40.0, "moi nguoi chi ban %.0f phat ca van - mien doi chu qua it" % phat)
 
 	# ── 7. KHONG AI CHET: het gio van con du nguoi ──
-	ck(KEP < BAN_KINH_SAN, "kep %.1f >= san %.1f - nguoi choi ra duoc khoi san va chet" % [KEP, BAN_KINH_SAN])
+	ck(KEP < BAN_KINH_SAN, "kep %.1f >= san %.1f - nguoi choi ra duoc khoi san va chet" \
+			% [KEP, BAN_KINH_SAN])
 	ck(BAN_KINH_SAN - KEP >= 0.4, "kep sat bo qua (%.2f m)" % (BAN_KINH_SAN - KEP))
 	# Hat manh nhat cung khong duoc day ai ra khoi vung kep
 	ck(hat_xa < duong_kinh * 0.5,
 			"mot cu hat di %.2f m tren san ban kinh %.1f - hat tu tam la ra toi bo" % [hat_xa, KEP])
 
 	# ── 8. MIEN DOI TREN DAU, khong lut trong nguoi; nam dat thi thay duoc ──
-	ck(CAO_DOI > CAO_NGUOI, "mien doi %.2f m <= nguoi cao %.1f m - mien lut trong nhan vat" % [CAO_DOI, CAO_NGUOI])
+	ck(CAO_DOI > CAO_NGUOI, "mien doi %.2f m <= nguoi cao %.1f m - mien lut trong nhan vat" \
+			% [CAO_DOI, CAO_NGUOI])
 	ck(CAO_DOI < 3.5, "mien doi %.2f m - cao qua, nhin tu cam tren cao khong biet cua ai" % CAO_DOI)
 	ck(CAO_NAM > 0.3, "mien nam o %.2f m - lut xuong san" % CAO_NAM)
 	ck(CAO_NAM < CAO_DOI, "mien nam (%.2f) cao hon luc doi (%.2f) - doc lon" % [CAO_NAM, CAO_DOI])
@@ -171,9 +176,12 @@ func _init() -> void:
 	print("OK  hat xa %.2f m > tam nhat %.2f m; ve lai mat %.2f s > nghi %.2f s"
 			% [hat_xa, tam_than, ve_lai, NGHI_CUOP])
 	print("OK  tam nhat %.2f m = vong nhin thay; tam den tam %.2f m" % [TAM_NHAT, tam_than])
-	print("OK  cau lua bay %.1f m qua san %.1f m; %.0f phat/nguoi/van" % [tam_cau, duong_kinh, phat])
-	print("OK  khong ai chet: kep %.1f trong san %.1f; mot cu hat chi di %.2f m" % [KEP, BAN_KINH_SAN, hat_xa])
-	print("OK  mien doi %.2f m tren nguoi cao %.1f m; nam dat o %.2f m" % [CAO_DOI, CAO_NGUOI, CAO_NAM])
+	print("OK  cau lua bay %.1f m qua san %.1f m; %.0f phat/nguoi/van" \
+			% [tam_cau, duong_kinh, phat])
+	print("OK  khong ai chet: kep %.1f trong san %.1f; mot cu hat chi di %.2f m" \
+			% [KEP, BAN_KINH_SAN, hat_xa])
+	print("OK  mien doi %.2f m tren nguoi cao %.1f m; nam dat o %.2f m" \
+			% [CAO_DOI, CAO_NGUOI, CAO_NAM])
 	print("OK  ~%.0f lan doi chu kha thi trong %.0f s" % [so_lan, GIAY_VAN])
 	print("--- %d loi ---" % _loi)
 	quit()

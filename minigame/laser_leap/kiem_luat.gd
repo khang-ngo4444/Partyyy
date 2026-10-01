@@ -140,13 +140,14 @@ func _init() -> void:
 	# ── 1. THANH PHAI DU DAI de tia lech tam van quet het san ──
 	var can: float = BAN_KINH_SAN + LECH_TOI_DA
 	ck(DAI_THANH * 0.5 >= can,
-			"nua thanh %.1f m < %.1f m can thiet (san %.1f + lech %.1f) - se co vanh san khong bao gio bi quet"
+			"nua thanh %.1f m < %.1f m can (san %.1f + lech %.1f) - co vanh khong bi quet"
 			% [DAI_THANH * 0.5, can, BAN_KINH_SAN, LECH_TOI_DA])
 
 	# ── 2. NHAY PHAI THOAT DUOC TIA ──
 	# Thoi gian o tren CAO_THOAT trong mot cu nhay, va be rong tia tinh theo thoi gian tia di qua.
 	var v0: float = sqrt(2.0 * GRAVITY * JUMP_HEIGHT)
-	ck(JUMP_HEIGHT > CAO_THOAT, "nhay cao %.2f m khong qua duoc nguong thoat %.2f m" % [JUMP_HEIGHT, CAO_THOAT])
+	ck(JUMP_HEIGHT > CAO_THOAT, "nhay cao %.2f m khong qua duoc nguong thoat %.2f m" \
+			% [JUMP_HEIGHT, CAO_THOAT])
 	# t ma y(t) = CAO_THOAT: y = v0 t - g t^2/2
 	var disc: float = v0 * v0 - 2.0 * GRAVITY * CAO_THOAT
 	var t_tren := 0.0
@@ -214,7 +215,8 @@ func _init() -> void:
 					lan.append(t)
 				dang_trong = trong
 				t += 0.01
-		ck(lan.size() >= 8, "cho %s chi bi quet %d lan trong 60 s - qua it de do nhip" % [str(cho), lan.size()])
+		ck(lan.size() >= 8, "cho %s chi bi quet %d lan trong 60 s - qua it de do nhip" \
+				% [str(cho), lan.size()])
 		if lan.size() < 3:
 			continue
 		var khoang: Array = []
@@ -233,19 +235,22 @@ func _init() -> void:
 			lech_min = he_so
 			cho_te = str(cho)
 		ck(he_so > 0.15,
-				"cho %s: hai khoang lien nhau chi lech %.1f%% - NHIP KHOA, dung yen nhay theo nhip la song het van"
+				"cho %s: hai khoang ke nhau lech %.1f%% - NHIP KHOA, nhay theo nhip la song"
 				% [str(cho), he_so * 100.0])
 
 	# ── 5. DO KHO TANG DAN, KHONG phai chi nhanh hon ──
 	ck(kieu_cho_phep(5.0) == [MOT], "dau van phai chi mot tia")
-	ck(kieu_cho_phep(5.0).size() < kieu_cho_phep(50.0).size(), "cuoi van phai nhieu kieu hon dau van")
+	ck(kieu_cho_phep(5.0).size() < kieu_cho_phep(50.0).size(),
+			"cuoi van phai nhieu kieu hon dau van")
 	ck(not kieu_cho_phep(5.0).has(NHIEU), "dau van khong duoc co doi NHIEU tia")
 	ck(kieu_cho_phep(50.0).has(NHIEU), "cuoi van phai co doi NHIEU tia")
 	for a in [0.0, 10.0, 25.0, 45.0, 60.0]:
 		for b in [0.0, 10.0, 25.0, 45.0, 60.0]:
 			if a < b:
-				ck(dai_dot(a) >= dai_dot(b), "doi phai NGAN dan: %.0fs=%.2f, %.0fs=%.2f" % [a, dai_dot(a), b, dai_dot(b)])
-				ck(nghi(a) >= nghi(b), "nghi phai NGAN dan: %.0fs=%.2f, %.0fs=%.2f" % [a, nghi(a), b, nghi(b)])
+				ck(dai_dot(a) >= dai_dot(b), "doi phai NGAN dan: %.0fs=%.2f, %.0fs=%.2f" \
+						% [a, dai_dot(a), b, dai_dot(b)])
+				ck(nghi(a) >= nghi(b), "nghi phai NGAN dan: %.0fs=%.2f, %.0fs=%.2f" \
+						% [a, nghi(a), b, nghi(b)])
 	ck(so_tia_cho(MOT, SO_TIA) == 1, "kieu MOT phai dung 1 tia")
 	ck(so_tia_cho(NHIEU, SO_TIA) > so_tia_cho(DOI, SO_TIA), "NHIEU phai nhieu tia hon DOI")
 
@@ -256,7 +261,8 @@ func _init() -> void:
 		var sau: Dictionary = lich[i]
 		var ho: float = float(sau["luc"]) - float(truoc["het"])
 		ck(ho >= GIAY_BAO - 0.001,
-				"dot %d bat dau chi %.2f s sau dot truoc, it hon %.2f s bao truoc" % [i, ho, GIAY_BAO])
+				"dot %d bat dau chi %.2f s sau dot truoc, it hon %.2f s bao truoc" \
+						% [i, ho, GIAY_BAO])
 		min_bao = minf(min_bao, ho)
 	ck(float(lich[0]["luc"]) >= GIAY_BAO, "dot dau tien khong co du %.1f s bao truoc" % GIAY_BAO)
 
@@ -268,7 +274,8 @@ func _init() -> void:
 
 	# ── 8. LICH PHAI PHU HET VAN ──
 	var cuoi: float = float(lich[lich.size() - 1]["het"])
-	ck(cuoi >= GIAY_VAN, "lich chi toi %.1f s nhung van dai toi %.1f s - cuoi van khong con tia" % [cuoi, GIAY_VAN])
+	ck(cuoi >= GIAY_VAN, "lich chi toi %.1f s nhung van dai toi %.1f s - cuoi van khong con tia" \
+			% [cuoi, GIAY_VAN])
 
 	# dem kieu dot de in ra cho de doc
 	var dem := {}
@@ -280,7 +287,7 @@ func _init() -> void:
 			% [DAI_THANH, DAI_THANH * 0.5, can, BAN_KINH_SAN, LECH_TOI_DA])
 	print("OK  nhay o tren nguong %.3f s; tia nhanh nhat qua mat %.3f s" % [t_tren, t_qua])
 	print("OK  2000/2000 diem tren san deu bi tia quet - khong co cho an toan vinh vien")
-	print("OK  nhip tia BIEN THIEN: hai khoang lien nhau lech it nhat %.1f%% (tai %s); so do cu: 1.6%%"
+	print("OK  nhip BIEN THIEN: hai khoang ke nhau lech %.1f%% (tai %s); cu: 1.6%%"
 			% [lech_min * 100.0, cho_te])
 	print("OK  do kho: 1 tia -> %d kieu; dot %.1f->%.1f s; nghi %.1f->%.1f s"
 			% [kieu_cho_phep(50.0).size(), DOT_DAU, DOT_CUOI, NGHI_DAU, NGHI_CUOI])

@@ -142,16 +142,19 @@ func _init() -> void:
 	ck(khe_giua < tam_nhay, "khe giua<->vanh %.2f m > tam nhay %.2f m" % [khe_giua, tam_nhay])
 	ck(khe_vanh < tam_nhay, "khe vanh<->vanh %.2f m > tam nhay %.2f m" % [khe_vanh, tam_nhay])
 	# Khong duoc sat sao: nhay chinh xac tung cm la pham spec
-	ck(tam_nhay > khe_vanh * 1.2, "chi du %.2fx tam nhay cho khe rong nhat - nhay chinh xac qua" % (tam_nhay / khe_vanh))
+	ck(tam_nhay > khe_vanh * 1.2, "chi du %.2fx tam nhay cho khe rong nhat - nhay chinh xac qua" \
+			% (tam_nhay / khe_vanh))
 	# Dao phai nam trong bon
 	ck(BAN_KINH_VANH + BAN_KINH_DAO <= BAN_KINH_BON,
-			"dao vanh tran ra ngoai bon: %.1f > %.1f" % [BAN_KINH_VANH + BAN_KINH_DAO, BAN_KINH_BON])
+			"dao vanh tran ra ngoai bon: %.1f > %.1f" \
+					% [BAN_KINH_VANH + BAN_KINH_DAO, BAN_KINH_BON])
 
 	# ── 2. AXIT KHONG DUOC LA BAY CHET ──
 	ck(CAO_DAO < JUMP_HEIGHT,
 			"mat dao cao %.2f m >= nhay %.2f m - roi xuong axit la khong leo len duoc"
 			% [CAO_DAO, JUMP_HEIGHT])
-	ck(JUMP_HEIGHT - CAO_DAO >= 0.3, "chi du %.2f m du dat - leo len doi may man" % (JUMP_HEIGHT - CAO_DAO))
+	ck(JUMP_HEIGHT - CAO_DAO >= 0.3, "chi du %.2f m du dat - leo len doi may man" \
+			% (JUMP_HEIGHT - CAO_DAO))
 	var giay_chet: float = MAU_TOI_DA / MAT_MAU_MOI_GIAY
 	ck(giay_chet >= 3.0, "loi axit %.1f s la chet - bi hat xuong mot cai la xong" % giay_chet)
 	ck(giay_chet <= 8.0, "loi axit %.1f s moi chet - khong du dau de phai leo len" % giay_chet)
@@ -188,23 +191,28 @@ func _init() -> void:
 				te_nhat = ben
 				te_tai = "hat %d, chang %d" % [g, k]
 			ck(ben >= 1,
-					"hat %d chang %d: KHONG dao nao song qua chang sau - nguoi choi dung dung cung phai xuong axit"
+					"hat %d chang %d: 0 dao song qua chang sau - choi dung cung phai xuong axit"
 					% [g, k])
 			# Dao duoc bao phai dung la dao sap chim
 			var tt: float = CHO_TRUOC_KHI_CHIM + float(k) * GIAY_MOI_CHANG - 0.05
 			if k >= 1 and tt > 0.0:
 				for i in dao_bao(g, tt):
-					ck(dao_noi(g, chang(tt)).has(i), "hat %d: dao %d bi bao nhung dang chim san" % [g, i])
-					ck(not dao_noi(g, chang(tt) + 1).has(i), "hat %d: dao %d bi bao nhung khong chim" % [g, i])
+					ck(dao_noi(g, chang(tt)).has(i), "hat %d: dao %d bi bao nhung dang chim san" \
+							% [g, i])
+					ck(not dao_noi(g, chang(tt) + 1).has(i),
+							"hat %d: dao %d bi bao nhung khong chim" % [g, i])
 
 	# ── 5. CO BAO TRUOC DUNG GIAY_BAO ──
 	for k in range(1, chang_cuoi() + 1):
 		var luc: float = CHO_TRUOC_KHI_CHIM + float(k) * GIAY_MOI_CHANG
-		ck(dao_bao(7, luc - 0.05).size() > 0, "ngay truoc lan chim o %.1f s ma khong bao dao nao" % luc)
-		ck(dao_bao(7, luc - GIAY_BAO - 0.2).size() == 0, "bao som hon %.1f s truoc khi chim" % GIAY_BAO)
+		ck(dao_bao(7, luc - 0.05).size() > 0, "ngay truoc lan chim o %.1f s ma khong bao dao nao" \
+				% luc)
+		ck(dao_bao(7, luc - GIAY_BAO - 0.2).size() == 0, "bao som hon %.1f s truoc khi chim" \
+				% GIAY_BAO)
 	# Kip chay: tu giua dao bi bao sang dao noi gan nhat
 	var can_chay: float = (BAN_KINH_DAO + khe_vanh) / SPEED
-	ck(can_chay < GIAY_BAO, "chay sang dao khac mat %.2f s nhung chi bao %.1f s" % [can_chay, GIAY_BAO])
+	ck(can_chay < GIAY_BAO, "chay sang dao khac mat %.2f s nhung chi bao %.1f s" \
+			% [can_chay, GIAY_BAO])
 	ck(GIAY_BAO / can_chay >= 2.0, "chi du %.1fx thoi gian can - gap qua" % (GIAY_BAO / can_chay))
 
 	# ── 6. TAP DAO AN TOAN PHAI DOI (bat di chuyen lap lai, khong don mot lan) ──
@@ -252,13 +260,15 @@ func _init() -> void:
 		if float(b["luc"]) <= GIAY_VAN:
 			bom_trong_van += 1
 	ck(bom_trong_van >= 20, "chi %d qua bom ca van - bom khong gay ap luc gi" % bom_trong_van)
-	ck(bom_trong_van <= 70, "toi %d qua bom ca van - ap luc chong len dao chim thanh roi" % bom_trong_van)
+	ck(bom_trong_van <= 70, "toi %d qua bom ca van - ap luc chong len dao chim thanh roi" \
+			% bom_trong_van)
 
 	# ── 8. DIEN TICH AN TOAN: dau rong, cuoi chat ──
 	var dt1: float = PI * BAN_KINH_DAO * BAN_KINH_DAO
 	var dt_dau: float = dt1 * float(SO_DAO)
 	var dt_cuoi: float = dt1 * float(SO_DAO - TOI_DA_CHIM)
-	ck(dt_cuoi < dt_dau * 0.5, "cuoi van con %.0f%% dien tich - chua ep ai" % (dt_cuoi / dt_dau * 100.0))
+	ck(dt_cuoi < dt_dau * 0.5, "cuoi van con %.0f%% dien tich - chua ep ai" \
+			% (dt_cuoi / dt_dau * 100.0))
 	var moi_nguoi: float = dt_cuoi / 8.0
 	ck(moi_nguoi >= 4.0, "cuoi van %.1f m2 moi nguoi (8 nguoi) - chen khong the dung" % moi_nguoi)
 
@@ -267,7 +277,8 @@ func _init() -> void:
 	ck(str(thu_tu_chim(1)) != str(thu_tu_chim(2)), "hai hat giong ra cung thu tu")
 	ck(str(lich_roi(4242)) == str(lich_roi(4242)), "cung hat giong ra hai lich bom khac nhau")
 
-	print("OK  khe giua<->vanh %.2f m · vanh<->vanh %.2f m · tam nhay %.2f m" % [khe_giua, khe_vanh, tam_nhay])
+	print("OK  khe giua<->vanh %.2f m · vanh<->vanh %.2f m · tam nhay %.2f m" \
+			% [khe_giua, khe_vanh, tam_nhay])
 	print("OK  mat dao cao %.2f m < nhay %.2f m; loi axit %.1f s la chet, loi ve mat %.2f s"
 			% [CAO_DAO, JUMP_HEIGHT, giay_chet, giay_loi])
 	print("OK  dao con noi theo chang: %s" % str(moc))
@@ -276,6 +287,7 @@ func _init() -> void:
 			% [GIAY_BAO, can_chay, GIAY_BAO / can_chay])
 	print("OK  tap dao an toan doi %d/%d chang - phai di chuyen lap lai" % [so_doi, chang_cuoi()])
 	print("OK  %d qua bom, tat ca roi len dao con noi" % bom_trong_van)
-	print("OK  dien tich %.0f -> %.0f m2; cuoi van %.1f m2 moi nguoi (8 nguoi)" % [dt_dau, dt_cuoi, moi_nguoi])
+	print("OK  dien tich %.0f -> %.0f m2; cuoi van %.1f m2 moi nguoi (8 nguoi)" \
+			% [dt_dau, dt_cuoi, moi_nguoi])
 	print("--- %d loi ---" % _loi)
 	quit()

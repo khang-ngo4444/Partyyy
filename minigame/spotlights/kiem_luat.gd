@@ -83,7 +83,8 @@ func _init() -> void:
 		nhip.append(rng.randf_range(NHIP_TU, NHIP_DEN))
 
 	# ── 1. CHU KY: bon chang phai co that va du dai ──
-	ck(is_equal_approx(CHU_KY, GIAY_SANG + GIAY_MO + GIAY_TOI + GIAY_SANG_LAI), "CHU_KY khong bang tong bon chang")
+	ck(is_equal_approx(CHU_KY, GIAY_SANG + GIAY_MO + GIAY_TOI + GIAY_SANG_LAI),
+			"CHU_KY khong bang tong bon chang")
 	ck(GIAY_SANG >= 3.0, "chang SANG chi %.1f s - khong du de nhin va nho cho minh" % GIAY_SANG)
 	ck(GIAY_TOI >= 4.0, "chang TOI chi %.1f s - khong du de di trong toi" % GIAY_TOI)
 	ck(GIAY_MO >= 1.0, "toi dan chi %.1f s - gan nhu tat phut" % GIAY_MO)
@@ -143,7 +144,7 @@ func _init() -> void:
 		ck(b == a + 1, "chu ky %d -> %d phai tang dung 1 den, dang %d -> %d" % [c + 1, c + 2, a, b])
 	var ck_cuoi := chu_ky_thu(GIAY_VAN - 0.01)
 	ck(so_den(GIAY_VAN - 0.01) == DEN_TOI_DA,
-			"het van (%.0f s = chu ky %d) moi toi %d den, chua dat tran %d - progression khong kip chay het"
+			"het van (%.0f s = chu ky %d) moi %d den, chua dat tran %d - progression cham"
 			% [GIAY_VAN, ck_cuoi + 1, so_den(GIAY_VAN - 0.01), DEN_TOI_DA])
 
 	# ── 5. SAN KHONG BAO GIO BI SANG PHU KIN ──
@@ -205,7 +206,8 @@ func _init() -> void:
 	t = 0.0
 	while t < GIAY_VAN:
 		for i in SO_DEN_CO:
-			var v: float = (cho_den(pha[i], nhip[i], t + 0.02) - cho_den(pha[i], nhip[i], t)).length() / 0.02
+			var v: float = (cho_den(pha[i], nhip[i], t + 0.02)
+					- cho_den(pha[i], nhip[i], t)).length() / 0.02
 			toc_den_max = maxf(toc_den_max, v)
 		t += 0.05
 	ck(SPEED > toc_den_max,
@@ -241,7 +243,7 @@ func _init() -> void:
 			t += 0.0
 		t += 0.37
 	ck(thoat_lau_nhat < giay_chet,
-			"xau nhat thoat khoi den mat %.2f s (giay %.1f) nhung chet sau %.2f s - vao den la chet chac"
+			"xau nhat thoat den %.2f s (giay %.1f) > chet sau %.2f s - vao den la chet"
 			% [thoat_lau_nhat, thoat_tai, giay_chet])
 
 	# ── 8. DUONG DI DEN KHONG LAP LAI trong mot van (nho duong di la vo ich) ──
@@ -262,17 +264,22 @@ func _init() -> void:
 			% [ti_lap * 100.0])
 
 	# ── 9. KEP NGUOI TRONG SAN ──
-	ck(BAN_KINH_GIU < BAN_KINH_SAN, "kep %.1f m >= san %.1f m - nguoi ra duoc ngoai bo" % [BAN_KINH_GIU, BAN_KINH_SAN])
-	ck(BAN_KINH_SAN - BAN_KINH_GIU >= 0.4, "kep sat bo qua (%.2f m) - than nguoi co the lo ra ngoai" % (BAN_KINH_SAN - BAN_KINH_GIU))
+	ck(BAN_KINH_GIU < BAN_KINH_SAN, "kep %.1f m >= san %.1f m - nguoi ra duoc ngoai bo" \
+			% [BAN_KINH_GIU, BAN_KINH_SAN])
+	ck(BAN_KINH_SAN - BAN_KINH_GIU >= 0.4, "kep sat bo qua (%.2f m) - than lo ra ngoai" \
+			% (BAN_KINH_SAN - BAN_KINH_GIU))
 
 	print("OK  chu ky %.1f s = sang %.1f + mo %.1f + toi %.1f + sang lai %.1f"
 			% [CHU_KY, GIAY_SANG, GIAY_MO, GIAY_TOI, GIAY_SANG_LAI])
-	print("OK  chuyen sang LIEN TUC: buoc lon nhat %.4f/khung (cho phep %.4f)" % [buoc_lon, cho_phep])
+	print("OK  chuyen sang LIEN TUC: buoc lon nhat %.4f/khung (cho phep %.4f)" \
+			% [buoc_lon, cho_phep])
 	print("OK  moi chu ky: sang han %.1f s, toi han %.1f s" % [giay_sang_han, giay_toi_han])
-	print("OK  progression %s den qua %d chu ky, tran %d khi het van" % [str(moc.slice(0, 6)), 6, DEN_TOI_DA])
+	print("OK  progression %s den qua %d chu ky, tran %d khi het van" \
+			% [str(moc.slice(0, 6)), 6, DEN_TOI_DA])
 	print("OK  san bi sang: trung binh %.0f%%, cao nhat %.0f%% (giay %.1f, %d den)"
 			% [phu_tb * 100.0, phu_max * 100.0, phu_tai, so_den(phu_tai)])
-	print("OK  den xa nhat %.2f m + vet %.2f m = %.2f m, trong san %.1f m" % [xa_nhat, BAN_KINH_DEN, xa_nhat + BAN_KINH_DEN, BAN_KINH_SAN])
+	print("OK  den xa nhat %.2f m + vet %.2f m = %.2f m, trong san %.1f m" \
+			% [xa_nhat, BAN_KINH_DEN, xa_nhat + BAN_KINH_DEN, BAN_KINH_SAN])
 	print("OK  den %.2f m/s < nguoi %.1f m/s; thoat (vuong goc) xau nhat %.2f s < chet %.2f s"
 			% [toc_den_max, SPEED, thoat_lau_nhat, giay_chet])
 	print("OK  duong di den khong lap: %.0f%% thoi diem trung cho cu" % [ti_lap * 100.0])

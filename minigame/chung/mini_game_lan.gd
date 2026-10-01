@@ -27,8 +27,6 @@ extends MiniGame3D
 ## Hai làn cách nhau bao xa. Khớp `lan.tscn`: làn rộng 4 m + vách 0,6 m, nên 4,6 là hai làn
 ## dán sát, dùng chung vách. Nới ra là tách rời nhau trở lại.
 const KHOANG_LAN := 4.6
-## Làn rộng bao nhiêu mét trong lòng tường. Khớp `lan.tscn`.
-const RONG_LAN := 4.0
 ## Làn dài bao nhiêu mét. Khớp `lan.tscn` — chạy ~6 m/s nên 150 m hết chừng 25 giây.
 const DAI_LAN := 150.0
 

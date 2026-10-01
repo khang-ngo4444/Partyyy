@@ -269,7 +269,8 @@ func _gio_may() -> float:
 ## ponytail: giờ chỉ còn Laser Leap gọi — Snowy Spin (người dùng thứ hai) đã bị xoá khỏi trò.
 ## Để nguyên ở lớp cha vì nó là toán thuần và trò nào có vật quay cũng cần; dồn vào `laser_leap.gd`
 ## khi chắc là sẽ không có trò quay nào nữa.
-static func goc_quay(pha: float, t: float, toc_dau: float, toc_cuoi: float, tang_het: float) -> float:
+static func goc_quay(pha: float, t: float, toc_dau: float, toc_cuoi: float,
+		tang_het: float) -> float:
 	var k := minf(t, tang_het)
 	var quet := toc_dau * k + (toc_cuoi - toc_dau) * k * k / (2.0 * tang_het)
 	if t > tang_het:

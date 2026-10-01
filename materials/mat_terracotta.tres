@@ -1,6 +1,0 @@
-[gd_resource type="StandardMaterial3D" format=3]
-
-[resource]
-resource_name = "mat_terracotta"
-albedo_color = Color(0.698, 0.3961, 0.2471, 1)
-roughness = 0.7
