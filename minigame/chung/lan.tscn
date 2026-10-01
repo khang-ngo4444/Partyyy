@@ -5,53 +5,53 @@
 [ext_resource type="Material" path="res://materials/mat_san_canh_bao.tres" id="3_v"]
 
 [sub_resource type="BoxMesh" id="Box_san"]
-size = Vector3(10, 0.4, 400)
+size = Vector3(4, 0.4, 150)
 
 [sub_resource type="BoxShape3D" id="Shape_san"]
-size = Vector3(10, 0.4, 400)
+size = Vector3(4, 0.4, 150)
 
 [sub_resource type="BoxMesh" id="Box_vach"]
-size = Vector3(10, 0.1, 1.2)
+size = Vector3(4, 0.1, 1.2)
 
 [sub_resource type="BoxMesh" id="Box_tuong"]
-size = Vector3(0.6, 3, 400)
+size = Vector3(0.6, 3, 150)
 
 [sub_resource type="BoxShape3D" id="Shape_tuong"]
-size = Vector3(0.6, 3, 400)
+size = Vector3(0.6, 3, 150)
 
 [node name="Lan" type="Node3D"]
 
 [node name="Than" type="StaticBody3D" parent="."]
 
 [node name="MatSan" type="MeshInstance3D" parent="Than"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -200)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -75)
 mesh = SubResource("Box_san")
 material_override = ExtResource("1_t")
 
 [node name="HinhSan" type="CollisionShape3D" parent="Than"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -200)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -75)
 shape = SubResource("Shape_san")
 
 [node name="MatTuongTrai" type="MeshInstance3D" parent="Than"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 1.5, -200)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3, 1.5, -75)
 mesh = SubResource("Box_tuong")
 material_override = ExtResource("2_w")
 
 [node name="HinhTuongTrai" type="CollisionShape3D" parent="Than"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 1.5, -200)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3, 1.5, -75)
 shape = SubResource("Shape_tuong")
 
 [node name="MatTuongPhai" type="MeshInstance3D" parent="Than"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3, 1.5, -200)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 1.5, -75)
 mesh = SubResource("Box_tuong")
 material_override = ExtResource("2_w")
 
 [node name="HinhTuongPhai" type="CollisionShape3D" parent="Than"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3, 1.5, -200)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 1.5, -75)
 shape = SubResource("Shape_tuong")
 
 [node name="Vach" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26, -380)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26, -145)
 visible = false
 mesh = SubResource("Box_vach")
 material_override = ExtResource("3_v")

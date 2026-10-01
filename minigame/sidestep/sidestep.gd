@@ -21,15 +21,18 @@ extends MiniGameLan
 ## Tốc độ mẫu dùng để tính điểm sinh đá. Xấp xỉ `Player.speed`; không cần khớp tuyệt đối vì
 ## `TAM_NHIN` đã chừa dư.
 const TOC_CHAY_MAU := 6.0
-## Đá ló ra cách điểm sinh chừng này mét về phía trước.
-const TAM_NHIN := 70.0
+## Đá ló ra cách điểm sinh chừng này mét về phía trước. Camera bám tốp nên tầm nhìn ngắn hơn
+## bản làn-riêng nhiều: 70 m là đá sinh ngoài khung, người chơi không kịp thấy nó tới.
+const TAM_NHIN := 30.0
 ## Nghỉ giữa hai đợt đá, lúc đầu và lúc cuối.
 const NGHI_DAU := 1.5
 const NGHI_CUOI := 0.45
-## Dày hết cỡ sau chừng này giây.
-const GIAY_DAY_HET := 45.0
-## Đá lệch trái/phải trong khoảng này. Làn rộng 10 m, trừ tường còn ~4,4 m mỗi bên.
-const LECH_TOI_DA := 3.6
+## Dày hết cỡ sau chừng này giây. Phải <= lúc đá ngừng sinh (`cho_sinh` chạm cuối làn ở ~20 s),
+## không thì cả ván trôi qua mà đá chưa bao giờ đạt mật độ tối đa.
+const GIAY_DAY_HET := 20.0
+## Đá lệch trái/phải trong khoảng này. Làn rộng 4 m nên nửa làn là 2 m, trừ bán kính đá còn
+## 1,4. Nới quá là đá nằm trong tường.
+const LECH_TOI_DA := 1.4
 
 @export var da_scene: PackedScene = null
 
@@ -42,7 +45,7 @@ func _ready() -> void:
 	super()
 	ten = "SIDESTEP SLOPE"
 	luat = "WASD chạy · chuột xoay người · né đá lăn · đi càng xa càng tốt"
-	giay_van = 60.0
+	giay_van = 30.0
 
 
 func _dung_san() -> void:
@@ -117,7 +120,8 @@ static func lich_da(giong: int) -> Array:
 	rng.seed = giong
 	var ds: Array = []
 	var t := 2.0
-	while t < 90.0:
+	# Dừng khi điểm sinh chạy quá cuối làn: đá sinh ngoài sàn thì rơi thẳng xuống hư không.
+	while t < 90.0 and cho_sinh(t) <= MiniGameLan.DAI_LAN:
 		ds.append({"luc": t, "lech": rng.randf_range(-LECH_TOI_DA, LECH_TOI_DA)})
 		t += lerpf(NGHI_DAU, NGHI_CUOI, clampf(t / GIAY_DAY_HET, 0.0, 1.0))
 	return ds

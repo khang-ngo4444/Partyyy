@@ -1,30 +1,48 @@
 class_name MiniGameLan
 extends MiniGame3D
 
-## KHUNG CHUNG cho khuôn T4 — mỗi người một LÀN CHẠY riêng, camera sau lưng của chính mình.
+## KHUNG CHUNG cho khuôn T4 — mỗi người một LÀN RIÊNG, nhưng các làn SÁT NHAU và cả phòng
+## nhìn qua MỘT camera chung.
 ##
-## Khác T1/T2/T3 ở đúng hai điểm, và cả hai đều nằm gọn trong file này:
+## ## Vì sao làn riêng mà vẫn chung một chỗ
 ##
-## ## 1. Không có camera chung
+## Làn riêng là để công bằng: chướng ngại và quà của mọi làn sinh từ cùng một hạt giống nên ai
+## cũng gặp đúng một chuỗi thử thách, và không ai cấn được vào đường của ai.
 ##
-## T1–T3 ném cả phòng vào một sân rồi mọi người nhìn qua đúng một `Camera3D` treo trên cao.
-## T4 thì ngược lại: mỗi người chạy làn của riêng mình và nhìn từ sau lưng mình. Nên `_che_do_san()`
-## ở đây **không đổi camera** — nó để nguyên `CameraRig` mà người chơi vẫn đang dùng từ phòng chờ.
+## Nhưng bản đầu để các làn cách nhau 40 m — xa tới mức không ai thấy ai. Công bằng tuyệt đối
+## và nhạt tuyệt đối: mỗi người chạy một mình trong ống, không biết mình đang thắng hay thua.
+## Giờ các làn kề vai nhau (`KHOANG_LAN` = bề ngang một làn, tường chung vách) và một camera
+## bao hết. Vẫn làn ai người ấy chạy, nhưng thấy được cả phòng đang ở đâu.
 ##
-## Hệ quả: điều khiển cũng giữ nguyên kiểu phòng chờ (WASD theo thân, chuột xoay người). Bật
-## `che_do_san` của `Player` ở đây là hỏng: WASD sẽ theo trục thế giới trong khi camera lại
-## theo thân, và thân thì tự xoay theo hướng chạy — camera quay vòng mỗi lần né sang bên.
+## ## Camera
 ##
-## ## 2. Làn tách rời nhau, không phải vòng tròn quanh tâm
+## Khác T1–T3: sân của chúng là một vòng tròn bán kính 7 m, một camera đứng yên là xong. Làn
+## dài 150 m nên camera phải đi theo. Nó bám NGƯỜI DẪN ĐẦU, lùi đủ xa để người bét vẫn trong
+## khung, và dịch ngang về giữa những làn ĐANG CÓ NGƯỜI — bốn người thì không chừa chỗ cho bốn
+## làn trống.
 ##
-## `_cho_vao()` xếp người theo hàng ngang cách nhau `KHOANG_LAN`, xa tới mức không ai nhìn thấy
-## làn của ai. Chướng ngại và quà của từng làn sinh từ **hạt giống + chỉ số làn**, nên hai người
-## gặp đúng một chuỗi thử thách — công bằng mà vẫn không phải gửi gói tin nào.
+## Camera là việc CỤC BỘ, mỗi máy tự tính từ vị trí mà replicator đã gửi sẵn. Không gói tin,
+## và hai máy có lệch nhau vài khung hình cũng không ảnh hưởng gì tới xếp hạng.
 
-## Hai làn cách nhau bao xa. Đủ để không nhìn thấy nhau, kể cả lúc camera lùi ra sau.
-const KHOANG_LAN := 40.0
-## Làn dài bao nhiêu mét. Khớp `lan.tscn` — người chơi chạy ~6 m/s nên 400 m là quá đủ cho 60 giây.
-const DAI_LAN := 400.0
+## Hai làn cách nhau bao xa. Khớp `lan.tscn`: làn rộng 4 m + vách 0,6 m, nên 4,6 là hai làn
+## dán sát, dùng chung vách. Nới ra là tách rời nhau trở lại.
+const KHOANG_LAN := 4.6
+## Làn rộng bao nhiêu mét trong lòng tường. Khớp `lan.tscn`.
+const RONG_LAN := 4.0
+## Làn dài bao nhiêu mét. Khớp `lan.tscn` — chạy ~6 m/s nên 150 m hết chừng 25 giây.
+const DAI_LAN := 150.0
+
+## Camera lùi ra sau người bét chừng này mét.
+const CAM_LUI := 14.0
+## Camera cao chừng này mét so với mặt làn.
+const CAM_CAO := 7.5
+## Camera chúi xuống bao nhiêu độ.
+const CAM_CHUI := -18.0
+## Khung phải chứa được khoảng cách dẫn–bét tới chừng này mét; xa hơn thì người bét ra khỏi
+## khung và tự biết mình đang bị bỏ lại. Nới to là camera lùi xa, nhân vật bé đi.
+const CAM_GIAN_TOI_DA := 30.0
+## Camera đuổi theo mượt chừng nào. Cao quá thì giật mỗi lần đổi người dẫn đầu.
+const CAM_MUOT := 6.0
 
 ## Thứ tự người chơi, quyết định ai chạy làn nào. Lưu trước khi lớp cha dùng tới.
 var _ds_nguoi: Array = []
@@ -49,14 +67,46 @@ func _cho_vao(i: int, _tong: int) -> Vector3:
 	return Vector3(x_lan(i), 1.0, 0.0)
 
 
-## Ghi đè: T4 KHÔNG đổi sang camera chung — xem ghi chú đầu file.
-func _che_do_san(_bat: bool) -> void:
+## Camera chung đi theo cả tốp. Chạy sau `super()` nên đọc được vị trí mới nhất của mọi người.
+func _process(delta: float) -> void:
+	super(delta)
+	if _chay:
+		_nhip_camera(delta)
+
+
+## Đặt camera sao cho thấy hết người đang chạy.
+##
+## Trượt dần về chỗ cần tới chứ không nhảy thẳng: người dẫn đầu đổi liên tục, nhảy thẳng thì
+## khung giật mỗi lần đổi.
+func _nhip_camera(delta: float) -> void:
+	var cam := _cam_san()
+	if cam == null or san == null:
+		return
+	var dan := 0.0
+	var bet := INF
+	var lan_min := INF
+	var lan_max := -INF
+	var co := false
 	for p: Player in get_tree().get_nodes_in_group("players"):
-		if not p.is_mine:
+		var i := lan_cua(p.player_id())
+		if i < 0:
 			continue
-		p.che_do_san = false
-		if p.rig != null and is_instance_valid(p.rig):
-			p.rig.make_current()
+		co = true
+		var d := quang_duong(p)
+		dan = maxf(dan, d)
+		bet = minf(bet, d)
+		lan_min = minf(lan_min, x_lan(i))
+		lan_max = maxf(lan_max, x_lan(i))
+	if not co:
+		return
+	# Người bét quá xa thì thôi không lùi theo nữa — lùi mãi thì cả tốp bé như hạt gạo.
+	var gian := clampf(dan - bet, 0.0, CAM_GIAN_TOI_DA)
+	var dich := Vector3(
+			(lan_min + lan_max) * 0.5,
+			san.global_position.y + CAM_CAO + gian * 0.35,
+			san.global_position.z - bet + CAM_LUI + gian * 0.5)
+	cam.global_position = cam.global_position.lerp(dich, clampf(CAM_MUOT * delta, 0.0, 1.0))
+	cam.rotation = Vector3(deg_to_rad(CAM_CHUI), 0.0, 0.0)
 
 
 ## Toạ độ X của làn thứ `i`.

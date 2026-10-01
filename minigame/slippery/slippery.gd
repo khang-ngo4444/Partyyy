@@ -27,7 +27,7 @@ extends MiniGameLan
 ## vì ở đây chạy thẳng, không phải xoay xở né thanh.
 const TRON := 1.15
 
-var _vach_tai := 380.0
+var _vach_tai := 145.0
 ## Người này đã về đích chưa — để khỏi bắn `xin_chet()` thêm lần nữa ở khung hình sau.
 var _ve_roi := false
 
@@ -36,7 +36,7 @@ func _ready() -> void:
 	super()
 	ten = "SLIPPERY SPRINT"
 	luat = "WASD chạy trên băng · chuột xoay người · về vạch đỏ trước"
-	giay_van = 60.0
+	giay_van = 30.0
 
 
 func _dung_san() -> void:
@@ -44,7 +44,7 @@ func _dung_san() -> void:
 	if san == null:
 		return
 	# Vạch đích là node có sẵn trong `lan.tscn`, các trò khác giấu đi. Đọc luôn vị trí của nó
-	# làm mốc về đích — không chép con số 380 vào code để rồi một ngày hai bên lệch nhau.
+	# làm mốc về đích — không chép con số 145 vào code để rồi một ngày hai bên lệch nhau.
 	for lan in san.find_children("Lan*", "Node3D", false, false):
 		var vach := lan.get_node_or_null("Vach") as Node3D
 		if vach == null:

@@ -20,14 +20,16 @@ extends MiniGameLan
 ## Chặn ở 0 thì nửa sau ván người đang thua không còn lý do gì để né rác — cứ lao thẳng, nhặt
 ## hết, âm bao nhiêu cũng vẫn là 0. Cho âm thì mỗi món rác vẫn là một quyết định.
 
-## Bao nhiêu món trên một làn.
-const SO_MON := 64
+## Bao nhiêu món trên một làn. Làn 150 m, chừa hai đầu còn ~118 m, nên 28 món là ~4 m một
+## món — thưa đủ để né được. Dày hơn thì thành không có đường nào sạch.
+const SO_MON := 28
 ## Món đầu tiên cách vạch xuất phát chừng này mét — chừa chỗ cho người chơi định thần.
 const BAT_DAU_TU := 12.0
 ## Món cuối cùng nằm cách cuối làn chừng này mét.
 const CHUA_CUOI := 20.0
-## Món lệch trái/phải trong khoảng này. Làn rộng 10 m, trừ tường còn ~4,4 m mỗi bên.
-const LECH_TOI_DA := 3.4
+## Món lệch trái/phải trong khoảng này. Làn rộng 4 m nên nửa làn là 2 m, trừ bán kính món
+## còn 1,4. Nới quá là món nằm trong tường.
+const LECH_TOI_DA := 1.4
 ## Tỉ lệ từng loại: quà nhỏ, quà to, rác. Rác nhiều hơn quà to nên né mới là việc chính.
 const TI_LE_QUA_TO := 0.18
 const TI_LE_RAC := 0.34
@@ -44,7 +46,7 @@ func _ready() -> void:
 	super()
 	ten = "NHẶT QUÀ NÉ RÁC"
 	luat = "WASD chạy · chuột xoay người · quà +1 · quà to +3 · rác −1"
-	giay_van = 60.0
+	giay_van = 30.0
 
 
 func _dung_san() -> void:
