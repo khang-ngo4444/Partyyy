@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://minigame/magma/magma.gd" id="1_mg"]
 [ext_resource type="PackedScene" path="res://minigame/magma/san_magma.tscn" id="2_san"]
-[ext_resource type="PackedScene" path="res://minigame/magma/cau_lua.tscn" id="3_cau"]
+[ext_resource type="PackedScene" path="res://minigame/chung/cau_lua.tscn" id="3_cau"]
 [ext_resource type="PackedScene" path="res://minigame/chung/thanh_mau.tscn" id="4_tm"]
 
 [node name="Magma" type="Node"]

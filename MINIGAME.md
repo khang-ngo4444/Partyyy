@@ -67,6 +67,7 @@ Hai khuôn chung, trò nào cũng đi qua một trong hai:
 | `MiniGame3D` | `minigame/chung/mini_game_3d.gd` | Dựng sân, đọc giờ, đếm người còn sống, **chốt và phát `xong`** (`_chot_ket_qua` → `_net_xep_hang`) |
 | `MiniGameLan` | `minigame/chung/mini_game_lan.gd` | Kế thừa `MiniGame3D`, 8 làn riêng SÁT NHAU + camera chung bám tốp |
 | `ThanhMau` | `minigame/chung/thanh_mau.gd` + `.tscn` | Máu + thanh máu. Không phải khuôn — kéo vào `.tscn` của trò nào cần |
+| `CauLua` | `minigame/chung/cau_lua.gd` + `.tscn` | Quả cầu lửa bay thẳng, 1 gói tin cả đời. Magma & Crown dùng chung |
 
 Nên **lớp con không tự phát `xong`** — đừng đi tìm `xong.emit` trong `laser_leap.gd` rồi kết
 luận trò đó chưa xong. Nó nằm ở `mini_game_3d.gd`, một chỗ cho cả 15 trò.
@@ -159,6 +160,7 @@ godot --headless --path minigame/spotlights      --script kiem_luat.gd
 godot --headless --path minigame/magma           --script kiem_luat.gd
 godot --headless --path minigame/acidic_atoll    --script kiem_luat.gd
 godot --headless --path minigame/explosive       --script kiem_luat.gd
+godot --headless --path minigame/crown           --script kiem_luat.gd
 ```
 
 Chúng chặn được những thứ KHÔNG thấy bằng mắt trong một ván chơi thử:
@@ -170,6 +172,9 @@ Chúng chặn được những thứ KHÔNG thấy bằng mắt trong một ván
   **lọt qua**; phải đo hai khoảng liền nhau mới lộ ra 1,6%.
 - `TAM_QUET = 7,8` ở Spotlights → đèn rọi ra ngoài sàn và đèn chạy nhanh hơn người. Chơi thử 3
   đèn thấy thoải mái; tới chu kỳ 6 mới hết chỗ đi, mà lúc đó không ai còn đang test.
+- Ở Crown Capture, "xếp theo tổng giây giữ" và "xếp theo người đang giữ lúc hết giờ" **thường ra
+  cùng kết quả**, nên chơi thử không bắt được nếu một ngày ai sửa sai khoá sắp. Bộ kiểm dựng hẳn
+  một dòng thời gian mà hai cách ra kết quả khác nhau.
 - Ở Explosive Exchange, mọi người cùng tốc độ nên người ôm bom chỉ còn 1,22 giây biên trên bom
   ngắn nhất. Đông người thì không thấy, vì luôn có ai đó ở gần; chỉ lộ ra ở màn 1v1 cuối ván.
 - Ở Acidic Atoll, cửa sổ trượt có thể ăn hết mọi đảo an toàn cùng lúc — lúc đó người chơi đúng
@@ -333,7 +338,7 @@ Nối với ba kiểu ở mục 5:
 | 1 | Magma & Mages | T1 | trên cao | loại trừ · **100 máu, −22/giây trong nham** | 1/phát cầu lửa |
 | 3 | Acidic Atoll | T1 | trên cao | loại trừ · **100 máu, −20/giây trong axit** | ~~1/quả bom~~ → **0**, lịch rơi + thứ tự chìm từ hạt giống |
 | 4 | Explosive Exchange | T1 | trên cao | loại trừ theo thứ tự nổ (**không máu** — xem ghi chú) | `ai_om` do master, 1 gói/cú chuyền |
-| 5 | Crown Capture | T1 | trên cao | **1 đ/giây giữ**, 60 s | `ai_giu` do master |
+| 5 | Crown Capture | T1 | trên cao | **1 đ/giây giữ**, 60 s · **không ai chết** | `ai_giu` do master, 1 gói/phát cầu lửa |
 | 6 | Breaking Blocks | T2 | trên cao | thời gian sống, 60 s | "tôi chết" + **ô vỡ/mọc do master phát** |
 | 7 | Laser Leap | T2 | trên cao | thời gian sống, chốt chặn 90 s | chỉ "tôi chết" |
 | 8 | Searing Spotlights | T2 | trên cao, **chu kỳ sáng↔tối** | thời gian sống · **100 máu, −40/giây trong đèn** | chỉ "tôi chết" |
@@ -349,6 +354,36 @@ Nối với ba kiểu ở mục 5:
 | 18 | Bóng chày | T5 | **overlay 2D, hàng ngang** | tâm ±40 ms **3đ** · ±100 ms **2đ** · ±180 ms **1đ** · trật 0 · 15 quả | 1 gói cuối |
 
 ## Ghi chú riêng vài trò
+
+**Crown Capture — cướp miện phải qua ĐÒN, và miện RƠI chứ không sang tay.**
+
+Bản cũ đúng phần khó: điểm tích luỹ theo giây giữ, master trọng tài, `_chot_ket_qua()` ghi đè để
+xếp theo giây giữ chứ không theo thời gian sống. Giữ nguyên trọn phần đó.
+
+Nhưng `Area3D` cướp nằm ngay trên quả miện, mà miện thì đội trên đầu người giữ — nên **chạy tới
+chạm vào người giữ là miện sang tay mình**. Hai hệ quả, cả hai sai với trò:
+
+- **Không có đòn nào trong một trò PvP.** Người không giữ miện chẳng có việc gì ngoài chạy tới
+  đụng. Không có chặn đường, không có tranh giành.
+- **Miện sang tay TỨC THÌ.** Không có khoảnh khắc miện nằm đất để mà giành; ai đến trước ăn tất.
+
+Giờ: bắn cầu lửa trúng người đang giữ thì **miện rơi xuống đúng chỗ họ đứng**, không bay sang ai.
+Ai chạy tới trước thì nhặt. Bắn vào người không giữ miện thì chỉ hất — vẫn có ích, đó là cách hẩy
+đối thủ ra khỏi quả miện đang nằm đất.
+
+Tính được từ `Player`: xung 9,0 với `DAY_TAT_DAN = 9,0` hất xa **4,5 m** trong 1,0 giây, tầm nhặt
+1,9 m (tâm đến tâm), nên người bị hất cần **1,43 giây** mới về được trong khi miện mở nhặt từ
+**1,10 giây** — có đúng một cửa hẹp cho người khác, và cú đòn không vô nghĩa.
+
+**Không ai chết.** Vị trí bị kẹp trong lòng sàn: thắng thua chỉ do tổng giây đội miện, nên hất
+nhau xuống vực sẽ biến nó thành nửa deathmatch. `_toi_thua()` luôn trả `false`.
+
+**Thêm bảng điểm cả phòng.** Trước chỉ hiện điểm của người đang giữ, nên không ai biết mình thứ
+mấy — và cả phần "cuối ván ai cũng xông vào người dẫn điểm" không xảy ra được.
+
+`cau_lua` chuyển từ `minigame/magma/` sang `minigame/chung/`: giờ hai trò dùng, mà để nó nằm trong
+thư mục của một trò là đúng cái bẫy vừa gặp khi xoá Snowy Spin — phải đi dò xem còn ai dùng file
+của trò bị xoá.
 
 **Explosive Exchange — người ôm bom chạy NHANH HƠN, và đó là cả trò.**
 

@@ -1,11 +1,16 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Material" path="res://materials/mat_brass.tres" id="1_m"]
+[ext_resource type="Material" path="res://materials/mat_san_canh_bao.tres" id="2_v"]
 
 [sub_resource type="TorusMesh" id="Tor_mien"]
 inner_radius = 0.34
 outer_radius = 0.5
 rings = 12
+
+[sub_resource type="TorusMesh" id="Tor_nhat"]
+inner_radius = 1.42
+outer_radius = 1.5
 
 [sub_resource type="SphereShape3D" id="Shape_cuop"]
 radius = 1.5
@@ -31,6 +36,11 @@ font_size = 96
 outline_size = 26
 modulate = Color(1, 0.92, 0.55, 1)
 text = "0"
+
+[node name="VongNhat" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.75, 0)
+mesh = SubResource("Tor_nhat")
+material_override = ExtResource("2_v")
 
 [node name="Vung" type="Area3D" parent="."]
 collision_layer = 0
