@@ -5,7 +5,7 @@
 [ext_resource type="AudioStream" path="res://asset/kenney_interface-sounds/Audio/click_003.ogg" id="4_click"]
 
 [sub_resource type="StyleBoxFlat" id="DockPanel"]
-bg_color = Color(0.006, 0.027, 0.037, 0.62)
+bg_color = Color(0.006, 0.027, 0.037, 0.64)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
@@ -33,7 +33,7 @@ border_width_bottom = 1
 border_color = Color(0.78, 1, 0.95, 0.88)
 
 [sub_resource type="StyleBoxFlat" id="SettingsPanel"]
-bg_color = Color(0.006, 0.03, 0.04, 0.94)
+bg_color = Color(0.006, 0.03, 0.04, 0.96)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
@@ -45,7 +45,7 @@ content_margin_right = 32.0
 content_margin_bottom = 28.0
 
 [sub_resource type="StyleBoxFlat" id="RoomPanel"]
-bg_color = Color(0.005, 0.025, 0.034, 0.32)
+bg_color = Color(0.005, 0.025, 0.034, 0.34)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
@@ -81,30 +81,6 @@ offset_bottom = 1.0
 grow_horizontal = 2
 color = Color(0.76, 0.96, 0.92, 0.36)
 
-[node name="TopActions" type="HBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -238.0
-offset_top = 24.0
-offset_right = -34.0
-offset_bottom = 62.0
-grow_horizontal = 0
-theme_override_constants/separation = 10
-
-[node name="SettingsBtn" type="Button" parent="TopActions"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(97, 38)
-layout_mode = 2
-text = "CÀI ĐẶT"
-
-[node name="QuitBtn" type="Button" parent="TopActions"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(97, 38)
-layout_mode = 2
-text = "THOÁT"
-
 [node name="MenuDock" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 4
@@ -117,107 +93,195 @@ offset_bottom = 260.0
 grow_vertical = 2
 theme_override_styles/panel = SubResource("DockPanel")
 
-[node name="Content" type="VBoxContainer" parent="MenuDock"]
+[node name="MainScreen" type="VBoxContainer" parent="MenuDock"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Eyebrow" type="Label" parent="MenuDock/Content"]
+[node name="Eyebrow" type="Label" parent="MenuDock/MainScreen"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.68, 0.92, 0.87, 0.82)
 theme_override_font_sizes/font_size = 10
-text = "PARTYBASH  /  ONLINE"
+text = "PARTYBASH  /  MAIN MENU"
 
-[node name="Title" type="Label" parent="MenuDock/Content"]
+[node name="Title" type="Label" parent="MenuDock/MainScreen"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 1, 0.98, 1)
 theme_override_font_sizes/font_size = 44
 text = "PARTYBASH"
 
-[node name="Tagline" type="Label" parent="MenuDock/Content"]
+[node name="Tagline" type="Label" parent="MenuDock/MainScreen"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.75, 0.84, 0.82, 0.76)
 theme_override_font_sizes/font_size = 12
 text = "Chơi cùng bạn bè trên Rumble Reef."
 
-[node name="TitleGap" type="Control" parent="MenuDock/Content"]
-custom_minimum_size = Vector2(0, 3)
+[node name="Spacer" type="Control" parent="MenuDock/MainScreen"]
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="IdentityLabel" type="Label" parent="MenuDock/Content"]
+[node name="PlayBtn" type="Button" parent="MenuDock/MainScreen"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.90, 0.99, 0.97, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("PrimaryNormal")
+theme_override_styles/hover = SubResource("PrimaryHover")
+text = "CHƠI ONLINE"
+
+[node name="HowToBtn" type="Button" parent="MenuDock/MainScreen"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "CÁCH CHƠI"
+
+[node name="SettingsBtn" type="Button" parent="MenuDock/MainScreen"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "CÀI ĐẶT"
+
+[node name="QuitBtn" type="Button" parent="MenuDock/MainScreen"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "THOÁT"
+
+[node name="MainStatus" type="Label" parent="MenuDock/MainScreen"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.73, 0.84, 0.82, 0.62)
+theme_override_font_sizes/font_size = 11
+text = "Đang kết nối…"
+autowrap_mode = 3
+
+[node name="OnlineScreen" type="VBoxContainer" parent="MenuDock"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="HBoxContainer" parent="MenuDock/OnlineScreen"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="OnlineBackBtn" type="Button" parent="MenuDock/OnlineScreen/Header"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 36)
+layout_mode = 2
+text = "‹  TRỞ LẠI"
+
+[node name="Title" type="Label" parent="MenuDock/OnlineScreen/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 22
+text = "CHƠI ONLINE"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="IdentityLabel" type="Label" parent="MenuDock/OnlineScreen"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.70, 0.90, 0.86, 0.84)
 theme_override_font_sizes/font_size = 10
 text = "TÊN NGƯỜI CHƠI"
 
-[node name="NameEdit" type="LineEdit" parent="MenuDock/Content"]
+[node name="NameEdit" type="LineEdit" parent="MenuDock/OnlineScreen"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 42)
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 placeholder_text = "Nhập tên của bạn"
 max_length = 14
 select_all_on_focus = true
 
-[node name="HostBtn" type="Button" parent="MenuDock/Content"]
+[node name="HostBtn" type="Button" parent="MenuDock/OnlineScreen"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 46)
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.88, 0.98, 0.95, 0.96)
-theme_override_colors/font_hover_color = Color(0.90, 1, 0.97, 1)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 14
 theme_override_styles/normal = SubResource("PrimaryNormal")
 theme_override_styles/hover = SubResource("PrimaryHover")
-text = "TẠO PHÒNG"
+text = "TẠO PHÒNG MỚI"
 
-[node name="RoomHeader" type="HBoxContainer" parent="MenuDock/Content"]
+[node name="CodeLabel" type="Label" parent="MenuDock/OnlineScreen"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.70, 0.90, 0.86, 0.84)
+theme_override_font_sizes/font_size = 10
+text = "VÀO BẰNG MÃ PHÒNG"
+
+[node name="CodeRow" type="HBoxContainer" parent="MenuDock/OnlineScreen"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CodeEdit" type="LineEdit" parent="MenuDock/OnlineScreen/CodeRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "VD: PLAYER-AB12"
+max_length = 32
+
+[node name="JoinCodeBtn" type="Button" parent="MenuDock/OnlineScreen/CodeRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(92, 40)
+layout_mode = 2
+text = "THAM GIA"
+
+[node name="RoomHeader" type="HBoxContainer" parent="MenuDock/OnlineScreen"]
 layout_mode = 2
 
-[node name="RoomsTitle" type="Label" parent="MenuDock/Content/RoomHeader"]
+[node name="RoomsTitle" type="Label" parent="MenuDock/OnlineScreen/RoomHeader"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.70, 0.90, 0.86, 0.84)
 theme_override_font_sizes/font_size = 10
 text = "PHÒNG ĐANG MỞ"
 
-[node name="LiveLabel" type="Label" parent="MenuDock/Content/RoomHeader"]
+[node name="RefreshBtn" type="Button" parent="MenuDock/OnlineScreen/RoomHeader"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(78, 30)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.68, 0.93, 0.85, 0.76)
-theme_override_font_sizes/font_size = 10
-text = "ONLINE"
+theme_override_font_sizes/font_size = 11
+text = "LÀM MỚI"
 
-[node name="RoomSurface" type="PanelContainer" parent="MenuDock/Content"]
-custom_minimum_size = Vector2(0, 106)
+[node name="RoomSurface" type="PanelContainer" parent="MenuDock/OnlineScreen"]
+custom_minimum_size = Vector2(0, 102)
 layout_mode = 2
 theme_override_styles/panel = SubResource("RoomPanel")
 
-[node name="RoomMargin" type="MarginContainer" parent="MenuDock/Content/RoomSurface"]
+[node name="RoomMargin" type="MarginContainer" parent="MenuDock/OnlineScreen/RoomSurface"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="Scroll" type="ScrollContainer" parent="MenuDock/Content/RoomSurface/RoomMargin"]
+[node name="RoomContent" type="VBoxContainer" parent="MenuDock/OnlineScreen/RoomSurface/RoomMargin"]
 layout_mode = 2
-horizontal_scroll_mode = 0
 
-[node name="RoomList" type="VBoxContainer" parent="MenuDock/Content/RoomSurface/RoomMargin/Scroll"]
+[node name="EmptyHint" type="Label" parent="MenuDock/OnlineScreen/RoomSurface/RoomMargin/RoomContent"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 6
-
-[node name="EmptyHint" type="Label" parent="MenuDock/Content"]
-unique_name_in_owner = true
-layout_mode = 2
+size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.70, 0.78, 0.77, 0.62)
 theme_override_font_sizes/font_size = 11
 text = "Chưa có phòng đang mở."
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="Status" type="Label" parent="MenuDock/Content"]
+[node name="Scroll" type="ScrollContainer" parent="MenuDock/OnlineScreen/RoomSurface/RoomMargin/RoomContent"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="RoomList" type="VBoxContainer" parent="MenuDock/OnlineScreen/RoomSurface/RoomMargin/RoomContent/Scroll"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 5
+
+[node name="Status" type="Label" parent="MenuDock/OnlineScreen"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.74, 0.84, 0.82, 0.72)
 theme_override_font_sizes/font_size = 11
@@ -262,7 +326,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="PanelContainer" parent="SettingsOverlay/Center"]
-custom_minimum_size = Vector2(490, 0)
+custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("SettingsPanel")
 
@@ -324,7 +388,7 @@ text = "Camera nền chuyển động"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.63, 0.76, 0.74, 0.72)
 theme_override_font_sizes/font_size = 12
-text = "Bạn có thể tắt camera nền nếu dễ bị say chuyển động."
+text = "Tắt tùy chọn này nếu bạn dễ bị say chuyển động."
 autowrap_mode = 3
 
 [node name="BackBtn" type="Button" parent="SettingsOverlay/Center/Panel/VBox"]
@@ -332,6 +396,122 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 text = "XONG"
+
+[node name="HowToOverlay" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.003, 0.015, 0.022, 0.72)
+
+[node name="Center" type="CenterContainer" parent="HowToOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="HowToOverlay/Center"]
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("SettingsPanel")
+
+[node name="VBox" type="VBoxContainer" parent="HowToOverlay/Center/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Kicker" type="Label" parent="HowToOverlay/Center/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.69, 0.93, 0.87, 0.84)
+theme_override_font_sizes/font_size = 10
+text = "RUMBLE REEF  /  QUICK GUIDE"
+
+[node name="Title" type="Label" parent="HowToOverlay/Center/Panel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "CÁCH CHƠI"
+
+[node name="Divider" type="HSeparator" parent="HowToOverlay/Center/Panel/VBox"]
+layout_mode = 2
+
+[node name="Guide" type="RichTextLabel" parent="HowToOverlay/Center/Panel/VBox"]
+custom_minimum_size = Vector2(496, 260)
+layout_mode = 2
+theme_override_colors/default_color = Color(0.83, 0.90, 0.89, 0.90)
+theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/bold_font_size = 14
+bbcode_enabled = true
+text = "[color=#8fe7d4]01  PHÒNG CHỜ[/color]\nChọn nhân vật, khám phá phòng và đứng lên ô giữa sàn khi sẵn sàng.\n\n[color=#8fe7d4]02  BÀN PARTY[/color]\nTới lượt mình: tung xúc xắc, chọn đường và dùng vật phẩm bằng phím số. Thu thập chìa khóa để mở rương và nhận cốc.\n\n[color=#8fe7d4]03  MINIGAME[/color]\nCuối mỗi vòng, cả phòng vào minigame. Xếp hạng quyết định thứ tự lượt vòng sau.\n\n[color=#8fe7d4]MỤC TIÊU[/color]\nNgười đầu tiên đạt đủ số cốc sẽ thắng ván."
+fit_content = true
+scroll_active = false
+
+[node name="HowToCloseBtn" type="Button" parent="HowToOverlay/Center/Panel/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "ĐÃ HIỂU"
+
+[node name="QuitOverlay" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.003, 0.015, 0.022, 0.72)
+
+[node name="Center" type="CenterContainer" parent="QuitOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="QuitOverlay/Center"]
+custom_minimum_size = Vector2(430, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("SettingsPanel")
+
+[node name="VBox" type="VBoxContainer" parent="QuitOverlay/Center/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="QuitOverlay/Center/Panel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "THOÁT GAME?"
+
+[node name="Message" type="Label" parent="QuitOverlay/Center/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.86, 0.85, 0.76)
+text = "Bạn có chắc muốn đóng PartyBash?"
+autowrap_mode = 3
+
+[node name="Actions" type="HBoxContainer" parent="QuitOverlay/Center/Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="QuitCancelBtn" type="Button" parent="QuitOverlay/Center/Panel/VBox/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Ở LẠI"
+
+[node name="QuitConfirmBtn" type="Button" parent="QuitOverlay/Center/Panel/VBox/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "THOÁT"
 
 [node name="ClickSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_click")

@@ -83,3 +83,15 @@ modulate = Color(1, 1, 1, 0.55)
 layout_mode = 2
 text = "Esc để đóng"
 horizontal_alignment = 1
+
+[node name="LeaveConfirm" type="ConfirmationDialog" parent="."]
+unique_name_in_owner = true
+title = "Rời phòng?"
+dialog_text = "Bạn sẽ rời phòng hiện tại và quay về menu chính."
+ok_button_text = "RỜI PHÒNG"
+
+[node name="QuitConfirm" type="ConfirmationDialog" parent="."]
+unique_name_in_owner = true
+title = "Thoát game?"
+dialog_text = "Bạn có chắc muốn đóng PartyBash?"
+ok_button_text = "THOÁT"

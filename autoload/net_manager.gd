@@ -116,6 +116,13 @@ func join_room(ten: String) -> void:
 	Fusion.join_room(ten, null)
 
 
+## Cho UI yeu cau cap nhat ngay thay vi doi nhip tu dong ROOM_LIST_REFRESH.
+## Van chi doc tu Photon khi dang o master server; `_publish_room_list` tu chan trong phong.
+func refresh_room_list() -> void:
+	_refresh_timer = 0.0
+	_publish_room_list()
+
+
 func leave_room() -> void:
 	room_name = ""
 	Fusion.leave_room()
