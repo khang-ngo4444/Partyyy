@@ -1,6 +1,6 @@
 extends VBoxContainer
 
-## Bảng trạng thái bàn party ở góc phải: lượt của ai, máu / chìa / cốc / đồ của từng người,
+## Bảng trạng thái bàn party ở góc phải: lượt của ai, máu / vàng / đất / đồ của từng người,
 ## và chuyện vừa xảy ra.
 ##
 ## CHỈ HIỂN THỊ. Nghe một tín hiệu, đổ chữ ra, hết. Không đọc thẳng vào `PhaBanCo`, không giữ
@@ -33,12 +33,19 @@ func cap_nhat(tt: Dictionary) -> void:
 
 	var dong := PackedStringArray()
 	for id in thu_tu:
-		dong.append(_mot_dong(tt, int(id), id_luot, int(tt.get("can_coc", 0))))
+		dong.append(_mot_dong(tt, int(id), id_luot))
 	_bang.text = "\n".join(dong)
 
 	# `het_vong` là cờ nội bộ cho `main.gd`, không phải câu để người chơi đọc.
 	var su := str(tt.get("su_kien", ""))
 	_su_kien.text = "" if su == "het_vong" else su
+	var thue: Dictionary = tt.get("thue", {}) as Dictionary
+	if not thue.is_empty() and int(thue.get("chu", -1)) == NetManager.local_id():
+		_chon_huong.text = "CHỌN THUẾ: [1] đất  [2] máu  [3] tiền  [4] trang bị"
+		_chon_huong.visible = true
+	else:
+		_chon_huong.text = ""
+		_chon_huong.visible = false
 
 
 func cap_nhat_chon_huong(noi_dung: String) -> void:
@@ -47,21 +54,22 @@ func cap_nhat_chon_huong(noi_dung: String) -> void:
 	_luot.text = "ĐÃ TUNG XÚC XẮC — CHỌN HƯỚNG" if _chon_huong.visible else _dong_luot
 
 
-## `can` = số cốc để thắng. 0 nghĩa là ván chơi vô hạn, khi đó không hiện mẫu số — "cốc 2/0"
-## thì còn khó hiểu hơn là không ghi gì.
-func _mot_dong(tt: Dictionary, id: int, id_luot: int, can: int) -> String:
+func _mot_dong(tt: Dictionary, id: int, id_luot: int) -> String:
 	var k := LuatBan.khoa(id)
 	var tui: Array = _bang_cua(tt, "do").get(k, [])
 	var ten_do := PackedStringArray()
 	for i in tui.size():
 		ten_do.append("[%d] %s" % [i + 1, LuatBan.TEN_DO.get(str(tui[i]), str(tui[i]))])
-	var coc := int(_bang_cua(tt, "coc").get(k, 0))
-	return "%s %s — máu %d/%d · chìa %d · cốc %s · %s" % [
+	var so_dat := 0
+	for chu in _bang_cua(tt, "chu_dat").values():
+		if int(chu) == id:
+			so_dat += 1
+	return "%s %s — máu %d/%d · %d vàng · %d đất · checkpoint %d · %s" % [
 		"▶" if id == id_luot else "  ",
 		Player.ten_theo_id(get_tree(), id),
-		int(_bang_cua(tt, "mau").get(k, 0)), LuatBan.MAU_TOI_DA,
-		int(_bang_cua(tt, "chia").get(k, 0)),
-		str(coc) if can <= 0 else "%d/%d" % [coc, can],
+		int(_bang_cua(tt, "mau").get(k, 0)), int(tt.get("max_health", 10)),
+		int(_bang_cua(tt, "tien").get(k, 0)), so_dat,
+		int(_bang_cua(tt, "hoi_sinh").get(k, 0)),
 		" · ".join(ten_do) if ten_do.size() > 0 else "tay không",
 	]
 

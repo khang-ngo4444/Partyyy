@@ -47,7 +47,7 @@ height = 0.30
 
 [node name="OBan" type="Node3D"]
 script = ExtResource("1_ob")
-vat_lieu = Array[StandardMaterial3D]([ExtResource("2_0"), ExtResource("2_1"), ExtResource("2_2"), ExtResource("2_3"), ExtResource("2_4"), ExtResource("2_5"), ExtResource("2_6"), ExtResource("2_7")])
+vat_lieu = Array[StandardMaterial3D]([ExtResource("2_0"), ExtResource("2_2"), ExtResource("2_4"), ExtResource("2_3"), ExtResource("2_1"), ExtResource("2_6")])
 
 [node name="Bezel" type="MeshInstance3D" parent="."]
 position = Vector3(0, -0.07, 0)
