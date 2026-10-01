@@ -1,13 +1,19 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Material" path="res://materials/mat_o_nguy_hiem.tres" id="1_m"]
+[ext_resource type="Material" path="res://materials/mat_san_canh_bao.tres" id="2_v"]
 
 [sub_resource type="SphereMesh" id="Sph_bom"]
 radius = 0.55
 height = 1.1
 
-[sub_resource type="SphereShape3D" id="Shape_cham"]
-radius = 1.5
+[sub_resource type="TorusMesh" id="Torus_tam"]
+inner_radius = 1.72
+outer_radius = 1.8
+
+[sub_resource type="CylinderShape3D" id="Shape_tam"]
+radius = 1.8
+height = 2.2
 
 [node name="BomChuyen" type="Node3D"]
 
@@ -31,9 +37,15 @@ outline_size = 26
 modulate = Color(1, 0.85, 0.5, 1)
 text = "0"
 
+[node name="VongTam" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.2, 0)
+mesh = SubResource("Torus_tam")
+material_override = ExtResource("2_v")
+
 [node name="Vung" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2, 0)
 collision_layer = 0
 collision_mask = 2
 
 [node name="Hinh" type="CollisionShape3D" parent="Vung"]
-shape = SubResource("Shape_cham")
+shape = SubResource("Shape_tam")

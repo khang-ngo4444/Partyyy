@@ -158,6 +158,7 @@ godot --headless --path minigame/laser_leap      --script kiem_luat.gd
 godot --headless --path minigame/spotlights      --script kiem_luat.gd
 godot --headless --path minigame/magma           --script kiem_luat.gd
 godot --headless --path minigame/acidic_atoll    --script kiem_luat.gd
+godot --headless --path minigame/explosive       --script kiem_luat.gd
 ```
 
 Chúng chặn được những thứ KHÔNG thấy bằng mắt trong một ván chơi thử:
@@ -169,6 +170,8 @@ Chúng chặn được những thứ KHÔNG thấy bằng mắt trong một ván
   **lọt qua**; phải đo hai khoảng liền nhau mới lộ ra 1,6%.
 - `TAM_QUET = 7,8` ở Spotlights → đèn rọi ra ngoài sàn và đèn chạy nhanh hơn người. Chơi thử 3
   đèn thấy thoải mái; tới chu kỳ 6 mới hết chỗ đi, mà lúc đó không ai còn đang test.
+- Ở Explosive Exchange, mọi người cùng tốc độ nên người ôm bom chỉ còn 1,22 giây biên trên bom
+  ngắn nhất. Đông người thì không thấy, vì luôn có ai đó ở gần; chỉ lộ ra ở màn 1v1 cuối ván.
 - Ở Acidic Atoll, cửa sổ trượt có thể ăn hết mọi đảo an toàn cùng lúc — lúc đó người chơi đúng
   cũng buộc phải xuống axit. Bộ kiểm quét **200 hạt giống × mọi chặng** và đòi luôn còn ít nhất
   một đảo sống qua được chặng sau.
@@ -329,7 +332,7 @@ Nối với ba kiểu ở mục 5:
 |---|---|---|---|---|---|
 | 1 | Magma & Mages | T1 | trên cao | loại trừ · **100 máu, −22/giây trong nham** | 1/phát cầu lửa |
 | 3 | Acidic Atoll | T1 | trên cao | loại trừ · **100 máu, −20/giây trong axit** | ~~1/quả bom~~ → **0**, lịch rơi + thứ tự chìm từ hạt giống |
-| 4 | Explosive Exchange | T1 | trên cao | loại trừ theo thứ tự nổ | `ai_om` do master |
+| 4 | Explosive Exchange | T1 | trên cao | loại trừ theo thứ tự nổ (**không máu** — xem ghi chú) | `ai_om` do master, 1 gói/cú chuyền |
 | 5 | Crown Capture | T1 | trên cao | **1 đ/giây giữ**, 60 s | `ai_giu` do master |
 | 6 | Breaking Blocks | T2 | trên cao | thời gian sống, 60 s | "tôi chết" + **ô vỡ/mọc do master phát** |
 | 7 | Laser Leap | T2 | trên cao | thời gian sống, chốt chặn 90 s | chỉ "tôi chết" |
@@ -346,6 +349,37 @@ Nối với ba kiểu ở mục 5:
 | 18 | Bóng chày | T5 | **overlay 2D, hàng ngang** | tâm ±40 ms **3đ** · ±100 ms **2đ** · ±180 ms **1đ** · trật 0 · 15 quả | 1 gói cuối |
 
 ## Ghi chú riêng vài trò
+
+**Explosive Exchange — người ôm bom chạy NHANH HƠN, và đó là cả trò.**
+
+Bản cũ đã đúng kiến trúc (master giữ `_ai_om`, nạn nhân tự khai tử, đồng hồ ngắn dần 16 → 7 giây)
+nhưng có một lỗ hổng không thấy được khi chơi thử đông người: **mọi người cùng `Player.speed`**.
+
+`kiem_luat.gd` mô phỏng đuổi bắt 1v1 trên sàn tròn và đo: không boost thì bắt từ đầu này sàn sang
+đầu kia mất **4,88 giây**, trong khi bom ngắn nhất 7 giây và còn mất 0,9 giây nghỉ chuyền — còn
+**1,22 giây** để làm mọi việc. `TOC_OM_THEM = 1,6` hạ xuống 2,83 giây, còn **3,27 giây**.
+
+> Lần đầu tôi viết lý lẽ là "bằng tốc thì KHÔNG BAO GIỜ bắt được". Chính mô phỏng bác lại: kẻ chạy
+> trốn men theo bờ vẫn bị cắt góc. Lý lẽ đúng là **biên quá sát**, không phải bất khả. Và kẻ chạy
+> trốn trong mô phỏng còn ngây thơ, nên 4,88 giây là biên DƯỚI của cái khó.
+
+Phải trả tốc độ lại khi hết ôm và trong `dung_som()` — đúng cái bẫy `Player.truot` của Slippery
+Sprint đã dính một lần.
+
+**Ba chỗ khác đã sửa:**
+
+| | Cũ | Mới |
+|---|---|---|
+| Chuyền | tự chuyền cho người gần nhất khi hết nghỉ | bấm **E**. Chạy ngang qua ai đó không còn làm mất bom |
+| Tầm chuyền | `Area3D` bán kính 1,5 **trên đầu**, không ứng với gì nhìn thấy (comment bảo bằng "quầng sáng" nhưng quầng sáng là `OmniLight` tầm 6,0) | hạ xuống chân người ôm, bán kính 1,8, và vẽ `VongTam` đúng bán kính đó |
+| Lúc sắp nổ | chỉ một con số đang tụt | bom phồng + nhịp nhanh dần (2 → 9 nhịp/giây), đèn 3 → 9, chữ vàng → đỏ |
+
+**Không thêm máu.** Hai trò T1 kia dùng `ThanhMau` vì ở đó bị hất vào nham/axit xảy ra liên tục;
+ở đây "ôm bom lúc nổ" là sự kiện dứt khoát và người chơi đã có cả 16 giây để tránh. Spec cũng nói
+rõ: nếu demo đang loại thẳng thì giữ nguyên.
+
+**Không cần tránh trao lại cho người vừa ôm** (§7): `_trao_cho_ai_do()` chỉ chạy khi người ôm cũ
+đã CHẾT, nên `con_song` đã loại họ. Lặp lại người ôm là chuyện không xảy ra được.
 
 **Acidic Atoll — SÁU đảo rời, tập đảo an toàn đổi mỗi chặng.**
 
