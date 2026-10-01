@@ -40,8 +40,8 @@ extends MiniGame3D
 ## Đường đi của đèn, số đèn, và độ sáng đều là hàm thuần của `gio()` và hạt giống. Máu trừ cục
 ## bộ, hết thì tự khai tử.
 
-const MAU_TOI_DA := 100.0
-## Mất bao nhiêu máu mỗi giây khi đứng trong đèn. 100 / 40 = 2,5 giây là chết.
+## Mất bao nhiêu máu mỗi giây khi đứng trong đèn. Máu đầy 100 (đặt trong `.tscn`) nên
+## 100 / 40 = 2,5 giây là chết.
 const MAT_MAU_MOI_GIAY := 40.0
 ## Đèn đi trên quỹ đạo Lissajous quanh tâm sàn, biên độ chừng này.
 ##
@@ -83,7 +83,7 @@ const BAN_KINH_GIU := 11.0
 ## đầu SÁNG là giá trị mặc định của `san_dau.tscn`.
 const DEN_TROI_SANG := 1.1
 
-@onready var _thanh: ColorRect = $Lop/ThanhMau/Muc
+@onready var _thanh: ThanhMau = $ThanhMau
 
 var _den: Array[Node3D] = []
 ## Vùng sáng của từng đèn, cùng thứ tự với `_den`.
@@ -91,8 +91,6 @@ var _vung: Array[Area3D] = []
 var _bong: Array[SpotLight3D] = []
 var _pha: PackedFloat32Array = PackedFloat32Array()
 var _nhip: PackedFloat32Array = PackedFloat32Array()
-var mau := MAU_TOI_DA
-var _rong_thanh := 0.0
 
 ## Đèn trời của sân và môi trường, hai thứ bị chu kỳ sáng/tối điều khiển.
 var _troi: DirectionalLight3D = null
@@ -107,7 +105,6 @@ func _ready() -> void:
 	ten = "SEARING SPOTLIGHTS"
 	luat = "WASD chạy · nhớ chỗ mình lúc còn sáng · tránh vùng sáng khi tối"
 	giay_van = 75.0
-	_rong_thanh = _thanh.size.x
 
 
 func _dung_san() -> void:
@@ -123,8 +120,7 @@ func _dung_san() -> void:
 		_pha[i] = _rng.randf() * TAU
 		# Nhịp lệch nhau thì hai đèn không bao giờ khoá pha thành một cặp đi song song mãi.
 		_nhip[i] = _rng.randf_range(0.28, 0.52)
-	mau = MAU_TOI_DA
-	$Lop.visible = true
+	_thanh.mo()
 	if _den.is_empty():
 		push_error("Spotlights: san khong co node ten Den*")
 		return
@@ -146,7 +142,7 @@ func _dung_san() -> void:
 
 
 func dung_som() -> void:
-	$Lop.visible = false
+	_thanh.dong()
 	super()
 
 
@@ -160,7 +156,6 @@ func _luat_moi_nhip() -> void:
 		# Đèn chưa tới lượt thì tắt HẲN: tắt hình mà để vùng sát thương là vùng cháy vô hình,
 		# đúng cái phải tránh.
 		_bong[i].visible = i < n
-	_thanh.size.x = _rong_thanh * clampf(mau / MAU_TOI_DA, 0.0, 1.0)
 	if con_song(NetManager.local_id()):
 		_giu_tren_san()
 		_an_mau(n)
@@ -192,7 +187,7 @@ func _an_mau(n: int) -> void:
 		return
 	for i in mini(n, _vung.size()):
 		if _vung[i] != null and _vung[i].overlaps_body(p):
-			mau -= MAT_MAU_MOI_GIAY * get_process_delta_time()
+			_thanh.tru(MAT_MAU_MOI_GIAY, get_process_delta_time())
 			return
 
 
@@ -215,7 +210,7 @@ func _dat_sang(s: float) -> void:
 ## Ghi đè và KHÔNG gọi `super()`: xem ghi chú "vì sao không chết vì rơi" đầu file. Hết máu là
 ## đường thua duy nhất.
 func _toi_thua() -> bool:
-	return mau <= 0.0
+	return _thanh.het()
 
 
 # ───────────────────────── luật: hàm thuần, kiểm bằng assert ─────────────────────────

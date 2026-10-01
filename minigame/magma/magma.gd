@@ -75,20 +75,17 @@ const GIAY_BAO := 4.0
 ## 100 / 22 ≈ 4,5 giây là chết — đủ đau để phải bò ra ngay, nhưng bị hất vào nham một cái không
 ## phải là xong. Spotlights dùng 40/giây vì ở đó vùng sáng nhỏ và tránh được; nham thì chiếm cả
 ## vành ngoài, không ai đi vòng tránh được.
-const MAU_TOI_DA := 100.0
 const MAT_MAU_MOI_GIAY := 22.0
 
 @export var cau_lua_scene: PackedScene = null
 
-@onready var _thanh: ColorRect = $Lop/ThanhMau/Muc
+@onready var _thanh: ThanhMau = $ThanhMau
 
 var _san_tron: Node3D = null
 var _vung_bao: Node3D = null
 var _vung_an_toan: Node3D = null
 var _cau: Array[CauLua] = []
 var _ban_luc := -99.0
-var mau := MAU_TOI_DA
-var _rong_thanh := 0.0
 ## Bán kính sàn, ĐỌC từ mesh chứ không chép tay — `ti_le_san()` chỉ trả về tỉ lệ.
 var _ban_kinh := 11.5
 
@@ -98,7 +95,6 @@ func _ready() -> void:
 	ten = "MAGMA & MAGES"
 	luat = "WASD chạy · E bắn cầu lửa · vành đỏ sắp thành nham · hất nhau vào nham"
 	giay_van = 75.0
-	_rong_thanh = _thanh.size.x
 
 
 func _dung_san() -> void:
@@ -107,8 +103,7 @@ func _dung_san() -> void:
 	_vung_an_toan = san.get_node_or_null("VungAnToan") as Node3D
 	_cau.clear()
 	_ban_luc = -99.0
-	mau = MAU_TOI_DA
-	$Lop.visible = true
+	_thanh.mo()
 	if _san_tron == null or _vung_bao == null or _vung_an_toan == null:
 		push_error("Magma: san thieu SanTron / VungBao / VungAnToan")
 		return
@@ -120,7 +115,7 @@ func _dung_san() -> void:
 
 
 func dung_som() -> void:
-	$Lop.visible = false
+	_thanh.dong()
 	super()
 
 
@@ -128,7 +123,6 @@ func _luat_moi_nhip() -> void:
 	var t := gio()
 	_ve_vung(t)
 	_cau = _cau.filter(func(c: CauLua) -> bool: return is_instance_valid(c))
-	_thanh.size.x = _rong_thanh * clampf(mau / MAU_TOI_DA, 0.0, 1.0)
 	if con_song(NetManager.local_id()):
 		_giu_tren_san()
 		_an_mau(t)
@@ -168,7 +162,7 @@ func _an_mau(t: float) -> void:
 		return
 	var l := p.global_position - san.global_position
 	if Vector2(l.x, l.z).length() > ti_le_san(t) * _ban_kinh:
-		mau -= MAT_MAU_MOI_GIAY * get_process_delta_time()
+		_thanh.tru(MAT_MAU_MOI_GIAY, get_process_delta_time())
 
 
 ## Ghi đè: cầu lửa HẤT chứ không giết; chết là do hết máu.
@@ -187,7 +181,7 @@ func _toi_thua() -> bool:
 			p.day(huong.normalized() * DAY_NGANG + Vector3.UP * DAY_LEN)
 			c.queue_free()
 			break
-	return mau <= 0.0 or super()
+	return _thanh.het() or super()
 
 
 func _unhandled_input(event: InputEvent) -> void:

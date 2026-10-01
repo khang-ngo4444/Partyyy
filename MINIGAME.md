@@ -66,6 +66,7 @@ Hai khuôn chung, trò nào cũng đi qua một trong hai:
 |---|---|---|
 | `MiniGame3D` | `minigame/chung/mini_game_3d.gd` | Dựng sân, đọc giờ, đếm người còn sống, **chốt và phát `xong`** (`_chot_ket_qua` → `_net_xep_hang`) |
 | `MiniGameLan` | `minigame/chung/mini_game_lan.gd` | Kế thừa `MiniGame3D`, 8 làn riêng SÁT NHAU + camera chung bám tốp |
+| `ThanhMau` | `minigame/chung/thanh_mau.gd` + `.tscn` | Máu + thanh máu. Không phải khuôn — kéo vào `.tscn` của trò nào cần |
 
 Nên **lớp con không tự phát `xong`** — đừng đi tìm `xong.emit` trong `laser_leap.gd` rồi kết
 luận trò đó chưa xong. Nó nằm ở `mini_game_3d.gd`, một chỗ cho cả 15 trò.
@@ -156,6 +157,7 @@ godot --headless --path minigame/breaking_blocks --script kiem_luat.gd
 godot --headless --path minigame/laser_leap      --script kiem_luat.gd
 godot --headless --path minigame/spotlights      --script kiem_luat.gd
 godot --headless --path minigame/magma           --script kiem_luat.gd
+godot --headless --path minigame/acidic_atoll    --script kiem_luat.gd
 ```
 
 Chúng chặn được những thứ KHÔNG thấy bằng mắt trong một ván chơi thử:
@@ -167,6 +169,9 @@ Chúng chặn được những thứ KHÔNG thấy bằng mắt trong một ván
   **lọt qua**; phải đo hai khoảng liền nhau mới lộ ra 1,6%.
 - `TAM_QUET = 7,8` ở Spotlights → đèn rọi ra ngoài sàn và đèn chạy nhanh hơn người. Chơi thử 3
   đèn thấy thoải mái; tới chu kỳ 6 mới hết chỗ đi, mà lúc đó không ai còn đang test.
+- Ở Acidic Atoll, cửa sổ trượt có thể ăn hết mọi đảo an toàn cùng lúc — lúc đó người chơi đúng
+  cũng buộc phải xuống axit. Bộ kiểm quét **200 hạt giống × mọi chặng** và đòi luôn còn ít nhất
+  một đảo sống qua được chặng sau.
 
 Hằng số trong bộ kiểm **chép tay** từ file trò. Đổi số bên trò thì phải đổi ở đây — và đó là việc
 cố ý: mỗi lần đổi một con số, bộ kiểm buộc phải chạy lại.
@@ -323,7 +328,7 @@ Nối với ba kiểu ở mục 5:
 | # | Trò | Khuôn | Camera | Tính điểm | Gói tin |
 |---|---|---|---|---|---|
 | 1 | Magma & Mages | T1 | trên cao | loại trừ · **100 máu, −22/giây trong nham** | 1/phát cầu lửa |
-| 3 | Acidic Atoll | T1 | trên cao | loại trừ | ~~1/quả bom~~ → **0**, lịch rơi từ hạt giống |
+| 3 | Acidic Atoll | T1 | trên cao | loại trừ · **100 máu, −20/giây trong axit** | ~~1/quả bom~~ → **0**, lịch rơi + thứ tự chìm từ hạt giống |
 | 4 | Explosive Exchange | T1 | trên cao | loại trừ theo thứ tự nổ | `ai_om` do master |
 | 5 | Crown Capture | T1 | trên cao | **1 đ/giây giữ**, 60 s | `ai_giu` do master |
 | 6 | Breaking Blocks | T2 | trên cao | thời gian sống, 60 s | "tôi chết" + **ô vỡ/mọc do master phát** |
@@ -341,6 +346,37 @@ Nối với ba kiểu ở mục 5:
 | 18 | Bóng chày | T5 | **overlay 2D, hàng ngang** | tâm ±40 ms **3đ** · ±100 ms **2đ** · ±180 ms **1đ** · trật 0 · 15 quả | 1 gói cuối |
 
 ## Ghi chú riêng vài trò
+
+**Acidic Atoll — SÁU đảo rời, tập đảo an toàn đổi mỗi chặng.**
+
+Bản cũ là **một đảo tròn duy nhất** + mưa bom; axit chỉ là mặt phẳng trang trí ở `y = -5` và chết
+là do rơi. Tức nó đang là trò né chướng ngại, không phải trò đảo — và ra khỏi đảo là chết ngay.
+
+Giờ: bồn axit **đứng được** (có va chạm, thấp hơn mặt đảo 0,8 m) + 6 đảo đặt lên trên (1 giữa,
+5 trên vành bán kính 7,5). Rơi xuống là lội trong axit, −20 máu/giây, nhảy lên đảo lại được —
+0,8 m < `jump_height` 1,2 m, đây là ràng buộc cứng chứ không phải con số cho đẹp.
+
+**Khác Magma & Mages ở đâu** (§9 của spec đòi phải khác): Magma là MỘT sân, nham ăn vào từ ngoài,
+ai cũng dồn về cùng một tâm — "trụ ở giữa thế nào". Ở đây là sáu đảo rời và tập đảo an toàn **đổi
+mỗi chặng** — "nhảy sang đảo nào, lúc nào". Không có chỗ nào càng-vào-giữa-càng-an-toàn.
+
+**Cửa sổ TRƯỢT, không phải chìm dần rồi hết.** Mỗi chặng cửa sổ đảo-chìm trượt một bước trên một
+thứ tự gieo từ hạt giống: một đảo nổi lên, đảo kế tiếp chìm xuống. Nên phải di chuyển LẶP LẠI
+suốt ván (đo được: tập đảo an toàn đổi 7/7 chặng), chứ không dồn một lần về đảo cuối rồi đứng đó.
+Số đảo chìm cùng lúc tăng dần 0 → 4, nên chỗ an toàn ít đi: `6 → 5 → 4 → 3 → 2` đảo.
+
+Bom giữ nguyên (vòng đánh dấu + quầng nổ đúng bằng vùng sát thương) nhưng giờ **nhắm vào một đảo
+còn nổi** chứ không rơi bừa khắp bồn — bom rơi xuống axit là bom vô nghĩa. Nhịp bom cuối ván nới
+từ 0,5 lên 1,0 giây: áp lực chính giờ là đảo chìm, hai nguồn chồng lên nhau thì thành rối.
+
+**Fisher-Yates với `RandomNumberGenerator`, KHÔNG dùng `Array.shuffle()`** — `shuffle()` lấy RNG
+toàn cục nên mỗi máy một trạng thái và mỗi người sẽ thấy một đảo khác chìm. Cả trò dựa vào chỗ
+này để khỏi gửi gói tin nào.
+
+**Máu tách ra dùng chung.** Đây là trò thứ ba cần máu, đúng lúc comment `ponytail:` trong
+`magma.gd` hẹn sẽ tách. `minigame/chung/thanh_mau.tscn` giờ giữ máu + thanh, ba trò (Spotlights,
+Magma, Acidic Atoll) đều dùng; bỏ được 5 biến lặp trong mỗi script và một khối `CanvasLayer`
+lặp trong mỗi `.tscn`.
 
 **Magma & Mages — vùng an toàn co theo CHẶNG, sàn không biến mất.**
 

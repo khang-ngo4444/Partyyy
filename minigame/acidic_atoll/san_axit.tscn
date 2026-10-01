@@ -1,11 +1,11 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="PackedScene" path="res://minigame/chung/san_dau.tscn" id="1_st"]
 [ext_resource type="PackedScene" path="res://minigame/chung/san_tron.tscn" id="2_sr"]
 [ext_resource type="Environment" path="res://materials/env_san_sang.tres" id="3_env"]
 [ext_resource type="Material" path="res://materials/mat_axit.tres" id="4_a"]
 
-[sub_resource type="PlaneMesh" id="Plane_axit"]
+[sub_resource type="PlaneMesh" id="Plane_bien"]
 size = Vector2(90, 90)
 
 [node name="SanAxit" type="Node3D"]
@@ -17,7 +17,10 @@ environment = ExtResource("3_env")
 
 [node name="SanTron" parent="." instance=ExtResource("2_sr")]
 
+[node name="Mat" parent="SanTron" index="0"]
+material_override = ExtResource("4_a")
+
 [node name="BienAxit" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5, 0)
-mesh = SubResource("Plane_axit")
+mesh = SubResource("Plane_bien")
 material_override = ExtResource("4_a")
