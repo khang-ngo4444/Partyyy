@@ -202,10 +202,16 @@ func _lenh_minigame(doi_so: PackedStringArray) -> void:
 	quan_tro.xin_chay(ma)
 
 
-## Het mot vong luot tren ban -> sang Tank. Chi master phat lenh.
+## Het mot vong luot tren ban -> sang MINIGAME. Chi master phat lenh.
+##
+## Master chon ma, `xin_chay` phat ma do qua RPC cho ca phong — nen chon ngau nhien o day la
+## an toan, moi may van nap dung mot tro.
+##
+## ponytail: rut ngau nhien tran, co the lap lai tro vua choi. Them bo dem "khong lap lai N
+## tro gan nhat" khi nguoi choi bat dau thay nham.
 func _khi_het_vong(_thu_tu_cu: Array) -> void:
 	if NetManager.is_master() and not quan_tro.dang_chay():
-		quan_tro.xin_chay("tank")
+		quan_tro.xin_chay(quan_tro.DANH_SACH.keys().pick_random())
 
 
 ## Hết minigame: master trả phòng về `PHASE_LOBBY`.

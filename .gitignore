@@ -2,5 +2,4 @@
 .godot/
 /android/
 addons/fusion/bin/~*
-builds/PartyBash-0.0.6/libfusion.windows.template_release.x86_64.release.dll
-builds/PartyBash-0.0.6/PartyBash.exe
+builds/*/

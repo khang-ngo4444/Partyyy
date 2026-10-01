@@ -33,6 +33,12 @@ project/assembly_name="PartyBash"
 
 enabled=PackedStringArray("res://addons/godot_ai/plugin.cfg", "res://addons/physics_placer/plugin.cfg")
 
+[file_customization]
+
+folder_colors={
+"res://lobby/": "red"
+}
+
 [filesystem]
 
 import/blender/enabled=false
