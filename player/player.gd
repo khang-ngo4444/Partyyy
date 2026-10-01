@@ -11,9 +11,8 @@ extends CharacterBody3D
 ## chỉnh sẵn trong scene đó (Kenney quay mặt về +Z nên xoay 180°). Thêm/đổi nhân vật: sửa mảng
 ## này trong Inspector của player.tscn.
 ##
-## KayKit không có animation nhúng sẵn trong model nhân vật (animation nằm riêng ở thư mục
-## Animations/, dùng chung cho cả bộ) — `_apply_model()` không tìm thấy AnimationPlayer thì
-## cứ đứng yên, không animation, vẫn hiển thị model bình thường.
+## KayKit để animation trong một scene rig dùng chung. `CharacterVisual` gắn thư viện đó
+## vào model khi dựng để năm archetype dùng cùng idle/walk/run/jump/sit.
 @export var models: Array[PackedScene] = []
 ## glTF import vào Godot mặc định KHÔNG lặp — animation chạy một lượt rồi dừng, im lặng.
 ## Mọi animation dùng làm TRẠNG THÁI đều phải có ở đây; chỉ animation một phát mới để nguyên.
@@ -183,6 +182,18 @@ var _loaded_model := -1
 		if is_node_ready():
 			_apply_tint()
 
+@export var accent_index: int = 1:
+	set(value):
+		accent_index = value
+		if is_node_ready():
+			_apply_tint()
+
+@export var accessory_enabled: bool = true:
+	set(value):
+		accessory_enabled = value
+		if is_node_ready():
+			_apply_accessory()
+
 ## Người chơi TỰ bật cờ sẵn sàng của chính mình — họ sở hữu object này nên không có tranh
 ## chấp quyền. Ô sẵn sàng chỉ là công tắc vật lý, không lưu trạng thái.
 @export var is_ready: bool = false
@@ -218,8 +229,10 @@ func _ready() -> void:
 
 	if is_mine:
 		player_name = NetManager.player_name
-		color_index = (NetManager.local_id() - 1) % NetManager.PLAYER_COLORS.size()
-		model_index = (NetManager.local_id() - 1) % models.size()
+		color_index = NetManager.color_index
+		accent_index = NetManager.accent_index
+		accessory_enabled = NetManager.accessory_enabled
+		model_index = NetManager.model_index
 
 	_apply_model()
 	_apply_name()
@@ -589,7 +602,7 @@ func _apply_model() -> void:
 	var inst := models[model_index % models.size()].instantiate() as Node3D
 	model_root.add_child(inst)
 
-	_anim = inst.find_child("AnimationPlayer", true, false) as AnimationPlayer
+	_anim = CharacterVisual.attach_animations(inst)
 	if _anim != null:
 		for a in LOOPING_ANIMS:
 			if _anim.has_animation(a):
@@ -607,6 +620,7 @@ func _apply_model() -> void:
 	# Mesh vua dung lai tu dau: ep `_giau_than` ap lai trang thai o khung hinh sau.
 	_dang_giau = false
 	_apply_tint()
+	_apply_accessory()
 
 
 ## Giấu thân khi camera dán sát vào gáy (góc nhìn thứ nhất).
@@ -631,16 +645,14 @@ func _giau_than(giau: bool) -> void:
 ## Kenney dùng một texture atlas chung. Không dùng material_override trơn (mất texture) —
 ## nhân bản material gốc rồi chỉ đổi albedo_color làm màu nhuộm.
 func _apply_tint() -> void:
-	var tint := NetManager.color_for(color_index)
-	name_tag.modulate = tint
-	for m in _meshes:
-		var src := m.get_active_material(0)
-		if src == null:
-			continue
-		var mat := src.duplicate()
-		if mat is StandardMaterial3D:
-			(mat as StandardMaterial3D).albedo_color = tint
-		m.set_surface_override_material(0, mat)
+	var primary := NetManager.color_for(color_index)
+	name_tag.modulate = primary
+	CharacterVisual.apply_customization(model_root, primary,
+			NetManager.color_for(accent_index), accessory_enabled)
+
+
+func _apply_accessory() -> void:
+	CharacterVisual.set_accessory_enabled(model_root, accessory_enabled)
 
 
 func _apply_name() -> void:

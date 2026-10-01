@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://ui/main_menu.gd" id="1_menu"]
 [ext_resource type="Theme" path="res://ui/main_menu_theme.tres" id="2_theme"]
 [ext_resource type="AudioStream" path="res://asset/kenney_interface-sounds/Audio/click_003.ogg" id="4_click"]
+[ext_resource type="PackedScene" path="res://ui/character_creator.tscn" id="5_creator"]
 
 [sub_resource type="StyleBoxFlat" id="DockPanel"]
 bg_color = Color(0.006, 0.027, 0.037, 0.64)
@@ -516,3 +517,6 @@ text = "THOÁT"
 [node name="ClickSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_click")
 volume_db = -9.0
+
+[node name="CharacterCreator" parent="." instance=ExtResource("5_creator")]
+unique_name_in_owner = true

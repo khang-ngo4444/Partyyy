@@ -39,6 +39,7 @@ const NETWORK_TIMEOUT := 12.0
 @onready var fullscreen_check: CheckButton = %FullscreenCheck
 @onready var camera_motion_check: CheckButton = %CameraMotionCheck
 @onready var click_sound: AudioStreamPlayer = $ClickSound
+@onready var character_creator: CharacterCreator = %CharacterCreator
 
 var _connected := false
 var _busy := false
@@ -54,7 +55,7 @@ func _ready() -> void:
 	name_edit.text_changed.connect(func(t): NetManager.player_name = t.strip_edges())
 	NetManager.player_name = name_edit.text
 
-	play_btn.pressed.connect(_show_online)
+	play_btn.pressed.connect(_open_character_creator)
 	online_back_btn.pressed.connect(_show_main)
 	how_to_btn.pressed.connect(_open_how_to)
 	settings_btn.pressed.connect(_open_settings)
@@ -70,6 +71,8 @@ func _ready() -> void:
 	volume_slider.value_changed.connect(_set_volume)
 	fullscreen_check.toggled.connect(_set_fullscreen)
 	camera_motion_check.toggled.connect(_set_camera_motion)
+	character_creator.confirmed.connect(_on_character_confirmed)
+	character_creator.cancelled.connect(func(): play_btn.grab_focus())
 
 	NetManager.connected.connect(_on_connected)
 	NetManager.connect_failed.connect(_on_connect_failed)
@@ -87,6 +90,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		return
 	if quit_overlay.visible:
 		_close_quit_confirm()
+	elif character_creator.visible:
+		character_creator.close()
 	elif how_to_overlay.visible:
 		_close_how_to()
 	elif settings_overlay.visible:
@@ -106,19 +111,32 @@ func _show_main(play_sound := true) -> void:
 	settings_overlay.visible = false
 	how_to_overlay.visible = false
 	quit_overlay.visible = false
+	character_creator.visible = false
 	_busy = false
 	_request_token += 1
 	_set_online_controls()
 	play_btn.grab_focus()
 
 
-func _show_online() -> void:
-	_play_click()
+func _show_online(play_sound := true) -> void:
+	if play_sound:
+		_play_click()
 	main_screen.visible = false
 	online_screen.visible = true
 	_set_online_controls()
 	_refresh_rooms(false)
 	host_btn.grab_focus()
+
+
+func _open_character_creator() -> void:
+	_play_click()
+	character_creator.open()
+
+
+func _on_character_confirmed() -> void:
+	_play_click()
+	_save_settings()
+	_show_online(false)
 
 
 func _request_host() -> void:
@@ -323,6 +341,11 @@ func _load_settings() -> void:
 		fullscreen = bool(config.get_value("display", "fullscreen", fullscreen))
 		motion = bool(config.get_value("display", "menu_camera_motion", motion))
 		_saved_player_name = String(config.get_value("profile", "player_name", ""))
+		NetManager.model_index = int(config.get_value("profile", "model_index", 0))
+		NetManager.color_index = int(config.get_value("profile", "color_index", 0))
+		NetManager.accent_index = int(config.get_value("profile", "accent_index", 1))
+		NetManager.accessory_enabled = bool(
+				config.get_value("profile", "accessory_enabled", true))
 	volume_slider.value = volume
 	fullscreen_check.button_pressed = fullscreen
 	camera_motion_check.button_pressed = motion
@@ -338,6 +361,10 @@ func _save_settings() -> void:
 	config.set_value("display", "fullscreen", fullscreen_check.button_pressed)
 	config.set_value("display", "menu_camera_motion", camera_motion_check.button_pressed)
 	config.set_value("profile", "player_name", name_edit.text.strip_edges())
+	config.set_value("profile", "model_index", NetManager.model_index)
+	config.set_value("profile", "color_index", NetManager.color_index)
+	config.set_value("profile", "accent_index", NetManager.accent_index)
+	config.set_value("profile", "accessory_enabled", NetManager.accessory_enabled)
 	config.save(SETTINGS_PATH)
 
 

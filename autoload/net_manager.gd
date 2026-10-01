@@ -28,6 +28,11 @@ const PLAYER_COLORS: Array[Color] = [
 ## (đã kiểm chứng, xem ROADMAP mục 1f).
 var player_name := ""
 var color_index := 0
+## Ngoại hình cục bộ được chọn trước khi vào phòng. Player copy các giá trị này vào
+## property replicated ngay khi spawn, vì vậy người vào muộn cũng thấy đúng nhân vật.
+var model_index := 0
+var accent_index := 1
+var accessory_enabled := true
 
 ## Photon chi day danh sach phong xuong khi no muon. Nguoi mo menu truoc luc ai do tao
 ## phong co the ngoi nhin danh sach rong. Doc lai ban cache dinh ky cho chac.
