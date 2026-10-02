@@ -44,6 +44,16 @@ func test_land_money_and_equipment_tax() -> void:
 	assert_contains(state["do"][owner], "khien")
 
 
+func test_land_tax_choice_survives_next_round() -> void:
+	var settings := GameplaySettings.defaults()
+	var state := LuatBan.trang_thai_moi([11, 22], {}, settings)
+	state["chu_dat"] = {"4": 11}
+	state["thue_dat"] = {"4": LuatBan.Thue.MAU}
+	var next_round := LuatBan.trang_thai_moi([22, 11], state, settings)
+	assert_eq(int(next_round["chu_dat"]["4"]), 11)
+	assert_eq(int(next_round["thue_dat"]["4"]), LuatBan.Thue.MAU)
+
+
 func test_minigame_rewards_weapon_then_decreasing_gold() -> void:
 	var settings := GameplaySettings.defaults()
 	var state := LuatBan.trang_thai_moi([11, 22, 33], {}, settings)

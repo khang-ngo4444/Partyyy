@@ -105,6 +105,7 @@ func _ready() -> void:
 	# HUD chi HIEN THI: no nghe tin hieu chu khong doc thang vao PhaBanCo.
 	ban_co.trang_thai_doi.connect(hud.cap_nhat_ban)
 	ban_co.chon_huong_doi.connect(hud.cap_nhat_chon_huong)
+	hud.thue_da_chon.connect(ban_co.xin_chon_thue)
 	hud.lenh.connect(_khi_lenh)
 
 	light_picker.mau_da_chon.connect(request_light)

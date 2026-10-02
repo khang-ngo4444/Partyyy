@@ -1,5 +1,7 @@
 extends VBoxContainer
 
+signal thue_da_chon(loai: int)
+
 ## Bảng trạng thái bàn party ở góc phải: lượt của ai, máu / vàng / đất / đồ của từng người,
 ## và chuyện vừa xảy ra.
 ##
@@ -8,6 +10,7 @@ extends VBoxContainer
 
 @onready var _luot: Label = $Luot
 @onready var _chon_huong: Label = $ChonHuong
+@onready var _menu_thue: PanelContainer = $MenuThue
 @onready var _bang: RichTextLabel = $Bang
 @onready var _su_kien: Label = $SuKien
 var _dong_luot := "—"
@@ -15,6 +18,14 @@ var _dong_luot := "—"
 
 func _ready() -> void:
 	visible = false
+	var cac_nut: Array[Button] = [
+		$MenuThue/NoiDung/CacLuaChon/Dat,
+		$MenuThue/NoiDung/CacLuaChon/Mau,
+		$MenuThue/NoiDung/CacLuaChon/Tien,
+		$MenuThue/NoiDung/CacLuaChon/TrangBi,
+	]
+	for i in cac_nut.size():
+		cac_nut[i].pressed.connect(_chon_thue.bind(i))
 
 
 ## ⚠️ Khoá của mọi bảng theo người chơi là CHUỖI — gói tới từ `JSON.parse_string()`. Đọc bằng
@@ -41,11 +52,14 @@ func cap_nhat(tt: Dictionary) -> void:
 	_su_kien.text = "" if su == "het_vong" else su
 	var thue: Dictionary = tt.get("thue", {}) as Dictionary
 	if not thue.is_empty() and int(thue.get("chu", -1)) == NetManager.local_id():
-		_chon_huong.text = "CHỌN THUẾ: [1] đất  [2] máu  [3] tiền  [4] trang bị"
-		_chon_huong.visible = true
+		_menu_thue.visible = true
 	else:
-		_chon_huong.text = ""
-		_chon_huong.visible = false
+		_menu_thue.visible = false
+
+
+func _chon_thue(loai: int) -> void:
+	_menu_thue.visible = false
+	thue_da_chon.emit(loai)
 
 
 func cap_nhat_chon_huong(noi_dung: String) -> void:

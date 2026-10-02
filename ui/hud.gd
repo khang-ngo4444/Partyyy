@@ -4,8 +4,13 @@ extends Control
 
 ## Chat vừa nhận một dòng lệnh. HUD chuyển tiếp cho `main.gd` — nó không tự thi hành gì.
 signal lenh(id_nguoi_gui: int, doi_so: PackedStringArray)
+signal thue_da_chon(loai: int)
+
+const STATUS_REFRESH := 0.2
 
 var _peer_count := 0
+var _status_acc := STATUS_REFRESH
+var _local_player: Player = null
 
 @onready var room_label: Label = %RoomLabel
 @onready var peers_label: Label = %PeersLabel
@@ -23,28 +28,42 @@ var _peer_count := 0
 @onready var bang_ban: VBoxContainer = $BangBan
 @onready var chat := $Chat
 @onready var bang_thang: Control = $BangThang
+@onready var performance_manager: Node = get_node("/root/PerformanceManager")
 
 
 func _ready() -> void:
 	chat.lenh.connect(func(id: int, ds: PackedStringArray): lenh.emit(id, ds))
+	bang_ban.thue_da_chon.connect(func(loai: int): thue_da_chon.emit(loai))
 	NetManager.room_joined.connect(_on_room_joined)
 	NetManager.peer_joined.connect(func(_id, _uid): _refresh_peers())
 	NetManager.peer_left.connect(func(_id, _inactive): _refresh_peers())
 	NetManager.master_changed.connect(func(_new_id, _old): _on_room_joined())
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if not visible:
 		return
-	ping_label.text = "ping %d ms" % NetManager.rtt_ms()
+	# Con trỏ chỉ có nghĩa khi chuột đang bị khoá vào game. Mở màn hình Esc thì tắt đi.
+	crosshair.visible = Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
+	_ve_luc_nem()
+	_status_acc += delta
+	if _status_acc < STATUS_REFRESH:
+		return
+	_status_acc = fmod(_status_acc, STATUS_REFRESH)
+	_refresh_status()
+
+
+## Chu va du lieu mang khong can cap nhat 60 lan/giay. Tach khoi phan tam ngam/thanh nem can
+## muot de tranh quet scene tree va kich hoat layout cua Control moi frame.
+func _refresh_status() -> void:
+	ping_label.text = "ping %d ms  ·  %d FPS  ·  3D %d%%" % [NetManager.rtt_ms(),
+			Engine.get_frames_per_second(),
+			roundi(float(performance_manager.get("current_scale")) * 100.0)]
 	# Nhan vat toi SAU tin peer_joined mot nhip, nen phai dem lai deu chu khong chi dem
 	# luc co signal.
 	_refresh_peers()
 	_nhac_bai()
 	_nhac_poker()
-	# Con trỏ chỉ có nghĩa khi chuột đang bị khoá vào game. Mở màn hình Esc thì tắt đi.
-	crosshair.visible = Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
-	_ve_luc_nem()
 
 	var ms: MatchState = get_tree().get_first_node_in_group("match_state")
 	if ms == null:
@@ -62,9 +81,8 @@ func _process(_delta: float) -> void:
 ## Thanh lực ném ngay dưới tâm ngắm: xanh → vàng → đỏ theo mức nạp. Chỉ hiện khi đang giữ E.
 func _ve_luc_nem() -> void:
 	var muc := -1.0
-	for n in get_tree().get_nodes_in_group("players"):
-		if n is Player and n.is_mine:
-			muc = n.muc_nap()
+	if _local_player != null and is_instance_valid(_local_player):
+		muc = _local_player.muc_nap()
 	luc_nen.visible = muc >= 0.0
 	if muc < 0.0:
 		return
@@ -94,7 +112,13 @@ func _on_room_joined() -> void:
 ## chưa tới máy này — đó mới đúng là lỗi đồng bộ, và khác hẳn chuyện ngồi nhầm phòng.
 func _refresh_peers() -> void:
 	_peer_count = NetManager.peers_in_room().size()
-	var nhan_vat := get_tree().get_nodes_in_group("players").size()
+	var players := get_tree().get_nodes_in_group("players")
+	if _local_player == null or not is_instance_valid(_local_player):
+		for n in players:
+			if n is Player and n.is_mine:
+				_local_player = n
+				break
+	var nhan_vat := players.size()
 	if nhan_vat == _peer_count:
 		peers_label.text = "%d người trong phòng" % _peer_count
 	else:

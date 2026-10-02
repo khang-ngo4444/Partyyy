@@ -613,11 +613,35 @@ layout_mode = 2
 button_pressed = true
 text = "Camera nền chuyển động"
 
+[node name="GraphicsRow" type="HBoxContainer" parent="SettingsOverlay/Center/Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="SettingsOverlay/Center/Panel/VBox/GraphicsRow"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Chất lượng đồ họa"
+
+[node name="GraphicsOption" type="OptionButton" parent="SettingsOverlay/Center/Panel/VBox/GraphicsRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+item_count = 4
+popup/item_0/text = "Tự động · mục tiêu 60 FPS"
+popup/item_0/id = 0
+popup/item_1/text = "Hiệu năng"
+popup/item_1/id = 1
+popup/item_2/text = "Cân bằng"
+popup/item_2/id = 2
+popup/item_3/text = "Chất lượng"
+popup/item_3/id = 3
+
 [node name="Hint" type="Label" parent="SettingsOverlay/Center/Panel/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.63, 0.76, 0.74, 0.72)
 theme_override_font_sizes/font_size = 12
-text = "Tắt tùy chọn này nếu bạn dễ bị say chuyển động."
+text = "Tự động giữ HUD sắc nét và chỉ điều chỉnh độ phân giải cảnh 3D để ổn định FPS."
 autowrap_mode = 3
 
 [node name="BackBtn" type="Button" parent="SettingsOverlay/Center/Panel/VBox"]

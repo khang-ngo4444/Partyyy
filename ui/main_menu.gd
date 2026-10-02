@@ -12,6 +12,8 @@ signal setup_leave_requested
 
 const SETTINGS_PATH := "user://party_settings.cfg"
 const NETWORK_TIMEOUT := 12.0
+const GRAPHICS_AUTO := 0
+const GRAPHICS_QUALITY := 3
 
 @onready var main_screen: VBoxContainer = %MainScreen
 @onready var online_screen: VBoxContainer = %OnlineScreen
@@ -41,6 +43,8 @@ const NETWORK_TIMEOUT := 12.0
 @onready var volume_value: Label = %VolumeValue
 @onready var fullscreen_check: CheckButton = %FullscreenCheck
 @onready var camera_motion_check: CheckButton = %CameraMotionCheck
+@onready var graphics_option: OptionButton = %GraphicsOption
+@onready var performance_manager: Node = get_node("/root/PerformanceManager")
 @onready var click_sound: AudioStreamPlayer = $ClickSound
 @onready var character_creator: CharacterCreator = %CharacterCreator
 @onready var setup_room: Label = %SetupRoom
@@ -96,6 +100,7 @@ func _ready() -> void:
 	volume_slider.value_changed.connect(_set_volume)
 	fullscreen_check.toggled.connect(_set_fullscreen)
 	camera_motion_check.toggled.connect(_set_camera_motion)
+	graphics_option.item_selected.connect(_set_graphics_mode)
 	character_creator.confirmed.connect(_on_character_confirmed)
 	character_creator.cancelled.connect(func(): play_btn.grab_focus())
 	setup_confirm_btn.pressed.connect(_confirm_gameplay)
@@ -432,26 +437,35 @@ func _set_camera_motion(enabled: bool) -> void:
 	camera_motion_changed.emit(enabled)
 
 
+func _set_graphics_mode(index: int) -> void:
+	performance_manager.call("set_graphics_mode", graphics_option.get_item_id(index))
+
+
 func _load_settings() -> void:
 	var config := ConfigFile.new()
 	var volume := 80.0
 	var fullscreen := DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
 	var motion := true
+	var graphics_mode := GRAPHICS_AUTO
 	if config.load(SETTINGS_PATH) == OK:
 		volume = float(config.get_value("audio", "master_volume", volume))
 		fullscreen = bool(config.get_value("display", "fullscreen", fullscreen))
 		motion = bool(config.get_value("display", "menu_camera_motion", motion))
+		graphics_mode = int(config.get_value("display", "graphics_mode", graphics_mode))
 		_saved_player_name = String(config.get_value("profile", "player_name", ""))
 		NetManager.model_index = int(config.get_value("profile", "model_index", 0))
 		NetManager.color_index = int(config.get_value("profile", "color_index", 0))
 		NetManager.accent_index = int(config.get_value("profile", "accent_index", 1))
 		NetManager.accessory_enabled = bool(
 				config.get_value("profile", "accessory_enabled", true))
+	graphics_mode = clampi(graphics_mode, GRAPHICS_AUTO, GRAPHICS_QUALITY)
 	volume_slider.value = volume
 	fullscreen_check.button_pressed = fullscreen
 	camera_motion_check.button_pressed = motion
+	graphics_option.select(graphics_option.get_item_index(graphics_mode))
 	_set_volume(volume)
 	_set_fullscreen(fullscreen)
+	performance_manager.call("set_graphics_mode", graphics_mode)
 	# Parent connects this signal after child _ready; defer preserves the saved state.
 	camera_motion_changed.emit.bind(motion).call_deferred()
 
@@ -461,6 +475,8 @@ func _save_settings() -> void:
 	config.set_value("audio", "master_volume", volume_slider.value)
 	config.set_value("display", "fullscreen", fullscreen_check.button_pressed)
 	config.set_value("display", "menu_camera_motion", camera_motion_check.button_pressed)
+	config.set_value("display", "graphics_mode",
+			graphics_option.get_item_id(graphics_option.selected))
 	config.set_value("profile", "player_name", name_edit.text.strip_edges())
 	config.set_value("profile", "model_index", NetManager.model_index)
 	config.set_value("profile", "color_index", NetManager.color_index)

@@ -47,7 +47,7 @@ func _ve() -> void:
 	_chu.text = str(so) if ky == "" else "%d\n%s" % [so, ky]
 
 
-func hien_trang_thai(loai_moi: int, chu_dat: String, co_ruong: bool,
+func hien_trang_thai(loai_moi: int, chu_dat: String, thue_dat: String, co_ruong: bool,
 		diem_hoi_sinh: PackedStringArray) -> void:
 	loai = loai_moi as BanDuong.Loai
 	var dong := PackedStringArray([str(so)])
@@ -55,6 +55,8 @@ func hien_trang_thai(loai_moi: int, chu_dat: String, co_ruong: bool,
 		dong.append("RUONG ?")
 	elif loai == BanDuong.Loai.DAT:
 		dong.append("DAT" if chu_dat.is_empty() else "DAT · %s" % chu_dat)
+		if not thue_dat.is_empty():
+			dong.append("THUE · %s" % thue_dat.to_upper())
 	else:
 		dong.append(BanDuong.KY_HIEU[loai])
 	if not diem_hoi_sinh.is_empty():

@@ -38,6 +38,12 @@ const MAT_CANE := preload("res://materials/mat_cane.tres")
 
 ## Xa hon chung nay met thi chu 3D tu mo di.
 const TAM_CHU := 6.0
+const CLOCK_REFRESH := 0.25
+const LIGHT_FADE_BEGIN := 22.0
+const LIGHT_FADE_LENGTH := 6.0
+const LIGHT_SHADOW_CUTOFF := 14.0
+const GRAPHICS_PERFORMANCE := 1
+const GRAPHICS_QUALITY := 3
 
 ## Cac mau den cho nut DOI MAU DEN. Muc 0 la MAU GOC — bam ve 0 tra lai nguyen trang moi
 ## nguon sang, ke ca hai sac am khac nhau da dat san trong .tscn.
@@ -88,6 +94,8 @@ var _goc_troi_chan := Color.WHITE
 var _goc_suong := Color.WHITE
 var _moi_truong: Environment = null
 var _chat_troi: ProceduralSkyMaterial = null
+var _clock_acc := CLOCK_REFRESH
+var _den_do_bong: Array[Light3D] = []
 
 
 func _ready() -> void:
@@ -95,6 +103,9 @@ func _ready() -> void:
 	_gioi_han_tam_chu()
 	_build_ribs_and_mullions()
 	_nho_mau_den()
+	var performance_manager := get_node("/root/PerformanceManager")
+	performance_manager.connect("graphics_mode_changed", _apply_graphics_quality)
+	_apply_graphics_quality(int(performance_manager.get("graphics_mode")))
 	_dung_ghe_sofa()
 	$ClockTower/Loa.add_to_group("loa_nhac")
 	_build_clocks()
@@ -106,7 +117,11 @@ func _ready() -> void:
 	t.tween_property(sun, "rotation_degrees:y", 128.0, 900.0)
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	_clock_acc += delta
+	if _clock_acc < CLOCK_REFRESH:
+		return
+	_clock_acc = fmod(_clock_acc, CLOCK_REFRESH)
 	var now := Time.get_time_dict_from_system()
 	var minute: float = now.minute + now.second / 60.0
 	var hour := fmod(now.hour, 12.0) + minute / 60.0
@@ -148,6 +163,8 @@ func _dung_ghe_sofa() -> void:
 func _nho_mau_den() -> void:
 	for d: Light3D in $AccentLights.find_children("*", "Light3D", true, false):
 		_mau_den_goc[d] = d.light_color
+		if d.shadow_enabled:
+			_den_do_bong.append(d)
 
 	var we := $WorldEnvironment as WorldEnvironment
 	_moi_truong = we.environment.duplicate(true)
@@ -160,6 +177,23 @@ func _nho_mau_den() -> void:
 	if _chat_troi != null:
 		_goc_troi_dinh = _chat_troi.sky_top_color
 		_goc_troi_chan = _chat_troi.sky_horizon_color
+
+
+## Scalability theo preset: LOD anh sang xa, cat shadow cuc bo va post-process dat tien.
+## Che do Chat luong khoi phuc dung hinh anh goc cua scene.
+func _apply_graphics_quality(mode: int) -> void:
+	var quality := mode == GRAPHICS_QUALITY
+	var performance := mode == GRAPHICS_PERFORMANCE
+	_moi_truong.ssao_enabled = quality
+	_moi_truong.glow_enabled = not performance
+	sun.directional_shadow_max_distance = 60.0 if quality else 36.0
+	for d: Light3D in $AccentLights.find_children("*", "Light3D", true, false):
+		d.distance_fade_enabled = not quality
+		d.distance_fade_begin = LIGHT_FADE_BEGIN
+		d.distance_fade_length = LIGHT_FADE_LENGTH
+		d.distance_fade_shadow = LIGHT_SHADOW_CUTOFF
+	for d in _den_do_bong:
+		d.shadow_enabled = quality
 
 
 ## Nhuom ca phong bang MOT mau tuyet doi (0xRRGGBB), hoac -1 de tra moi nguon ve mau goc.
