@@ -190,14 +190,20 @@ func _net_trang_thai(json: String) -> void:
 		het_vong.emit(_thu_tu())
 
 
+## Súng phải đọc ở `_input`: tâm ngắm là các Control nằm đúng giữa màn hình, nên chuột trái
+## có thể bị GUI đánh dấu đã xử lý trước khi tới `_unhandled_input`. Chỉ nhận lúc chuột đang
+## bị khoá vào game để không bắn xuyên qua menu Esc / menu thuế.
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT \
+			and event.pressed and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED \
+			and _co_the_ban_sung(NetManager.local_id()):
+		get_viewport().set_input_as_handled()
+		_xin_ban_sung()
+
+
 ## Người tới lượt bấm phím: tự gieo số rồi phát cho cả phòng để mọi máy diễn lại cùng một
 ## đoạn đi. Master áp luật ở cuối, xem `_ket_luot`.
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT \
-			and event.pressed and _co_the_ban_sung(NetManager.local_id()):
-		get_viewport().set_input_as_handled()
-		_xin_ban_sung()
-		return
 	var thue: Dictionary = tt.get("thue", {}) as Dictionary
 	if not thue.is_empty() and int(thue.get("chu", -1)) == NetManager.local_id():
 		if event is InputEventKey and event.pressed and not event.echo:
@@ -276,10 +282,9 @@ func _net_xin_ban_sung(id: int, json_du_lieu: String) -> void:
 	if goc.distance_to(nguoi_ban.global_position) > 22.0 or huong.length_squared() < 0.9:
 		return
 	huong = huong.normalized()
-	# Chặn gói giả hướng ngược với góc nhìn đã replicate của người bắn.
-	var huong_hop_le := -nguoi_ban.diem_cam(Vector3.ZERO).basis.z.normalized()
-	if huong.dot(huong_hop_le) < 0.9:
-		return
+	# Không so hướng này với `nhin_doc` replicate: ngay sau minigame, camera cục bộ đã trở về
+	# bàn nhưng góc nhìn trên máy master có thể còn chậm một gói mạng. Vị trí bắt đầu vẫn bị
+	# giới hạn quanh người bắn; master vẫn tự raycast, kiểm tầm và trừ đúng một khẩu trong túi.
 	var muc_tieu := _muc_tieu_sung(nguoi_ban, goc, huong)
 	var k_muc_tieu := "" if muc_tieu == null else LuatBan.khoa(muc_tieu.player_id())
 	var ket_qua := LuatBan.ban_sung(tt, LuatBan.khoa(id), k_muc_tieu,

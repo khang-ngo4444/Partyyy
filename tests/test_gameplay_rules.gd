@@ -64,6 +64,15 @@ func test_minigame_rewards_weapon_then_decreasing_gold() -> void:
 	assert_eq(int(state["tien"][LuatBan.khoa(11)]), 20)
 
 
+func test_minigame_weapon_survives_new_round_state() -> void:
+	var settings := GameplaySettings.defaults()
+	var state := LuatBan.trang_thai_moi([11, 22], {}, settings)
+	LuatBan.thuong_minigame(state, [22, 11], settings)
+
+	var next_round := LuatBan.trang_thai_moi([22, 11], state, settings)
+	assert_contains(next_round["do"][LuatBan.khoa(22)], "sung_1_phat")
+
+
 func test_one_shot_weapon_hit_miss_and_shield() -> void:
 	var settings := GameplaySettings.defaults()
 	var state := LuatBan.trang_thai_moi([11, 22], {}, settings)
