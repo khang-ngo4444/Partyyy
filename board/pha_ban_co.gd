@@ -45,6 +45,8 @@ const NGHI_GIUA_LUOT := 0.8
 const CAO_DUNG := 0.32
 ## Nhiều người cùng một ô thì đứng cách tâm ô chừng này. Ô rộng 1.4 m nên 0.45 là vừa trong mép.
 const BAN_KINH_DUNG := 0.45
+## Tầm tính từ người bắn tới mục tiêu. Tia ngắm bắt đầu ở camera để khớp đúng tâm màn hình.
+const TAM_SUNG := 18.0
 const XUC_XAC_SCENE: PackedScene = preload("res://board/xuc_xac_3d.tscn")
 
 ## Bàn party là một SCENE RIÊNG, nạp vào khi cần. Đổi bản đồ = trỏ export này sang scene khác.
@@ -191,6 +193,11 @@ func _net_trang_thai(json: String) -> void:
 ## Người tới lượt bấm phím: tự gieo số rồi phát cho cả phòng để mọi máy diễn lại cùng một
 ## đoạn đi. Master áp luật ở cuối, xem `_ket_luot`.
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT \
+			and event.pressed and _co_the_ban_sung(NetManager.local_id()):
+		get_viewport().set_input_as_handled()
+		_xin_ban_sung()
+		return
 	var thue: Dictionary = tt.get("thue", {}) as Dictionary
 	if not thue.is_empty() and int(thue.get("chu", -1)) == NetManager.local_id():
 		if event is InputEventKey and event.pressed and not event.echo:
@@ -227,6 +234,80 @@ func _den_luot_minh() -> bool:
 	if not dang_chay() or _dang_di or tam_dung or not (tt.get("thue", {}) as Dictionary).is_empty():
 		return false
 	return int(_thu_tu()[int(tt["luot"])]) == NetManager.local_id()
+
+
+func _co_the_ban_sung(id: int) -> bool:
+	if not dang_chay() or tam_dung or _dang_di or _dang_chon or tt.has("thang"):
+		return false
+	if not (tt.get("thue", {}) as Dictionary).is_empty():
+		return false
+	return (_bang("do").get(LuatBan.khoa(id), []) as Array).has("sung_1_phat")
+
+
+func _xin_ban_sung() -> void:
+	var camera := get_viewport().get_camera_3d()
+	if camera == null:
+		return
+	var goc := camera.global_position
+	var huong := -camera.global_transform.basis.z.normalized()
+	var du_lieu := JSON.stringify({
+		"goc": [goc.x, goc.y, goc.z],
+		"huong": [huong.x, huong.y, huong.z],
+	})
+	Fusion.rpc(_net_xin_ban_sung, NetManager.local_id(), du_lieu)
+
+
+@rpc("any_peer", "call_local")
+func _net_xin_ban_sung(id: int, json_du_lieu: String) -> void:
+	if not NetManager.is_master() or not _co_the_ban_sung(id):
+		return
+	var raw = JSON.parse_string(json_du_lieu)
+	if not (raw is Dictionary):
+		return
+	var goc_raw: Array = raw.get("goc", []) as Array
+	var huong_raw: Array = raw.get("huong", []) as Array
+	if goc_raw.size() != 3 or huong_raw.size() != 3:
+		return
+	var goc := Vector3(float(goc_raw[0]), float(goc_raw[1]), float(goc_raw[2]))
+	var huong := Vector3(float(huong_raw[0]), float(huong_raw[1]), float(huong_raw[2]))
+	var nguoi_ban := _nguoi(id)
+	if nguoi_ban == null or not goc.is_finite() or not huong.is_finite():
+		return
+	if goc.distance_to(nguoi_ban.global_position) > 22.0 or huong.length_squared() < 0.9:
+		return
+	huong = huong.normalized()
+	# Chặn gói giả hướng ngược với góc nhìn đã replicate của người bắn.
+	var huong_hop_le := -nguoi_ban.diem_cam(Vector3.ZERO).basis.z.normalized()
+	if huong.dot(huong_hop_le) < 0.9:
+		return
+	var muc_tieu := _muc_tieu_sung(nguoi_ban, goc, huong)
+	var k_muc_tieu := "" if muc_tieu == null else LuatBan.khoa(muc_tieu.player_id())
+	var ket_qua := LuatBan.ban_sung(tt, LuatBan.khoa(id), k_muc_tieu,
+			int(settings.get("weapon_damage", 3)))
+	if not bool(ket_qua.get("da_ban", false)):
+		return
+	var su_kien := str(ket_qua.get("su_kien", ""))
+	if muc_tieu != null:
+		su_kien += " %s" % Player.ten_theo_id(get_tree(), muc_tieu.player_id())
+		if bool(ket_qua.get("chet", false)):
+			LuatBan.chet(tt, k_muc_tieu, settings)
+			su_kien += " · hồi sinh"
+	_phat(tt, "%s: %s" % [Player.ten_theo_id(get_tree(), id), su_kien])
+
+
+func _muc_tieu_sung(nguoi_ban: Player, goc: Vector3, huong: Vector3) -> Player:
+	var q := PhysicsRayQueryParameters3D.create(goc, goc + huong * 60.0,
+			Pickable.LOP_THE_GIOI | Player.LOP_NGUOI)
+	q.exclude = [nguoi_ban.get_rid()]
+	var trung := nguoi_ban.get_world_3d().direct_space_state.intersect_ray(q)
+	if trung.is_empty():
+		return null
+	var muc_tieu := trung.get("collider") as Player
+	if muc_tieu == null or muc_tieu.player_id() == nguoi_ban.player_id():
+		return null
+	if muc_tieu.global_position.distance_to(nguoi_ban.global_position) > TAM_SUNG:
+		return null
+	return muc_tieu
 
 
 @rpc("any_peer", "call_local")
@@ -376,7 +457,8 @@ func _ket_luot(id: int, so_buoc: int) -> void:
 	if l == BanDuong.Loai.TRANG_BI:
 		var mon := "khien" if _rng.randi() % 3 == 0 else "sung_1_phat"
 		LuatBan.them_do(tt, k, mon)
-		su = "+%s" % LuatBan.TEN_DO[mon]
+		su = ("+Khiên · tự động chặn một đòn" if mon == "khien"
+				else "+Súng một phát · chuột trái để bắn")
 	_sang_luot(id, _noi_su_kien(su, checkpoint))
 
 

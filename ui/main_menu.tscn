@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://ui/main_menu.gd" id="1_menu"]
 [ext_resource type="Theme" path="res://ui/main_menu_theme.tres" id="2_theme"]
 [ext_resource type="AudioStream" path="res://asset/kenney_interface-sounds/Audio/click_003.ogg" id="4_click"]
 [ext_resource type="PackedScene" path="res://ui/character_creator.tscn" id="5_creator"]
+[ext_resource type="Script" path="res://ui/how_to_guide.gd" id="6_howto"]
 
 [sub_resource type="StyleBoxFlat" id="DockPanel"]
 bg_color = Color(0.006, 0.027, 0.037, 0.64)
@@ -660,6 +661,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.003, 0.015, 0.022, 0.72)
+script = ExtResource("6_howto")
 
 [node name="Center" type="CenterContainer" parent="HowToOverlay"]
 layout_mode = 1
@@ -670,7 +672,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="PanelContainer" parent="HowToOverlay/Center"]
-custom_minimum_size = Vector2(560, 0)
+custom_minimum_size = Vector2(980, 620)
 layout_mode = 2
 theme_override_styles/panel = SubResource("SettingsPanel")
 
@@ -692,16 +694,68 @@ text = "CÁCH CHƠI"
 [node name="Divider" type="HSeparator" parent="HowToOverlay/Center/Panel/VBox"]
 layout_mode = 2
 
-[node name="Guide" type="RichTextLabel" parent="HowToOverlay/Center/Panel/VBox"]
-custom_minimum_size = Vector2(496, 260)
+[node name="Pages" type="HBoxContainer" parent="HowToOverlay/Center/Panel/VBox"]
 layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="HowToPageList" type="ItemList" parent="HowToOverlay/Center/Panel/VBox/Pages"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(265, 440)
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+allow_reselect = true
+
+[node name="Separator" type="VSeparator" parent="HowToOverlay/Center/Panel/VBox/Pages"]
+layout_mode = 2
+
+[node name="Page" type="VBoxContainer" parent="HowToOverlay/Center/Panel/VBox/Pages"]
+custom_minimum_size = Vector2(625, 440)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="HowToPageTitle" type="Label" parent="HowToOverlay/Center/Panel/VBox/Pages/Page"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.69, 0.93, 0.87, 1)
+theme_override_font_sizes/font_size = 22
+text = "Mục tiêu ván chơi"
+
+[node name="HowToPageBody" type="RichTextLabel" parent="HowToOverlay/Center/Panel/VBox/Pages/Page"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(625, 350)
+layout_mode = 2
+size_flags_vertical = 3
 theme_override_colors/default_color = Color(0.83, 0.90, 0.89, 0.90)
 theme_override_font_sizes/normal_font_size = 14
 theme_override_font_sizes/bold_font_size = 14
 bbcode_enabled = true
-text = "[color=#8fe7d4]01  TẠO PHÒNG[/color]\nChủ phòng chọn tỷ lệ ô, máu, vàng, thuế, checkpoint và phần thưởng rồi mới mở sảnh.\n\n[color=#8fe7d4]02  BÀN PARTY[/color]\nTới lượt mình: tung xúc xắc và chọn đường. Đất chưa có chủ sẽ mang tên bạn; khi người khác ghé, bạn chọn thuế bằng phím 1–4.\n\n[color=#8fe7d4]03  MINIGAME[/color]\nCuối mỗi vòng, cả phòng vào một minigame ngẫu nhiên. Hạng 1 nhận vũ khí; xếp hạng cũng là thứ tự lượt vòng sau.\n\n[color=#8fe7d4]MỤC TIÊU[/color]\nTích đủ vàng, tìm 1 rương thật trong 4 rương và trả phí mở để chiến thắng."
-fit_content = true
-scroll_active = false
+scroll_active = true
+
+[node name="Navigation" type="HBoxContainer" parent="HowToOverlay/Center/Panel/VBox/Pages/Page"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HowToPrevBtn" type="Button" parent="HowToOverlay/Center/Panel/VBox/Pages/Page/Navigation"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 36)
+layout_mode = 2
+text = "‹  TRANG TRƯỚC"
+
+[node name="HowToPageCounter" type="Label" parent="HowToOverlay/Center/Panel/VBox/Pages/Page/Navigation"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "1 / 20"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HowToNextBtn" type="Button" parent="HowToOverlay/Center/Panel/VBox/Pages/Page/Navigation"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 36)
+layout_mode = 2
+text = "TRANG SAU  ›"
 
 [node name="HowToCloseBtn" type="Button" parent="HowToOverlay/Center/Panel/VBox"]
 unique_name_in_owner = true

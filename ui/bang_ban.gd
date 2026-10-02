@@ -73,7 +73,9 @@ func _mot_dong(tt: Dictionary, id: int, id_luot: int) -> String:
 	var tui: Array = _bang_cua(tt, "do").get(k, [])
 	var ten_do := PackedStringArray()
 	for i in tui.size():
-		ten_do.append("[%d] %s" % [i + 1, LuatBan.TEN_DO.get(str(tui[i]), str(tui[i]))])
+		var mon := str(tui[i])
+		var cach_dung := " · tự chặn 1 đòn" if mon == "khien" else " · chuột trái bắn"
+		ten_do.append("[%d] %s%s" % [i + 1, LuatBan.TEN_DO.get(mon, mon), cach_dung])
 	var so_dat := 0
 	for chu in _bang_cua(tt, "chu_dat").values():
 		if int(chu) == id:
