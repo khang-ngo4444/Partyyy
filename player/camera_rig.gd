@@ -57,6 +57,13 @@ extends Node3D
 @export var cui_ban_deg := -48.0
 @export var fov_ban := 65.0
 
+## Góc ngắm súng trên bàn: dán camera vào mắt để tâm màn hình trùng chính xác với tia bắn.
+## Khi súng một phát bị tiêu, `PhaBanCo` gọi lại và camera tự trả về góc tổng quan của bàn.
+@export var lui_ngam := 0.0
+@export var cao_ngam := 0.0
+@export var cui_ngam_deg := -8.0
+@export var fov_ngam := 72.0
+
 var _body: Node3D = null
 ## Độ cao mắt, FOV, khoảng lùi lúc đứng — đọc từ scene lúc khởi động, không chép cứng số ở đây.
 var _mat_dung := 0.0
@@ -64,6 +71,7 @@ var _fov_dung := 0.0
 var _lui_dung := 0.0
 var _cao_dung := 0.0
 var _ban_co := false
+var _ngam_sung := false
 var _tween: Tween = null
 
 
@@ -129,14 +137,34 @@ func set_ban_co(bat: bool) -> void:
 	if _ban_co == bat:
 		return
 	_ban_co = bat
+	if not bat:
+		_ngam_sung = false
+	_chuyen_camera_ban()
+
+
+## Bật góc nhìn thứ nhất khi có súng. Chỉ có hiệu lực trong pha bàn cờ.
+func set_ngam_sung(bat: bool) -> void:
+	var moi := bat and _ban_co
+	if _ngam_sung == moi:
+		return
+	_ngam_sung = moi
+	_chuyen_camera_ban()
+
+
+func _chuyen_camera_ban() -> void:
 	if _tween != null:
 		_tween.kill()
 	_tween = create_tween().set_parallel(true)
-	_tween.tween_property(self, "lui_xa", lui_ban if bat else _lui_dung, 0.5)
-	_tween.tween_property(self, "nang_cao", cao_ban if bat else _cao_dung, 0.5)
-	_tween.tween_property(camera, "fov", fov_ban if bat else _fov_dung, 0.5)
-	if bat:
-		_tween.tween_property(self, "rotation:x", deg_to_rad(cui_ban_deg), 0.5)
+	var lui := lui_ngam if _ngam_sung else (lui_ban if _ban_co else _lui_dung)
+	var cao := cao_ngam if _ngam_sung else (cao_ban if _ban_co else _cao_dung)
+	var fov := fov_ngam if _ngam_sung else (fov_ban if _ban_co else _fov_dung)
+	var thoi_gian := 0.3 if _ngam_sung else 0.5
+	_tween.tween_property(self, "lui_xa", lui, thoi_gian)
+	_tween.tween_property(self, "nang_cao", cao, thoi_gian)
+	_tween.tween_property(camera, "fov", fov, thoi_gian)
+	if _ban_co:
+		var goc := cui_ngam_deg if _ngam_sung else cui_ban_deg
+		_tween.tween_property(self, "rotation:x", deg_to_rad(goc), thoi_gian)
 
 
 ## Dùng _input chứ không phải _unhandled_input: khi chuột đang bị khoá thì việc nhìn quanh

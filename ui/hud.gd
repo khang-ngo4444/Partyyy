@@ -26,6 +26,7 @@ var _local_player: Player = null
 @onready var luc_nen: ColorRect = %LucNem
 @onready var luc_muc: ColorRect = %LucNemMuc
 @onready var bang_ban: VBoxContainer = $BangBan
+@onready var trang_thai_ca_nhan: PanelContainer = $TrangThaiCaNhan
 @onready var chat := $Chat
 @onready var bang_thang: Control = $BangThang
 @onready var performance_manager: Node = get_node("/root/PerformanceManager")
@@ -207,6 +208,7 @@ func _nhac_poker() -> void:
 ## vào đây, HUD chuyển tiếp cho bảng của nó — main.gd không với sâu vào cây con của HUD.
 func cap_nhat_ban(tt: Dictionary) -> void:
 	bang_ban.cap_nhat(tt)
+	trang_thai_ca_nhan.cap_nhat(tt)
 
 
 func cap_nhat_chon_huong(noi_dung: String) -> void:

@@ -74,7 +74,7 @@ const PAGES := [
 		"body": "[color=%s][b]NHẬN TRANG BỊ[/b][/color]\n" % ACCENT
 				+ "Dừng trên ô Trang bị sẽ tự nhận ngẫu nhiên một món: khoảng 1/3 là Khiên và 2/3 là Súng một phát. Không cần click vào ô để nhặt.\n\n"
 				+ "[b]Khiên[/b] — bị động, tự chặn trọn một lần mất máu rồi biến mất. Chuột trái không dùng Khiên.\n\n"
-				+ "[b]Súng một phát[/b] — ngắm bằng tâm màn hình và bấm chuột trái. Tầm 18 m, gây 3 sát thương. Bắn trúng hay trượt đều tiêu súng.\n\n"
+				+ "[b]Súng một phát[/b] — khi nhận súng, camera tự chuyển sang góc nhìn thứ nhất. Ngắm bằng tâm màn hình và bấm chuột trái. Tầm 35 m, gây 3 sát thương. Bắn trúng hay trượt đều tiêu súng.\n\n"
 				+ "Có thể bắn khi bàn đang đứng yên; không thể bắn trong lúc quân đang di chuyển, đang chọn đường hoặc khi minigame đang phủ lên bàn."
 	},
 	{
