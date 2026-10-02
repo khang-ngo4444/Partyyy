@@ -69,6 +69,10 @@ var _so_dang_tung := 0
 var _cac_duong: Array[PackedInt32Array] = []
 var _lua_chon := 0
 var _thue_token := 0
+## Góc ngắm là trạng thái CỤC BỘ, không thể suy ra đơn giản bằng "còn súng trong túi": nếu
+## có hai khẩu thì bắn một khẩu xong vẫn còn đồ, nhưng camera vẫn phải trở về góc thứ ba.
+var _dang_ngam_sung_cuc_bo := false
+var _so_sung_truoc := 0
 ## Xúc xắc là vật thể trình diễn cục bộ, gắn vào camera hiện hành. Kết quả vẫn tới từ cùng
 ## RPC `_net_tung`, vì vậy mọi máy hiển thị đúng một con số và không thêm trạng thái mạng.
 var _xuc_xac: Node3D = null
@@ -137,6 +141,8 @@ func dong() -> void:
 	_id_dang_tung = -1
 	_so_dang_tung = 0
 	_cac_duong.clear()
+	_dang_ngam_sung_cuc_bo = false
+	_so_sung_truoc = 0
 	chon_huong_doi.emit("")
 	tam_dung = false                    # đóng rồi thì không còn lớp nào che nữa
 	_che_do_ban_co(false)
@@ -166,6 +172,7 @@ func _net_trang_thai(json: String) -> void:
 	if not (g is Dictionary):
 		return
 	tt = g
+	_cap_nhat_trang_thai_ngam_sung()
 	if not dang_chay():
 		return
 	_bao_dam_co_ban()
@@ -264,7 +271,32 @@ func _xin_ban_sung() -> void:
 		"goc": [goc.x, goc.y, goc.z],
 		"huong": [huong.x, huong.y, huong.z],
 	})
+	# Phát súng một lần là kết thúc ngắm ngay trên máy người bắn. Không đợi một vòng RPC,
+	# và cũng không bật lại nếu trong túi còn khẩu thứ hai.
+	_dat_ngam_sung_cuc_bo(false)
 	Fusion.rpc(_net_xin_ban_sung, NetManager.local_id(), du_lieu)
+
+
+func _cap_nhat_trang_thai_ngam_sung() -> void:
+	var tui: Array = _bang("do").get(LuatBan.khoa(NetManager.local_id()), []) as Array
+	var so_sung := tui.count("sung_1_phat")
+	if so_sung > _so_sung_truoc:
+		_dang_ngam_sung_cuc_bo = true
+	elif so_sung < _so_sung_truoc or so_sung == 0:
+		_dang_ngam_sung_cuc_bo = false
+	_so_sung_truoc = so_sung
+	_ap_ngam_sung_cuc_bo()
+
+
+func _dat_ngam_sung_cuc_bo(bat: bool) -> void:
+	_dang_ngam_sung_cuc_bo = bat
+	_ap_ngam_sung_cuc_bo()
+
+
+func _ap_ngam_sung_cuc_bo() -> void:
+	for p: Player in get_tree().get_nodes_in_group("players"):
+		if p.is_mine and p.rig != null and is_instance_valid(p.rig):
+			p.rig.set_ngam_sung(dang_chay() and not tam_dung and _dang_ngam_sung_cuc_bo)
 
 
 @rpc("any_peer", "call_local")
@@ -758,4 +790,4 @@ func _che_do_ban_co(bat: bool) -> void:
 			p.rig.set_ban_co(bat)
 			# Chỉ camera của người sở hữu đổi sang góc ngắm. Máy khác không có rig này,
 			# và trạng thái túi được tra bằng local_id nên không thể hiện góc ngắm của đối thủ.
-			p.rig.set_ngam_sung(bat and _co_sung_trong_tui(NetManager.local_id()))
+			p.rig.set_ngam_sung(bat and _dang_ngam_sung_cuc_bo)
