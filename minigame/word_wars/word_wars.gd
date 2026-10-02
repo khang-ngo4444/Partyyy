@@ -1,15 +1,17 @@
 extends MiniGame3D
 
-## WORD WARS — mỗi người một từ hiện trên đầu, chạy tới ô chữ trên sàn và bấm E để gõ từng chữ.
+## WORD WARS — cả phòng gõ CÙNG một chuỗi từ tiếng Anh: từ hiện trên đầu, chạy tới ô chữ trên sàn
+## và bấm E để gõ từng chữ. Ai gõ nhanh hơn thì đi trước trong chuỗi.
 ##
 ## Khuôn T3. Sàn là 26 ô A–Z đặt sẵn trong `san_chu.tscn` (lưới 6 cột như bàn phím trải dưới
 ## đất). Gõ xong một từ thì được một điểm và nhận từ mới. Hết giờ, ai nhiều từ nhất đứng đầu.
 ##
 ## ## Từ của mỗi người là hàm thuần — không gói tin nào để phát từ
 ##
-## `tu_cua(hat_giong, id, so_tu_xong)` cho ra từ đang gõ của một người. Mọi máy biết cả ba
-## tham số (điểm được cộng qua `_net_tien`), nên mọi máy hiện đúng chữ trên đầu từng người mà
-## không ai phải gửi "từ của tôi là gì".
+## `tu_cua(hat_giong, so_tu_xong)` cho ra từ đang gõ. Chuỗi từ CHUNG cho cả phòng (không phụ
+## thuộc người): ai cũng gặp đúng những từ đó theo đúng thứ tự, nên thắng là do tay chứ không do
+## bốc được từ dễ. Mọi máy biết số từ đã xong của từng người (qua `_net_tien`), nên hiện đúng
+## chữ trên đầu mỗi người mà không ai phải gửi "từ của tôi là gì".
 ##
 ## ## Một gói cho mỗi chữ ĐÚNG
 ##
@@ -20,23 +22,23 @@ extends MiniGame3D
 ##
 ## ## Đánh nhau
 ##
-## Ô chữ là của chung, nên chen nhau là chuyện tự nhiên: F đánh (đòn chung của `MiniGame3D`,
-## bật `co_danh` trong `word_wars.tscn`) hất người ta khỏi ô họ đang cần và làm họ CHOÁNG
-## `GIAY_CHOANG` giây không gõ được. Tiến độ không mất — mất chữ vì bị đánh là quá gắt.
+## Ô chữ là của chung, nên chen nhau là chuyện tự nhiên. Hai đòn chung của `MiniGame3D` (bật
+## `co_danh` trong `word_wars.tscn`): F ĐÁNH làm người ta choáng — đứng sững, không gõ được; G
+## CHƯỞNG hất người ta khỏi ô họ đang cần. Tiến độ không mất — mất chữ vì bị đánh là quá gắt.
 
 ## Nút gõ. Trong sân không có gì để nhặt nên phím này rảnh.
 const NUT_GO := "interact"
 ## Nghỉ giữa hai lần gõ, giây. Chặn giữ phím E rồi lướt qua các ô.
 const NGHI_GO := 0.15
-## Bị đánh trúng thì không gõ được chừng này giây.
-const GIAY_CHOANG := 1.0
 ## Kẹp người chơi trong bán kính này — sàn 11,5. Trò không chết vì rơi, nên cú đánh không được
 ## hất ai ra khỏi sàn.
 const BAN_KINH_GIU := 11.0
 
-const TU := ["NHA", "CUA", "BAN", "MEO", "CHO", "HOA", "CAY", "SAO", "MUA", "GIO",
-		"NUI", "TRE", "COM", "PHO", "BIEN", "SONG", "BANH", "CHAM", "XANH", "TRANG",
-		"VUI", "KHOE", "QUAT", "DEN", "MAY"]
+## Từ tiếng Anh 3–6 chữ, chỉ chữ cái A–Z (khớp 26 ô trên sàn).
+const TU := ["CAT", "DOG", "SUN", "FOX", "BOX", "JAM", "KEY", "ZIP", "MOON", "STAR",
+		"FISH", "JUMP", "QUIZ", "WAVE", "BIKE", "GOLD", "FROG", "HAPPY", "PARTY", "PIZZA",
+		"ROBOT", "MAGIC", "QUEEN", "ZEBRA", "CROWN", "GHOST", "LEMON", "TIGER", "PLANET",
+		"BRIDGE", "WIZARD", "JUNGLE", "ROCKET", "CASTLE", "DRAGON", "PUZZLE"]
 
 ## Chữ trên đầu của chính mình tô màu này, người khác màu trắng — nhìn sân đông là thấy ngay
 ## mình ở đâu.
@@ -52,7 +54,6 @@ var _tien: Dictionary = {}
 ## player_id -> Label3D trên đầu người đó. Nhãn là con của Player, phải tự gỡ khi xong ván.
 var _nhan: Dictionary = {}
 var _go_luc := -99.0
-var _choang_toi := -99.0
 
 
 func _ready() -> void:
@@ -67,7 +68,6 @@ func _dung_san() -> void:
 	_diem.clear()
 	_tien.clear()
 	_go_luc = -99.0
-	_choang_toi = -99.0
 	for id in _song:
 		_diem[int(id)] = 0
 		_tien[int(id)] = 0
@@ -93,7 +93,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	super(event)
 	if not _chay or not event.is_action_pressed(NUT_GO):
 		return
-	if gio() - _go_luc < NGHI_GO or gio() < _choang_toi:
+	if gio() - _go_luc < NGHI_GO or dang_choang():
 		return
 	var id := NetManager.local_id()
 	var p := _nguoi(id)
@@ -124,13 +124,8 @@ func _net_tien(id: int, tien: int) -> void:
 		_tien[id] = tien
 
 
-func _khi_bi_danh(_ke_danh: int, nan: int) -> void:
-	if nan == NetManager.local_id():
-		_choang_toi = gio() + GIAY_CHOANG
-
-
 func tu_hien_tai(id: int) -> String:
-	return tu_cua(hat_giong, id, int(_diem.get(id, 0)))
+	return tu_cua(hat_giong, int(_diem.get(id, 0)))
 
 
 ## Ô chữ đang ở dưới chân người này, null nếu không đứng trên ô nào.
@@ -172,7 +167,18 @@ func _go_nhan() -> void:
 		p.name_tag.visible = not p.is_mine
 
 
-# ───────────────────────── xếp hạng theo số từ ─────────────────────────
+# ───────────────────────── ô điểm + xếp hạng theo số từ ─────────────────────────
+
+## Số từ đã gõ xong, cộng phần lẻ của từ đang gõ — để hai người cùng số từ vẫn xếp được.
+func diem_cua(id: int) -> float:
+	if not _diem.has(id):
+		return NAN
+	var tu := tu_hien_tai(id)
+	return float(_diem[id]) + float(_tien.get(id, 0)) / float(maxi(tu.length(), 1))
+
+
+func chu_diem(id: int) -> String:
+	return "%d từ" % int(_diem[id]) if _diem.has(id) else ""
 
 func _chot_ket_qua() -> void:
 	_chay = false
@@ -194,12 +200,21 @@ func _toi_thua() -> bool:
 
 # ───────────────────────── luật: hàm thuần ─────────────────────────
 
-## Từ thứ `so_xong` của người `id` trong ván có hạt giống `giong`. Mỗi người một chuỗi từ
-## riêng, nhưng ai cũng tính ra được chuỗi của người khác.
-static func tu_cua(giong: int, id: int, so_xong: int) -> String:
+## Từ thứ `so_xong` của ván có hạt giống `giong` — CHUNG cho cả phòng. Hai từ liền nhau không
+## trùng nhau (bốc lại nếu trùng), không thì gõ xong một từ lại gặp y nó.
+static func tu_cua(giong: int, so_xong: int) -> String:
 	var rng := RandomNumberGenerator.new()
-	rng.seed = hash([giong, id, so_xong])
-	return TU[rng.randi() % TU.size()]
+	rng.seed = hash([giong, so_xong])
+	var k := rng.randi() % TU.size()
+	if so_xong > 0:
+		var truoc := tu_cua_chi_so(giong, so_xong - 1)
+		while k == truoc:
+			k = rng.randi() % TU.size()
+	return TU[k]
+
+
+static func tu_cua_chi_so(giong: int, so_xong: int) -> int:
+	return TU.find(tu_cua(giong, so_xong))
 
 
 ## Chữ hiện trên đầu: chữ đã gõ thành `•`, nên chữ ĐẦU TIÊN còn thấy là chữ phải gõ kế tiếp.

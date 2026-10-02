@@ -47,3 +47,18 @@ func bat_dau(_nguoi_choi: Array, _hat_giong: int) -> void:
 ## Dừng giữa chừng (có người thoát phòng, master huỷ ván). Lớp con dọn dẹp nếu cần.
 func dung_som() -> void:
 	pass
+
+
+# ───────────────────── ô điểm chung (QuanTroMiniGame vẽ ở đáy màn hình) ─────────────────────
+
+## Điểm của một người, chỉ để SẮP XẾP ô điểm. `NAN` = trò này không có ô điểm (Tank).
+##
+## Trò sinh tồn (MiniGame3D mặc định): giây sống + thưởng sống cuối. Trò tích điểm (Crown, Word
+## Wars...) ghi đè bằng con số của mình. Bảng xếp hạng cuối ván vẫn là việc của `xong()`.
+func diem_cua(_id: int) -> float:
+	return NAN
+
+
+## Chữ hiện trong ô điểm của một người. Mặc định là `diem_cua` làm tròn.
+func chu_diem(id: int) -> String:
+	return "%.0f" % diem_cua(id)

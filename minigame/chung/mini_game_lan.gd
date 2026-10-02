@@ -134,6 +134,17 @@ func ghi_quang_duong() -> void:
 			_xa_nhat[id] = maxf(float(_xa_nhat[id]), quang_duong(p))
 
 
+## Ô điểm: mét xa nhất đã tới trên làn. ✓ = đã rời cuộc (về đích ở Slippery, trúng đá ở Sidestep).
+func diem_cua(id: int) -> float:
+	return float(_xa_nhat[id]) if _xa_nhat.has(id) else NAN
+
+
+func chu_diem(id: int) -> String:
+	if not _xa_nhat.has(id):
+		return ""
+	return "%.0f m%s" % [float(_xa_nhat[id]), "" if con_song(id) else " ✓"]
+
+
 ## Xếp hạng theo quãng đường đi được, xa hơn thì trên.
 func _chot_ket_qua() -> void:
 	_chay = false

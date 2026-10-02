@@ -50,11 +50,8 @@ const CAO_DOI := 2.2
 ## Miện nằm dưới đất ở độ cao này khi chưa ai nhặt.
 const CAO_NAM := 0.8
 
-@onready var _bang: Label = $Lop/Bang
-
 var _mien: Node3D = null
 var _vung: Area3D = null
-var _diem_3d: Label3D = null
 var _vong: Node3D = null
 
 ## Ai đang giữ. 0 = miện đang nằm đất. Chỉ đổi qua `_net_giu`.
@@ -73,7 +70,7 @@ var _ban_kinh := 11.5
 func _ready() -> void:
 	super()
 	ten = "CROWN CAPTURE"
-	luat = "WASD chạy · F đánh · đánh trúng người đội miện thì miện rơi · giữ lâu thì thắng"
+	luat = "WASD chạy · F đánh (choáng) · G chưởng (hất) · trúng người đội miện thì miện rơi"
 	giay_van = 60.0
 
 
@@ -83,7 +80,6 @@ func _dung_san() -> void:
 		push_error("Crown: san thieu node Mien")
 		return
 	_vung = _mien.get_node("Vung") as Area3D
-	_diem_3d = _mien.get_node("Diem") as Label3D
 	_vong = _mien.get_node("VongNhat") as Node3D
 	_ai_giu = 0
 	_cho_nam = Vector3(0.0, CAO_NAM, 0.0)
@@ -91,7 +87,6 @@ func _dung_san() -> void:
 	_diem.clear()
 	for id in _song:
 		_diem[int(id)] = 0.0
-	$Lop.visible = true
 	var bon := san.get_node_or_null("SanTron") as Node3D
 	var m := bon.get_node_or_null("Mat") as MeshInstance3D if bon != null else null
 	var cyl := m.mesh as CylinderMesh if m != null else null
@@ -100,7 +95,6 @@ func _dung_san() -> void:
 
 
 func dung_som() -> void:
-	$Lop.visible = false
 	super()
 
 
@@ -113,16 +107,13 @@ func _luat_moi_nhip() -> void:
 		# Cộng theo `_delta` của khung hình chứ không phải hiệu hai lần đọc đồng hồ: khung hình
 		# đầu tiên sau khi đổi chủ sẽ cộng nhầm cả quãng vừa rồi cho người mới.
 		_diem[_ai_giu] = float(_diem.get(_ai_giu, 0.0)) + get_process_delta_time()
-		_diem_3d.text = "%.0f" % float(_diem[_ai_giu])
 	else:
 		# Nằm ĐÚNG chỗ rơi, không về giữa sân: chỗ rơi là thông tin, và kéo nó về tâm là xoá đi
 		# khoảnh khắc giành nhau mà cú đòn vừa tạo ra.
 		_mien.position = _cho_nam
-		_diem_3d.text = "?"
 	# Vòng tầm nhặt chỉ hiện khi miện nằm đất VÀ đã hết nghỉ — nó trả lời đúng câu "chạy vào đây
 	# lúc này có nhặt được không". Đội trên đầu thì vòng vô nghĩa.
 	_vong.visible = _ai_giu == 0 and gio() >= _cho_toi
-	_ve_bang()
 
 	if not con_song(NetManager.local_id()):
 		return
@@ -140,21 +131,18 @@ func _luat_moi_nhip() -> void:
 		Fusion.rpc(_xin_cuop, NetManager.local_id())
 
 
-## Bảng điểm của CẢ PHÒNG, không chỉ người đang giữ.
+## Ô điểm chung ở đáy màn hình (`QuanTroMiniGame`): giây đã đội miện, và ♛ cho người đang đội.
 ##
-## Thiếu nó thì người chơi không biết mình đang thứ mấy, và cả phần "cuối ván ai cũng xông vào
-## người dẫn điểm" không xảy ra được — không ai biết ai đang dẫn.
-func _ve_bang() -> void:
-	var ids: Array = []
-	for id in _diem:
-		ids.append(int(id))
-	ids.sort_custom(func(a: int, b: int) -> bool: return float(_diem[a]) > float(_diem[b]))
-	var dong := PackedStringArray()
-	for i in ids.size():
-		var id: int = ids[i]
-		var dau := "♛ " if id == _ai_giu else "   "
-		dong.append("%s%-12s %5.1f s" % [dau, Player.ten_theo_id(get_tree(), id), float(_diem[id])])
-	_bang.text = "\n".join(dong)
+## Thay cho số chạy trên đầu quả miện + bảng góc phải của bản trước: số trên đầu chỉ cho biết điểm
+## của MỘT người, nên không ai biết mình đang thứ mấy.
+func diem_cua(id: int) -> float:
+	return float(_diem[id]) if _diem.has(id) else NAN
+
+
+func chu_diem(id: int) -> String:
+	if not _diem.has(id):
+		return ""
+	return "%s%.1f s" % ["♛ " if id == _ai_giu else "", float(_diem[id])]
 
 
 ## Trò này cố ý KHÔNG cho ai chết: thắng thua chỉ do tổng giây đội miện. Vị trí bị kẹp trong
@@ -163,8 +151,9 @@ func _toi_thua() -> bool:
 	return false
 
 
-## Đánh trúng người đang đội miện: xin master cho miện rơi. Master tự phán theo `_ai_giu` của nó.
-func _khi_bi_danh(_ke_danh: int, nan: int) -> void:
+## Trúng ĐÁNH hay CHƯỞNG đều làm người đang đội miện đánh rơi miện. Master tự phán theo
+## `_ai_giu` của nó.
+func _khi_bi_danh(_ke_danh: int, nan: int, _loai: int) -> void:
 	if NetManager.is_master() and nan == _ai_giu:
 		_xin_roi(nan)
 

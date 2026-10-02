@@ -37,25 +37,41 @@ const CAO_SAN := 300.0
 ## Rơi thấp hơn mặt sân chừng này thì coi như đã rơi khỏi sàn.
 const ROI_KHOI_SAN := 8.0
 
-## ĐÁNH tay không (phím F, action `danh`) — trò nào cần thì bật trong `.tscn`. Trúng thì nạn
-## nhân bị hất; lớp con nghe `_khi_bi_danh()` để thêm luật riêng (rơi vương miện, choáng...).
+## HAI đòn tay không — trò nào cần thì bật `co_danh` trong `.tscn`. Lớp con nghe `_khi_bi_danh()`
+## để thêm luật riêng (rơi vương miện...).
+##
+##   - ĐÁNH (F, action `danh`): tầm NGẮN, nạn nhân bị CHOÁNG — đứng sững, không đi, không nhảy —
+##     nhưng không bị hất. Dùng để giữ chân người ta tại chỗ.
+##   - CHƯỞNG (G, action `chuong`): tầm xa hơn, HẤT nạn nhân văng ra, không choáng. Nghỉ lâu hơn.
+##
+## Tầm tính từ TÂM người đánh tới TÂM nạn nhân. Hai thân người (bán kính 0,4) chạm nhau đã cách
+## 0,8 m, nên tầm đánh 1,7 m là "sát người, chìa tay ra là tới"; chưởng 2,8 m là "cách một bước".
 const NUT_DANH := "danh"
-## Tầm đánh, mét, tính từ tâm người đánh.
-const TAM_DANH := 1.8
-## Nạn nhân phải nằm PHÍA TRƯỚC: tích vô hướng giữa hướng mặt và hướng tới họ phải lớn hơn
-## số này (0,35 ≈ nón 140°). Không có điều kiện này thì quay lưng vẫn đánh trúng.
-const GOC_DANH := 0.35
-## Nghỉ giữa hai cú đánh, giây. Không có thì giữ phím là hất liên hoàn không ai đứng nổi.
-const NGHI_DANH := 0.6
-## Bị đánh thì bị hất mạnh cỡ nào — ngang và dốc lên.
-const DANH_NGANG := 9.0
-const DANH_LEN := 3.5
+const NUT_CHUONG := "chuong"
+enum { DON_DANH, DON_CHUONG }
+const TAM_DON := [1.7, 2.8]
+## Nạn nhân phải nằm PHÍA TRƯỚC: tích vô hướng giữa hướng mặt và hướng tới họ lớn hơn số này.
+## Đánh 0,2 (≈ nón 155°, đứng sát thì hơi lệch mặt vẫn trúng), chưởng 0,5 (nón 120°, phải nhắm).
+const GOC_DON := [0.2, 0.5]
+## Nghỉ giữa hai đòn CÙNG LOẠI, giây.
+const NGHI_DON := [0.55, 1.1]
+## Choáng bao lâu khi trúng ĐÁNH.
+const GIAY_CHOANG := 0.9
+## Trúng CHƯỞNG bị hất mạnh cỡ nào — ngang và dốc lên.
+const CHUONG_NGANG := 10.0
+const CHUONG_LEN := 3.5
+## Nhân vật trong sân to hơn ở phòng chờ chừng này lần — CHỈ hình, không đổi thân va chạm, nên
+## không đổi luật trò nào. Camera sân đứng xa hơn camera người chơi nhiều, nhân vật cỡ thường
+## nhìn như hạt gạo.
+const TO_HON := 1.3
+## Sống tới cuối ván (hoặc còn sống lúc hết giờ) được cộng thêm chừng này điểm.
+const THUONG_SONG_CUOI := 10.0
 
 ## Scene sân của trò này. Lớp con trỏ export này sang scene của nó trong `.tscn`.
 @export var san_scene: PackedScene = null
 ## Ván dài bao lâu. 0 = không giới hạn, chạy tới khi còn một người.
 @export var giay_van := 60.0
-## Bật đòn đánh tay không (xem `NUT_DANH`).
+## Bật hai đòn tay không (xem `NUT_DANH` / `NUT_CHUONG`).
 @export var co_danh := false
 
 var san: Node3D = null
@@ -72,7 +88,14 @@ var _khoa_cu := false
 var _bat_dau_luc := 0.0
 var _chay := false
 var _rng := RandomNumberGenerator.new()
-var _danh_luc := -99.0
+## `gio()` lúc ra đòn gần nhất, theo loại đòn.
+var _don_luc := [-99.0, -99.0]
+## Nhân vật CỦA MÁY NÀY bị choáng tới `gio()` này.
+var _choang_toi := -99.0
+var _dang_choang := false
+## Đã chốt bảng — điểm sinh tồn cộng thưởng sống cuối từ lúc này.
+var _da_chot := false
+var _het_luc := 0.0
 
 
 func _ready() -> void:
@@ -149,6 +172,8 @@ func so_con_song() -> int:
 func _process(_delta: float) -> void:
 	if not _chay:
 		return
+	if co_danh:
+		_nhip_choang()
 	_luat_moi_nhip()
 	if con_song(NetManager.local_id()) and _toi_thua():
 		xin_chet()
@@ -182,62 +207,87 @@ func _toi_thua() -> bool:
 
 ## Lớp con ghi đè `_unhandled_input` thì PHẢI gọi `super(event)`, không thì phím đánh chết.
 func _unhandled_input(event: InputEvent) -> void:
-	if not co_danh or not _chay or not event.is_action_pressed(NUT_DANH):
+	if not co_danh or not _chay:
 		return
-	if gio() - _danh_luc < NGHI_DANH:
+	var loai := -1
+	if event.is_action_pressed(NUT_DANH):
+		loai = DON_DANH
+	elif event.is_action_pressed(NUT_CHUONG):
+		loai = DON_CHUONG
+	if loai < 0 or gio() - float(_don_luc[loai]) < float(NGHI_DON[loai]) or dang_choang():
 		return
 	var toi := _nguoi(NetManager.local_id())
 	if toi == null or not con_song(NetManager.local_id()):
 		return
 	get_viewport().set_input_as_handled()
-	_danh_luc = gio()
-	var nan := tim_nan(toi)
+	_don_luc[loai] = gio()
+	var nan := tim_nan(toi, loai)
 	if nan == null:
 		return
 	var huong := nan.global_position - toi.global_position
 	huong.y = 0.0
-	Fusion.rpc(_net_danh, NetManager.local_id(), nan.player_id(), huong.normalized())
+	Fusion.rpc(_net_danh, NetManager.local_id(), nan.player_id(), huong.normalized(), loai)
 
 
-## Người gần nhất trong tầm, phía trước mặt `toi`, còn sống. Null nếu đánh vào không khí.
+## Người gần nhất trong tầm của đòn `loai`, phía trước mặt `toi`, còn sống. Null nếu trượt.
 ##
 ## Máy NGƯỜI ĐÁNH phán trúng hay trượt theo vị trí replicator đã gửi — trễ vài chục ms, chấp
 ## nhận được cho một trò party. Có trọng tài thì phải đợi một vòng gói tin mới thấy đòn ăn.
-func tim_nan(toi: Player) -> Player:
+func tim_nan(toi: Player, loai: int) -> Player:
 	var truoc := -toi.global_basis.z
 	truoc.y = 0.0
 	truoc = truoc.normalized()
 	var gan: Player = null
-	var gan_nhat := TAM_DANH
+	var gan_nhat: float = TAM_DON[loai]
 	for p: Player in get_tree().get_nodes_in_group("players"):
 		if p == toi or not con_song(p.player_id()):
 			continue
 		var d := p.global_position - toi.global_position
 		d.y = 0.0
 		var dai := d.length()
-		if dai > gan_nhat or dai < 0.001 or truoc.dot(d / dai) < GOC_DANH:
+		if dai > gan_nhat or dai < 0.001 or truoc.dot(d / dai) < float(GOC_DON[loai]):
 			continue
 		gan = p
 		gan_nhat = dai
 	return gan
 
 
-## Một gói cho một cú trúng. CHỈ máy của nạn nhân tự hất mình — đẩy hộ người khác là đánh nhau
-## với replicator đang gửi vị trí của họ.
+## Một gói cho một cú trúng. CHỈ máy của nạn nhân tự áp hậu quả lên mình — đẩy hộ người khác là
+## đánh nhau với replicator đang gửi vị trí của họ.
 @rpc("any_peer", "call_local")
-func _net_danh(ke_danh: int, nan: int, huong: Vector3) -> void:
+func _net_danh(ke_danh: int, nan: int, huong: Vector3, loai: int) -> void:
 	if not _chay:
 		return
 	if nan == NetManager.local_id():
 		var p := _nguoi(nan)
-		if p != null:
-			p.day(huong * DANH_NGANG + Vector3.UP * DANH_LEN)
-	_khi_bi_danh(ke_danh, nan)
+		if loai == DON_CHUONG and p != null:
+			p.day(huong * CHUONG_NGANG + Vector3.UP * CHUONG_LEN)
+		elif loai == DON_DANH:
+			_choang_toi = gio() + GIAY_CHOANG
+	_khi_bi_danh(ke_danh, nan, loai)
 
 
 ## Chạy trên MỌI máy khi có cú trúng. Lớp con thêm luật riêng ở đây.
-func _khi_bi_danh(_ke_danh: int, _nan: int) -> void:
+func _khi_bi_danh(_ke_danh: int, _nan: int, _loai: int) -> void:
 	pass
+
+
+## Nhân vật của máy này đang choáng.
+func dang_choang() -> bool:
+	return gio() < _choang_toi
+
+
+## Choáng = khoá WASD + nhảy của chính mình. Chỉ đụng khoá lúc VÀO và RA khỏi choáng, để trò nào
+## tự khoá vì luật riêng (chưa có trò có đòn nào làm vậy) không bị gỡ khoá mỗi khung hình.
+func _nhip_choang() -> void:
+	var choang := dang_choang()
+	if choang == _dang_choang:
+		return
+	_dang_choang = choang
+	var p := _nguoi(NetManager.local_id())
+	if p != null:
+		p.khoa_di_chuyen = choang
+		p.velocity = Vector3.ZERO
 
 
 ## Kẹp nhân vật CỦA MÁY NÀY trong bán kính `r` quanh tâm sân — cho trò không có đường chết vì
@@ -300,7 +350,35 @@ func _chot_ket_qua() -> void:
 func _net_xep_hang(xep: Array) -> void:
 	_chay = false
 	set_process(false)
+	if not _da_chot:
+		_da_chot = true
+		_het_luc = gio()
 	xong.emit(xep)
+
+
+# ───────────────────────── ô điểm: mặc định là điểm SINH TỒN ─────────────────────────
+
+## Trò sinh tồn: mỗi giây còn sống là một điểm; còn sống lúc chốt bảng thì cộng
+## `THUONG_SONG_CUOI`. Mọi máy tính ra cùng một con số vì giây chết đi qua `_net_chet`.
+##
+## Trò tích điểm (Crown, Word Wars...) ghi đè hàm này bằng con số riêng của mình.
+func diem_cua(id: int) -> float:
+	if not _song.has(id):
+		return NAN
+	var chet := float(_song[id])
+	if chet >= 0.0:
+		return chet
+	if _da_chot:
+		return _het_luc + THUONG_SONG_CUOI
+	return gio()
+
+
+func chu_diem(id: int) -> String:
+	var d := diem_cua(id)
+	if is_nan(d):
+		return ""
+	var them := " ★" if _da_chot and con_song(id) else ""
+	return "%.0f%s" % [d, them]
 
 
 # ───────────────────────────── người chơi ─────────────────────────────
@@ -326,6 +404,8 @@ func ban_kinh_vao_san() -> float:
 ## Chỉ đụng `is_mine` — máy này không có camera của người khác.
 func _che_do_san(bat: bool) -> void:
 	for p: Player in get_tree().get_nodes_in_group("players"):
+		# Phóng to HÌNH của mọi người trên máy này (việc cục bộ, không replicate). Xem `TO_HON`.
+		p.model_root.scale = Vector3.ONE * (TO_HON if bat else 1.0)
 		if not p.is_mine:
 			continue
 		p.che_do_san = bat

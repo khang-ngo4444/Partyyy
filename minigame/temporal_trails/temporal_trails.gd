@@ -215,6 +215,11 @@ func _net_ket_vong(id: int, _v: int, phan: float) -> void:
 		_diem[id] = float(_diem[id]) + clampf(phan, 0.0, 1.0)
 
 
+## Ô điểm: tổng phần trăm vệt đã đi được qua các vòng (100 = trọn một vệt).
+func diem_cua(id: int) -> float:
+	return float(_diem[id]) * 100.0 if _diem.has(id) else NAN
+
+
 ## Ghi đè: hết máu là thua. Vẫn giữ luật rơi khỏi sàn của lớp cha.
 func _toi_thua() -> bool:
 	return _thanh.het() or super()

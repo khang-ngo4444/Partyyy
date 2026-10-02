@@ -30,6 +30,9 @@ signal bat_dau()
 const DEM_NGUOC := 3.0
 ## Hiện bảng kết quả bao lâu rồi tự về phòng chờ.
 const XEM_KET_QUA := 5.0
+## Sắp lại dải điểm chừng này giây một lần. Mỗi khung hình là thừa, và thứ hạng nhảy liên tục
+## mỗi khung hình thì không ai đọc kịp.
+const NHIP_DIEM := 0.25
 
 const DANH_SACH := {
 	"tank": "res://minigame/tank/tank_battle.tscn",
@@ -54,9 +57,16 @@ const DANH_SACH := {
 @onready var _luat: Label = $Lop/HuongDan/Giua/Luat
 @onready var _dem: Label = $Lop/HuongDan/Giua/Dem
 @onready var _ket_qua: Label = $Lop/Bang/KetQua
+## Dải điểm ở đáy màn hình — DÙNG CHUNG cho mọi minigame. Minigame chỉ trả lời `diem_cua()` /
+## `chu_diem()`; vẽ, sắp hạng, tô màu là việc ở đây.
+@onready var _bang_diem: HBoxContainer = $Lop/BangDiem
+
+@export var o_diem_scene: PackedScene = null
 
 var _game: MiniGame = null
 var _dang_chay := false
+var _ids: Array = []
+var _cho_diem := 0.0
 
 
 func _ready() -> void:
@@ -108,6 +118,55 @@ func _net_chay(ma: String, hat_giong: int, ids: Array) -> void:
 			return          # có người huỷ giữa chừng
 	_huong_dan.visible = false
 	_game.bat_dau(ids, hat_giong)
+	_ids = ids.duplicate()
+	_dung_bang_diem()
+
+
+## Mỗi người một ô. Trò không có điểm (`diem_cua` trả NAN, như Tank) thì không hiện dải.
+func _dung_bang_diem() -> void:
+	for c in _bang_diem.get_children():
+		c.queue_free()
+	if o_diem_scene == null or _ids.is_empty() or is_nan(_game.diem_cua(int(_ids[0]))):
+		_bang_diem.visible = false
+		return
+	for i in _ids.size():
+		_bang_diem.add_child(o_diem_scene.instantiate())
+	_bang_diem.visible = true
+	_ve_bang_diem()
+
+
+func _process(delta: float) -> void:
+	if not _dang_chay or not _bang_diem.visible or _game == null or not is_instance_valid(_game):
+		return
+	_cho_diem -= delta
+	if _cho_diem <= 0.0:
+		_cho_diem = NHIP_DIEM
+		_ve_bang_diem()
+
+
+func _ve_bang_diem() -> void:
+	var xep := _xep_theo_diem()
+	var o := _bang_diem.get_children()
+	for i in mini(xep.size(), o.size()):
+		var id := int(xep[i])
+		var p := _nguoi(id)
+		var mau := NetManager.color_for(p.color_index) if p != null else Color.GRAY
+		(o[i] as ODiem).dat(i + 1, Player.ten_theo_id(get_tree(), id), mau, _game.chu_diem(id),
+				id == NetManager.local_id())
+
+
+## Thứ tự hiện trong dải: điểm cao đứng trước. Chỉ để HIỂN THỊ — hạng chốt vẫn là bảng `xong()`.
+func _xep_theo_diem() -> Array:
+	var xep := _ids.duplicate()
+	xep.sort_custom(func(a, b) -> bool: return _game.diem_cua(int(a)) > _game.diem_cua(int(b)))
+	return xep
+
+
+func _nguoi(id: int) -> Player:
+	for p: Player in get_tree().get_nodes_in_group("players"):
+		if p.player_id() == id:
+			return p
+	return null
 
 
 func _khi_xong(xep_hang: Array) -> void:
@@ -115,7 +174,10 @@ func _khi_xong(xep_hang: Array) -> void:
 		return
 	var dong := PackedStringArray(["KẾT QUẢ"])
 	for i in xep_hang.size():
-		dong.append("%d.  %s" % [i + 1, Player.ten_theo_id(get_tree(), int(xep_hang[i]))])
+		var id := int(xep_hang[i])
+		var diem := _game.chu_diem(id) if _game != null and is_instance_valid(_game) else ""
+		dong.append("%d.  %s%s" % [i + 1, Player.ten_theo_id(get_tree(), id),
+				("   ·   " + diem) if diem != "" else ""])
 	_ket_qua.text = "\n".join(dong)
 	await get_tree().create_timer(XEM_KET_QUA).timeout
 	_don()
@@ -136,6 +198,8 @@ func _don() -> void:
 	_lop.visible = false
 	_nen.visible = true
 	_huong_dan.visible = false
+	_bang_diem.visible = false
+	_ids.clear()
 	_ket_qua.text = ""
 	# Trả chuột về cho game 3D. Không trả thì người chơi ra khỏi minigame mà không xoay được.
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED

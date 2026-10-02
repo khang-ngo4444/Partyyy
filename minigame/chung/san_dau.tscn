@@ -3,7 +3,7 @@
 [node name="SanDau" type="Node3D"]
 
 [node name="Cam" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.766, 0.643, 0, -0.643, 0.766, 0, 14.0, 17.0)
+transform = Transform3D(1, 0, 0, 0, 0.743, 0.669, 0, -0.669, 0.743, 0, 11.5, 17.0)
 fov = 60.0
 
 [node name="Den" type="DirectionalLight3D" parent="."]

@@ -205,7 +205,7 @@ Dung nham **không phải `StaticBody3D`** như guide ghi: rơi khỏi sàn đã
 | `bom_chuyen.tscn` → `Dem` | ✅ `Label3D` đếm ngược trên đầu người ôm | — |
 | `vuong_mien.tscn` → `Mat` | 🔴 `TorusMesh` đồng — trông như cái vòng, không ra vương miện | Model vương miện thật. Quaternius/KayKit có |
 | Hoạt ảnh "đang ôm bom" / "đang đội miện" | 🔴 chưa có | Model KayKit có sẵn tư thế; cần nối `AnimationPlayer` |
-| Đòn đánh tay không (phím F, `MiniGame3D.co_danh`) — Crown + Word Wars | 🔴 không có hoạt ảnh, chỉ thấy nạn nhân bị hất | KayKit có `Attack`/`Unarmed_Melee`; nối vào `AnimationPlayer` lúc `_net_danh` + tiếng `asset/kenney_impact-sounds/` |
+| Hai đòn tay không (F đánh = choáng, G chưởng = hất; `MiniGame3D.co_danh`) — Crown + Word Wars | 🔴 không có hoạt ảnh, không có dấu hiệu choáng — chỉ thấy nạn nhân bị hất/đứng sững | KayKit có `Attack`/`Unarmed_Melee`; nối vào `AnimationPlayer` lúc `_net_danh` + tiếng `asset/kenney_impact-sounds/` |
 | UI cho cả 5 trò T1 | 🔴 chưa có | Cùng món nợ `CanvasLayer (UI)` với T2 |
 
 > **Sàn trơn nằm trong `Player`, không nằm trong sân.** `Player.truot` —
@@ -294,3 +294,10 @@ của phòng chờ) và **làn tách rời** cách nhau 40 m.
 | Node | Hiện tại | Cần |
 |---|---|---|
 | `Lop/HuongDan` | 🔴 `ColorRect` nền phẳng + ba `Label` (tên, luật, số đếm) | Nền/khung hướng dẫn thật; mỗi trò một hình minh hoạ phím + cách chơi |
+
+
+## Ô điểm chung minigame — `minigame/chung/o_diem.tscn`
+
+| Node | Hiện tại | Cần |
+|---|---|---|
+| `ODiem` (một ô mỗi người, dải `QuanTroMiniGame/Lop/BangDiem` ở đáy màn hình) | 🟡 `PanelContainer` + 2 `Label`, viền dưới màu nhân vật | Avatar nhỏ của nhân vật (xem mục "12 avatar 2D") |
