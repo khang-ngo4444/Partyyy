@@ -62,3 +62,28 @@ func test_minigame_rewards_weapon_then_decreasing_gold() -> void:
 	assert_contains(state["do"][LuatBan.khoa(33)], "sung_1_phat")
 	assert_eq(int(state["tien"][LuatBan.khoa(22)]), 30)
 	assert_eq(int(state["tien"][LuatBan.khoa(11)]), 20)
+
+
+func test_one_shot_weapon_hit_miss_and_shield() -> void:
+	var settings := GameplaySettings.defaults()
+	var state := LuatBan.trang_thai_moi([11, 22], {}, settings)
+	var shooter := LuatBan.khoa(11)
+	var target := LuatBan.khoa(22)
+
+	LuatBan.them_do(state, shooter, "sung_1_phat")
+	var miss := LuatBan.ban_sung(state, shooter, "", 3)
+	assert_true(bool(miss["da_ban"]))
+	assert_contains(str(miss["su_kien"]), "trượt")
+	assert_false((state["do"][shooter] as Array).has("sung_1_phat"))
+
+	LuatBan.them_do(state, shooter, "sung_1_phat")
+	LuatBan.them_do(state, target, "khien")
+	var blocked := LuatBan.ban_sung(state, shooter, target, 3)
+	assert_contains(str(blocked["su_kien"]), "khiên")
+	assert_eq(int(state["mau"][target]), int(settings["max_health"]))
+	assert_false((state["do"][target] as Array).has("khien"))
+
+	LuatBan.them_do(state, shooter, "sung_1_phat")
+	var hit := LuatBan.ban_sung(state, shooter, target, 3)
+	assert_contains(str(hit["su_kien"]), "-3 máu")
+	assert_eq(int(state["mau"][target]), int(settings["max_health"]) - 3)

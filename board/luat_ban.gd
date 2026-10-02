@@ -64,6 +64,27 @@ static func rut_do(tt: Dictionary, k: String, chi_so: int) -> String:
 	return mon
 
 
+## Bắn luôn tiêu một khẩu, kể cả trượt. `muc_tieu` rỗng nghĩa là tia không trúng người.
+## Raycast thuộc PhaBanCo; luật thuần này chỉ sở hữu túi đồ, khiên, máu và kết quả sự kiện.
+static func ban_sung(tt: Dictionary, nguoi_ban: String, muc_tieu: String,
+		sat_thuong: int) -> Dictionary:
+	var tui: Array = _bang(tt, "do").get(nguoi_ban, [])
+	var vi_tri := tui.find("sung_1_phat")
+	if vi_tri < 0:
+		return {"da_ban": false, "chet": false, "su_kien": ""}
+	tui.remove_at(vi_tri)
+	_bang(tt, "do")[nguoi_ban] = tui
+	if muc_tieu.is_empty() or muc_tieu == nguoi_ban:
+		return {"da_ban": true, "chet": false, "su_kien": "bắn trượt"}
+	var tui_muc_tieu: Array = _bang(tt, "do").get(muc_tieu, [])
+	var co_khien := tui_muc_tieu.has("khien")
+	var chet := tru_mau(tt, muc_tieu, sat_thuong)
+	if co_khien:
+		return {"da_ban": true, "chet": false, "su_kien": "bắn trúng · khiên đã chặn"}
+	return {"da_ban": true, "chet": chet,
+			"su_kien": "bắn trúng · -%d máu%s" % [sat_thuong, " · gục" if chet else ""]}
+
+
 ## Ô hồi máu và ô tiền là luật thuần. Ô đất/rương/trang bị cần thông tin scene hoặc RNG
 ## nên PhaBanCo xử lý ở lớp điều phối.
 static func hieu_ung_o(tt: Dictionary, k: String, loai: int, settings: Dictionary) -> String:

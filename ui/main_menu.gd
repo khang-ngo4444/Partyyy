@@ -33,10 +33,9 @@ const GRAPHICS_QUALITY := 3
 @onready var room_list: VBoxContainer = %RoomList
 @onready var empty_hint: Label = %EmptyHint
 @onready var settings_overlay: ColorRect = %SettingsOverlay
-@onready var how_to_overlay: ColorRect = %HowToOverlay
+@onready var how_to_overlay: HowToGuide = %HowToOverlay
 @onready var quit_overlay: ColorRect = %QuitOverlay
 @onready var back_btn: Button = %BackBtn
-@onready var how_to_close_btn: Button = %HowToCloseBtn
 @onready var quit_cancel_btn: Button = %QuitCancelBtn
 @onready var quit_confirm_btn: Button = %QuitConfirmBtn
 @onready var volume_slider: HSlider = %VolumeSlider
@@ -94,7 +93,7 @@ func _ready() -> void:
 	code_edit.text_submitted.connect(func(_text): _request_join_code())
 	refresh_btn.pressed.connect(_refresh_rooms)
 	back_btn.pressed.connect(_close_settings)
-	how_to_close_btn.pressed.connect(_close_how_to)
+	how_to_overlay.close_requested.connect(_close_how_to)
 	quit_cancel_btn.pressed.connect(_close_quit_confirm)
 	quit_confirm_btn.pressed.connect(_confirm_quit)
 	volume_slider.value_changed.connect(_set_volume)
@@ -392,13 +391,12 @@ func _close_settings() -> void:
 
 func _open_how_to() -> void:
 	_play_click()
-	how_to_overlay.visible = true
-	how_to_close_btn.grab_focus()
+	how_to_overlay.open()
 
 
 func _close_how_to() -> void:
 	_play_click()
-	how_to_overlay.visible = false
+	how_to_overlay.close()
 	how_to_btn.grab_focus()
 
 

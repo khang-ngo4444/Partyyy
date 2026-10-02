@@ -17,6 +17,7 @@ const DEFAULTS := {
 	"respawn_steps": 18,
 	"tax_health": 2,
 	"tax_money": 10,
+	"weapon_damage": 3,
 	"minigame_second_gold": 30,
 	"minigame_reward_drop": 10,
 	"minigame_min_gold": 5,
@@ -44,6 +45,7 @@ static func sanitize(raw: Dictionary) -> Dictionary:
 	out["respawn_steps"] = clampi(int(out["respawn_steps"]), 1, 999)
 	out["tax_health"] = clampi(int(out["tax_health"]), 1, int(out["max_health"]))
 	out["tax_money"] = clampi(int(out["tax_money"]), 1, 999)
+	out["weapon_damage"] = clampi(int(out["weapon_damage"]), 1, int(out["max_health"]))
 	out["minigame_second_gold"] = clampi(int(out["minigame_second_gold"]), 0, 999)
 	out["minigame_reward_drop"] = clampi(int(out["minigame_reward_drop"]), 0, 999)
 	out["minigame_min_gold"] = clampi(int(out["minigame_min_gold"]), 0, 999)
