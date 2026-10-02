@@ -88,6 +88,9 @@ var _dung_yen := 0.0
 
 func _ready() -> void:
 	add_to_group("pickable")
+	# Phan lon vat dung lo xo vat ly (`sieu_linh`) va _process chi return ngay. Tat callback
+	# render rong cho chung; vat cam cung van theo tay trong _physics_process.
+	set_process(not sieu_linh)
 	# Chay SAU replicator (priority 0). O may nguoi cam, vat duoc dat theo camera cua chinh ho;
 	# chay truoc thi replicator ghi de bang vi tri cu tu mang va vat giat lui moi nhip.
 	process_priority = 1

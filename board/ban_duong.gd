@@ -87,11 +87,11 @@ func dat_loai(i: int, l: int) -> void:
 
 
 ## Cập nhật cả loại ô lẫn lớp thông tin động (chủ đất, rương, checkpoint).
-func hien_o(i: int, l: int, chu_dat: String, co_ruong: bool,
+func hien_o(i: int, l: int, chu_dat: String, thue_dat: String, co_ruong: bool,
 		diem_hoi_sinh: PackedStringArray) -> void:
 	_bao_dam_do_thi()
 	if not _o.is_empty():
-		_o[_chi_so(i)].hien_trang_thai(l, chu_dat, co_ruong, diem_hoi_sinh)
+		_o[_chi_so(i)].hien_trang_thai(l, chu_dat, thue_dat, co_ruong, diem_hoi_sinh)
 
 
 ## Toạ độ thế giới của mặt ô — chỗ đặt chân người chơi.

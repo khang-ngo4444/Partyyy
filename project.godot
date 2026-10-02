@@ -19,6 +19,7 @@ config/features=PackedStringArray("4.7", "Forward Plus")
 
 NetManager="*res://autoload/net_manager.gd"
 _mcp_game_helper="*res://addons/godot_ai/runtime/game_helper.gd"
+PerformanceManager="*res://autoload/performance_manager.gd"
 
 [display]
 

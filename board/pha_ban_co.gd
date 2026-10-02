@@ -353,11 +353,16 @@ func _ket_luot(id: int, so_buoc: int) -> void:
 		var ok := str(o_dung)
 		if not dat.has(ok):
 			dat[ok] = id
-			_sang_luot(id, _noi_su_kien("đánh dấu ô đất", checkpoint))
+			_bat_dau_chon_thue_dat(id, o_dung, checkpoint)
 			return
 		var chu := int(dat[ok])
 		if chu != id:
-			_bat_dau_cho_thue(chu, id, o_dung, checkpoint)
+			var loai_thue := int(_bang("thue_dat").get(ok, LuatBan.Thue.TIEN))
+			var su_thue := LuatBan.thu_thue(tt, LuatBan.khoa(chu), k, loai_thue, settings)
+			if int(_bang("mau").get(k, 1)) <= 0:
+				LuatBan.chet(tt, k, settings)
+				su_thue += " · hồi sinh"
+			_sang_luot(id, _noi_su_kien(su_thue, checkpoint))
 			return
 		_sang_luot(id, _noi_su_kien("về đất của mình", checkpoint))
 		return
@@ -395,13 +400,24 @@ func _mo_ruong(k: String, o: int) -> String:
 	return "mở rương giả (-%d vàng)" % gia
 
 
-func _bat_dau_cho_thue(chu: int, khach: int, o: int, checkpoint: String) -> void:
+func _bat_dau_chon_thue_dat(chu: int, o: int, checkpoint: String) -> void:
 	_thue_token += 1
-	tt["thue"] = {"chu": chu, "khach": khach, "o": o, "checkpoint": checkpoint,
+	tt["thue"] = {"chu": chu, "o": o, "checkpoint": checkpoint,
 			"token": _thue_token}
-	_phat(tt, "%s chọn thuế của %s: [1] đất [2] máu [3] tiền [4] trang bị" % [
-			Player.ten_theo_id(get_tree(), chu), Player.ten_theo_id(get_tree(), khach)])
+	_phat(tt, "%s đã đánh dấu ô đất %d — chọn loại thuế cho ô này" % [
+			Player.ten_theo_id(get_tree(), chu), o])
 	_het_han_thue(_thue_token)
+
+
+## HUD gọi khi người chơi bấm một nút trong menu thuế. Phím 1–4 vẫn đi qua
+## `_unhandled_input()` để người chơi có thể chọn mà không cần nhả chuột khỏi camera.
+func xin_chon_thue(loai: int) -> void:
+	var thue: Dictionary = tt.get("thue", {}) as Dictionary
+	if loai < 0 or loai >= 4 or thue.is_empty():
+		return
+	if int(thue.get("chu", -1)) != NetManager.local_id():
+		return
+	Fusion.rpc(_net_xin_thu_thue, NetManager.local_id(), loai)
 
 
 @rpc("any_peer", "call_local")
@@ -427,14 +443,13 @@ func _chot_thue(loai: int) -> void:
 	var thue: Dictionary = tt.get("thue", {}) as Dictionary
 	if thue.is_empty():
 		return
-	var chu := LuatBan.khoa(thue["chu"])
-	var khach := LuatBan.khoa(thue["khach"])
-	var su := LuatBan.thu_thue(tt, chu, khach, loai, settings)
-	if int(_bang("mau").get(khach, 1)) <= 0:
-		LuatBan.chet(tt, khach, settings)
-		su += " · hồi sinh"
+	var chu := int(thue["chu"])
+	var o := int(thue["o"])
+	_bang("thue_dat")[str(o)] = loai
+	var ten_thue := str(LuatBan.TEN_THUE[loai])
 	tt.erase("thue")
-	_sang_luot(int(khach), _noi_su_kien(su, str(thue.get("checkpoint", ""))))
+	_sang_luot(chu, _noi_su_kien("đánh dấu ô đất · thuế %s" % ten_thue,
+			str(thue.get("checkpoint", ""))))
 
 
 func _mo_checkpoint_neu_du(id: int, truoc: int, sau: int, o_dung: int) -> String:
@@ -536,17 +551,23 @@ func _ap_mat_ban() -> void:
 	var loai: Array = tt.get("loai_o", []) as Array
 	var ruong: Array = tt.get("ruong", []) as Array
 	var dat: Dictionary = _bang("chu_dat")
+	var thue_dat: Dictionary = _bang("thue_dat")
 	var checkpoints: Dictionary = _bang("hoi_sinh")
 	for i in ban.so_luong():
 		var ten_chu := ""
+		var ten_thue := ""
 		if dat.has(str(i)):
 			ten_chu = Player.ten_theo_id(get_tree(), int(dat[str(i)]))
+		if thue_dat.has(str(i)):
+			var loai_thue := int(thue_dat[str(i)])
+			if loai_thue >= 0 and loai_thue < LuatBan.TEN_THUE.size():
+				ten_thue = str(LuatBan.TEN_THUE[loai_thue])
 		var ds_hoi_sinh := PackedStringArray()
 		for k in checkpoints:
 			if int(checkpoints[k]) == i:
 				ds_hoi_sinh.append(Player.ten_theo_id(get_tree(), int(k)))
 		ban.hien_o(i, int(loai[i]) if i < loai.size() else BanDuong.Loai.DAT,
-				ten_chu, ruong.has(i), ds_hoi_sinh)
+				ten_chu, ten_thue, ruong.has(i), ds_hoi_sinh)
 
 
 func _loai_o(i: int) -> int:

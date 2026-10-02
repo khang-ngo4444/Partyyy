@@ -32,6 +32,7 @@ static func trang_thai_moi(ds: Array, cu: Dictionary, settings: Dictionary) -> D
 		"buoc": {},
 		"hoi_sinh": {},
 		"chu_dat": (_bang(cu, "chu_dat").duplicate() if not cu.is_empty() else {}),
+		"thue_dat": (_bang(cu, "thue_dat").duplicate() if not cu.is_empty() else {}),
 		"loai_o": (cu.get("loai_o", []) as Array).duplicate(),
 		"ruong": (cu.get("ruong", []) as Array).duplicate(),
 		"ruong_that": int(cu.get("ruong_that", -1)),

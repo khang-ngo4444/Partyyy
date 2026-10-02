@@ -32,6 +32,47 @@ theme_override_font_sizes/font_size = 18
 autowrap_mode = 3
 text = "CHỌN LỘ TRÌNH"
 
+[node name="MenuThue" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 2
+mouse_filter = 1
+
+[node name="NoiDung" type="VBoxContainer" parent="MenuThue"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="TieuDe" type="Label" parent="MenuThue/NoiDung"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.35, 1)
+theme_override_font_sizes/font_size = 18
+text = "CHỌN THUẾ CHO Ô ĐẤT NÀY"
+horizontal_alignment = 1
+
+[node name="GoiY" type="Label" parent="MenuThue/NoiDung"]
+layout_mode = 2
+text = "Bấm nút hoặc phím 1–4"
+horizontal_alignment = 1
+
+[node name="CacLuaChon" type="GridContainer" parent="MenuThue/NoiDung"]
+layout_mode = 2
+columns = 2
+
+[node name="Dat" type="Button" parent="MenuThue/NoiDung/CacLuaChon"]
+layout_mode = 2
+text = "[1] Đất"
+
+[node name="Mau" type="Button" parent="MenuThue/NoiDung/CacLuaChon"]
+layout_mode = 2
+text = "[2] Máu"
+
+[node name="Tien" type="Button" parent="MenuThue/NoiDung/CacLuaChon"]
+layout_mode = 2
+text = "[3] Tiền"
+
+[node name="TrangBi" type="Button" parent="MenuThue/NoiDung/CacLuaChon"]
+layout_mode = 2
+text = "[4] Trang bị"
+
 [node name="Bang" type="RichTextLabel" parent="."]
 layout_mode = 2
 theme_override_colors/default_color = Color(1, 1, 1, 1)
