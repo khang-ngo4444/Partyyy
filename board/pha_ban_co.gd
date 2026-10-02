@@ -168,12 +168,17 @@ func _net_trang_thai(json: String) -> void:
 		return
 	_bao_dam_co_ban()
 	_ap_mat_ban()
+	# Minigame đang phủ lên (`tam_dung`): chỉ nhận số liệu, KHÔNG kéo người về ô và KHÔNG khoá
+	# WASD. Có người rời phòng giữa minigame là master phát lại bàn (`_bo_khoi_vong`) — trước
+	# đây gói đó khoá cứng mọi nhân vật và nhấc họ từ sân về bàn. Hết minigame thì
+	# `xin_thu_tu_moi` phát gói mới, lúc đó mới đặt lại.
 	# Đang chạy animation đi thì đừng giật người về — gói này là bản chốt, animation sẽ tới
 	# đúng đó trong chớp mắt nữa.
-	if not _dang_di:
-		for id in _thu_tu():
-			_dat_len_o(int(id), int(_bang("o").get(LuatBan.khoa(id), 0)))
-	_che_do_ban_co(true)
+	if not tam_dung:
+		if not _dang_di:
+			for id in _thu_tu():
+				_dat_len_o(int(id), int(_bang("o").get(LuatBan.khoa(id), 0)))
+		_che_do_ban_co(true)
 	trang_thai_doi.emit(tt)
 	if tt.has("thang"):
 		var id := int(tt["thang"])

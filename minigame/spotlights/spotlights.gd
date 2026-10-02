@@ -88,7 +88,6 @@ const DEN_TROI_SANG := 1.1
 var _den: Array[Node3D] = []
 ## Vùng sáng của từng đèn, cùng thứ tự với `_den`.
 var _vung: Array[Area3D] = []
-var _bong: Array[SpotLight3D] = []
 var _pha: PackedFloat32Array = PackedFloat32Array()
 var _nhip: PackedFloat32Array = PackedFloat32Array()
 
@@ -97,7 +96,9 @@ var _troi: DirectionalLight3D = null
 var _env: Environment = null
 var _env_toi: Environment = null
 var _env_sang: Environment = null
-var _troi_toi := 0.05
+var _troi_toi := 0.0
+## Viền sàn — tắt dần theo độ sáng, để lúc tối màn hình ĐEN HẲN.
+var _vien: GeometryInstance3D = null
 
 
 func _ready() -> void:
@@ -110,10 +111,9 @@ func _ready() -> void:
 func _dung_san() -> void:
 	_den.assign(san.find_children("Den*", "Node3D", false, false))
 	_vung.clear()
-	_bong.clear()
 	for d in _den:
 		_vung.append(d.get_node("Vung") as Area3D)
-		_bong.append(d.get_node("Bong") as SpotLight3D)
+	_vien = san.get_node_or_null("VienSan") as GeometryInstance3D
 	_pha.resize(_den.size())
 	_nhip.resize(_den.size())
 	for i in _den.size():
@@ -143,6 +143,7 @@ func _dung_san() -> void:
 
 func dung_som() -> void:
 	_thanh.dong()
+	_hien_ten(true)
 	super()
 
 
@@ -153,26 +154,13 @@ func _luat_moi_nhip() -> void:
 	for i in _den.size():
 		var v := cho_den(_pha[i], _nhip[i], t)
 		_den[i].position = Vector3(v.x, _den[i].position.y, v.y)
-		# Đèn chưa tới lượt thì tắt HẲN: tắt hình mà để vùng sát thương là vùng cháy vô hình,
-		# đúng cái phải tránh.
-		_bong[i].visible = i < n
+		# Đèn chưa tới lượt thì tắt HẲN — cả bóng đèn lẫn chùm tia `Tia`. Vùng sát thương thì
+		# `_an_mau` đã chỉ xét `i < n`, nên ẩn cả node không đẻ ra vùng cháy vô hình.
+		_den[i].visible = i < n
+	# Kẹp cả người đã hết máu: trò này không ai được rơi khỏi sàn, kể cả lúc đang xem.
+	giu_trong_san(BAN_KINH_GIU)
 	if con_song(NetManager.local_id()):
-		_giu_tren_san()
 		_an_mau(n)
-
-
-## Kẹp nhân vật CỦA MÁY NÀY trong lòng sàn. Chỉ `is_mine` — kéo người khác là đánh nhau với
-## replicator đang gửi vị trí của họ.
-func _giu_tren_san() -> void:
-	var p := _nguoi(NetManager.local_id())
-	if p == null:
-		return
-	var l := p.global_position - san.global_position
-	var r := Vector2(l.x, l.z)
-	if r.length() <= BAN_KINH_GIU:
-		return
-	r = r.normalized() * BAN_KINH_GIU
-	p.global_position = san.global_position + Vector3(r.x, l.y, r.y)
 
 
 ## Trừ máu nếu đang đứng trong vùng sáng của một đèn ĐANG BẬT.
@@ -193,11 +181,17 @@ func _an_mau(n: int) -> void:
 
 ## Đặt độ sáng chung của sàn: `s` = 0 là tối hẳn, 1 là sáng hẳn.
 ##
+## Tối hẳn là ĐEN HẲN: không đèn trời, không ánh sáng nền, viền sàn tắt, tên người khác ẩn —
+## nhìn thấy nhân vật (kể cả của mình) CHỈ khi nó đứng trong vệt đèn.
+##
 ## Nội suy giữa hai tài nguyên `env_san_toi` và `env_san_sang` chứ không chép số vào code — hai
 ## con số đó đã nằm trong `.tres`, chép ra đây là có hai nguồn sự thật.
 func _dat_sang(s: float) -> void:
 	if _troi != null:
 		_troi.light_energy = lerpf(_troi_toi, DEN_TROI_SANG, s)
+	if _vien != null:
+		_vien.transparency = 1.0 - s
+	_hien_ten(s > 0.5)
 	if _env == null:
 		return
 	_env.ambient_light_energy = lerpf(
@@ -205,6 +199,14 @@ func _dat_sang(s: float) -> void:
 	_env.ambient_light_color = _env_toi.ambient_light_color.lerp(
 			_env_sang.ambient_light_color, s)
 	_env.background_color = _env_toi.background_color.lerp(_env_sang.background_color, s)
+
+
+## Tên nổi trên đầu là `Label3D` không bị bóng tối che — để nguyên thì tối hẳn vẫn thấy từng
+## người đứng đâu. Tên của chính mình vốn đã ẩn (`Player._apply_name`), không bật lại.
+func _hien_ten(hien: bool) -> void:
+	for p: Player in get_tree().get_nodes_in_group("players"):
+		if not p.is_mine:
+			p.name_tag.visible = hien
 
 
 ## Ghi đè và KHÔNG gọi `super()`: xem ghi chú "vì sao không chết vì rơi" đầu file. Hết máu là

@@ -37,14 +37,11 @@ const DANH_SACH := {
 	"laser_leap": "res://minigame/laser_leap/laser_leap.tscn",
 	"spotlights": "res://minigame/spotlights/spotlights.tscn",
 	"magma": "res://minigame/magma/magma.tscn",
-	"acidic_atoll": "res://minigame/acidic_atoll/acidic_atoll.tscn",
 	"explosive": "res://minigame/explosive/explosive.tscn",
 	"crown": "res://minigame/crown/crown.tscn",
-	"bounding_blocks": "res://minigame/bounding_blocks/bounding_blocks.tscn",
 	"temporal_trails": "res://minigame/temporal_trails/temporal_trails.tscn",
 	"word_wars": "res://minigame/word_wars/word_wars.tscn",
 	"sidestep": "res://minigame/sidestep/sidestep.tscn",
-	"nhat_qua": "res://minigame/nhat_qua/nhat_qua.tscn",
 	"slippery": "res://minigame/slippery/slippery.tscn",
 }
 
@@ -52,7 +49,10 @@ const DANH_SACH := {
 @onready var _lop: CanvasLayer = $Lop
 @onready var _nen: ColorRect = $Lop/Nen
 @onready var _khung: Control = $Lop/Khung
-@onready var _bao: Label = $Lop/Bang/Bao
+@onready var _huong_dan: Control = $Lop/HuongDan
+@onready var _tieu: Label = $Lop/HuongDan/Giua/Tieu
+@onready var _luat: Label = $Lop/HuongDan/Giua/Luat
+@onready var _dem: Label = $Lop/HuongDan/Giua/Dem
 @onready var _ket_qua: Label = $Lop/Bang/KetQua
 
 var _game: MiniGame = null
@@ -97,12 +97,16 @@ func _net_chay(ma: String, hat_giong: int, ids: Array) -> void:
 	# Tro 3D dung san that trong the gioi; nen duc se che mat dung cai no vua dung.
 	_nen.visible = _game.che_nen
 
+	# Màn hướng dẫn RIÊNG, đục kín: không còn chữ chạy đè lên cảnh bàn cờ.
+	_tieu.text = _game.ten
+	_luat.text = "• " + _game.luat.replace(" · ", "\n• ")
+	_huong_dan.visible = true
 	for i in range(int(DEM_NGUOC), 0, -1):
-		_bao.text = "%s\n%s\n\n%d" % [_game.ten, _game.luat, i]
+		_dem.text = str(i)
 		await get_tree().create_timer(1.0).timeout
 		if not _dang_chay:
 			return          # có người huỷ giữa chừng
-	_bao.text = ""
+	_huong_dan.visible = false
 	_game.bat_dau(ids, hat_giong)
 
 
@@ -131,7 +135,7 @@ func _don() -> void:
 	_game = null
 	_lop.visible = false
 	_nen.visible = true
-	_bao.text = ""
+	_huong_dan.visible = false
 	_ket_qua.text = ""
 	# Trả chuột về cho game 3D. Không trả thì người chơi ra khỏi minigame mà không xoay được.
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED

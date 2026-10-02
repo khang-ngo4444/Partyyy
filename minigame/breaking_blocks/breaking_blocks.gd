@@ -7,12 +7,15 @@ extends MiniGame3D
 ##
 ## ## Hư thuộc về Ô, không thuộc về NGƯỜI
 ##
-## Đây là chỗ dễ làm sai nhất. `_hu[i]` nằm trên ô thứ `i`, không nằm trên người. Rời ô thì vết
-## nứt **ở lại**, và người sau bước vào sẽ gặp đúng vết nứt đó. Ô chỉ lành khi vắng người một
-## lúc, và lành CHẬM hơn hư — không thì chẳng ai có lý do gì phải di chuyển.
+## `_hu[i]` nằm trên ô thứ `i`, không nằm trên người. Rời ô (kể cả NHẢY lên) thì vết nứt **ở lại
+## nguyên** — ô đang SẮP VỠ vẫn sắp vỡ, và **không bao giờ tự lành**. Người sau bước vào gặp đúng
+## vết nứt đó. Ô chỉ về LÀNH khi đã vỡ rồi mọc lại.
 ##
-## Hệ quả: người chơi tác động lên nhau mà không cần đánh nhau. Ai cũng đang ăn dần chỗ đứng an
-## toàn của người khác, và hai người chung một ô thì ô đó hư nhanh hơn hẳn.
+## Hệ quả: sàn ăn mòn dần theo cả ván, ai cũng đang ăn dần chỗ đứng an toàn của người khác, và hai
+## người chung một ô thì ô đó hư nhanh hơn hẳn.
+##
+## (Có một bản cho ô lành ngay khi vắng người — nhảy khỏi ô là ô về bình thường, hiểu nhầm yêu
+## cầu. Bản đó cũng không chơi được: mô phỏng 4 người biết né thì 60 giây không vỡ ô nào.)
 ##
 ## ## Vì sao bản này thay hẳn bản cũ
 ##
@@ -49,25 +52,11 @@ const KHE := 1.2
 ## Tâm hai ô kề nhau cách nhau bao xa.
 const BUOC := RONG_O + KHE
 
-## Một người đứng yên thì ô vỡ sau bao lâu, lúc ĐẦU ván.
-const GIAY_VO_MOT_NGUOI := 5.5
+## Một người đứng yên thì ô vỡ sau bao lâu, lúc ĐẦU ván. Cuối ván nhanh gấp `KHO_CUOI`.
+const GIAY_VO_MOT_NGUOI := 3.0
 ## Người thứ hai trở đi, mỗi người cộng thêm bao nhiêu phần tốc hư. Đây là chỗ "chung ô thì
 ## nguy hiểm nhanh hơn" — không cần đòn nào mà vẫn tranh nhau chỗ đứng.
 const THEM_MOI_NGUOI := 0.75
-## Rời ô bao lâu thì ô mới bắt đầu lành. Có trễ thì nhảy qua nhảy lại một cặp ô không xoá được
-## vết nứt.
-const TRE_HOI := 1.2
-## Lành từ nứt hết về lành hẳn mất bao lâu. PHẢI lớn hơn `GIAY_VO_MOT_NGUOI` — lành nhanh hơn hư
-## thì đứng một chỗ là xong, chẳng ai cần đi đâu.
-##
-## 9 giây là con số đầu, và nó làm trò KHÔNG CHƠI ĐƯỢC: đo bằng mô phỏng, 4 người biết bỏ chạy
-## thì cả 60 giây **không một ô nào vỡ**, không ai rơi, ván nào cũng hết giờ với bốn người sống
-## và bảng xếp hạng thành ngẫu nhiên.
-##
-## Lý do tính được chứ không phải đoán: 64 ô cho 4 người là 16 ô mỗi người. Người chạy vòng qua
-## 8 ô, mỗi ô đứng 0,7 giây thì mỗi vòng ô đó ăn 0,13 thanh hư nhưng lành được 0,18 — hư không
-## bao giờ đuổi kịp lành. Phải 22 giây thì một vòng 8 ô mới bắt đầu lỗ.
-const GIAY_HOI := 22.0
 ## Ô vỡ rồi nằm trống bao lâu mới mọc lại, lúc ĐẦU ván. Không cho mọc lại thì 64 ô bay hết trong
 ## nửa phút và ván kết thúc vì hết sàn chứ không vì ai giỏi hơn.
 ##
@@ -76,11 +65,8 @@ const GIAY_HOI := 22.0
 ## 10 ô và sàn không bao giờ tụt dưới 61/64 — cả ván không ai chết, luôn hết giờ.
 const GIAY_MOC_LAI := 4.5
 
-## Cuối ván hư nhanh gấp mấy lần đầu ván. Cũng là hệ số dãn của thời gian mọc lại và thời gian
-## lành — một núm cho cả ba, để không bao giờ có chuyện hư nhanh hơn mà sàn vẫn hồi như cũ.
-##
-## 4,0 chứ không phải 2,4: với một vòng 8 ô, hư chỉ thắng lành khi tốc hư lên ~0,7/giây, tức
-## phải gấp 4 lần đầu ván. Dưới mức đó thì người chơi chỉ cần đi vòng tròn là bất tử.
+## Cuối ván hư nhanh gấp mấy lần đầu ván. Cũng là hệ số dãn của thời gian mọc lại — một núm cho
+## cả hai.
 const KHO_CUOI := 4.0
 ## Khó hết cỡ sau chừng này giây. Phải NGẮN hơn `giay_van` (60) kha khá, không thì ván hết trước
 ## lúc độ khó kịp cắn và trận nào cũng kết thúc bằng tiếng còi.
@@ -102,13 +88,9 @@ const GIAY_BAO_TOI_THIEU := 0.6
 
 ## Ô sắp vỡ thì rung. Biên độ, mét.
 const RUNG := 0.045
-## Người chơi phải nằm trong khoảng này phía trên mặt ô mới tính là ĐANG ĐỨNG trên nó. Phải cao
-## hơn `jump_height` (1,2 m) — không thì nhảy tại chỗ là ngừng làm hư ô, và trò thành thi nhảy.
-const CAO_TINH := 2.2
-
-## Camera: đủ cao và đủ lùi để thấy cả lưới 8×8 (~31 m) lẫn vết nứt trên từng ô.
-const CAM_CAO := 28.0
-const CAM_LUI := 20.0
+## Người chơi phải nằm trong khoảng này phía trên mặt ô mới tính là ĐANG ĐỨNG trên nó. Cao hơn
+## đỉnh NHẢY ĐÔI (~2,4 m): nhảy tại chỗ vẫn tính là đứng, không thì nhảy liên tục là ô ngừng hư.
+const CAO_TINH := 3.0
 
 @export var o_scene: PackedScene = null
 
@@ -117,8 +99,6 @@ var _o: Array[OSan] = []
 var _tam: PackedVector3Array = PackedVector3Array()
 ## Mức hư từng ô, 0..1. Mọi máy tự tính, dùng cho HÌNH ẢNH.
 var _hu: PackedFloat32Array = PackedFloat32Array()
-## Còn bao lâu nữa ô mới bắt đầu lành. Đếm xuống khi ô vắng người.
-var _cho_hoi: PackedFloat32Array = PackedFloat32Array()
 ## Ô còn hay đã vỡ. Do MASTER phán, phát qua `_net_doi`.
 var _con: Array[bool] = []
 ## `gio()` lúc ô vỡ. Chỉ master dùng, để biết khi nào cho mọc lại.
@@ -141,7 +121,6 @@ func _dung_san() -> void:
 	var tong := CANH * CANH
 	_tam.resize(tong)
 	_hu.resize(tong)
-	_cho_hoi.resize(tong)
 	_vo_luc.resize(tong)
 	_bao_tu.resize(tong)
 	_con.resize(tong)
@@ -159,23 +138,11 @@ func _dung_san() -> void:
 			o.position = _tam[i]
 			_o.append(o)
 			_hu[i] = 0.0
-			_cho_hoi[i] = 0.0
 			_vo_luc[i] = 0.0
 			_bao_tu[i] = -1.0
 			_con[i] = true
 			o.dat(true)
 			o.son(_mau[LANH])
-	_dat_camera()
-
-
-## Camera chung của sân, đặt bằng code: lưới này rộng gấp đôi sân vòng tròn của T1/T3 nên để
-## nguyên chỗ đứng mặc định là tràn khung — thấy giữa sân mà mất bốn góc.
-func _dat_camera() -> void:
-	var cam := _cam_san()
-	if cam == null or san == null:
-		return
-	cam.global_position = san.global_position + Vector3(0.0, CAM_CAO, CAM_LUI)
-	cam.look_at(san.global_position)
 
 
 func _luat_moi_nhip() -> void:
@@ -187,13 +154,9 @@ func _luat_moi_nhip() -> void:
 		if not _con[i]:
 			continue
 		var n := int(dong.get(i, 0))
+		# Vắng người thì vết nứt GIỮ NGUYÊN — xem ghi chú đầu file.
 		if n > 0:
-			_cho_hoi[i] = TRE_HOI
 			_hu[i] = minf(_hu[i] + toc_hu(n, t) * d, 1.0)
-		elif _cho_hoi[i] > 0.0:
-			_cho_hoi[i] -= d
-		else:
-			_hu[i] = maxf(_hu[i] - d / giay_hoi(t), 0.0)
 		# Mốc bắt đầu báo: đặt khi vừa vào SẮP VỠ, xoá khi lành lại xuống dưới mốc đó.
 		if trang_thai(_hu[i]) == SAP_VO:
 			if _bao_tu[i] < 0.0:
@@ -223,8 +186,10 @@ func _dem_nguoi() -> Dictionary:
 
 ## CHỈ master. Ô nào đủ hư thì vỡ, ô nào vỡ đủ lâu thì mọc lại. Chỉ phát khi CÓ đổi.
 func _master_phan(t: float) -> void:
-	var vo := PackedInt32Array()
-	var moc := PackedInt32Array()
+	# Array thường, KHÔNG PackedInt32Array: Fusion không tuần tự hoá được kiểu packed (type 30),
+	# máy nhận được NIL và `_net_doi` gãy — ô không bao giờ vỡ ở máy khác.
+	var vo: Array = []
+	var moc: Array = []
 	for i in _o.size():
 		if _con[i]:
 			# Đủ hư VÀ đã báo đủ lâu. Thiếu điều kiện thứ hai là vỡ không kịp báo.
@@ -237,8 +202,9 @@ func _master_phan(t: float) -> void:
 
 
 @rpc("any_peer", "call_local")
-func _net_doi(vo: PackedInt32Array, moc: PackedInt32Array, t: float) -> void:
-	for i in vo:
+func _net_doi(vo: Array, moc: Array, t: float) -> void:
+	for v in vo:
+		var i := int(v)
 		if i < 0 or i >= _o.size() or not _con[i]:
 			continue
 		_con[i] = false
@@ -247,12 +213,12 @@ func _net_doi(vo: PackedInt32Array, moc: PackedInt32Array, t: float) -> void:
 		_bao_tu[i] = -1.0
 		_o[i].position = _tam[i]
 		_o[i].dat(false)
-	for i in moc:
+	for v in moc:
+		var i := int(v)
 		if i < 0 or i >= _o.size() or _con[i]:
 			continue
 		_con[i] = true
 		_hu[i] = 0.0
-		_cho_hoi[i] = 0.0
 		_bao_tu[i] = -1.0
 		_o[i].position = _tam[i]
 		_o[i].dat(true)
@@ -325,12 +291,6 @@ static func kho(t: float) -> float:
 ## Ô vỡ nằm trống bao lâu mới mọc lại, tại giây `t`. Dãn theo độ khó: cuối ván sàn teo thật.
 static func giay_moc_lai(t: float) -> float:
 	return GIAY_MOC_LAI * kho(t)
-
-
-## Lành hết vết nứt mất bao lâu, tại giây `t`. Cũng chậm đi cuối ván — hư nhanh hơn mà lành vẫn
-## như cũ thì sàn tự bù lại hết phần khó vừa thêm vào.
-static func giay_hoi(t: float) -> float:
-	return GIAY_HOI * kho(t)
 
 
 ## Tốc hư của một ô đang có `n` người đứng, tại giây `t`. Đơn vị: phần thanh hư mỗi giây.

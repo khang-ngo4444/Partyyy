@@ -92,7 +92,8 @@ func _gui(text: String) -> void:
 	# Dòng lệnh KHÔNG đi qua đường chat: nó không phải câu nói, và hiện `/mg tank` lên khung
 	# chat của cả phòng chỉ làm rối. Lệnh đi đường riêng của nó.
 	if LenhChat.la_lenh(t):
-		Fusion.rpc(_net_lenh, NetManager.local_id(), LenhChat.tach(t))
+		# Fusion không gửi được PackedStringArray (tới nơi thành NIL) — gửi Array thường.
+		Fusion.rpc(_net_lenh, NetManager.local_id(), Array(LenhChat.tach(t)))
 		return
 	Fusion.rpc(_net_chat, NetManager.local_id(), t.left(DAI_TOI_DA))
 
@@ -100,10 +101,10 @@ func _gui(text: String) -> void:
 ## Lệnh tới MỌI máy — tầng 2 của lớp xác thực. Máy nào được thi hành thì `main.gd` quyết bằng
 ## `LenhChat.duoc_thi_hanh()`; ở đây chỉ chuyển tiếp, không phán gì.
 @rpc("any_peer", "call_local")
-func _net_lenh(id_nguoi_gui: int, doi_so: PackedStringArray) -> void:
+func _net_lenh(id_nguoi_gui: int, doi_so: Array) -> void:
 	if doi_so.is_empty():
 		return
-	lenh.emit(id_nguoi_gui, doi_so)
+	lenh.emit(id_nguoi_gui, PackedStringArray(doi_so))
 
 
 ## Báo riêng cho máy này, không gửi ai. Dùng cho câu trả lời của lệnh.
@@ -111,8 +112,7 @@ func bao(chu: String) -> void:
 	_tin.append("[color=#8b98a8]%s[/color]" % _tho(chu))
 	if _tin.size() > SO_DONG:
 		_tin.remove_at(0)
-	log_label.text = "
-".join(_tin)
+	log_label.text = "\n".join(_tin)
 	_hien()
 
 

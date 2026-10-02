@@ -8,4 +8,5 @@
 [node name="SanDau" parent="." instance=ExtResource("1_sd")]
 
 [node name="Cam" parent="SanDau" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.766, 0.643, 0, -0.643, 0.766, 0, 19.0, 23.0)
 environment = ExtResource("2_env")

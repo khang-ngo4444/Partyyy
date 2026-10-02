@@ -66,5 +66,8 @@ static func encode(settings: Dictionary) -> String:
 
 
 static func decode(value: String) -> Dictionary:
+	# Rỗng = MatchState chưa nhận gói replicate đầu tiên. `parse_string("")` báo lỗi đỏ mỗi lần.
+	if value.strip_edges() == "":
+		return defaults()
 	var parsed = JSON.parse_string(value)
 	return sanitize(parsed if parsed is Dictionary else {})

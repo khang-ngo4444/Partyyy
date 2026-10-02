@@ -102,8 +102,11 @@ func _dung_san() -> void:
 	_mat = _bom.get_node("Mat") as Node3D
 	_vong = _bom.get_node("VongTam") as Node3D
 	_bom.visible = false
-	_da_thap = false
-	_ai_om = 0
+	# KHÔNG đặt lại `_ai_om` / `_no_luc` / `_cho_toi` ở đây. Mỗi máy đếm ngược 3 giây bằng đồng hồ
+	# riêng nên master vào ván sớm hơn nửa RTT và trao bom NGAY — gói `_net_trao` tới máy khác
+	# TRƯỚC khi máy đó chạy tới đây. Đặt lại là xoá mất người ôm: máy kia không thấy bom, người
+	# ôm không biết mình ôm nên không chuyền được và không bao giờ nổ. Node minigame được tạo mới
+	# mỗi ván nên giá trị mặc định đã đúng sẵn.
 	_toc_goc = -1.0
 	var bon := san.get_node_or_null("SanTron") as Node3D
 	var m := bon.get_node_or_null("Mat") as MeshInstance3D if bon != null else null
@@ -137,9 +140,13 @@ func _luat_moi_nhip() -> void:
 	var con_lai := maxf(_no_luc - gio(), 0.0)
 	_ve_bom(con_lai)
 
+	# Lưới đỡ: người ôm đã quá giờ nổ mà máy họ không khai (mất gói, rớt mạng) thì master khai hộ.
+	# Không có nó thì ván đứng im mãi — trò này không có giới hạn giờ.
+	if NetManager.is_master() and not toi and gio() >= _no_luc + 1.5 and con_song(_ai_om):
+		Fusion.rpc(_net_chet, _ai_om, _no_luc)
 	if not toi:
 		return
-	_giu_tren_san()
+	giu_trong_san(_ban_kinh - 0.5)
 	# Chỉ máy của người đang ôm mới tự khai tử — không thì cả phòng cùng gửi một tin.
 	if gio() >= _no_luc:
 		xin_chet()
@@ -159,24 +166,6 @@ func _ve_bom(con_lai: float) -> void:
 	_dem.modulate = Color(1.0, 0.85, 0.5).lerp(Color(1.0, 0.25, 0.15), gap)
 	# Vòng chỉ sáng khi ĐANG chuyền được — nó là thứ trả lời "bấm E lúc này có ăn không".
 	_vong.visible = gio() >= _cho_toi
-
-
-## Kẹp nhân vật CỦA MÁY NÀY trong lòng sàn. Chỉ `is_mine` — kéo người khác là đánh nhau với
-## replicator đang gửi vị trí của họ.
-##
-## Người ôm bom không được chạy ra khỏi sân để khỏi phải chuyền cho ai: sàn tròn mà ngoài là hư
-## không thì "nhảy ra ngoài" là một đường thoát khỏi luật chơi.
-func _giu_tren_san() -> void:
-	var p := _nguoi(NetManager.local_id())
-	if p == null:
-		return
-	var l := p.global_position - san.global_position
-	var r := Vector2(l.x, l.z)
-	var toi_da := _ban_kinh - 0.5
-	if r.length() <= toi_da:
-		return
-	r = r.normalized() * toi_da
-	p.global_position = san.global_position + Vector3(r.x, l.y, r.y)
 
 
 ## Bật/tắt tốc độ của người ôm bom, chỉ trên nhân vật của máy này.
@@ -234,7 +223,7 @@ func _xin_chuyen(tu: int, den: int) -> void:
 	# cùng lúc thì gói nào tới trước thắng — và chỉ một gói được duyệt, vì gói sau đã sai `tu`.
 	if tu != _ai_om or not con_song(den) or gio() < _cho_toi:
 		return
-	Fusion.rpc(_net_trao, den, _no_luc)
+	Fusion.rpc(_net_trao, den, _no_luc, gio() + NGHI_CHUYEN)
 
 
 ## Master chọn người ôm bom mới và đặt đồng hồ mới.
@@ -250,14 +239,16 @@ func _trao_cho_ai_do() -> void:
 		return
 	song.sort()                         # sắp trước khi bốc: cùng hạt giống thì cùng kết quả
 	var ai := int(song[_rng.randi() % song.size()])
-	Fusion.rpc(_net_trao, ai, gio() + giay_dem(_lan_no))
+	Fusion.rpc(_net_trao, ai, gio() + giay_dem(_lan_no), gio() + NGHI_CHUYEN)
 
 
+## Mọi mốc giờ do MASTER tính rồi gửi kèm. Máy nhận có thể chưa vào ván (xem `_dung_san`), lúc
+## đó `gio()` của nó còn là giờ máy thô — tự cộng `NGHI_CHUYEN` vào đó là cấm chuyền vài phút.
 @rpc("any_peer", "call_local")
-func _net_trao(ai: int, no_luc: float) -> void:
+func _net_trao(ai: int, no_luc: float, cho_toi: float) -> void:
 	_ai_om = ai
 	_no_luc = no_luc
-	_cho_toi = gio() + NGHI_CHUYEN
+	_cho_toi = cho_toi
 
 
 ## Người ôm bom vừa nổ: master thắp quả tiếp theo. Lớp cha đã ghi nhận cái chết rồi.

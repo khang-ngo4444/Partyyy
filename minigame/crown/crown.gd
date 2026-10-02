@@ -30,29 +30,18 @@ extends MiniGame3D
 ##   2. **Miện sang tay TỨC THÌ.** Không có khoảnh khắc miện nằm đất để mà giành. Người đến trước
 ##      ăn tất, và cả ván là một chuỗi đụng-đổi-chủ.
 ##
-## Giờ: bắn cầu lửa trúng người đang giữ thì **miện RƠI xuống đúng chỗ họ đứng**, không bay sang
-## ai. Ai chạy tới trước thì nhặt. Cầu lửa bắn vào người không giữ miện thì chỉ hất — vẫn có ích,
-## vì đó là cách hẩy đối thủ ra khỏi quả miện đang nằm đất.
+## Giờ: ĐÁNH (phím F) trúng người đang giữ thì **miện RƠI xuống đúng chỗ họ đứng**, không bay
+## sang ai. Ai chạy tới trước thì nhặt. Đánh người không giữ miện thì chỉ hất — vẫn có ích, vì
+## đó là cách hẩy đối thủ ra khỏi quả miện đang nằm đất.
 ##
-## Cầu lửa dùng lại nguyên `CauLua` + `cau_lua.tscn` của Magma & Mages, không viết hệ đòn mới.
+## Đòn đánh là đòn tay không dùng chung của `MiniGame3D` (bật `co_danh` trong `crown.tscn`).
+## Bản trước bắn cầu lửa — đánh xa được thì người giữ miện không chạy đâu thoát, và trò thành
+## bắn tỉa chứ không phải giành giật.
 ##
 ## ## Vì sao có `NGHI_CUOP`
 ##
 ## Không có nó thì người vừa bị hất quay lại nhặt luôn quả miện vừa rơi, và cú đòn thành vô nghĩa.
 ## 1,1 giây đủ để người khác tới tranh.
-
-## Nút bắn. `interact` (E) — trong sân không có vật nào để nhặt nên phím này rảnh.
-const NUT_BAN := "interact"
-## Nghỉ giữa hai phát, giây. Không có thì giữ phím là một vòi lửa liền mạch.
-const NGHI_BAN := 0.7
-## Cầu lửa rời tay ở độ cao này, để nó bay ngang tầm ngực chứ không lết dưới sàn.
-const CAO_BAN := 1.0
-## Trúng cầu lửa thì bị hất mạnh cỡ nào — ngang và dốc lên.
-##
-## Nhẹ hơn Magma (11,0 / 4,5) vì ở đây hất không để giết: chỉ cần đẩy người ta rời khỏi quả miện
-## vừa rơi. Hất quá mạnh thì ai trúng một phát là mất luôn lượt tranh.
-const DAY_NGANG := 9.0
-const DAY_LEN := 3.5
 
 ## Miện rơi xuống rồi chừng này giây sau mới nhặt được.
 const NGHI_CUOP := 1.1
@@ -60,8 +49,6 @@ const NGHI_CUOP := 1.1
 const CAO_DOI := 2.2
 ## Miện nằm dưới đất ở độ cao này khi chưa ai nhặt.
 const CAO_NAM := 0.8
-
-@export var cau_lua_scene: PackedScene = null
 
 @onready var _bang: Label = $Lop/Bang
 
@@ -79,11 +66,6 @@ var _cho_toi := 0.0
 ## player_id -> giây đã giữ. Mọi máy tự cộng; bảng của master là bảng quyết định.
 var _diem: Dictionary = {}
 
-var _cau: Array[CauLua] = []
-var _ban_luc := -99.0
-## instance_id của những quả ĐÃ hất mình rồi. Quả cầu sống 1,6 giây; không nhớ thì nó cộng dồn
-## lực đẩy mỗi khung hình và bắn người chơi ra khỏi bản đồ.
-var _da_dinh: Dictionary = {}
 ## Bán kính sàn, ĐỌC từ mesh chứ không chép tay.
 var _ban_kinh := 11.5
 
@@ -91,7 +73,7 @@ var _ban_kinh := 11.5
 func _ready() -> void:
 	super()
 	ten = "CROWN CAPTURE"
-	luat = "WASD chạy · E bắn cầu lửa · trúng người đội miện thì miện rơi · giữ lâu thì thắng"
+	luat = "WASD chạy · F đánh · đánh trúng người đội miện thì miện rơi · giữ lâu thì thắng"
 	giay_van = 60.0
 
 
@@ -106,9 +88,6 @@ func _dung_san() -> void:
 	_ai_giu = 0
 	_cho_nam = Vector3(0.0, CAO_NAM, 0.0)
 	_cho_toi = 0.0
-	_cau.clear()
-	_da_dinh.clear()
-	_ban_luc = -99.0
 	_diem.clear()
 	for id in _song:
 		_diem[int(id)] = 0.0
@@ -144,11 +123,10 @@ func _luat_moi_nhip() -> void:
 	# lúc này có nhặt được không". Đội trên đầu thì vòng vô nghĩa.
 	_vong.visible = _ai_giu == 0 and gio() >= _cho_toi
 	_ve_bang()
-	_cau = _cau.filter(func(c: CauLua) -> bool: return is_instance_valid(c))
 
 	if not con_song(NetManager.local_id()):
 		return
-	_giu_tren_san()
+	giu_trong_san(_ban_kinh - 0.5)
 	# Chỉ máy của NGƯỜI SẮP NHẶT đi hỏi — mỗi máy chỉ tự nói về nhân vật của mình.
 	if _ai_giu != 0 or gio() < _cho_toi:
 		return
@@ -179,76 +157,16 @@ func _ve_bang() -> void:
 	_bang.text = "\n".join(dong)
 
 
-## Kẹp nhân vật CỦA MÁY NÀY trong lòng sàn. Chỉ `is_mine` — kéo người khác là đánh nhau với
-## replicator đang gửi vị trí của họ.
-##
-## Trò này cố ý KHÔNG cho ai chết: thắng thua chỉ do tổng giây đội miện, nên hất nhau xuống vực
-## sẽ biến nó thành nửa deathmatch. Hất giờ chỉ để đẩy người ta rời quả miện.
-func _giu_tren_san() -> void:
-	var p := _nguoi(NetManager.local_id())
-	if p == null:
-		return
-	var l := p.global_position - san.global_position
-	var r := Vector2(l.x, l.z)
-	var toi_da := _ban_kinh - 0.5
-	if r.length() <= toi_da:
-		return
-	r = r.normalized() * toi_da
-	p.global_position = san.global_position + Vector3(r.x, l.y, r.y)
-
-
-## Trúng cầu lửa: tự áp lực đẩy lên mình, và nếu mình đang đội miện thì xin cho miện rơi.
-##
-## Ghi đè `_toi_thua()` vì đây là hàm lớp cha gọi mỗi khung hình cho nhân vật của máy này. Trả về
-## `false` luôn: trò này không có đường thua nào, hết giờ mới chốt.
+## Trò này cố ý KHÔNG cho ai chết: thắng thua chỉ do tổng giây đội miện. Vị trí bị kẹp trong
+## lòng sàn (`giu_trong_san`), nên cú đánh chỉ đẩy người ta rời quả miện chứ không hất xuống vực.
 func _toi_thua() -> bool:
-	var p := _nguoi(NetManager.local_id())
-	if p == null:
-		return false
-	for c in _cau:
-		if c.nguoi_ban == NetManager.local_id() or _da_dinh.has(c.get_instance_id()):
-			continue
-		if not c.overlaps_body(p):
-			continue
-		_da_dinh[c.get_instance_id()] = true
-		var ra := p.global_position - c.global_position
-		ra.y = 0.0
-		if ra.length_squared() < 0.001:
-			ra = Vector3.RIGHT
-		p.day(ra.normalized() * DAY_NGANG + Vector3.UP * DAY_LEN)
-		if _ai_giu == NetManager.local_id():
-			Fusion.rpc(_xin_roi, NetManager.local_id())
-		c.queue_free()
-		break
 	return false
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if not _chay or not event.is_action_pressed(NUT_BAN):
-		return
-	if gio() - _ban_luc < NGHI_BAN:
-		return
-	var p := _nguoi(NetManager.local_id())
-	if p == null or not con_song(NetManager.local_id()):
-		return
-	get_viewport().set_input_as_handled()
-	_ban_luc = gio()
-	# Bắn theo hướng thân đang quay — ở chế độ sân, thân tự quay theo hướng chạy.
-	var huong := -p.global_transform.basis.z
-	huong.y = 0.0
-	Fusion.rpc(_net_ban, NetManager.local_id(),
-			p.global_position + Vector3.UP * CAO_BAN, huong.normalized())
-
-
-## Một gói cho cả đời quả cầu. Mọi máy tự dựng và tự cho nó bay — không gửi vị trí lần nào nữa.
-@rpc("any_peer", "call_local")
-func _net_ban(id: int, tu: Vector3, huong: Vector3) -> void:
-	if san == null or cau_lua_scene == null:
-		return
-	var c := cau_lua_scene.instantiate() as CauLua
-	san.add_child(c)
-	c.ban(tu, huong, id)
-	_cau.append(c)
+## Đánh trúng người đang đội miện: xin master cho miện rơi. Master tự phán theo `_ai_giu` của nó.
+func _khi_bi_danh(_ke_danh: int, nan: int) -> void:
+	if NetManager.is_master() and nan == _ai_giu:
+		_xin_roi(nan)
 
 
 # ───────────────────────── trọng tài: master duyệt rồi phát ─────────────────────────

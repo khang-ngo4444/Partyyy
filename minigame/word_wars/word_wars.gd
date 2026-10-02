@@ -1,154 +1,175 @@
 extends MiniGame3D
 
-## WORD WARS — chữ cái rơi như mưa, đấm đúng thứ tự để ghép thành từ.
+## WORD WARS — mỗi người một từ hiện trên đầu, chạy tới ô chữ trên sàn và bấm E để gõ từng chữ.
 ##
-## Khuôn T3 thứ ba, và là trò T3 duy nhất tốn gói tin — đúng một gói mỗi lần ai đó ghép xong
-## một từ. Cả ván cỡ hai chục gói.
+## Khuôn T3. Sàn là 26 ô A–Z đặt sẵn trong `san_chu.tscn` (lưới 6 cột như bàn phím trải dưới
+## đất). Gõ xong một từ thì được một điểm và nhận từ mới. Hết giờ, ai nhiều từ nhất đứng đầu.
 ##
-## ## Cả phòng ghép CHUNG một từ
+## ## Từ của mỗi người là hàm thuần — không gói tin nào để phát từ
 ##
-## Từ hiện tại chỉ phụ thuộc `(hạt giống, gio())`, nên mọi máy luôn hiện cùng một từ, và cứ
-## `GIAY_MOI_TU` giây thì đổi. Nhờ thế:
+## `tu_cua(hat_giong, id, so_tu_xong)` cho ra từ đang gõ của một người. Mọi máy biết cả ba
+## tham số (điểm được cộng qua `_net_tien`), nên mọi máy hiện đúng chữ trên đầu từng người mà
+## không ai phải gửi "từ của tôi là gì".
 ##
-##   - Không cần ai phát "từ mới là gì" — mọi máy tự biết.
-##   - Mưa chữ có thể ưu tiên rải đúng chữ mà từ hiện tại cần, mà vẫn tất định.
-##   - Nhiều người ghép xong cùng một từ đều được điểm: không có gì để tranh, nên không cần
-##     trọng tài.
+## ## Một gói cho mỗi chữ ĐÚNG
 ##
-## ## Khối chữ KHÔNG bị tiêu thụ
+## Tiến độ phải gửi đi vì chữ trên đầu là thứ người khác nhìn để biết mình đang thua ai. Chữ
+## sai không tốn gói nào và không bị phạt — phạt chỉ dạy người chơi đứng yên không dám gõ.
 ##
-## Đấm một khối là mình nhận chữ đó, khối vẫn nằm nguyên cho người khác đấm. Cho biến mất thì
-## lập tức sinh ra câu hỏi "ai đấm trước" — một câu hỏi phải có trọng tài trả lời, chỉ để đổi
-## lấy đúng một chút kịch tính. Không đáng.
+## Mỗi người chỉ tự gõ cho chính mình, nên không có gì để tranh, không cần trọng tài.
 ##
-## ## Đấm sai thì sao
+## ## Đánh nhau
 ##
-## Không sao cả. Chỉ chữ ĐÚNG KẾ TIẾP mới được nhận. Phạt (xoá tiến độ) nghe có vẻ căng hơn,
-## nhưng giữa một cơn mưa chữ thì nó chỉ dạy người chơi đứng yên không dám đấm.
+## Ô chữ là của chung, nên chen nhau là chuyện tự nhiên: F đánh (đòn chung của `MiniGame3D`,
+## bật `co_danh` trong `word_wars.tscn`) hất người ta khỏi ô họ đang cần và làm họ CHOÁNG
+## `GIAY_CHOANG` giây không gõ được. Tiến độ không mất — mất chữ vì bị đánh là quá gắt.
 
-## Nút đấm. Cùng phím với cầu lửa của Magma — trong sân không có gì để nhặt nên phím này rảnh.
-const NUT_DAM := "interact"
-## Nghỉ giữa hai cú đấm, giây.
-const NGHI_DAM := 0.25
-## Cả phòng đổi sang từ mới sau chừng này giây.
-const GIAY_MOI_TU := 9.0
-## Mưa chữ: chừng này giây một khối.
-const NHIP_ROI := 0.45
-## Khối rơi trong bán kính này. Sàn tròn bán kính 11,5 m.
-const BAN_KINH_ROI := 10.0
-## Bao nhiêu phần khối rơi là chữ mà từ hiện tại đang cần. Phần còn lại là chữ nhiễu — không có
-## nhiễu thì sân chỉ toàn ba chữ và ghép từ thành chuyện nhặt đồ, không phải chuyện tìm.
-const TI_LE_CHU_CAN := 0.55
+## Nút gõ. Trong sân không có gì để nhặt nên phím này rảnh.
+const NUT_GO := "interact"
+## Nghỉ giữa hai lần gõ, giây. Chặn giữ phím E rồi lướt qua các ô.
+const NGHI_GO := 0.15
+## Bị đánh trúng thì không gõ được chừng này giây.
+const GIAY_CHOANG := 1.0
+## Kẹp người chơi trong bán kính này — sàn 11,5. Trò không chết vì rơi, nên cú đánh không được
+## hất ai ra khỏi sàn.
+const BAN_KINH_GIU := 11.0
 
 const TU := ["NHA", "CUA", "BAN", "MEO", "CHO", "HOA", "CAY", "SAO", "MUA", "GIO",
-		"NUI", "TRE", "COM", "PHO", "BIEN", "SONG", "BANH", "CHAM", "XANH", "TRANG"]
-const CHU_NHIEU := "ABCDEGHIKLMNOPQRSTUVXY"
+		"NUI", "TRE", "COM", "PHO", "BIEN", "SONG", "BANH", "CHAM", "XANH", "TRANG",
+		"VUI", "KHOE", "QUAT", "DEN", "MAY"]
 
-@export var khoi_scene: PackedScene = null
+## Chữ trên đầu của chính mình tô màu này, người khác màu trắng — nhìn sân đông là thấy ngay
+## mình ở đâu.
+const MAU_TOI := Color(1.0, 0.85, 0.2)
 
-var _bang: Label3D = null
-var _khoi: Array[KhoiChu] = []
-## Lịch mưa chữ sinh từ hạt giống: `[{"luc": giây, "chu": "A", "cho": Vector3}]`.
-var _lich: Array = []
-var _ke_tiep := 0
-## Đã ghép đúng mấy chữ đầu của từ hiện tại.
-var _tien := 0
-## Chỉ số từ mà `_tien` đang nói về — đổi từ thì tiến độ về 0.
-var _tu_dang := -1
-var _dam_luc := -99.0
-## player_id -> số từ đã ghép xong. Mọi máy cùng cộng từ RPC; bảng của master là bảng chốt.
+@export var chu_tren_dau_scene: PackedScene = null
+
+var _o: Array[OChu] = []
+## player_id -> số từ đã gõ xong. Mọi máy cùng cộng từ RPC; bảng của master là bảng chốt.
 var _diem: Dictionary = {}
+## player_id -> đã gõ đúng mấy chữ đầu của từ hiện tại.
+var _tien: Dictionary = {}
+## player_id -> Label3D trên đầu người đó. Nhãn là con của Player, phải tự gỡ khi xong ván.
+var _nhan: Dictionary = {}
+var _go_luc := -99.0
+var _choang_toi := -99.0
 
 
 func _ready() -> void:
 	super()
 	ten = "WORD WARS"
-	luat = "WASD chạy · E đấm khối chữ · ghép đúng thứ tự thành từ trên bảng"
+	luat = "WASD chạy · đứng lên ô chữ rồi bấm E · gõ đúng từ trên đầu mình · F đánh"
 	giay_van = 60.0
 
 
 func _dung_san() -> void:
-	_bang = san.get_node_or_null("Bang") as Label3D
-	_khoi.clear()
-	_lich = lich_mua(hat_giong)
-	_ke_tiep = 0
-	_tien = 0
-	_tu_dang = -1
-	_dam_luc = -99.0
+	_o.assign(san.get_node("Bang").get_children())
 	_diem.clear()
+	_tien.clear()
+	_go_luc = -99.0
+	_choang_toi = -99.0
 	for id in _song:
 		_diem[int(id)] = 0
-	if _bang == null:
-		push_error("WordWars: san thieu node Bang")
+		_tien[int(id)] = 0
+	if _o.size() != 26:
+		push_error("WordWars: san co %d o chu, can 26" % _o.size())
+	_gan_nhan()
+
+
+func dung_som() -> void:
+	_go_nhan()
+	super()
 
 
 func _luat_moi_nhip() -> void:
-	var t := gio()
-	var i_tu := chi_so_tu(t)
-	if i_tu != _tu_dang:
-		_tu_dang = i_tu
-		_tien = 0
-	while _ke_tiep < _lich.size() and t >= float(_lich[_ke_tiep]["luc"]):
-		_roi(_lich[_ke_tiep])
-		_ke_tiep += 1
-	_khoi = _khoi.filter(func(k: KhoiChu) -> bool: return is_instance_valid(k))
-	if _bang != null:
-		var tu := tu_luc(t)
-		_bang.text = "%s\n%s   ·   %d từ" % [
-				" ".join(tu.split()), _da_ghep(tu), int(_diem.get(NetManager.local_id(), 0))]
+	giu_trong_san(BAN_KINH_GIU)
+	for id in _nhan:
+		var n := _nhan[id] as Label3D
+		if is_instance_valid(n):
+			n.text = hien_tu(tu_hien_tai(int(id)), int(_tien.get(id, 0)))
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not _chay or not event.is_action_pressed(NUT_DAM):
+	super(event)
+	if not _chay or not event.is_action_pressed(NUT_GO):
 		return
-	if gio() - _dam_luc < NGHI_DAM:
+	if gio() - _go_luc < NGHI_GO or gio() < _choang_toi:
 		return
-	var p := _nguoi(NetManager.local_id())
-	if p == null or not con_song(NetManager.local_id()):
+	var id := NetManager.local_id()
+	var p := _nguoi(id)
+	if p == null or not _tien.has(id):
 		return
 	get_viewport().set_input_as_handled()
-	_dam_luc = gio()
-	_dam(p)
+	_go_luc = gio()
+	var o := _o_duoi_chan(p)
+	if o == null:
+		return
+	var tu := tu_hien_tai(id)
+	var k := int(_tien[id])
+	if k < tu.length() and o.chu == tu[k]:
+		Fusion.rpc(_net_tien, id, k + 1)
 
 
-## Đấm: nhận chữ nếu đúng chữ kế tiếp của từ đang hiện.
+## Tiến độ mới của một người. Gõ đủ chữ thì cộng điểm và về 0 — từ mới tự suy ra từ điểm.
 ##
-## Hỏi thẳng `Area3D` của từng khối — tầm đấm CHÍNH LÀ cái khối nhìn thấy, không phải một con
-## số bán kính chép tay trong code.
-func _dam(p: Player) -> void:
-	var tu := tu_luc(gio())
-	if _tien >= tu.length():
-		return
-	var can := tu[_tien]
-	for k in _khoi:
-		if k.chu != can or not k.vung.overlaps_body(p):
-			continue
-		_tien += 1
-		if _tien >= tu.length():
-			_tien = 0
-			Fusion.rpc(_net_xong_tu, NetManager.local_id())
-		return
-
-
-## Một gói cho một từ ghép xong. Không ai phải duyệt: nhiều người cùng ghép xong một từ đều
-## được tính, nên không có gì để tranh.
+## Gửi CON SỐ tiến độ chứ không gửi "+1": gói tới trễ hay lặp lại cũng không cộng đúp.
 @rpc("any_peer", "call_local")
-func _net_xong_tu(id: int) -> void:
-	if _diem.has(id):
-		_diem[id] = int(_diem[id]) + 1
-
-
-func _roi(muc: Dictionary) -> void:
-	if san == null or khoi_scene == null:
+func _net_tien(id: int, tien: int) -> void:
+	if not _tien.has(id) or tien != int(_tien[id]) + 1:
 		return
-	var k := khoi_scene.instantiate() as KhoiChu
-	san.add_child(k)
-	k.dat(String(muc["chu"]), san.global_position + (muc["cho"] as Vector3))
-	_khoi.append(k)
+	if tien >= tu_hien_tai(id).length():
+		_diem[id] = int(_diem[id]) + 1
+		_tien[id] = 0
+	else:
+		_tien[id] = tien
 
 
-func _da_ghep(tu: String) -> String:
-	return tu.substr(0, _tien).rpad(tu.length(), "_")
+func _khi_bi_danh(_ke_danh: int, nan: int) -> void:
+	if nan == NetManager.local_id():
+		_choang_toi = gio() + GIAY_CHOANG
+
+
+func tu_hien_tai(id: int) -> String:
+	return tu_cua(hat_giong, id, int(_diem.get(id, 0)))
+
+
+## Ô chữ đang ở dưới chân người này, null nếu không đứng trên ô nào.
+func _o_duoi_chan(p: Player) -> OChu:
+	for o in _o:
+		if o.vung.overlaps_body(p):
+			return o
+	return null
+
+
+# ───────────────────────── nhãn trên đầu ─────────────────────────
+
+## Gắn một nhãn lên đầu MỌI người chơi trên máy này. Nhãn là scene đặt sẵn; ở đây chỉ
+## `instantiate()` vì số người chỉ biết lúc vào ván.
+func _gan_nhan() -> void:
+	_go_nhan()
+	if chu_tren_dau_scene == null:
+		push_error("WordWars: thieu chu_tren_dau_scene")
+		return
+	for p: Player in get_tree().get_nodes_in_group("players"):
+		var id := p.player_id()
+		if not _tien.has(id):
+			continue
+		var n := chu_tren_dau_scene.instantiate() as Label3D
+		n.modulate = MAU_TOI if p.is_mine else Color.WHITE
+		p.add_child(n)
+		_nhan[id] = n
+		# Tên người chơi nằm đúng chỗ nhãn từ — ẩn đi cho khỏi chồng chữ, trả lại khi xong ván.
+		p.name_tag.visible = false
+
+
+func _go_nhan() -> void:
+	for id in _nhan:
+		var n = _nhan[id]
+		if is_instance_valid(n):
+			n.queue_free()
+	_nhan.clear()
+	for p: Player in get_tree().get_nodes_in_group("players"):
+		p.name_tag.visible = not p.is_mine
 
 
 # ───────────────────────── xếp hạng theo số từ ─────────────────────────
@@ -159,38 +180,28 @@ func _chot_ket_qua() -> void:
 	var xep: Array = []
 	for id in _diem:
 		xep.append(int(id))
-	xep.sort_custom(func(a: int, b: int) -> bool: return int(_diem[a]) > int(_diem[b]))
+	xep.sort_custom(func(a: int, b: int) -> bool:
+		if int(_diem[a]) != int(_diem[b]):
+			return int(_diem[a]) > int(_diem[b])
+		return int(_tien[a]) > int(_tien[b]))
 	Fusion.rpc(_net_xep_hang, xep)
 
 
-# ───────────────────────── luật: hàm thuần, kiểm bằng assert ─────────────────────────
-
-## Từ thứ mấy đang hiện tại thời điểm `t`.
-static func chi_so_tu(t: float) -> int:
-	return int(t / GIAY_MOI_TU)
+## Không ai rơi khỏi sàn trong trò này — xếp hạng chỉ theo số từ, chạy đủ giờ.
+func _toi_thua() -> bool:
+	return false
 
 
-## Từ đang hiện tại thời điểm `t`. Chỉ phụ thuộc `t` nên mọi máy luôn hiện cùng một từ.
-static func tu_luc(t: float) -> String:
-	return TU[chi_so_tu(t) % TU.size()]
+# ───────────────────────── luật: hàm thuần ─────────────────────────
 
-
-## Toàn bộ cơn mưa chữ của một ván, suy ra từ hạt giống.
-static func lich_mua(giong: int) -> Array:
+## Từ thứ `so_xong` của người `id` trong ván có hạt giống `giong`. Mỗi người một chuỗi từ
+## riêng, nhưng ai cũng tính ra được chuỗi của người khác.
+static func tu_cua(giong: int, id: int, so_xong: int) -> String:
 	var rng := RandomNumberGenerator.new()
-	rng.seed = giong
-	var ds: Array = []
-	var t := 1.0
-	while t < 90.0:
-		var tu := tu_luc(t)
-		var chu: String
-		if rng.randf() < TI_LE_CHU_CAN:
-			chu = tu[rng.randi() % tu.length()]
-		else:
-			chu = CHU_NHIEU[rng.randi() % CHU_NHIEU.length()]
-		var a := rng.randf() * TAU
-		# `sqrt` để khối rải đều trên mặt sàn chứ không dồn về tâm.
-		var r := sqrt(rng.randf()) * BAN_KINH_ROI
-		ds.append({"luc": t, "chu": chu, "cho": Vector3(cos(a) * r, 0.0, sin(a) * r)})
-		t += NHIP_ROI
-	return ds
+	rng.seed = hash([giong, id, so_xong])
+	return TU[rng.randi() % TU.size()]
+
+
+## Chữ hiện trên đầu: chữ đã gõ thành `•`, nên chữ ĐẦU TIÊN còn thấy là chữ phải gõ kế tiếp.
+static func hien_tu(tu: String, tien: int) -> String:
+	return "•".repeat(tien) + tu.substr(tien)

@@ -1,21 +1,52 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://minigame/temporal_trails/temporal_trails.gd" id="1_tt"]
 [ext_resource type="PackedScene" path="res://minigame/temporal_trails/san_vet.tscn" id="2_san"]
-[ext_resource type="PackedScene" path="res://minigame/temporal_trails/vet.tscn" id="3_vet"]
-[ext_resource type="Material" path="res://materials/o_nguoi/mat_o_nguoi_0.tres" id="m0"]
-[ext_resource type="Material" path="res://materials/o_nguoi/mat_o_nguoi_1.tres" id="m1"]
-[ext_resource type="Material" path="res://materials/o_nguoi/mat_o_nguoi_2.tres" id="m2"]
-[ext_resource type="Material" path="res://materials/o_nguoi/mat_o_nguoi_3.tres" id="m3"]
-[ext_resource type="Material" path="res://materials/o_nguoi/mat_o_nguoi_4.tres" id="m4"]
-[ext_resource type="Material" path="res://materials/o_nguoi/mat_o_nguoi_5.tres" id="m5"]
-[ext_resource type="Material" path="res://materials/o_nguoi/mat_o_nguoi_6.tres" id="m6"]
-[ext_resource type="Material" path="res://materials/o_nguoi/mat_o_nguoi_7.tres" id="m7"]
-[ext_resource type="Material" path="res://materials/o_nguoi/mat_o_nguoi_8.tres" id="m8"]
-[ext_resource type="Material" path="res://materials/o_nguoi/mat_o_nguoi_9.tres" id="m9"]
+[ext_resource type="PackedScene" path="res://minigame/temporal_trails/vet_sang.tscn" id="3_vet"]
+[ext_resource type="PackedScene" path="res://minigame/chung/thanh_mau.tscn" id="4_tm"]
 
 [node name="TemporalTrails" type="Node"]
 script = ExtResource("1_tt")
 san_scene = ExtResource("2_san")
 vet_scene = ExtResource("3_vet")
-vat_lieu_nguoi = Array[StandardMaterial3D]([ExtResource("m0"), ExtResource("m1"), ExtResource("m2"), ExtResource("m3"), ExtResource("m4"), ExtResource("m5"), ExtResource("m6"), ExtResource("m7"), ExtResource("m8"), ExtResource("m9")])
+
+[node name="ThanhMau" parent="." instance=ExtResource("4_tm")]
+toi_da = 100.0
+
+[node name="Lop" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="Pha" type="Label" parent="Lop"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -360.0
+offset_top = 70.0
+offset_right = 360.0
+offset_bottom = 120.0
+grow_horizontal = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 30
+horizontal_alignment = 1
+text = "..."
+
+[node name="CanhBao" type="Label" parent="Lop"]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -300.0
+offset_top = -130.0
+offset_right = 300.0
+offset_bottom = -80.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 0.3, 0.25, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 34
+horizontal_alignment = 1
+text = "RA KHỎI VỆT! QUAY LẠI ĐƯỜNG CŨ"

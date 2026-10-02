@@ -34,7 +34,7 @@ Node Godot: Node3D (Root) -> WorldEnvironment, Camera3D, Node3D (Đèn: SpotLigh
 Luật: Chạy đua trên băng, camera sau lưng riêng. Thứ hạng về đích hoặc đo quãng đường Z. Chết gửi 1 gói tin "tôi chết".
 Node Godot: Node3D (Root) -> StaticBody3D (Đường đua), Area3D (Vạch đích), CharacterBody3D (Player: Camera3D sau lưng, MeshInstance3D, CollisionShape3D), CanvasLayer (UI).
 
-10. Bounding Blocks
+10. ~~Bounding Blocks~~ (đã xoá 2026-10-02)
 Luật: Giậm ô đổi màu trong 60s. Hết giờ đếm ô. 0 gói tin mạng, tự suy từ vị trí.
 Node Godot: Node3D (Root) -> Camera3D, Timer (60s), GridMap / mảng Area3D, CharacterBody3D (Player: MeshInstance3D, CollisionShape3D, RayCast3D bắn xuống), CanvasLayer (UI).
 

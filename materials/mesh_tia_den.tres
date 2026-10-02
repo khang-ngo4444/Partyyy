@@ -1,0 +1,11 @@
+[gd_resource type="CylinderMesh" format=3]
+
+[resource]
+resource_name = "mesh_tia_den"
+top_radius = 0.12
+bottom_radius = 2.66
+height = 11.8
+radial_segments = 32
+rings = 1
+cap_top = false
+cap_bottom = false

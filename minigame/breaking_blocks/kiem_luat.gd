@@ -6,10 +6,8 @@ const RONG_O := 2.8
 const KHE := 1.2
 const BUOC := RONG_O + KHE
 
-const GIAY_VO_MOT_NGUOI := 5.5
+const GIAY_VO_MOT_NGUOI := 3.0
 const THEM_MOI_NGUOI := 0.75
-const TRE_HOI := 1.2
-const GIAY_HOI := 22.0
 const GIAY_MOC_LAI := 4.5
 const KHO_CUOI := 4.0
 const GIAY_KHO_HET := 30.0
@@ -17,7 +15,7 @@ const MOC_NHE := 0.25
 const MOC_NANG := 0.5
 const MOC_SAP_VO := 0.7
 const GIAY_BAO_TOI_THIEU := 0.6
-const CAO_TINH := 2.2
+const CAO_TINH := 3.0
 const GIAY_VAN := 60.0
 
 const SPEED := 6.0
@@ -38,9 +36,6 @@ static func kho(t: float) -> float:
 
 static func giay_moc_lai(t: float) -> float:
 	return GIAY_MOC_LAI * kho(t)
-
-static func giay_hoi(t: float) -> float:
-	return GIAY_HOI * kho(t)
 
 static func toc_hu(n: int, t: float) -> float:
 	if n <= 0:
@@ -66,7 +61,6 @@ static func giay_canh_bao(n: int, t: float) -> float:
 func mo_phong(so_nguoi: int, nguong: float, giong: int) -> Dictionary:
 	var tong := CANH * CANH
 	var hu := PackedFloat32Array(); hu.resize(tong)
-	var cho := PackedFloat32Array(); cho.resize(tong)
 	var bao := PackedFloat32Array(); bao.resize(tong)
 	var vo_luc := PackedFloat32Array(); vo_luc.resize(tong)
 	var con := []
@@ -100,16 +94,11 @@ func mo_phong(so_nguoi: int, nguong: float, giong: int) -> Dictionary:
 		for i in tong:
 			if not con[i]:
 				if t - vo_luc[i] >= giay_moc_lai(t):
-					con[i] = true; hu[i] = 0.0; cho[i] = 0.0; bao[i] = -1.0
+					con[i] = true; hu[i] = 0.0; bao[i] = -1.0
 				continue
 			var n := int(dong.get(i, 0))
 			if n > 0:
-				cho[i] = TRE_HOI
 				hu[i] = minf(hu[i] + toc_hu(n, t) * d, 1.0)
-			elif cho[i] > 0.0:
-				cho[i] -= d
-			else:
-				hu[i] = maxf(hu[i] - d / giay_hoi(t), 0.0)
 			if trang_thai(hu[i]) == SAP_VO:
 				if bao[i] < 0.0: bao[i] = t
 			else:
@@ -210,13 +199,6 @@ func _init() -> void:
 	ck(cam_chet > 0.0, "dung yen ca van ma o khong vo - tro vo nghia")
 	ck(cam_chet < 10.0, "dung yen %.1f s moi vo - cho qua lau" % cam_chet)
 
-	# ── 5. LANH CHAM HON HU, moi luc trong van ──
-	for gi in range(0, 61, 5):
-		var vo_tai: float = 1.0 / toc_hu(1, float(gi))
-		ck(giay_hoi(float(gi)) > vo_tai * 1.5,
-				"giay %d: lanh %.1f s vs vo %.1f s - lanh qua nhanh"
-				% [gi, giay_hoi(float(gi)), vo_tai])
-
 	# ── 6. DONG NGUOI THI NHANH HON ──
 	for n in range(2, 9):
 		ck(toc_hu(n, 0.0) > toc_hu(n - 1, 0.0), "%d nguoi khong nhanh hon %d" % [n, n - 1])
@@ -262,8 +244,8 @@ func _init() -> void:
 	print("OK  4 trang thai dung thu tu LANH -> NHE -> NANG -> SAP_VO")
 	print("OK  bao hep nhat %.2f s (%s), san cung %.2f s" % [hep, hep_tai, GIAY_BAO_TOI_THIEU])
 	print("OK  dung yen thi o vo sau %.1f s" % cam_chet)
-	print("OK  lanh %.1f s (dau) -> %.1f s (cuoi); moc lai %.1f s -> %.1f s"
-			% [giay_hoi(0.0), giay_hoi(60.0), giay_moc_lai(0.0), giay_moc_lai(60.0)])
+	print("OK  roi o thi vet nut o lai, khong tu lanh; moc lai %.1f s -> %.1f s"
+			% [giay_moc_lai(0.0), giay_moc_lai(60.0)])
 	print("OK  van thuc 4 nguoi, 5 hat giong moi kieu:")
 	for l in bao_cao:
 		print(l)

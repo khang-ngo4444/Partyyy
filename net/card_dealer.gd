@@ -179,8 +179,7 @@ func _roi_ban(player_id: int) -> void:
 		else:
 			_day_trang_thai(deck)
 			if van_con and _ghi_chu.has(deck):
-				_bao_them(deck, "%s
-%s" % [_ghi_chu[deck], _bang_poker(deck)])
+				_bao_them(deck, "%s\n%s" % [_ghi_chu[deck], _bang_poker(deck)])
 				_ghi_chu.erase(deck)
 
 
@@ -572,8 +571,7 @@ func _ha_bai(deck: int) -> void:
 	_luot[deck] = -1
 	_han[deck] = 0.0
 	_day_trang_thai(deck)
-	_ket_thuc(deck, "
-".join(dong))
+	_ket_thuc(deck, "\n".join(dong))
 
 
 ## CHI XI DACH. Nha cai lat la tay roi rut toi khi du 17 — luat chuan, khong co quyet dinh
@@ -617,8 +615,7 @@ func _ket_thuc(deck: int, kq: String) -> void:
 	_day_trang_thai(deck)
 	var ghi: String = _ghi_chu.get(deck, "")
 	_ghi_chu.erase(deck)
-	_bao(deck, kq if ghi == "" else "%s
-%s" % [ghi, kq])
+	_bao(deck, kq if ghi == "" else "%s\n%s" % [ghi, kq])
 	await get_tree().create_timer(DON_BAN_SAU).timeout
 	if int(_pha.get(deck, PHA_CHO)) != PHA_XONG:
 		return
@@ -988,8 +985,7 @@ func _het_gio(deck: int) -> void:
 	_lam(deck, seat, HD_FOLD, 0)
 	# Van con danh tiep thi bao ngay. Van ket thuc luon thi `_ket_thuc` da in ghi chu roi.
 	if int(_pha.get(deck, PHA_CHO)) == PHA_CHOI and _ghi_chu.has(deck):
-		_bao_them(deck, "%s
-%s" % [_ghi_chu[deck], _bang_poker(deck)])
+		_bao_them(deck, "%s\n%s" % [_ghi_chu[deck], _bang_poker(deck)])
 		_ghi_chu.erase(deck)
 
 

@@ -1,0 +1,35 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://minigame/word_wars/o_chu.gd" id="1_oc"]
+[ext_resource type="Material" path="res://materials/mat_o_chu.tres" id="2_m"]
+
+[sub_resource type="BoxMesh" id="Box_o"]
+size = Vector3(2.2, 0.06, 2.2)
+
+[sub_resource type="BoxShape3D" id="Shape_o"]
+size = Vector3(2.2, 2.0, 2.2)
+
+[node name="OChu" type="Node3D"]
+script = ExtResource("1_oc")
+
+[node name="Mat" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+mesh = SubResource("Box_o")
+material_override = ExtResource("2_m")
+
+[node name="Chu" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.07, 0)
+pixel_size = 0.012
+font_size = 110
+outline_size = 18
+modulate = Color(0.45, 0.95, 1, 1)
+outline_modulate = Color(0.02, 0.08, 0.12, 1)
+text = "A"
+
+[node name="Vung" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+collision_layer = 0
+collision_mask = 2
+
+[node name="Hinh" type="CollisionShape3D" parent="Vung"]
+shape = SubResource("Shape_o")

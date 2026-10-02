@@ -35,25 +35,50 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Bao" type="Label" parent="Lop/Bang"]
+[node name="HuongDan" type="ColorRect" parent="Lop"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.07, 0.09, 0.14, 1)
+
+[node name="Giua" type="VBoxContainer" parent="Lop/HuongDan"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -420.0
-offset_top = -140.0
-offset_right = 420.0
-offset_bottom = 140.0
+offset_left = -460.0
+offset_top = -250.0
+offset_right = 460.0
+offset_bottom = 250.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
-theme_override_font_sizes/font_size = 40
+theme_override_constants/separation = 28
+
+[node name="Tieu" type="Label" parent="Lop/HuongDan/Giua"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 64
+text = "MINIGAME"
+horizontal_alignment = 1
+
+[node name="Luat" type="Label" parent="Lop/HuongDan/Giua"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = ""
 horizontal_alignment = 1
-vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Dem" type="Label" parent="Lop/HuongDan/Giua"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 96
+text = ""
+horizontal_alignment = 1
 
 [node name="KetQua" type="Label" parent="Lop/Bang"]
 layout_mode = 1

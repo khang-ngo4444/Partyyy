@@ -37,10 +37,26 @@ const CAO_SAN := 300.0
 ## Rơi thấp hơn mặt sân chừng này thì coi như đã rơi khỏi sàn.
 const ROI_KHOI_SAN := 8.0
 
+## ĐÁNH tay không (phím F, action `danh`) — trò nào cần thì bật trong `.tscn`. Trúng thì nạn
+## nhân bị hất; lớp con nghe `_khi_bi_danh()` để thêm luật riêng (rơi vương miện, choáng...).
+const NUT_DANH := "danh"
+## Tầm đánh, mét, tính từ tâm người đánh.
+const TAM_DANH := 1.8
+## Nạn nhân phải nằm PHÍA TRƯỚC: tích vô hướng giữa hướng mặt và hướng tới họ phải lớn hơn
+## số này (0,35 ≈ nón 140°). Không có điều kiện này thì quay lưng vẫn đánh trúng.
+const GOC_DANH := 0.35
+## Nghỉ giữa hai cú đánh, giây. Không có thì giữ phím là hất liên hoàn không ai đứng nổi.
+const NGHI_DANH := 0.6
+## Bị đánh thì bị hất mạnh cỡ nào — ngang và dốc lên.
+const DANH_NGANG := 9.0
+const DANH_LEN := 3.5
+
 ## Scene sân của trò này. Lớp con trỏ export này sang scene của nó trong `.tscn`.
 @export var san_scene: PackedScene = null
 ## Ván dài bao lâu. 0 = không giới hạn, chạy tới khi còn một người.
 @export var giay_van := 60.0
+## Bật đòn đánh tay không (xem `NUT_DANH`).
+@export var co_danh := false
 
 var san: Node3D = null
 var hat_giong := 0
@@ -51,9 +67,12 @@ var _thu_tu_chet: Array = []
 ## Chỗ đứng trước khi lên sân, để còn đường về. Xem ghi chú đầu file.
 var _cho_cu := Transform3D.IDENTITY
 var _co_cho_cu := false
+## `khoa_di_chuyen` của nhân vật máy này trước khi vào sân. Xem `_che_do_san()`.
+var _khoa_cu := false
 var _bat_dau_luc := 0.0
 var _chay := false
 var _rng := RandomNumberGenerator.new()
+var _danh_luc := -99.0
 
 
 func _ready() -> void:
@@ -159,6 +178,83 @@ func _toi_thua() -> bool:
 	return p != null and p.global_position.y < san.global_position.y - ROI_KHOI_SAN
 
 
+# ───────────────────────────── đánh tay không ─────────────────────────────
+
+## Lớp con ghi đè `_unhandled_input` thì PHẢI gọi `super(event)`, không thì phím đánh chết.
+func _unhandled_input(event: InputEvent) -> void:
+	if not co_danh or not _chay or not event.is_action_pressed(NUT_DANH):
+		return
+	if gio() - _danh_luc < NGHI_DANH:
+		return
+	var toi := _nguoi(NetManager.local_id())
+	if toi == null or not con_song(NetManager.local_id()):
+		return
+	get_viewport().set_input_as_handled()
+	_danh_luc = gio()
+	var nan := tim_nan(toi)
+	if nan == null:
+		return
+	var huong := nan.global_position - toi.global_position
+	huong.y = 0.0
+	Fusion.rpc(_net_danh, NetManager.local_id(), nan.player_id(), huong.normalized())
+
+
+## Người gần nhất trong tầm, phía trước mặt `toi`, còn sống. Null nếu đánh vào không khí.
+##
+## Máy NGƯỜI ĐÁNH phán trúng hay trượt theo vị trí replicator đã gửi — trễ vài chục ms, chấp
+## nhận được cho một trò party. Có trọng tài thì phải đợi một vòng gói tin mới thấy đòn ăn.
+func tim_nan(toi: Player) -> Player:
+	var truoc := -toi.global_basis.z
+	truoc.y = 0.0
+	truoc = truoc.normalized()
+	var gan: Player = null
+	var gan_nhat := TAM_DANH
+	for p: Player in get_tree().get_nodes_in_group("players"):
+		if p == toi or not con_song(p.player_id()):
+			continue
+		var d := p.global_position - toi.global_position
+		d.y = 0.0
+		var dai := d.length()
+		if dai > gan_nhat or dai < 0.001 or truoc.dot(d / dai) < GOC_DANH:
+			continue
+		gan = p
+		gan_nhat = dai
+	return gan
+
+
+## Một gói cho một cú trúng. CHỈ máy của nạn nhân tự hất mình — đẩy hộ người khác là đánh nhau
+## với replicator đang gửi vị trí của họ.
+@rpc("any_peer", "call_local")
+func _net_danh(ke_danh: int, nan: int, huong: Vector3) -> void:
+	if not _chay:
+		return
+	if nan == NetManager.local_id():
+		var p := _nguoi(nan)
+		if p != null:
+			p.day(huong * DANH_NGANG + Vector3.UP * DANH_LEN)
+	_khi_bi_danh(ke_danh, nan)
+
+
+## Chạy trên MỌI máy khi có cú trúng. Lớp con thêm luật riêng ở đây.
+func _khi_bi_danh(_ke_danh: int, _nan: int) -> void:
+	pass
+
+
+## Kẹp nhân vật CỦA MÁY NÀY trong bán kính `r` quanh tâm sân — cho trò không có đường chết vì
+## rơi, để cú đánh không hất ai xuống vực. Chỉ `is_mine`: kéo người khác là đánh nhau với
+## replicator.
+func giu_trong_san(r: float) -> void:
+	var p := _nguoi(NetManager.local_id())
+	if p == null or san == null:
+		return
+	var l := p.global_position - san.global_position
+	var v := Vector2(l.x, l.z)
+	if v.length() <= r:
+		return
+	v = v.normalized() * r
+	p.global_position = san.global_position + Vector3(v.x, l.y, v.y)
+
+
 # ───────────────────────────── chết và xếp hạng ─────────────────────────────
 
 ## Tôi vừa thua. Tự khai, không đợi ai phán.
@@ -233,12 +329,18 @@ func _che_do_san(bat: bool) -> void:
 		if not p.is_mine:
 			continue
 		p.che_do_san = bat
+		# Bàn cờ khoá WASD (`PhaBanCo._che_do_ban_co`) và không ai mở khoá khi minigame chen vào
+		# — nhân vật đứng trơ trên sân. Mở lúc vào, trả lại đúng như cũ lúc ra (bàn vẫn đang mở).
 		if bat:
+			_khoa_cu = p.khoa_di_chuyen
+			p.khoa_di_chuyen = false
 			var c := _cam_san()
 			if c != null:
 				c.make_current()
-		elif p.rig != null and is_instance_valid(p.rig):
-			p.rig.camera.make_current()
+		else:
+			p.khoa_di_chuyen = _khoa_cu
+			if p.rig != null and is_instance_valid(p.rig):
+				p.rig.camera.make_current()
 
 
 ## Tìm theo TÊN xuống cả cây con: sân của mỗi trò bọc `san_dau.tscn` vào một node riêng, nên

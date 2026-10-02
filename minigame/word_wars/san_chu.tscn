@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3]
 
 [ext_resource type="PackedScene" path="res://minigame/chung/san_dau.tscn" id="1_st"]
 [ext_resource type="PackedScene" path="res://minigame/chung/san_tron.tscn" id="2_sr"]
 [ext_resource type="Environment" path="res://materials/env_san_sang.tres" id="3_env"]
+[ext_resource type="PackedScene" path="res://minigame/word_wars/o_chu.tscn" id="4_o"]
 
 [node name="SanChu" type="Node3D"]
 
@@ -13,13 +14,108 @@ environment = ExtResource("3_env")
 
 [node name="SanTron" parent="." instance=ExtResource("2_sr")]
 
-[node name="Bang" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, -9)
-billboard = 1
-no_depth_test = true
-fixed_size = true
-pixel_size = 0.0016
-font_size = 120
-outline_size = 32
-modulate = Color(1, 0.95, 0.7, 1)
-text = "..."
+[node name="Bang" type="Node3D" parent="."]
+
+[node name="OA" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 0.2, -4.5)
+chu = "A"
+
+[node name="OB" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0.2, -4.5)
+chu = "B"
+
+[node name="OC" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.2, -4.5)
+chu = "C"
+
+[node name="OD" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.2, -4.5)
+chu = "D"
+
+[node name="OE" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.2, -4.5)
+chu = "E"
+
+[node name="OF" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0.2, -4.5)
+chu = "F"
+
+[node name="OG" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 0.2, -1.5)
+chu = "G"
+
+[node name="OH" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0.2, -1.5)
+chu = "H"
+
+[node name="OI" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.2, -1.5)
+chu = "I"
+
+[node name="OJ" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.2, -1.5)
+chu = "J"
+
+[node name="OK" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.2, -1.5)
+chu = "K"
+
+[node name="OL" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0.2, -1.5)
+chu = "L"
+
+[node name="OM" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 0.2, 1.5)
+chu = "M"
+
+[node name="ON" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0.2, 1.5)
+chu = "N"
+
+[node name="OO" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.2, 1.5)
+chu = "O"
+
+[node name="OP" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.2, 1.5)
+chu = "P"
+
+[node name="OQ" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.2, 1.5)
+chu = "Q"
+
+[node name="OR" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0.2, 1.5)
+chu = "R"
+
+[node name="OS" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 0.2, 4.5)
+chu = "S"
+
+[node name="OT" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0.2, 4.5)
+chu = "T"
+
+[node name="OU" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.2, 4.5)
+chu = "U"
+
+[node name="OV" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.2, 4.5)
+chu = "V"
+
+[node name="OW" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.2, 4.5)
+chu = "W"
+
+[node name="OX" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0.2, 4.5)
+chu = "X"
+
+[node name="OY" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.2, 7.5)
+chu = "Y"
+
+[node name="OZ" parent="Bang" instance=ExtResource("4_o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.2, 7.5)
+chu = "Z"

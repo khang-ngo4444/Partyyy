@@ -54,6 +54,8 @@ không cái nào đăng ký được vào `DANH_SACH` (lý do ở mục 4).
 
 # 3. Minigame pha 3 — hiện có 15 TRÒ
 
+> **Đã xoá (2026-10-02): Acidic Atoll (chìm đảo), Nhặt quà né rác và Bounding Blocks** — gỡ khỏi `QuanTroMiniGame.DANH_SACH`, xoá thư mục `minigame/acidic_atoll/`, `minigame/nhat_qua/`, `minigame/bounding_blocks/`, `materials/mat_axit.tres` và `minigame/chung/san_luoi.tscn` (lưới 13×13 chỉ Bounding Blocks dùng). Các đoạn bên dưới còn nhắc tới hai trò này là lịch sử.
+
 ```
 extends MiniGame   →  17 script, nhưng 2 trong đó là KHUÔN chứ không phải trò
 DANH_SACH          →  15 mục                           ← danh sách thật
@@ -309,7 +311,7 @@ Steam, trang chủ, bài preview và wiki đều chỉ nói "30+ minigame", khô
 |---|---|---|
 | **T1 — sàn đẩy nhau** | Magma & Mages · Acidic Atoll · Explosive Exchange · Crown Capture | cam trên cao · di chuyển theo cam · 1 nút đòn (tầm/hình/lực/hồi chiêu là config) · rơi khỏi sàn tự khai tử · sàn co dần bật-tắt |
 | **T2 — né chướng ngại** | Breaking Blocks · Laser Leap · Searing Spotlights · Slippery Sprint | cùng cam + điều khiển T1, bỏ nút đòn · chướng ngại = hàm của hạt giống + thời gian mạng |
-| **T3 — lưới ô** | Bounding Blocks · Temporal Trails · Word Wars | sàn chia ô · giẫm lên thì ô đổi chủ · đếm ô |
+| **T3 — lưới ô** | Temporal Trails · Word Wars | sàn chia ô · giẫm lên thì ô đổi chủ · đếm ô |
 | **T4 — làn chạy, cam chung** | Sidestep Slope · Nhặt quà né rác · Slippery Sprint | 8 làn kề vai · vật cản sinh theo quãng đường từ hạt giống |
 | **T5 — mỗi người một bàn riêng** | Fractured Faces · Đếm thú · Rockin Rhythm · Bóng chày | chia khu riêng · cùng chuỗi đề từ hạt giống · cuối ván gửi đúng một con số |
 

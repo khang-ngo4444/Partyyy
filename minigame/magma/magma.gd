@@ -40,11 +40,10 @@ extends MiniGame3D
 ## 0,6 m — nhìn từ camera trên cao gần như không thấy, và nó đọc như một vạch trôi chứ không như
 ## "khoanh này sắp mất". Co theo chặng cho vành rộng 1,38 m, hở ra dứt khoát.
 ##
-## ## Chết vì MÁU, không vì rơi
+## ## Chết vì MÁU, hoặc vì bị HẤT văng khỏi sàn
 ##
-## Vị trí bị kẹp trong lòng sàn nên không ai ra khỏi sân được. Đòn cầu lửa giờ hất người ta vào
-## NHAM chứ không hất xuống vực — vẫn đúng ý "hất nhau vào dung nham", nhưng người bị hất có cơ
-## hội bò ra.
+## Không kẹp người trong sàn: cầu lửa trúng gần mép là văng ra ngoài và rơi — lớp cha tính là
+## chết. Ở giữa sàn thì cú hất chỉ đẩy người ta vào nham, vẫn còn cơ hội bò ra.
 ##
 ## ponytail: máu + thanh máu CHÉP từ `spotlights.gd` chứ không tách ra chỗ dùng chung. Hai trò
 ## dùng thì chép rẻ hơn dựng một tầng mới; trò thứ ba cần máu thì lúc đó hãy tách.
@@ -122,9 +121,10 @@ func dung_som() -> void:
 func _luat_moi_nhip() -> void:
 	var t := gio()
 	_ve_vung(t)
-	_cau = _cau.filter(func(c: CauLua) -> bool: return is_instance_valid(c))
+	# `assign` + lambda KHÔNG kiểu: `filter` trả Array thường, và quả đã free không ép được
+	# sang CauLua.
+	_cau.assign(_cau.filter(func(c) -> bool: return is_instance_valid(c)))
 	if con_song(NetManager.local_id()):
-		_giu_tren_san()
 		_an_mau(t)
 
 
@@ -133,23 +133,6 @@ func _ve_vung(t: float) -> void:
 	_vung_bao.scale = Vector3(ti_le_san(t), 1.0, ti_le_san(t))
 	var b := ti_le_bao(t)
 	_vung_an_toan.scale = Vector3(b, 1.0, b)
-
-
-## Kẹp nhân vật CỦA MÁY NÀY trong lòng sàn. Chỉ `is_mine` — kéo người khác là đánh nhau với
-## replicator đang gửi vị trí của họ.
-##
-## Kẹp ở mép sàn, KHÔNG kẹp ở mép vùng an toàn: bị đẩy vào nham là một phần của trò.
-func _giu_tren_san() -> void:
-	var p := _nguoi(NetManager.local_id())
-	if p == null:
-		return
-	var l := p.global_position - san.global_position
-	var r := Vector2(l.x, l.z)
-	var toi_da := _ban_kinh - 0.5
-	if r.length() <= toi_da:
-		return
-	r = r.normalized() * toi_da
-	p.global_position = san.global_position + Vector3(r.x, l.y, r.y)
 
 
 ## Cháy nếu đang ở NGOÀI vùng an toàn.
@@ -167,8 +150,8 @@ func _an_mau(t: float) -> void:
 
 ## Ghi đè: cầu lửa HẤT chứ không giết; chết là do hết máu.
 ##
-## Vẫn gọi `super()` ở cuối: kẹp vị trí chặn được việc đi ra khỏi sàn, nhưng nếu một ngày vật lý
-## đẩy ai xuyên qua mặt sàn thì lưới đỡ của lớp cha vẫn phải ở đó.
+## Gọi `super()` ở cuối: trò này KHÔNG kẹp người trong sàn — bị hất văng ra ngoài là một phần của
+## trò, và rơi khỏi sàn thì lớp cha tính là chết.
 func _toi_thua() -> bool:
 	var p := _nguoi(NetManager.local_id())
 	if p != null:
@@ -208,7 +191,10 @@ func _net_ban(id: int, tu: Vector3, huong: Vector3) -> void:
 		return
 	var c := cau_lua_scene.instantiate() as CauLua
 	san.add_child(c)
-	c.ban(tu, huong, id)
+	# Bù nửa RTT cho quả cầu của NGƯỜI KHÁC (xem `CauLua.ban`). Kẹp 0,15 s để ping xấu không
+	# làm quả cầu nhảy cóc qua đầu nạn nhân.
+	var tre := 0.0 if id == NetManager.local_id() else minf(NetManager.rtt_ms() / 2000.0, 0.15)
+	c.ban(tu, huong, id, tre)
 	_cau.append(c)
 
 

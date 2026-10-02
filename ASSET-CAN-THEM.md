@@ -158,6 +158,7 @@ tất cả là node đặt sẵn trong `.tscn`; script chỉ bật/tắt, đổi
 | `san_laser.tscn` → `Tia*/Mat` | 🔴 `BoxMesh` màu cam | Hiệu ứng tia thật (`GPUParticles3D` hoặc vật liệu phát sáng có chuyển động) |
 | `san_laser.tscn` → `Tia*/Vung` | ✅ `Area3D` + `BoxShape3D` đúng bằng mesh | — |
 | `san_spot.tscn` → `Den*/Bong` | ✅ `SpotLight3D` thật | — |
+| `san_spot.tscn` → `Den*/Tia` | 🟡 nón `mesh_tia_den.tres` + `mat_tia_den.tres` (cộng sáng, trong suốt) | Chùm sáng thật: volumetric fog hoặc `GPUParticles3D` bụi trong tia |
 | `san_spot.tscn` → `Den*/Vung` | ✅ `Area3D` + `CylinderShape3D` khớp vệt sáng của nón đèn | — |
 | `VienSan` (mốc định hướng) | 🟡 `TorusMesh` phát sáng yếu | Cố ý: là NÚM CHỈNH độ khó, càng mờ trò càng căng |
 | UI cho Breaking Blocks / Laser Leap | 🔴 chưa có | `GUIDE_PARTYGAME.md` ghi cả hai cần `CanvasLayer (UI)`. Spotlights đã có thanh máu |
@@ -200,14 +201,11 @@ Dung nham **không phải `StaticBody3D`** như guide ghi: rơi khỏi sàn đã
 
 | Node | Hiện tại | Cần |
 |---|---|---|
-| `bom_axit.tscn` → `Qua` | 🟡 `SphereMesh` cam | Quả bom thật + `GPUParticles3D` đuôi khói |
-| `bom_axit.tscn` → `Dau` (vòng đánh dấu) | 🟡 `TorusMesh` đỏ, bán kính đúng bằng vùng nổ | Cố ý — nhưng nên nhấp nháy nhanh dần khi sắp chạm |
-| `bom_axit.tscn` → `Quang` + `No` | ✅ quầng nổ và vùng sát thương cùng 3,6 m (có assert) | Thay quầng cầu bằng `GPUParticles3D` |
-| `san_axit.tscn` → `BienAxit` | 🟡 `PlaneMesh` 90 m, vật liệu `mat_axit.tres` **mới thêm**, chỉ để nhìn | Shader gợn sóng + bọt |
 | `bom_chuyen.tscn` → `Mat` | 🟡 `SphereMesh` cam | Quả bom có ngòi cháy |
 | `bom_chuyen.tscn` → `Dem` | ✅ `Label3D` đếm ngược trên đầu người ôm | — |
 | `vuong_mien.tscn` → `Mat` | 🔴 `TorusMesh` đồng — trông như cái vòng, không ra vương miện | Model vương miện thật. Quaternius/KayKit có |
 | Hoạt ảnh "đang ôm bom" / "đang đội miện" | 🔴 chưa có | Model KayKit có sẵn tư thế; cần nối `AnimationPlayer` |
+| Đòn đánh tay không (phím F, `MiniGame3D.co_danh`) — Crown + Word Wars | 🔴 không có hoạt ảnh, chỉ thấy nạn nhân bị hất | KayKit có `Attack`/`Unarmed_Melee`; nối vào `AnimationPlayer` lúc `_net_danh` + tiếng `asset/kenney_impact-sounds/` |
 | UI cho cả 5 trò T1 | 🔴 chưa có | Cùng món nợ `CanvasLayer (UI)` với T2 |
 
 > **Sàn trơn nằm trong `Player`, không nằm trong sân.** `Player.truot` —
@@ -218,25 +216,16 @@ Dung nham **không phải `StaticBody3D`** như guide ghi: rơi khỏi sàn đã
 > Ba trò kia 0 gói tin ngoài "tôi chết": cầu lửa gửi đúng một gói lúc bắn rồi tự bay, thanh
 > xoay và lịch bom đều là hàm thuần của hạt giống + thời gian.
 
-## Minigame pha 3 — khuôn T3 (Bounding Blocks · Temporal Trails · Word Wars)
+## Minigame pha 3 — khuôn T3 (Temporal Trails · Word Wars — Bounding Blocks đã xoá)
 
-> **Lưới 13×13 giờ dùng chung.** `san_breaking.tscn` (520 dòng, 169 ô) đã chuyển thành
-> `minigame/chung/san_luoi.tscn` và bỏ bản riêng của Breaking Blocks. Hai trò cùng cần đúng
-> cái sân đó; giữ hai bản là hai chỗ phải sửa mỗi lần đổi bước lưới.
 
-> **`OSan.son()` là hàm mới, tách khỏi `dat()`.** Breaking Blocks hỏi "ô còn hay tan",
-> Bounding Blocks hỏi "ô của ai" — hai câu khác hẳn nhau, nhét chung một hàm thì mỗi bên phải
-> truyền một tham số mình không quan tâm.
 
 | Node | Hiện tại | Cần |
 |---|---|---|
-| `materials/o_nguoi/mat_o_nguoi_0..9.tres` | ✅ **10 file mới**, màu khớp đúng `NetManager.PLAYER_COLORS` | — (sinh sẵn thành file, KHÔNG tạo vật liệu lúc chạy) |
-| `san_luoi.tscn` → ô | 🟡 `BoxMesh` 1,6 m | Texture gạch, và hiệu ứng lúc ô đổi chủ |
-| `vet.tscn` → `Mat` | 🟡 `BoxMesh` 0,35 × 1,4 m, sơn theo màu chủ | Tường phát sáng kiểu đua xe ánh sáng + mờ dần khi sắp tan |
-| `vet.tscn` → `Hinh` | ✅ `BoxShape3D` đúng bằng mesh, cùng vị trí (có assert) | — |
-| `khoi_chu.tscn` → `Mat` + `Chu` | 🟡 `BoxMesh` 1,1 m + `Label3D` | Khối gỗ có vân, chữ khắc chìm |
-| `khoi_chu.tscn` → `Vung` | ✅ `Area3D` + `BoxShape3D` đúng bằng khối (có assert) | — |
-| `san_chu.tscn` → `Bang` | 🟡 `Label3D` treo lơ lửng ở độ cao 7 m | Bảng gỗ/đá thật để chữ có chỗ bám |
+| `vet_sang.tscn` → `Loi` + `Quang` (Temporal Trails) | 🟡 dải `ArrayMesh` dựng từ đường cong lúc chạy + `mat_vet_loi`/`mat_vet_quang` (phát sáng + quầng cộng sáng, bloom từ `env_san_vet.tres`) | Shader dải sáng có nhịp chạy dọc vệt; hạt sáng ở đầu/cuối vệt |
+| `o_chu.tscn` → `Mat` + `Chu` (26 ô A–Z trong `san_chu.tscn/Bang`) | 🟡 `BoxMesh` 2,2 m phẳng + `Label3D` nằm trên mặt | Tấm sàn kim loại/đèn viền kiểu ảnh mẫu, chữ phát sáng |
+| `o_chu.tscn` → `Vung` | ✅ `Area3D` 2,2 m đúng bằng mặt ô | — |
+| `chu_tren_dau.tscn` | 🟡 `Label3D` từ của từng người, gắn lên đầu nhân vật lúc vào ván | Khung/bảng nhỏ sau chữ cho dễ đọc trên nền sáng |
 | Hoạt ảnh đấm | 🔴 chưa có | KayKit có `Attack`; cần nối `AnimationPlayer` vào `_dam()` |
 | Âm thanh (chiếm ô, chạm tường, đấm trúng/trượt) | 🔴 chưa có | `asset/kenney_impact-sounds/` |
 | UI cho cả 3 trò | 🔴 chưa có | Word Wars đang mượn `Bang` trong sân thay `CanvasLayer` |
@@ -245,8 +234,7 @@ Dung nham **không phải `StaticBody3D`** như guide ghi: rơi khỏi sàn đã
 
 | Sinh bằng code | Vì sao không đặt sẵn trong `.tscn` |
 |---|---|
-| `vet.tscn` (Temporal Trails) | Số lượng không biết trước và thay đổi từng giây: 4 người × 12 giây tường sống ≈ 250 đoạn cùng lúc, lúc nhiều lúc ít. Hình tường, hộp va chạm, vật liệu đều nằm trong `.tscn`; code chỉ đặt vị trí và kéo dài |
-| `khoi_chu.tscn` (Word Wars) | Như trên — mưa chữ 0,45 giây một khối, cả ván ~130 khối |
+| `vet_sang.tscn` (Temporal Trails) | Một vệt mỗi người mỗi vòng; HÌNH dải là đường cong sinh từ hạt giống (`DuongVet.tao`) — không vẽ sẵn được, đúng lý do "hình dạng phụ thuộc trạng thái lúc chạy" |
 
 ### Lệch guide ở T3 — có lý do
 
@@ -257,13 +245,10 @@ Dung nham **không phải `StaticBody3D`** như guide ghi: rơi khỏi sàn đã
 - **Word Wars gửi 1 gói/TỪ ghép xong, không phải 1 gói/cú đấm.** Đấm là chuyện riêng của từng
   máy (khối không bị tiêu thụ, ai đấm cũng được), nên không có gì để kể cho người khác nghe cho
   tới lúc có điểm.
-- **Bounding Blocks quét cả 169 ô mỗi khung hình** thay vì `RayCast3D` bắn xuống. Bố cục lưới
-  nằm trong `.tscn`; tính chỉ số ô từ toạ độ là chép cùng một con số ở hai nơi — đúng thứ đã đẻ
-  ra lỗi hộp va chạm lệch mesh ở Laser Leap. ~1000 phép so sánh mỗi khung hình là rẻ.
 - **Temporal Trails hỏi `intersect_shape()` một lần** thay vì gọi `overlaps_body()` lên từng
   đoạn vệt. Cuối ván có ~250 đoạn; để engine lo phần chia lưới là việc của engine.
 
-## Minigame pha 3 — khuôn T4 (Sidestep Slope · Nhặt quà né rác · Slippery Sprint)
+## Minigame pha 3 — khuôn T4 (Sidestep Slope · Slippery Sprint — Nhặt quà đã xoá)
 
 Khuôn thứ hai của pha 3, nằm ở `minigame/chung/mini_game_lan.gd`. Khác T1–T3 đúng hai điểm:
 **không có camera chung** (mỗi người nhìn làn của mình từ sau lưng, dùng lại `CameraRig` sẵn có
@@ -282,9 +267,8 @@ của phòng chờ) và **làn tách rời** cách nhau 40 m.
 | `lan.tscn` → `MatSan` | 🟡 `BoxMesh` 10 × 400 m, vật liệu sáng | Texture đường/tuyết; Sidestep Slope nên có độ dốc thật |
 | `lan.tscn` → `MatTuongTrai/Phai` | 🟡 `BoxMesh` 0,6 × 3 × 400 m | Vách đá/lan can — `kenney_nature-kit` (329 model, **không** bị loại khỏi build) |
 | `lan.tscn` → `Vach` | 🟡 `BoxMesh` đỏ, ẩn sẵn, chỉ Slippery bật | Cổng đích có cờ |
-| `da_lan.tscn` → `Mat` | 🟡 `SphereMesh` 1,3 m | Tảng đá thật — `kenney_nature-kit` có `rock_*` |
+| `da_lan.tscn` → `Mat` | ✅ `rock_tallB.glb` (nature-kit) ×3,1 ≈ 2,4–2,7 m, `Mat` là trục quay | — |
 | `da_lan.tscn` → `Hinh` | ✅ `SphereShape3D` đúng bán kính mesh (có assert) | — |
-| `vat_pham.tscn` → `QuaNho` / `QuaTo` / `Rac` | 🟡 hai khối hộp + một hình cầu, ba màu | Hộp quà thật + thùng rác — `kenney_furniture-kit`, `polypizza` |
 | Cảnh hai bên làn | 🔴 trống trơn | Cây/đá `kenney_nature-kit` — làn 400 m không có gì thì không cảm được tốc độ |
 | UI cho cả 3 trò | 🔴 chưa có | Cùng món nợ `CanvasLayer` với T1–T3 |
 
@@ -293,7 +277,6 @@ của phòng chờ) và **làn tách rời** cách nhau 40 m.
 | Sinh bằng code | Vì sao không đặt sẵn trong `.tscn` |
 |---|---|
 | `da_lan.tscn` (Sidestep) | Số lượng không biết trước: một đợt mỗi 1,5 → 0,45 giây, nhân số làn đang có người. Hình và hộp va chạm đều trong `.tscn` |
-| `vat_pham.tscn` (Nhặt quà) | 64 món × **số làn đang có người**. Bày sẵn đủ 8 làn là 512 `Area3D` cho một ván 4 người |
 
 ### Lệch guide ở T4 — có lý do
 
@@ -305,3 +288,9 @@ của phòng chờ) và **làn tách rời** cách nhau 40 m.
   `TOC_CHAY_MAU` nên đá vẫn luôn ló ra trong tầm nhìn.
 - **Mọi làn bày đúng MỘT bố cục** (Nhặt quà) và **một đợt đá rải cho mọi làn cùng lúc**
   (Sidestep). Khác bố cục thì người thắng chỉ là người bốc được làn dễ.
+
+## minigame/quan_tro_minigame.tscn — màn hướng dẫn
+
+| Node | Hiện tại | Cần |
+|---|---|---|
+| `Lop/HuongDan` | 🔴 `ColorRect` nền phẳng + ba `Label` (tên, luật, số đếm) | Nền/khung hướng dẫn thật; mỗi trò một hình minh hoạ phím + cách chơi |

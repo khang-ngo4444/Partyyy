@@ -66,8 +66,7 @@ func _net_phi_tieu(nguoi: int, o: String, tong: String) -> void:
 		var ab := cap.split(":")
 		if ab.size() == 2:
 			dong.append("%s  %s" % [Player.ten_theo_id(get_tree(), int(ab[0])), ab[1]])
-	_bang.text = "
-".join(dong)
+	_bang.text = "\n".join(dong)
 
 
 func _build() -> void:
@@ -102,8 +101,7 @@ func _build() -> void:
 	add_child(chu)
 
 	_bang = Label3D.new()
-	_bang.text = "PHI TIEU
-đứng sau vạch, giữ E rồi thả để ném"
+	_bang.text = "PHI TIEU\nđứng sau vạch, giữ E rồi thả để ném"
 	_bang.font_size = 36
 	_bang.pixel_size = 0.0028
 	_bang.outline_size = 10

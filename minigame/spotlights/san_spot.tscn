@@ -1,171 +1,221 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene format=3 uid="uid://uhefxahj0cs2"]
 
 [ext_resource type="PackedScene" path="res://minigame/chung/san_dau.tscn" id="1_sd"]
 [ext_resource type="PackedScene" path="res://minigame/chung/san_tron.tscn" id="2_st"]
 [ext_resource type="Material" path="res://materials/mat_vien_san.tres" id="3_v"]
-[ext_resource type="Environment" path="res://materials/env_san_toi.tres" id="4_env"]
-[ext_resource type="Material" path="res://materials/mat_san_toi.tres" id="5_st"]
+[ext_resource type="Material" path="res://materials/mat_tia_den.tres" id="4_qkgym"]
+[ext_resource type="CylinderMesh" path="res://materials/mesh_tia_den.tres" id="5_egmqt"]
+[ext_resource type="Environment" path="res://materials/env_san_toi.tres" id="6_env"]
+[ext_resource type="Material" path="res://materials/mat_san_toi.tres" id="7_st"]
 
 [sub_resource type="TorusMesh" id="Torus_vien"]
 inner_radius = 11.2
 outer_radius = 11.5
 
 [sub_resource type="CylinderShape3D" id="Shape_den"]
-radius = 2.66
 height = 6.0
+radius = 2.66
 
-[node name="SanSpot" type="Node3D"]
+[node name="SanSpot" type="Node3D" unique_id=1633116369]
 
-[node name="SanDau" parent="." instance=ExtResource("1_sd")]
+[node name="SanDau" parent="." unique_id=1273395959 instance=ExtResource("1_sd")]
 
 [node name="Cam" parent="SanDau" index="0"]
-environment = ExtResource("4_env")
+environment = ExtResource("6_env")
 
 [node name="Den" parent="SanDau" index="1"]
-light_energy = 0.05
+light_energy = 0.0
 
-[node name="SanTron" parent="." instance=ExtResource("2_st")]
+[node name="SanTron" parent="." unique_id=1247120032 instance=ExtResource("2_st")]
 
 [node name="Mat" parent="SanTron" index="0"]
-material_override = ExtResource("5_st")
+material_override = ExtResource("7_st")
 
-[node name="VienSan" type="MeshInstance3D" parent="."]
+[node name="VienSan" type="MeshInstance3D" parent="." unique_id=38094822]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
-mesh = SubResource("Torus_vien")
 material_override = ExtResource("3_v")
+mesh = SubResource("Torus_vien")
 
-[node name="Den0" type="Node3D" parent="."]
+[node name="Den0" type="Node3D" parent="." unique_id=1049127184]
 
-[node name="Bong" type="SpotLight3D" parent="Den0"]
-transform = Transform3D(1, 0, 0, 0, -4.37e-08, -1, 0, 1, -4.37e-08, 0, 12, 0)
+[node name="Bong" type="SpotLight3D" parent="Den0" unique_id=291705206]
+transform = Transform3D(1, 0, 0, 0, 7.54979e-08, 1, 0, -1, 7.54979e-08, 0, 12, 0)
 light_color = Color(1, 0.86, 0.6, 1)
 light_energy = 12.0
 spot_range = 19.0
 spot_angle = 12.5
 
-[node name="Vung" type="Area3D" parent="Den0"]
+[node name="Vung" type="Area3D" parent="Den0" unique_id=504268419]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 collision_layer = 0
 collision_mask = 2
 
-[node name="Hinh" type="CollisionShape3D" parent="Den0/Vung"]
+[node name="Hinh" type="CollisionShape3D" parent="Den0/Vung" unique_id=1648501305]
 shape = SubResource("Shape_den")
 
-[node name="Den1" type="Node3D" parent="."]
+[node name="Tia" type="MeshInstance3D" parent="Den0" unique_id=981015922]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.1, 0)
+material_override = ExtResource("4_qkgym")
+cast_shadow = 0
+mesh = ExtResource("5_egmqt")
 
-[node name="Bong" type="SpotLight3D" parent="Den1"]
-transform = Transform3D(1, 0, 0, 0, -4.37e-08, -1, 0, 1, -4.37e-08, 0, 12, 0)
+[node name="Den1" type="Node3D" parent="." unique_id=1740555002]
+
+[node name="Bong" type="SpotLight3D" parent="Den1" unique_id=1955855528]
+transform = Transform3D(1, 0, 0, 0, 7.54979e-08, 1, 0, -1, 7.54979e-08, 0, 12, 0)
 light_color = Color(1, 0.86, 0.6, 1)
 light_energy = 12.0
 spot_range = 19.0
 spot_angle = 12.5
 
-[node name="Vung" type="Area3D" parent="Den1"]
+[node name="Vung" type="Area3D" parent="Den1" unique_id=1656709508]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 collision_layer = 0
 collision_mask = 2
 
-[node name="Hinh" type="CollisionShape3D" parent="Den1/Vung"]
+[node name="Hinh" type="CollisionShape3D" parent="Den1/Vung" unique_id=1607452780]
 shape = SubResource("Shape_den")
 
-[node name="Den2" type="Node3D" parent="."]
+[node name="Tia" type="MeshInstance3D" parent="Den1" unique_id=1957859971]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.1, 0)
+material_override = ExtResource("4_qkgym")
+cast_shadow = 0
+mesh = ExtResource("5_egmqt")
 
-[node name="Bong" type="SpotLight3D" parent="Den2"]
-transform = Transform3D(1, 0, 0, 0, -4.37e-08, -1, 0, 1, -4.37e-08, 0, 12, 0)
+[node name="Den2" type="Node3D" parent="." unique_id=970283144]
+
+[node name="Bong" type="SpotLight3D" parent="Den2" unique_id=511578527]
+transform = Transform3D(1, 0, 0, 0, 7.54979e-08, 1, 0, -1, 7.54979e-08, 0, 12, 0)
 light_color = Color(1, 0.86, 0.6, 1)
 light_energy = 12.0
 spot_range = 19.0
 spot_angle = 12.5
 
-[node name="Vung" type="Area3D" parent="Den2"]
+[node name="Vung" type="Area3D" parent="Den2" unique_id=697163962]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 collision_layer = 0
 collision_mask = 2
 
-[node name="Hinh" type="CollisionShape3D" parent="Den2/Vung"]
+[node name="Hinh" type="CollisionShape3D" parent="Den2/Vung" unique_id=123006885]
 shape = SubResource("Shape_den")
 
-[node name="Den3" type="Node3D" parent="."]
+[node name="Tia" type="MeshInstance3D" parent="Den2" unique_id=1238145281]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.1, 0)
+material_override = ExtResource("4_qkgym")
+cast_shadow = 0
+mesh = ExtResource("5_egmqt")
 
-[node name="Bong" type="SpotLight3D" parent="Den3"]
-transform = Transform3D(1, 0, 0, 0, -4.37e-08, -1, 0, 1, -4.37e-08, 0, 12, 0)
+[node name="Den3" type="Node3D" parent="." unique_id=344175582]
+
+[node name="Bong" type="SpotLight3D" parent="Den3" unique_id=1145880705]
+transform = Transform3D(1, 0, 0, 0, 7.54979e-08, 1, 0, -1, 7.54979e-08, 0, 12, 0)
 light_color = Color(1, 0.86, 0.6, 1)
 light_energy = 12.0
 spot_range = 19.0
 spot_angle = 12.5
 
-[node name="Vung" type="Area3D" parent="Den3"]
+[node name="Vung" type="Area3D" parent="Den3" unique_id=1786039320]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 collision_layer = 0
 collision_mask = 2
 
-[node name="Hinh" type="CollisionShape3D" parent="Den3/Vung"]
+[node name="Hinh" type="CollisionShape3D" parent="Den3/Vung" unique_id=343974315]
 shape = SubResource("Shape_den")
 
-[node name="Den4" type="Node3D" parent="."]
+[node name="Tia" type="MeshInstance3D" parent="Den3" unique_id=1058117827]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.1, 0)
+material_override = ExtResource("4_qkgym")
+cast_shadow = 0
+mesh = ExtResource("5_egmqt")
 
-[node name="Bong" type="SpotLight3D" parent="Den4"]
-transform = Transform3D(1, 0, 0, 0, -4.37e-08, -1, 0, 1, -4.37e-08, 0, 12, 0)
+[node name="Den4" type="Node3D" parent="." unique_id=40311774]
+
+[node name="Bong" type="SpotLight3D" parent="Den4" unique_id=1203740632]
+transform = Transform3D(1, 0, 0, 0, 7.54979e-08, 1, 0, -1, 7.54979e-08, 0, 12, 0)
 light_color = Color(1, 0.86, 0.6, 1)
 light_energy = 12.0
 spot_range = 19.0
 spot_angle = 12.5
 
-[node name="Vung" type="Area3D" parent="Den4"]
+[node name="Vung" type="Area3D" parent="Den4" unique_id=75202727]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 collision_layer = 0
 collision_mask = 2
 
-[node name="Hinh" type="CollisionShape3D" parent="Den4/Vung"]
+[node name="Hinh" type="CollisionShape3D" parent="Den4/Vung" unique_id=465060829]
 shape = SubResource("Shape_den")
 
-[node name="Den5" type="Node3D" parent="."]
+[node name="Tia" type="MeshInstance3D" parent="Den4" unique_id=233416409]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.1, 0)
+material_override = ExtResource("4_qkgym")
+cast_shadow = 0
+mesh = ExtResource("5_egmqt")
 
-[node name="Bong" type="SpotLight3D" parent="Den5"]
-transform = Transform3D(1, 0, 0, 0, -4.37e-08, -1, 0, 1, -4.37e-08, 0, 12, 0)
+[node name="Den5" type="Node3D" parent="." unique_id=772038210]
+
+[node name="Bong" type="SpotLight3D" parent="Den5" unique_id=1255040706]
+transform = Transform3D(1, 0, 0, 0, 7.54979e-08, 1, 0, -1, 7.54979e-08, 0, 12, 0)
 light_color = Color(1, 0.86, 0.6, 1)
 light_energy = 12.0
 spot_range = 19.0
 spot_angle = 12.5
 
-[node name="Vung" type="Area3D" parent="Den5"]
+[node name="Vung" type="Area3D" parent="Den5" unique_id=313692134]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 collision_layer = 0
 collision_mask = 2
 
-[node name="Hinh" type="CollisionShape3D" parent="Den5/Vung"]
+[node name="Hinh" type="CollisionShape3D" parent="Den5/Vung" unique_id=1233032140]
 shape = SubResource("Shape_den")
 
-[node name="Den6" type="Node3D" parent="."]
+[node name="Tia" type="MeshInstance3D" parent="Den5" unique_id=1356231128]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.1, 0)
+material_override = ExtResource("4_qkgym")
+cast_shadow = 0
+mesh = ExtResource("5_egmqt")
 
-[node name="Bong" type="SpotLight3D" parent="Den6"]
-transform = Transform3D(1, 0, 0, 0, -4.37e-08, -1, 0, 1, -4.37e-08, 0, 12, 0)
+[node name="Den6" type="Node3D" parent="." unique_id=577770837]
+
+[node name="Bong" type="SpotLight3D" parent="Den6" unique_id=313727618]
+transform = Transform3D(1, 0, 0, 0, 7.54979e-08, 1, 0, -1, 7.54979e-08, 0, 12, 0)
 light_color = Color(1, 0.86, 0.6, 1)
 light_energy = 12.0
 spot_range = 19.0
 spot_angle = 12.5
 
-[node name="Vung" type="Area3D" parent="Den6"]
+[node name="Vung" type="Area3D" parent="Den6" unique_id=666888241]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 collision_layer = 0
 collision_mask = 2
 
-[node name="Hinh" type="CollisionShape3D" parent="Den6/Vung"]
+[node name="Hinh" type="CollisionShape3D" parent="Den6/Vung" unique_id=2016737797]
 shape = SubResource("Shape_den")
 
-[node name="Den7" type="Node3D" parent="."]
+[node name="Tia" type="MeshInstance3D" parent="Den6" unique_id=1527754982]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.1, 0)
+material_override = ExtResource("4_qkgym")
+cast_shadow = 0
+mesh = ExtResource("5_egmqt")
 
-[node name="Bong" type="SpotLight3D" parent="Den7"]
-transform = Transform3D(1, 0, 0, 0, -4.37e-08, -1, 0, 1, -4.37e-08, 0, 12, 0)
+[node name="Den7" type="Node3D" parent="." unique_id=888974693]
+
+[node name="Bong" type="SpotLight3D" parent="Den7" unique_id=798930299]
+transform = Transform3D(1, 0, 0, 0, 7.54979e-08, 1, 0, -1, 7.54979e-08, 0, 12, 0)
 light_color = Color(1, 0.86, 0.6, 1)
 light_energy = 12.0
 spot_range = 19.0
 spot_angle = 12.5
 
-[node name="Vung" type="Area3D" parent="Den7"]
+[node name="Vung" type="Area3D" parent="Den7" unique_id=1603648535]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 collision_layer = 0
 collision_mask = 2
 
-[node name="Hinh" type="CollisionShape3D" parent="Den7/Vung"]
+[node name="Hinh" type="CollisionShape3D" parent="Den7/Vung" unique_id=929616014]
 shape = SubResource("Shape_den")
+
+[node name="Tia" type="MeshInstance3D" parent="Den7" unique_id=1267024857]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.1, 0)
+material_override = ExtResource("4_qkgym")
+cast_shadow = 0
+mesh = ExtResource("5_egmqt")

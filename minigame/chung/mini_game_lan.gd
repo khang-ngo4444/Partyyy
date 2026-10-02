@@ -21,6 +21,9 @@ extends MiniGame3D
 ## khung, và dịch ngang về giữa những làn ĐANG CÓ NGƯỜI — bốn người thì không chừa chỗ cho bốn
 ## làn trống.
 ##
+## Góc và khoảng lùi đặt trên SCENE (`san_lan.tscn`, node `SanDau/Cam`) — code chỉ TỊNH TIẾN
+## camera theo tốp, không xoay, không tự chọn độ cao.
+##
 ## Camera là việc CỤC BỘ, mỗi máy tự tính từ vị trí mà replicator đã gửi sẵn. Không gói tin,
 ## và hai máy có lệch nhau vài khung hình cũng không ảnh hưởng gì tới xếp hạng.
 
@@ -30,12 +33,6 @@ const KHOANG_LAN := 4.6
 ## Làn dài bao nhiêu mét. Khớp `lan.tscn` — chạy ~6 m/s nên 150 m hết chừng 25 giây.
 const DAI_LAN := 150.0
 
-## Camera lùi ra sau người bét chừng này mét.
-const CAM_LUI := 14.0
-## Camera cao chừng này mét so với mặt làn.
-const CAM_CAO := 7.5
-## Camera chúi xuống bao nhiêu độ.
-const CAM_CHUI := -18.0
 ## Khung phải chứa được khoảng cách dẫn–bét tới chừng này mét; xa hơn thì người bét ra khỏi
 ## khung và tự biết mình đang bị bỏ lại. Nới to là camera lùi xa, nhân vật bé đi.
 const CAM_GIAN_TOI_DA := 30.0
@@ -44,6 +41,8 @@ const CAM_MUOT := 6.0
 
 ## Thứ tự người chơi, quyết định ai chạy làn nào. Lưu trước khi lớp cha dùng tới.
 var _ds_nguoi: Array = []
+## Chỗ đặt camera trong scene, tính từ gốc sân. Chụp lúc vào ván, sau đó chỉ cộng thêm độ dời.
+var _cam_goc := Vector3.ZERO
 ## player_id -> quãng đường xa nhất đã tới. Mọi máy cùng cộng; bảng của master là bảng chốt.
 var _xa_nhat: Dictionary = {}
 
@@ -54,6 +53,9 @@ func bat_dau(nguoi_choi: Array, giong: int) -> void:
 	for id in nguoi_choi:
 		_xa_nhat[int(id)] = 0.0
 	super(nguoi_choi, giong)
+	var cam := _cam_san()
+	if cam != null:
+		_cam_goc = cam.global_position - san.global_position
 	# Quay mặt về đầu làn. `-Z` là hướng chạy, khớp cách `lan.tscn` được dựng.
 	var toi := _nguoi(NetManager.local_id())
 	if toi != null:
@@ -99,12 +101,9 @@ func _nhip_camera(delta: float) -> void:
 		return
 	# Người bét quá xa thì thôi không lùi theo nữa — lùi mãi thì cả tốp bé như hạt gạo.
 	var gian := clampf(dan - bet, 0.0, CAM_GIAN_TOI_DA)
-	var dich := Vector3(
-			(lan_min + lan_max) * 0.5,
-			san.global_position.y + CAM_CAO + gian * 0.35,
-			san.global_position.z - bet + CAM_LUI + gian * 0.5)
+	var dich := san.global_position + _cam_goc + Vector3(
+			(lan_min + lan_max) * 0.5, gian * 0.35, -bet + gian * 0.5)
 	cam.global_position = cam.global_position.lerp(dich, clampf(CAM_MUOT * delta, 0.0, 1.0))
-	cam.rotation = Vector3(deg_to_rad(CAM_CHUI), 0.0, 0.0)
 
 
 ## Toạ độ X của làn thứ `i`.

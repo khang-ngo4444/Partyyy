@@ -3,7 +3,8 @@ extends Area3D
 
 ## MỘT tảng đá đang lăn ngược làn về phía người chơi.
 ##
-## Hình cầu và hộp va chạm nằm trong `da_lan.tscn` và bằng nhau. Script chỉ lo **lăn và tự tan**.
+## Model đá (`rock_tallB`, kenney nature-kit) và hộp va chạm cầu nằm trong `da_lan.tscn`, cùng
+## cỡ ~2,6 m. Script chỉ lo **lăn và tự tan**.
 ##
 ## Lăn thẳng đều theo `+Z` nên mọi máy tính ra cùng một đường đi từ cùng một gói dữ liệu
 ## `(lúc sinh, chỗ sinh)` — mà gói đó thì không ai phải gửi, nó suy ra từ hạt giống.
@@ -24,7 +25,7 @@ func _physics_process(delta: float) -> void:
 	global_position.z += TOC_DO * delta
 	# Lăn thật: quay quanh trục X theo quãng đường, không phải hiệu ứng trang trí — đá trượt
 	# mà không quay thì mắt đọc ngay ra là một quả cầu bị kéo đi.
-	($Mat as Node3D).rotate_x(TOC_DO * delta / 1.3)
+	($Mat as Node3D).rotate_x(TOC_DO * delta / ($Hinh.shape as SphereShape3D).radius)
 	_con -= delta
 	if _con <= 0.0:
 		queue_free()

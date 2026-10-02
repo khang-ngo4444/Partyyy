@@ -25,9 +25,7 @@ func dat(hien: bool) -> void:
 
 ## Sơn ô. `null` = trả về màu thường.
 ##
-## T3 (Bounding Blocks) dùng để đánh dấu chủ ô, T2 (Breaking Blocks) dùng cho bốn mức nứt.
-##
-## Tách khỏi `dat()` chứ không thêm tham số: hai trò hỏi hai câu khác hẳn nhau — "ô còn hay tan"
-## và "ô màu gì". Nhét chung một hàm thì mỗi bên phải truyền một tham số mình không quan tâm.
+## Breaking Blocks dùng cho bốn mức nứt. Tách khỏi `dat()` vì đó là hai câu khác nhau — "ô còn
+## hay tan" và "ô màu gì".
 func son(vat_lieu: StandardMaterial3D) -> void:
 	_mat.material_override = vat_lieu if vat_lieu != null else vat_lieu_thuong

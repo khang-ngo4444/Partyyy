@@ -60,7 +60,9 @@ func _luat_moi_nhip() -> void:
 	while _ke_tiep < _lich.size() and t >= float(_lich[_ke_tiep]["luc"]):
 		_nem(_lich[_ke_tiep])
 		_ke_tiep += 1
-	_da = _da.filter(func(d: DaLan) -> bool: return is_instance_valid(d))
+	# `assign` + lambda KHÔNG kiểu: `filter` trả Array thường, và đá đã free không ép được
+	# sang DaLan.
+	_da.assign(_da.filter(func(d) -> bool: return is_instance_valid(d)))
 
 
 ## Ghi đè: trên làn có tường hai bên nên không ai rơi — luật duy nhất là trúng đá.
