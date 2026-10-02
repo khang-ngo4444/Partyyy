@@ -2,8 +2,8 @@ extends VBoxContainer
 
 signal thue_da_chon(loai: int)
 
-## Bảng trạng thái bàn party ở góc phải: lượt của ai, máu / vàng / đất / đồ của từng người,
-## và chuyện vừa xảy ra.
+## Bảng trạng thái bàn party ở góc phải: lượt của ai và chuyện vừa xảy ra.
+## Máu / vàng / trang bị là thông tin cá nhân, chỉ hiện ở `TrangThaiCaNhan` của từng máy.
 ##
 ## CHỈ HIỂN THỊ. Nghe một tín hiệu, đổ chữ ra, hết. Không đọc thẳng vào `PhaBanCo`, không giữ
 ## trạng thái riêng — trạng thái duy nhất là gói vừa nhận.
@@ -44,7 +44,8 @@ func cap_nhat(tt: Dictionary) -> void:
 
 	var dong := PackedStringArray()
 	for id in thu_tu:
-		dong.append(_mot_dong(tt, int(id), id_luot))
+		dong.append("%s %s" % ["▶" if int(id) == id_luot else "  ",
+				Player.ten_theo_id(get_tree(), int(id))])
 	_bang.text = "\n".join(dong)
 
 	# `het_vong` là cờ nội bộ cho `main.gd`, không phải câu để người chơi đọc.
@@ -66,29 +67,3 @@ func cap_nhat_chon_huong(noi_dung: String) -> void:
 	_chon_huong.text = noi_dung
 	_chon_huong.visible = not noi_dung.is_empty()
 	_luot.text = "ĐÃ TUNG XÚC XẮC — CHỌN HƯỚNG" if _chon_huong.visible else _dong_luot
-
-
-func _mot_dong(tt: Dictionary, id: int, id_luot: int) -> String:
-	var k := LuatBan.khoa(id)
-	var tui: Array = _bang_cua(tt, "do").get(k, [])
-	var ten_do := PackedStringArray()
-	for i in tui.size():
-		var mon := str(tui[i])
-		var cach_dung := " · tự chặn 1 đòn" if mon == "khien" else " · chuột trái bắn"
-		ten_do.append("[%d] %s%s" % [i + 1, LuatBan.TEN_DO.get(mon, mon), cach_dung])
-	var so_dat := 0
-	for chu in _bang_cua(tt, "chu_dat").values():
-		if int(chu) == id:
-			so_dat += 1
-	return "%s %s — máu %d/%d · %d vàng · %d đất · checkpoint %d · %s" % [
-		"▶" if id == id_luot else "  ",
-		Player.ten_theo_id(get_tree(), id),
-		int(_bang_cua(tt, "mau").get(k, 0)), int(tt.get("max_health", 10)),
-		int(_bang_cua(tt, "tien").get(k, 0)), so_dat,
-		int(_bang_cua(tt, "hoi_sinh").get(k, 0)),
-		" · ".join(ten_do) if ten_do.size() > 0 else "tay không",
-	]
-
-
-func _bang_cua(tt: Dictionary, ten: String) -> Dictionary:
-	return tt.get(ten, {}) as Dictionary

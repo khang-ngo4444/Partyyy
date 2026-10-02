@@ -46,7 +46,7 @@ const CAO_DUNG := 0.32
 ## Nhiều người cùng một ô thì đứng cách tâm ô chừng này. Ô rộng 1.4 m nên 0.45 là vừa trong mép.
 const BAN_KINH_DUNG := 0.45
 ## Tầm tính từ người bắn tới mục tiêu. Tia ngắm bắt đầu ở camera để khớp đúng tâm màn hình.
-const TAM_SUNG := 18.0
+const TAM_SUNG := 35.0
 const XUC_XAC_SCENE: PackedScene = preload("res://board/xuc_xac_3d.tscn")
 
 ## Bàn party là một SCENE RIÊNG, nạp vào khi cần. Đổi bản đồ = trỏ export này sang scene khác.
@@ -247,6 +247,10 @@ func _co_the_ban_sung(id: int) -> bool:
 		return false
 	if not (tt.get("thue", {}) as Dictionary).is_empty():
 		return false
+	return _co_sung_trong_tui(id)
+
+
+func _co_sung_trong_tui(id: int) -> bool:
 	return (_bang("do").get(LuatBan.khoa(id), []) as Array).has("sung_1_phat")
 
 
@@ -752,3 +756,6 @@ func _che_do_ban_co(bat: bool) -> void:
 		p.khoa_di_chuyen = bat
 		if p.rig != null and is_instance_valid(p.rig):
 			p.rig.set_ban_co(bat)
+			# Chỉ camera của người sở hữu đổi sang góc ngắm. Máy khác không có rig này,
+			# và trạng thái túi được tra bằng local_id nên không thể hiện góc ngắm của đối thủ.
+			p.rig.set_ngam_sung(bat and _co_sung_trong_tui(NetManager.local_id()))

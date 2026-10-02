@@ -16,11 +16,12 @@ Các số này đều nằm trong bước **Cài đặt màn chơi** của chủ
 
 Nên làm vũ khí đầu tiên theo kiểu hitscan có ngắm, không tự khóa mục tiêu:
 
-1. Chỉ được rút súng trước khi tung xúc xắc trong lượt của mình. Giữ chuột phải để ngắm,
-   chuột trái bắn. Bắn trúng hay trượt đều tiêu súng.
-2. Tầm đề xuất 18 m, sát thương khởi điểm 3/10 máu, không headshot. Khiên chặn trọn một phát.
-3. Client chỉ gửi `origin + direction`; master kiểm người bắn, trạng thái súng, lượt hiện tại,
-   góc ngắm và raycast rồi mới phát kết quả. Không nhận thẳng “player bị trúng” từ client.
+1. Khi có súng, camera tự chuyển sang góc nhìn thứ nhất; ngắm bằng tâm màn hình và bấm
+   chuột trái để bắn. Không thể bắn khi quân đang di chuyển, chọn đường hoặc trong minigame.
+   Bắn trúng hay trượt đều tiêu súng.
+2. Tầm hiện tại 35 m, sát thương khởi điểm 3/10 máu, không headshot. Khiên chặn trọn một phát.
+3. Client chỉ gửi `origin + direction`; master kiểm người bắn, súng trong túi, trạng thái bàn,
+   vị trí phát tia, tầm và raycast rồi mới phát kết quả. Không nhận thẳng “player bị trúng” từ client.
 4. Vệt đạn, giật camera và âm thanh là hiệu ứng cục bộ; máu, tiêu súng, chết và hồi sinh nằm
    trong gói trạng thái bàn hiện có.
 5. Nếu máu về 0, người chơi hồi đầy tại checkpoint cá nhân. Baseline không mất vàng để tránh

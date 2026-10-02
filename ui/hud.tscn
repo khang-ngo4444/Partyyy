@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://ui/hud.gd" id="1_hud"]
 [ext_resource type="Script" path="res://ui/chat.gd" id="2_chat"]
 [ext_resource type="PackedScene" path="res://ui/bang_ban.tscn" id="4_bb"]
 [ext_resource type="PackedScene" path="res://ui/bang_thang.tscn" id="5_bt"]
+[ext_resource type="PackedScene" path="res://ui/trang_thai_ca_nhan.tscn" id="6_personal"]
 
 [node name="HUD" type="Control"]
 layout_mode = 3
@@ -229,6 +230,9 @@ placeholder_text = "Nhập tin — Enter gửi, Esc huỷ"
 max_length = 120
 
 [node name="BangBan" parent="." instance=ExtResource("4_bb")]
+layout_mode = 1
+
+[node name="TrangThaiCaNhan" parent="." instance=ExtResource("6_personal")]
 layout_mode = 1
 
 [node name="BangThang" parent="." instance=ExtResource("5_bt")]
