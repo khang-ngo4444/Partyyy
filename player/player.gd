@@ -68,6 +68,15 @@ var che_do_san := false
 ## Thân quay theo hướng chạy nhanh cỡ nào, radian/giây.
 const XOAY_THEO_HUONG := 12.0
 
+## Chế độ LÁI (Temporal Trails): tự chạy thẳng với tốc `toc_lai`, A/D để rẽ, không dừng, không
+## lùi, không nhảy. Minigame bật cho nhân vật CỦA MÁY MÌNH rồi tắt lại khi xong ván. Cục bộ, không
+## replicate: vị trí + góc thân đã nằm trong Auto replication.
+var lai_tu_dong := false
+var toc_lai := 6.0
+## Rẽ nhanh cỡ nào, radian/giây. 2,6 ở 6 m/s là bán kính quay 2,3 m: đủ gắt để luồn qua khe,
+## đủ tròn để vệt sau lưng không gãy khúc.
+const RE_LAI := 2.6
+
 ## Vận tốc bị ĐẨY, giữ tách khỏi vận tốc đi lại.
 ##
 ## `_physics_process` GÁN THẲNG `velocity.x/z` từ phím mỗi khung hình, nên cộng xung lực vào
@@ -395,6 +404,9 @@ func _physics_process(delta: float) -> void:
 	if _ghe != null or khoa_di_chuyen:
 		velocity = Vector3.ZERO
 		return
+	if lai_tu_dong:
+		_lai(delta)
+		return
 	# Đang gõ chat thì WASD và Space là CHỮ. `Input.get_vector` đọc thẳng bàn phím, không quan
 	# tâm ô chữ đang giữ focus — không chặn ở đây thì gõ "wow" là nhân vật chạy đi.
 	var dang_go := get_viewport().gui_get_focus_owner() is LineEdit
@@ -426,6 +438,18 @@ func _physics_process(delta: float) -> void:
 	if che_do_san and dir.length_squared() > 0.01:
 		rotation.y = rotate_toward(rotation.y, atan2(-dir.x, -dir.z), XOAY_THEO_HUONG * delta)
 
+	move_and_slide()
+
+
+## Chế độ lái: luôn chạy thẳng theo hướng thân, A/D chỉ xoay thân. Bỏ qua W/S, Space, lực đẩy.
+func _lai(delta: float) -> void:
+	var dang_go := get_viewport().gui_get_focus_owner() is LineEdit
+	var re := 0.0 if dang_go else Input.get_axis("move_right", "move_left")
+	rotation.y += re * RE_LAI * delta
+	var truoc := -global_basis.z
+	velocity.x = truoc.x * toc_lai
+	velocity.z = truoc.z * toc_lai
+	velocity.y = 0.0 if is_on_floor() else velocity.y - gravity * delta
 	move_and_slide()
 
 

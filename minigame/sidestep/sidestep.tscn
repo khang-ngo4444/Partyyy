@@ -1,10 +1,10 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://minigame/sidestep/sidestep.gd" id="1_ss"]
-[ext_resource type="PackedScene" path="res://minigame/chung/san_lan.tscn" id="2_san"]
-[ext_resource type="PackedScene" path="res://minigame/sidestep/da_lan.tscn" id="3_da"]
+[ext_resource type="PackedScene" path="res://minigame/sidestep/san_doc.tscn" id="2_san"]
+[ext_resource type="PackedScene" path="res://minigame/sidestep/xe_doc.tscn" id="3_xe"]
 
 [node name="SidestepSlope" type="Node"]
 script = ExtResource("1_ss")
 san_scene = ExtResource("2_san")
-da_scene = ExtResource("3_da")
+xe_scene = ExtResource("3_xe")

@@ -1,129 +1,121 @@
 extends MiniGameLan
 
-## SIDESTEP SLOPE — chạy xuôi làn, đá lăn ngược lên. Đi xa hơn thì hạng cao hơn.
+## SIDESTEP SLOPE — chạy NGƯỢC lên một con dốc, xe lao XUỐNG về phía mình. Né sang trái/phải hay
+## nhảy, leo được xa nhất lúc hết giờ thì thắng.
 ##
-## Khuôn T4 đầu tiên: làn riêng, camera sau lưng của chính mình.
+## Khuôn T4 (`MiniGameLan`): camera chung bám tốp, xếp hạng theo quãng đường xa nhất. Khác bản
+## đầu ba chỗ, và cả ba đều do bản đầu không ra trò:
 ##
-## ## 0 gói tin
+##   1. **Một con dốc CHUNG rộng 14 m** (`san_doc.tscn`) thay cho làn riêng 4 m có tường hai bên.
+##      Làn 4 m với chướng ngại 2,6 m thì né hay không là chuyện may rủi.
+##   2. **Xe** (`XeDoc`) thay cho đá lăn, chạy trong 5 làn có vạch kẻ — nhìn là đọc được đường đi.
+##   3. **Bị tông là văng ngược xuống dốc**, không bị loại. Mất quãng đường + mất thời gian bò lại
+##      là cái giá; một cú chạm không được kết thúc cả ván của ai.
 ##
-## Đá sinh ra lúc nào, ở đâu — tất cả là hàm thuần của `(hạt giống, chỉ số làn, gio())`. Trúng
-## đá thì **chính người bị trúng khai tử**. Quãng đường thì mọi máy đọc từ vị trí mà replicator
-## đã gửi sẵn. Cả ván không thêm một byte nào ngoài gói `"tôi chết"`.
+## ## 0 gói tin cho xe
 ##
-## ## Vì sao đá sinh ra theo ĐỒNG HỒ chứ không theo vị trí người chơi
+## Lịch xe là hàm thuần của hạt giống (`XeDoc.lich`), vị trí xe là hàm thuần của `gio()`. Mọi máy
+## chiếu cùng một cuốn phim giao thông. Ai bị tông thì CHÍNH máy người đó tự hất mình (luật chung).
 ##
-## Sinh theo vị trí thì đá của mỗi người xuất hiện ở một chỗ khác nhau, và vị trí người chơi
-## trên máy người khác luôn trễ vài chục ms — hai máy sẽ đặt cùng một tảng đá ở hai chỗ.
-## Sinh theo đồng hồ thì làn của một người là một cuốn phim: bấm nút là nó chạy, ai xem cũng
-## thấy đúng cảnh đó. Điểm sinh bám theo `TOC_CHAY_MAU` — tốc độ của một người chạy đều — nên
-## đá luôn ló ra trong tầm nhìn chứ không rơi vào lưng.
+## ## Công bằng
+##
+## Không xe nào "mọc" cạnh người: lúc ván mở mọi xe còn cách vạch ≥ 45 m, xe mới vào đường từ đỉnh
+## dốc 250 m (không ai leo tới trong 35 giây). Một hàng xe chiếm tối đa 3/5 làn. Tốc độ và mật độ
+## tăng đều. `kiem_luat.gd` mô phỏng cả lịch và chặn bản nào phá các điều này.
 
-## Tốc độ mẫu dùng để tính điểm sinh đá. Xấp xỉ `Player.speed`; không cần khớp tuyệt đối vì
-## `TAM_NHIN` đã chừa dư.
-const TOC_CHAY_MAU := 6.0
-## Đá ló ra cách điểm sinh chừng này mét về phía trước. Camera bám tốp nên tầm nhìn ngắn hơn
-## bản làn-riêng nhiều: 70 m là đá sinh ngoài khung, người chơi không kịp thấy nó tới.
-const TAM_NHIN := 30.0
-## Nghỉ giữa hai đợt đá, lúc đầu và lúc cuối.
-const NGHI_DAU := 1.5
-const NGHI_CUOI := 0.45
-## Dày hết cỡ sau chừng này giây. Phải <= lúc đá ngừng sinh (`cho_sinh` chạm cuối làn ở ~20 s),
-## không thì cả ván trôi qua mà đá chưa bao giờ đạt mật độ tối đa.
-const GIAY_DAY_HET := 20.0
-## Đá lệch trái/phải trong khoảng này. Làn rộng 4 m nên nửa làn là 2 m, trừ bán kính đá còn
-## 1,4. Nới quá là đá nằm trong tường.
-const LECH_TOI_DA := 1.4
+## Bị tông thì văng ngược xuống dốc mạnh cỡ nào (m/s) — ngang và dốc lên. Lực đẩy tắt dần 9 m/s²
+## (`Player.DAY_TAT_DAN`) nên trừ đi tốc chạy 6 m/s còn văng lùi chừng 8 m, cộng thời gian bò lại.
+const HAT_LUI := 18.0
+const HAT_LEN := 5.0
+## Vừa bị tông thì chừng này giây sau mới bị tông lần nữa — không thì một xe đi qua người mình
+## hất liên tục mỗi khung hình.
+const MIEN := 0.8
+## Khoảng cách giữa hai người lúc xuất phát, mét.
+const CACH_XUAT_PHAT := 2.2
 
-@export var da_scene: PackedScene = null
+@export var xe_scene: PackedScene = null
 
 var _lich: Array = []
 var _ke_tiep := 0
-var _da: Array[DaLan] = []
+var _xe: Array[XeDoc] = []
+var _mien_toi := -99.0
 
 
 func _ready() -> void:
 	super()
 	ten = "SIDESTEP SLOPE"
-	luat = "WASD chạy · chuột xoay người · né đá lăn · đi càng xa càng tốt"
-	giay_van = 30.0
+	luat = "WASD chạy lên dốc · Space nhảy · né xe lao xuống · bị tông là văng ngược xuống"
+	giay_van = 35.0
 
 
 func _dung_san() -> void:
-	_lich = lich_da(hat_giong)
+	_lich = XeDoc.lich(hat_giong, giay_van)
 	_ke_tiep = 0
-	_da.clear()
+	_xe.clear()
+	_mien_toi = -99.0
+
+
+## Rải người ngang lòng đường quanh tâm, không xếp mỗi người một làn riêng.
+func _cho_vao(i: int, tong: int) -> Vector3:
+	var x := (float(i) - float(tong - 1) * 0.5) * CACH_XUAT_PHAT
+	return Vector3(clampf(x, -6.0, 6.0), 1.0, 0.0)
+
+
+func dai_lan() -> float:
+	return XeDoc.DAI
+
+
+func cao_tai(d: float) -> float:
+	return XeDoc.cao_tai(d)
 
 
 func _luat_moi_nhip() -> void:
 	ghi_quang_duong()
 	var t := gio()
-	while _ke_tiep < _lich.size() and t >= float(_lich[_ke_tiep]["luc"]):
-		_nem(_lich[_ke_tiep])
+	# Xe vào đường khi đầu xe chạm đỉnh dốc. Lịch xếp theo lúc tới vạch và tốc độ chỉ tăng, nên
+	# lúc vào đường cũng tăng dần — duyệt tuần tự là đủ.
+	while _ke_tiep < _lich.size():
+		var m: Dictionary = _lich[_ke_tiep]
+		if XeDoc.vi_tri(float(m["toc"]), float(m["toi_vach"]), t) < -XeDoc.DAI:
+			break
+		_tha_xe(m)
 		_ke_tiep += 1
-	# `assign` + lambda KHÔNG kiểu: `filter` trả Array thường, và đá đã free không ép được
-	# sang DaLan.
-	_da.assign(_da.filter(func(d) -> bool: return is_instance_valid(d)))
+	var con: Array[XeDoc] = []
+	for x in _xe:
+		if x.dat_luc(t):
+			con.append(x)
+		else:
+			x.queue_free()
+	_xe = con
+	_bi_tong()
 
 
-## Ghi đè: trên làn có tường hai bên nên không ai rơi — luật duy nhất là trúng đá.
+## Nhân vật CỦA MÁY NÀY vừa bị xe nào tông thì tự hất mình ngược xuống dốc.
+func _bi_tong() -> void:
+	var p := _nguoi(NetManager.local_id())
+	if p == null or gio() < _mien_toi:
+		return
+	for x in _xe:
+		if x.overlaps_body(p):
+			_mien_toi = gio() + MIEN
+			# +Z là xuống dốc. Lệch ngang theo phía người đứng so với tâm xe: bị tông bên trái
+			# xe thì văng chéo sang trái, đọc ra được là "xe húc vào mình".
+			var ngang := signf(p.global_position.x - x.global_position.x) * 3.0
+			p.day(Vector3(ngang, HAT_LEN, HAT_LUI))
+			return
+
+
+func _tha_xe(m: Dictionary) -> void:
+	if san == null or xe_scene == null:
+		return
+	var x := xe_scene.instantiate() as XeDoc
+	san.add_child(x)
+	x.chay(float(m["x"]), float(m["toc"]), float(m["toi_vach"]), san.global_position)
+	x.dat_luc(gio())
+	_xe.append(x)
+
+
+## Ghi đè: trò này KHÔNG loại ai — bị tông chỉ văng ngược. Sàn có tường hai bên nên cũng không
+## rơi ra ngoài được.
 func _toi_thua() -> bool:
-	var p := _nguoi(NetManager.local_id())
-	if p == null:
-		return false
-	for d in _da:
-		if d.overlaps_body(p):
-			return true
 	return false
-
-
-## Trúng đá thì đứng yên tại chỗ. Không khoá thì người đã chết vẫn chạy tiếp và vẫn ăn quãng
-## đường — thành ra chết xong lại về nhất.
-func _khi_ai_do_chet(id: int) -> void:
-	if id != NetManager.local_id():
-		return
-	var p := _nguoi(id)
-	if p != null:
-		p.khoa_di_chuyen = true
-
-
-func dung_som() -> void:
-	var p := _nguoi(NetManager.local_id())
-	if p != null:
-		p.khoa_di_chuyen = false
-	super()
-
-
-## Một đợt đá: mỗi làn đang có người đều nhận đúng một tảng ở cùng chỗ lệch, cùng lúc.
-##
-## Cùng chuỗi thử thách cho mọi người là điều kiện để bảng xếp hạng có nghĩa — khác chuỗi thì
-## người thắng chỉ là người bốc được làn dễ.
-func _nem(muc: Dictionary) -> void:
-	if san == null or da_scene == null:
-		return
-	var z: float = san.global_position.z - cho_sinh(float(muc["luc"]))
-	for i in _ds_nguoi.size():
-		var d := da_scene.instantiate() as DaLan
-		san.add_child(d)
-		d.lan(Vector3(san.global_position.x + x_lan(i) + float(muc["lech"]),
-				san.global_position.y + 1.3, z))
-		_da.append(d)
-
-
-# ───────────────────────── luật: hàm thuần, kiểm bằng assert ─────────────────────────
-
-## Đá đợt lúc `t` ló ra cách vạch xuất phát bao nhiêu mét.
-static func cho_sinh(t: float) -> float:
-	return TOC_CHAY_MAU * t + TAM_NHIN
-
-
-## Toàn bộ lịch đá của một ván, suy ra từ hạt giống.
-static func lich_da(giong: int) -> Array:
-	var rng := RandomNumberGenerator.new()
-	rng.seed = giong
-	var ds: Array = []
-	var t := 2.0
-	# Dừng khi điểm sinh chạy quá cuối làn: đá sinh ngoài sàn thì rơi thẳng xuống hư không.
-	while t < 90.0 and cho_sinh(t) <= MiniGameLan.DAI_LAN:
-		ds.append({"luc": t, "lech": rng.randf_range(-LECH_TOI_DA, LECH_TOI_DA)})
-		t += lerpf(NGHI_DAU, NGHI_CUOI, clampf(t / GIAY_DAY_HET, 0.0, 1.0))
-	return ds

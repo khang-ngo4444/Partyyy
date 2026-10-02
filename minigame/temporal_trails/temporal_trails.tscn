@@ -2,16 +2,12 @@
 
 [ext_resource type="Script" path="res://minigame/temporal_trails/temporal_trails.gd" id="1_tt"]
 [ext_resource type="PackedScene" path="res://minigame/temporal_trails/san_vet.tscn" id="2_san"]
-[ext_resource type="PackedScene" path="res://minigame/temporal_trails/vet_sang.tscn" id="3_vet"]
-[ext_resource type="PackedScene" path="res://minigame/chung/thanh_mau.tscn" id="4_tm"]
+[ext_resource type="PackedScene" path="res://minigame/temporal_trails/vet.tscn" id="3_vet"]
 
 [node name="TemporalTrails" type="Node"]
 script = ExtResource("1_tt")
 san_scene = ExtResource("2_san")
 vet_scene = ExtResource("3_vet")
-
-[node name="ThanhMau" parent="." instance=ExtResource("4_tm")]
-toi_da = 100.0
 
 [node name="Lop" type="CanvasLayer" parent="."]
 visible = false
@@ -30,23 +26,3 @@ theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 30
 horizontal_alignment = 1
 text = "..."
-
-[node name="CanhBao" type="Label" parent="Lop"]
-visible = false
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -300.0
-offset_top = -170.0
-offset_right = 300.0
-offset_bottom = -122.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_colors/font_color = Color(1, 0.3, 0.25, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 34
-horizontal_alignment = 1
-text = "RA KHỎI VỆT! QUAY LẠI ĐƯỜNG CŨ"

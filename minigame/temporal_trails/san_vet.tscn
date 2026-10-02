@@ -4,6 +4,16 @@
 [ext_resource type="PackedScene" path="res://minigame/chung/san_tron.tscn" id="2_sr"]
 [ext_resource type="Environment" path="res://materials/env_san_vet.tres" id="3_env"]
 [ext_resource type="Material" path="res://materials/mat_san_vet.tres" id="4_m"]
+[ext_resource type="Material" path="res://materials/mat_vien_san.tres" id="5_vien"]
+
+[sub_resource type="CylinderMesh" id="Cyl_bien"]
+top_radius = 11.0
+bottom_radius = 11.0
+height = 1.0
+radial_segments = 96
+rings = 1
+cap_top = false
+cap_bottom = false
 
 [node name="SanVet" type="Node3D"]
 
@@ -17,5 +27,10 @@ environment = ExtResource("3_env")
 [node name="Mat" parent="SanTron" index="0"]
 material_override = ExtResource("4_m")
 
+[node name="Bien" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+cast_shadow = 0
+mesh = SubResource("Cyl_bien")
+material_override = ExtResource("5_vien")
+
 [node name="Vet" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.215, 0)

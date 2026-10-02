@@ -88,21 +88,23 @@ func _nhip_camera(delta: float) -> void:
 	var lan_max := -INF
 	var co := false
 	for p: Player in get_tree().get_nodes_in_group("players"):
-		var i := lan_cua(p.player_id())
-		if i < 0:
+		if lan_cua(p.player_id()) < 0:
 			continue
 		co = true
 		var d := quang_duong(p)
 		dan = maxf(dan, d)
 		bet = minf(bet, d)
-		lan_min = minf(lan_min, x_lan(i))
-		lan_max = maxf(lan_max, x_lan(i))
+		# Theo chỗ người chơi THẬT SỰ đứng, không theo tâm làn: ở sân chung (Sidestep) không ai
+		# đứng yên trong làn của mình. Ở sân làn riêng thì hai số này trùng nhau.
+		var x := p.global_position.x - san.global_position.x
+		lan_min = minf(lan_min, x)
+		lan_max = maxf(lan_max, x)
 	if not co:
 		return
 	# Người bét quá xa thì thôi không lùi theo nữa — lùi mãi thì cả tốp bé như hạt gạo.
 	var gian := clampf(dan - bet, 0.0, CAM_GIAN_TOI_DA)
 	var dich := san.global_position + _cam_goc + Vector3(
-			(lan_min + lan_max) * 0.5, gian * 0.35, -bet + gian * 0.5)
+			(lan_min + lan_max) * 0.5, gian * 0.35 + cao_tai(bet), -bet + gian * 0.5)
 	cam.global_position = cam.global_position.lerp(dich, clampf(CAM_MUOT * delta, 0.0, 1.0))
 
 
@@ -120,7 +122,18 @@ func lan_cua(id: int) -> int:
 func quang_duong(p: Player) -> float:
 	if san == null:
 		return 0.0
-	return clampf(san.global_position.z - p.global_position.z, 0.0, DAI_LAN)
+	return clampf(san.global_position.z - p.global_position.z, 0.0, dai_lan())
+
+
+## Đường dài bao nhiêu mét. Trò có đường riêng (Sidestep) ghi đè.
+func dai_lan() -> float:
+	return DAI_LAN
+
+
+## Mặt đường cao bao nhiêu ở `d` mét tính từ vạch. Đường phẳng = 0; đường dốc ghi đè — camera
+## leo theo để không bị mặt dốc che mất người chơi.
+func cao_tai(_d: float) -> float:
+	return 0.0
 
 
 ## Cập nhật kỷ lục quãng đường của mọi người. Lớp con gọi trong `_luat_moi_nhip()`.

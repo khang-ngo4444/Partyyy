@@ -222,7 +222,7 @@ Dung nham **không phải `StaticBody3D`** như guide ghi: rơi khỏi sàn đã
 
 | Node | Hiện tại | Cần |
 |---|---|---|
-| `vet_sang.tscn` → `Loi` + `Quang` (Temporal Trails) | 🟡 dải `ArrayMesh` dựng từ đường cong lúc chạy + `mat_vet_loi`/`mat_vet_quang` (phát sáng + quầng cộng sáng, bloom từ `env_san_vet.tres`) | Shader dải sáng có nhịp chạy dọc vệt; hạt sáng ở đầu/cuối vệt |
+| `vet.tscn` → `Mat` (Temporal Trails, tường xe ánh sáng) | 🟡 `BoxMesh` 0,3 × 1 m phát sáng màu nhân vật (`mat_vet_loi`), hộp va chạm bằng đúng mesh | Shader tường có vân/nhịp chạy dọc; hiệu ứng nổ khi đâm (giờ chỉ biến mất) |
 | `o_chu.tscn` → `Mat` + `Chu` (26 ô A–Z trong `san_chu.tscn/Bang`) | 🟡 `BoxMesh` 2,2 m phẳng + `Label3D` nằm trên mặt | Tấm sàn kim loại/đèn viền kiểu ảnh mẫu, chữ phát sáng |
 | `o_chu.tscn` → `Vung` | ✅ `Area3D` 2,2 m đúng bằng mặt ô | — |
 | `chu_tren_dau.tscn` | 🟡 `Label3D` từ của từng người, gắn lên đầu nhân vật lúc vào ván | Khung/bảng nhỏ sau chữ cho dễ đọc trên nền sáng |
@@ -234,7 +234,7 @@ Dung nham **không phải `StaticBody3D`** như guide ghi: rơi khỏi sàn đã
 
 | Sinh bằng code | Vì sao không đặt sẵn trong `.tscn` |
 |---|---|
-| `vet_sang.tscn` (Temporal Trails) | Một vệt mỗi người mỗi vòng; HÌNH dải là đường cong sinh từ hạt giống (`DuongVet.tao`) — không vẽ sẵn được, đúng lý do "hình dạng phụ thuộc trạng thái lúc chạy" |
+| `vet.tscn` (Temporal Trails) | Tường mọc theo đường người chơi tự lái — chỉ biết lúc chạy. Sống tới hết ván |
 
 ### Lệch guide ở T3 — có lý do
 
@@ -267,8 +267,8 @@ của phòng chờ) và **làn tách rời** cách nhau 40 m.
 | `lan.tscn` → `MatSan` | 🟡 `BoxMesh` 10 × 400 m, vật liệu sáng | Texture đường/tuyết; Sidestep Slope nên có độ dốc thật |
 | `lan.tscn` → `MatTuongTrai/Phai` | 🟡 `BoxMesh` 0,6 × 3 × 400 m | Vách đá/lan can — `kenney_nature-kit` (329 model, **không** bị loại khỏi build) |
 | `lan.tscn` → `Vach` | 🟡 `BoxMesh` đỏ, ẩn sẵn, chỉ Slippery bật | Cổng đích có cờ |
-| `da_lan.tscn` → `Mat` | ✅ `rock_tallB.glb` (nature-kit) ×3,1 ≈ 2,4–2,7 m, `Mat` là trục quay | — |
-| `da_lan.tscn` → `Hinh` | ✅ `SphereShape3D` đúng bán kính mesh (có assert) | — |
+| `xe_doc.tscn` → `Toa` (Sidestep, xe lao xuống dốc) | 🟡 toa goòng `train-carriage-container-red.glb` (train-kit) ×1,8 + 2 đèn pha phát sáng | **Model ô tô/xe tải thật** — repo chưa có bộ xe nào; vài màu xe khác nhau; tiếng động cơ |
+| `xe_doc.tscn` → `Hinh` | ✅ `BoxShape3D` 1,8 × 2,45 × 4,86 m đúng bằng toa | — |
 | Cảnh hai bên làn | 🔴 trống trơn | Cây/đá `kenney_nature-kit` — làn 400 m không có gì thì không cảm được tốc độ |
 | UI cho cả 3 trò | 🔴 chưa có | Cùng món nợ `CanvasLayer` với T1–T3 |
 
@@ -276,7 +276,7 @@ của phòng chờ) và **làn tách rời** cách nhau 40 m.
 
 | Sinh bằng code | Vì sao không đặt sẵn trong `.tscn` |
 |---|---|
-| `da_lan.tscn` (Sidestep) | Số lượng không biết trước: một đợt mỗi 1,5 → 0,45 giây, nhân số làn đang có người. Hình và hộp va chạm đều trong `.tscn` |
+| `xe_doc.tscn` (Sidestep) | Lịch xe sinh từ hạt giống, số xe trên đường đổi theo giây — `XeDoc.lich` |
 
 ### Lệch guide ở T4 — có lý do
 

@@ -1,260 +1,199 @@
 extends MiniGame3D
 
-## TEMPORAL TRAILS — nhìn vệt sáng của mình, nhớ HÌNH của nó, vệt tắt rồi đi lại đúng đường đó.
+## TEMPORAL TRAILS — đua xe ánh sáng. Tự chạy thẳng, A/D để rẽ, sau lưng mọc tường sáng; đâm
+## vào tường (của ai cũng vậy, kể cả của mình) hay vào viền sân là ra NGAY. Còn một người là xong.
 ##
-## Khuôn T3. Mỗi vòng có bốn chặng:
+## Khuôn T3. Không dừng, không lùi, không nhảy, không đòn — chỉ có rẽ. Tường KHÔNG tan: sân chật
+## dần theo thời gian, và đó là toàn bộ độ khó. Không ai phải làm khó thêm.
 ##
-## ```
-## XEM (đứng yên, mọi vệt sáng rực) → MỜ DẦN → ĐI (vệt tắt hẳn, đi theo trí nhớ) → NGHỈ
-## ```
+## ## 0 gói tin cho tường
 ##
-## Thứ phải nhớ là **hình con đường** (thẳng → cong trái → vòng tròn → chữ S...), không phải chỗ
-## mình đứng — đó là chỗ khác với Searing Spotlights, nơi thứ phải nhớ là vị trí của chính mình.
+## Mỗi máy tự vẽ tường cho TẤT CẢ người chơi, dựa trên vị trí mà `FusionSharedReplicator` đã gửi
+## sẵn. Không ai phải kể cho ai nghe mình vừa đi qua đâu.
 ##
-## ## Vệt là gì
+## Hệ quả phải chấp nhận: hai máy lấy mẫu vị trí ở hai nhịp hơi khác nhau nên bức tường của cùng
+## một người có thể lệch nhau vài chục centimet giữa hai màn hình. Không sửa và không cần sửa —
+## **người đâm tường tự khai tử, và họ khai theo bức tường trên máy CỦA HỌ**. Nghĩa là thứ họ
+## nhìn thấy chính là thứ giết họ. Nếu để master phán thì mới sinh ra cảnh "màn hình tôi còn
+## cách tường một mét mà game bảo tôi chết".
 ##
-## Mỗi người một đường cong liền màu riêng (`DuongVet.tao`), vẽ thành dải phát sáng trên sàn
-## (`VetSang`). Vệt của mọi người hiện cùng lúc và có thể cắt nhau — nhầm nhánh ở chỗ giao là cái
-## bẫy chính của trò. Mỗi người xuất phát ở một góc sân khác nhau, nên bám theo người khác là đi
-## sai đường ngay từ đầu.
+## ## Vì sao hỏi không gian vật lý thay vì duyệt danh sách vệt
 ##
-## ## Đi đúng đường
-##
-## Đường hợp lệ rộng `2 × DuongVet.BE_RONG` = 2,5 m quanh vệt đã tắt. Ra ngoài thì mất máu dần
-## (`ThanhMau`, cùng hệ máu với Spotlights/Magma) và có chữ cảnh báo — lệch vài chục phân không
-## sao, lạc hẳn mới mất máu. Chỉ xét toạ độ NGANG (xz): nhảy không giúp bay tắt qua đâu được, vì
-## lúc đang bay vẫn bị đo như lúc đứng.
-##
-## ## 0 gói tin cho vệt, 1 gói mỗi người mỗi vòng
-##
-## Vệt và lịch chặng là hàm thuần của `(hạt giống, gio())`, mọi máy tự tính. Máu và tiến độ mỗi
-## máy tự đo cho nhân vật của mình (luật chung: nạn nhân tự khai). Hết mỗi vòng, mỗi người gửi
-## đúng MỘT gói báo mình đi được bao nhiêu phần vệt.
+## Tường sống tới hết ván, cuối ván có cả nghìn đoạn. `intersect_shape()` hỏi đúng MỘT câu cho cả
+## sân và để Godot lo phần chia lưới — đó là việc của engine, không phải việc của trò chơi.
 
-## Bốn vòng, khó dần: thời gian XEM ngắn lại (độ dài và độ cong nằm trong `DuongVet`).
-const XEM := [7.0, 6.0, 5.0, 4.0]
-const MO := 1.5
-const NGHI := 2.0
-## Đi bao lâu: theo chiều dài vệt, chừa dư cho người đang lục trí nhớ. Chạy thẳng 6 m/s; ở đây
-## tính 3,5 m/s cộng 4 giây.
-const TOC_DI_TINH := 3.5
-const DU_DI := 4.0
-## Mất máu mỗi giây khi ở ngoài đường hợp lệ. Máu 100 → 4 giây lạc tổng cộng là ra.
-const MAT_MAU_MOI_GIAY := 25.0
-## Hết giờ đi mà chưa tới cuối vệt thì mất thêm chừng này máu.
-const PHAT_KHONG_TOI := 20.0
-## Tới cách cuối vệt chừng này mét là tính là về đích.
-const VE_DICH := 0.8
-
-enum { PHA_XEM, PHA_MO, PHA_DI, PHA_NGHI, PHA_HET }
+## Đi được chừng này mét thì nhả một đoạn tường. Ngắn thì chỗ rẽ tròn hơn, đổi lại nhiều node hơn.
+##
+## ponytail: mỗi đoạn một Area3D + một MeshInstance3D; 4 người × 6 m/s × 60 s ÷ 0,6 m ≈ 2400 đoạn
+## lúc dài nhất. Nếu đo thấy tụt khung hình thì gộp hình vào một MultiMesh mỗi người và giữ Area3D
+## riêng cho va chạm.
+const BUOC_VET := 0.6
+## Đoạn tường CỦA CHÍNH MÌNH nhả trong chừng này giây gần nhất không giết mình — đoạn mới nhất
+## luôn bắt đầu ngay dưới chân. 0,4 s = 2,4 m; vòng rẽ gắt nhất có bán kính 2,3 m nên không thể
+## quay đầu đâm vào phần tường trong quãng đó, và đâm vào phần cũ hơn thì vẫn chết.
+const AN_TOAN := 0.4
+## Lớp va chạm riêng của tường, khớp `collision_layer` trong `vet.tscn`.
+const LOP_VET := 32
+## Bán kính quả cầu dò quanh người chơi — đúng bằng bán kính thân (`player.tscn`, 0,4 m), nên
+## "thân chạm tường" trên màn hình là "chết" trong luật.
+const BAN_KINH_DO := 0.4
+## Bán kính VIỀN sân (`Bien` trong `san_vet.tscn`). Thân chạm viền là chết.
+const BAN_KINH_BIEN := 11.0
+## Tốc độ chạy, m/s — bằng tốc đi bộ thường, không chỉnh nhanh hơn để làm khó.
+const TOC := 6.0
+## Giây đứng yên đầu ván để mọi người nhìn hướng mình sắp chạy.
+const CHUAN_BI := 1.2
+## Một lần dịch vị trí xa hơn chừng này trong một khung hình là DỊCH CHUYỂN (vào sân, về chỗ cũ),
+## không phải chạy — không vẽ tường cho quãng đó.
+const NHAY_XA := 3.0
 
 @export var vet_scene: PackedScene = null
 
-@onready var _thanh: ThanhMau = $ThanhMau
 @onready var _pha_chu: Label = $Lop/Pha
-@onready var _canh_bao: Label = $Lop/CanhBao
 
-## Thứ tự người chơi lúc vào ván — quyết định ai xuất phát ở góc sân nào.
-var _ds_nguoi: Array = []
-## player_id -> VetSang của vòng hiện tại.
-var _vet: Dictionary = {}
-## Đường của CHÍNH MÌNH ở vòng hiện tại (xz cục bộ trong sân).
-var _duong := PackedVector2Array()
-var _vong := -1
-var _tien := 0.0
-var _xong := false
-var _da_bao := -1
-## player_id -> tổng phần vệt đã đi được qua các vòng. Mọi máy cộng từ RPC; bảng của master là
-## bảng chốt.
-var _diem: Dictionary = {}
+## player_id -> chỗ nhả đoạn tường gần nhất.
+var _cho_cuoi: Dictionary = {}
+var _do: PhysicsShapeQueryParameters3D = null
+## color_index -> vật liệu tường của màu đó. Mỗi màu MỘT bản, dùng chung cho mọi đoạn.
+var _vat_lieu: Dictionary = {}
+var _dang_lai := false
 
 
 func _ready() -> void:
 	super()
 	ten = "TEMPORAL TRAILS"
-	luat = ("Nhớ HÌNH vệt sáng màu của bạn · vệt tắt thì đi lại đúng đường đó"
-			+ " · lạc đường là mất máu")
-	giay_van = 0.0                      # ván kết thúc sau vòng cuối, xem `_luat_moi_nhip`
+	luat = "Tự chạy thẳng · A/D để rẽ · đâm vào tường sáng hay viền sân là ra · trụ lại cuối cùng"
+	# Lưới đỡ: thường thì ván xong khi còn một người, rất lâu trước mốc này.
+	giay_van = 90.0
 
 
 func bat_dau(nguoi_choi: Array, giong: int) -> void:
-	_ds_nguoi = nguoi_choi.duplicate()
 	super(nguoi_choi, giong)
+	var toi := _nguoi(NetManager.local_id())
+	if toi == null:
+		return
+	# Đứng yên trong lúc chuẩn bị, mặt quay theo VÒNG xuất phát (cùng chiều cho mọi người): không
+	# ai chĩa thẳng mặt vào ai ngay giây đầu.
+	toi.khoa_di_chuyen = true
+	var l := toi.global_position - san.global_position
+	var tiep := Vector3(-l.z, 0.0, l.x).normalized()
+	if tiep.length_squared() > 0.0:
+		toi.rotation.y = atan2(-tiep.x, -tiep.z)
 
 
 func _dung_san() -> void:
-	_diem.clear()
-	for id in _song:
-		_diem[int(id)] = 0.0
-	_vong = -1
-	_da_bao = -1
-	_thanh.mo()
+	_cho_cuoi.clear()
+	_vat_lieu.clear()
+	_dang_lai = false
+	var hinh := SphereShape3D.new()
+	hinh.radius = BAN_KINH_DO
+	_do = PhysicsShapeQueryParameters3D.new()
+	_do.shape = hinh
+	_do.collision_mask = LOP_VET
+	# Chỉ hỏi Area3D: tường không có thân rắn, và sàn thì không phải thứ đang tìm.
+	_do.collide_with_bodies = false
+	_do.collide_with_areas = true
 	$Lop.visible = true
 
 
 func dung_som() -> void:
-	_thanh.dong()
+	var toi := _nguoi(NetManager.local_id())
+	if toi != null:
+		toi.lai_tu_dong = false
+	for p: Player in get_tree().get_nodes_in_group("players"):
+		p.model_root.visible = true
 	$Lop.visible = false
 	super()
 
 
 func _luat_moi_nhip() -> void:
-	var l := lich(gio())
-	var v: int = l["vong"]
-	var pha: int = l["pha"]
-	if pha == PHA_HET:
-		_hien_vet(0.0)
-		if NetManager.is_master():
-			_chot_ket_qua()
-		return
-	if v != _vong:
-		_vao_vong(v)
-	_hien_vet(1.0 if pha == PHA_XEM else (1.0 - float(l["qua"]) / MO if pha == PHA_MO else 0.0))
-
-	var id := NetManager.local_id()
-	var toi := _nguoi(id)
-	var song := con_song(id)
-	# Đứng yên lúc XEM / MỜ / NGHỈ: đi được lúc vệt còn sáng thì chỉ việc dò theo, không cần nhớ.
-	if toi != null and song:
-		toi.khoa_di_chuyen = pha != PHA_DI
-	_canh_bao.visible = false
-	if pha == PHA_DI and song and not _xong and toi != null:
-		_di(toi)
-	if pha == PHA_NGHI and song and _da_bao != v:
-		_da_bao = v
-		if not _xong:
-			_thanh.tru(PHAT_KHONG_TOI, 1.0)
-		var phan := clampf(_tien / maxf(DuongVet.dai(_duong), 0.01), 0.0, 1.0)
-		Fusion.rpc(_net_ket_vong, id, v, phan)
-	_pha_chu.text = _chu_pha(pha, float(l["con"]))
-
-
-## Đo người chơi của MÁY NÀY trên đường đã tắt. Chỉ toạ độ ngang: nhảy không né được phép đo.
-func _di(toi: Player) -> void:
-	var l := toi.global_position - san.global_position
-	var r := DuongVet.tien_do(_duong, _tien, Vector2(l.x, l.z))
-	_tien = r.x
-	if r.y > DuongVet.BE_RONG:
-		_thanh.tru(MAT_MAU_MOI_GIAY, get_process_delta_time())
-		_canh_bao.visible = true
-	if _tien >= DuongVet.dai(_duong) - VE_DICH:
-		_xong = true
+	if not _dang_lai and gio() >= CHUAN_BI:
+		_dang_lai = true
+		var toi := _nguoi(NetManager.local_id())
+		if toi != null and con_song(NetManager.local_id()):
+			toi.khoa_di_chuyen = false
+			toi.toc_lai = TOC
+			toi.lai_tu_dong = true
+	for p: Player in get_tree().get_nodes_in_group("players"):
+		var id := p.player_id()
+		if not _song.has(id) or not con_song(id):
+			continue
+		var cho := p.global_position
+		if not _dang_lai or not _cho_cuoi.has(id):
+			_cho_cuoi[id] = cho
+			continue
+		var tu: Vector3 = _cho_cuoi[id]
+		var d := tu.distance_to(cho)
+		if d > NHAY_XA:
+			# Dịch chuyển (thường là vị trí replicate của người khác vừa nhảy vào sân): bắt đầu
+			# vẽ lại từ chỗ mới, không kéo một bức tường dài từ chỗ cũ tới đây.
+			_cho_cuoi[id] = cho
+			continue
+		if d < BUOC_VET:
+			continue
+		_nha_vet(id, p.color_index, tu, cho)
+		_cho_cuoi[id] = cho
+	_pha_chu.text = _chu_trang_thai()
 
 
-## Vòng mới: dựng lại vệt của mọi người, đưa nhân vật của máy này về đầu vệt của mình.
-func _vao_vong(v: int) -> void:
-	_vong = v
-	_tien = 0.0
-	_xong = false
-	for k in _vet:
-		if is_instance_valid(_vet[k]):
-			_vet[k].queue_free()
-	_vet.clear()
-	var goc := san.get_node("Vet") as Node3D
-	var mau := _mau_rieng()
-	for i in _ds_nguoi.size():
-		var id := int(_ds_nguoi[i])
-		var ds := DuongVet.tao(hat_giong, v, i, _ds_nguoi.size())
-		var vs := vet_scene.instantiate() as VetSang
-		goc.add_child(vs)
-		# Nhích cao một chút theo thứ tự: hai vệt chồng nhau không nhấp nháy giành mặt.
-		vs.position.y = 0.003 * i
-		vs.dung(ds, mau[i])
-		_vet[id] = vs
-		if id == NetManager.local_id():
-			_duong = ds
-	var toi := _nguoi(NetManager.local_id())
-	if toi != null and con_song(NetManager.local_id()) and _duong.size() > 1:
-		var h := DuongVet.huong_dau(_duong)
-		toi.global_position = san.global_position + Vector3(_duong[0].x, 1.0, _duong[0].y)
-		toi.velocity = Vector3.ZERO
-		toi.rotation.y = atan2(-h.x, -h.y)
+func _chu_trang_thai() -> String:
+	if not _dang_lai:
+		return "SẴN SÀNG..."
+	if not con_song(NetManager.local_id()):
+		return "BẠN ĐÃ ĐÂM VÀO TƯỜNG · còn %d người" % so_con_song()
+	return "Còn %d người" % so_con_song()
 
 
-func _hien_vet(a: float) -> void:
-	for k in _vet:
-		if is_instance_valid(_vet[k]):
-			(_vet[k] as VetSang).do_sang(a)
-
-
-## Màu vệt = màu nhân vật đã chọn (`NetManager.PLAYER_COLORS`). Hai người trùng màu thì người sau
-## lấy màu kế tiếp còn trống — trùng màu là không ai biết vệt nào của mình. Tính trên `color_index`
-## đã replicate, nên mọi máy ra cùng một bảng.
-func _mau_rieng() -> Array[Color]:
-	var da_dung := {}
-	var ds: Array[Color] = []
-	for i in _ds_nguoi.size():
-		var p := _nguoi(int(_ds_nguoi[i]))
-		var ci := p.color_index if p != null else i
-		var n := NetManager.PLAYER_COLORS.size()
-		for k in n:
-			if not da_dung.has((ci + k) % n):
-				ci = (ci + k) % n
-				break
-		da_dung[ci] = true
-		ds.append(NetManager.color_for(ci))
-	return ds
-
-
-func _chu_pha(pha: int, con: float) -> String:
-	match pha:
-		PHA_XEM:
-			return "VÒNG %d · NHỚ VỆT MÀU CỦA BẠN · %d" % [_vong + 1, ceili(con)]
-		PHA_MO:
-			return "VỆT ĐANG TẮT..."
-		PHA_DI:
-			return ("VỀ ĐÍCH ✓" if _xong else "ĐI THEO TRÍ NHỚ · %d" % ceili(con))
-		_:
-			return "VỀ ĐÍCH ✓" if _xong else "HẾT GIỜ"
-
-
-## Mỗi người báo một lần mỗi vòng: đi được bao nhiêu phần vệt của mình.
-@rpc("any_peer", "call_local")
-func _net_ket_vong(id: int, _v: int, phan: float) -> void:
-	if _diem.has(id):
-		_diem[id] = float(_diem[id]) + clampf(phan, 0.0, 1.0)
-
-
-## Ô điểm: tổng phần trăm vệt đã đi được qua các vòng (100 = trọn một vệt).
-func diem_cua(id: int) -> float:
-	return float(_diem[id]) * 100.0 if _diem.has(id) else NAN
-
-
-## Ghi đè: hết máu là thua. Vẫn giữ luật rơi khỏi sàn của lớp cha.
+## Ghi đè: giữ nguyên luật rơi khỏi sàn của lớp cha, thêm viền sân và tường.
 func _toi_thua() -> bool:
-	return _thanh.het() or super()
+	if super():
+		return true
+	var p := _nguoi(NetManager.local_id())
+	if p == null or _do == null or not _dang_lai:
+		return false
+	var l := p.global_position - san.global_position
+	if Vector2(l.x, l.z).length() > BAN_KINH_BIEN - BAN_KINH_DO:
+		return true
+	# Tâm quả cầu ngang hông, giữa bề cao tường (0..1 m). Chế độ lái không có nhảy, nên không ai
+	# bay qua tường được.
+	_do.transform = Transform3D(Basis.IDENTITY, p.global_position + Vector3.UP * 0.5)
+	for cham in san.get_world_3d().direct_space_state.intersect_shape(_do, 16):
+		var v := cham["collider"] as Vet
+		if v == null:
+			continue
+		if v.nguoi == NetManager.local_id() and gio() - v.luc < AN_TOAN:
+			continue
+		return true
+	return false
 
 
-## Xếp theo tổng phần vệt đi được; bằng nhau thì ai sống lâu hơn đứng trên.
-func _chot_ket_qua() -> void:
-	_chay = false
-	set_process(false)
-	var xep: Array = []
-	for id in _diem:
-		xep.append(int(id))
-	xep.sort_custom(func(a: int, b: int) -> bool:
-		if not is_equal_approx(float(_diem[a]), float(_diem[b])):
-			return float(_diem[a]) > float(_diem[b])
-		return con_song(a) and not con_song(b))
-	Fusion.rpc(_net_xep_hang, xep)
+## Có người vừa đâm. Trên MỌI máy: nhân vật biến mất (tường của họ vẫn ở lại — đó là chướng ngại
+## cho người còn sống). Máy của chính người đó: đứng im, thôi tự chạy.
+func _khi_ai_do_chet(id: int) -> void:
+	var p := _nguoi(id)
+	if p == null:
+		return
+	p.model_root.visible = false
+	if id == NetManager.local_id():
+		p.lai_tu_dong = false
+		p.khoa_di_chuyen = true
 
 
-# ───────────────────────── luật: hàm thuần ─────────────────────────
+func _nha_vet(chu: int, chi_so_mau: int, tu: Vector3, den: Vector3) -> void:
+	if san == null or vet_scene == null:
+		return
+	var v := vet_scene.instantiate() as Vet
+	san.get_node("Vet").add_child(v)
+	v.dat(chu, gio(), tu, den, _vat_lieu_mau(chi_so_mau))
 
-## Thời gian ĐI của vòng `v`.
-static func giay_di(v: int) -> float:
-	return float(DuongVet.DAI[v]) / TOC_DI_TINH + DU_DI
 
-
-## Đang ở vòng nào, chặng nào lúc `t`. Trả về `{vong, pha, qua, con}`: `qua` = đã vào chặng bao
-## lâu, `con` = chặng còn bao lâu. Mọi máy cùng tính từ `gio()` — không ai phải phát "sang chặng".
-static func lich(t: float) -> Dictionary:
-	var dau := 0.0
-	for v in DuongVet.so_vong():
-		var cac := [float(XEM[v]), MO, giay_di(v), NGHI]
-		for k in cac.size():
-			var d: float = cac[k]
-			if t < dau + d:
-				return {"vong": v, "pha": k, "qua": t - dau, "con": dau + d - t}
-			dau += d
-	return {"vong": DuongVet.so_vong() - 1, "pha": PHA_HET, "qua": 0.0, "con": 0.0}
+## Tường mang MÀU NHÂN VẬT (`NetManager.PLAYER_COLORS`). Nhân bản `mat_vet_loi` một lần mỗi màu.
+func _vat_lieu_mau(chi_so_mau: int) -> Material:
+	if not _vat_lieu.has(chi_so_mau):
+		var goc := load("res://materials/mat_vet_loi.tres") as StandardMaterial3D
+		var m := goc.duplicate() as StandardMaterial3D
+		var mau := NetManager.color_for(chi_so_mau)
+		m.albedo_color = mau
+		m.emission = mau
+		_vat_lieu[chi_so_mau] = m
+	return _vat_lieu[chi_so_mau]
