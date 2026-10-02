@@ -48,8 +48,9 @@ extends MiniGame3D
 ## ponytail: máu + thanh máu CHÉP từ `spotlights.gd` chứ không tách ra chỗ dùng chung. Hai trò
 ## dùng thì chép rẻ hơn dựng một tầng mới; trò thứ ba cần máu thì lúc đó hãy tách.
 
-## Nút bắn. `interact` (E) — trong sân không có vật nào để nhặt nên phím này rảnh.
-const NUT_BAN := "interact"
+## Nút bắn: CHUỘT TRÁI (hoặc F) — cùng action `danh` với đòn đánh ở Crown/Word Wars, để mọi
+## minigame "ra đòn" bằng một nút. Trò này không bật `co_danh` nên lớp cha không đọc nút này.
+const NUT_BAN := "danh"
 ## Nghỉ giữa hai phát, giây. Không có thì giữ phím là một vòi lửa liền mạch.
 const NGHI_BAN := 0.7
 ## Cầu lửa rời tay ở độ cao này, để nó bay ngang tầm ngực chứ không lết dưới sàn.
@@ -92,7 +93,7 @@ var _ban_kinh := 11.5
 func _ready() -> void:
 	super()
 	ten = "MAGMA & MAGES"
-	luat = "WASD chạy · E bắn cầu lửa · vành đỏ sắp thành nham · hất nhau vào nham"
+	luat = "WASD chạy · chuột trái bắn cầu lửa · vành đỏ sắp thành nham · hất nhau vào nham"
 	giay_van = 75.0
 
 
@@ -167,7 +168,8 @@ func _toi_thua() -> bool:
 	return _thanh.het() or super()
 
 
-func _unhandled_input(event: InputEvent) -> void:
+## `_input` chứ không `_unhandled_input`: chuột trái bị GUI ăn mất trước (xem `MiniGame3D._input`).
+func _input(event: InputEvent) -> void:
 	if not _chay or not event.is_action_pressed(NUT_BAN):
 		return
 	if gio() - _ban_luc < NGHI_BAN:

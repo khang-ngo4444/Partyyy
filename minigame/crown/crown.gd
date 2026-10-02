@@ -20,31 +20,27 @@ extends MiniGame3D
 ##
 ## Chuyện này KHÔNG tốn thêm gói tin nào: bảng chỉ được gửi một lần duy nhất, lúc chốt kết quả.
 ##
-## ## Vì sao cướp miện phải qua ĐÒN, không phải chạm vào người giữ
+## ## Cướp miện: CHẠM vào người đang đội là miện sang tay mình
 ##
-## Bản trước để `Area3D` cướp ngay trên quả miện, mà miện thì đội trên đầu người giữ — nên chỉ
-## cần **chạy tới chạm vào người giữ** là miện sang tay mình. Hai hệ quả, cả hai đều sai với trò:
+## Đuổi bắt thuần tuý: người đội miện chạy, cả phòng đuổi; chạm được vào thân người đội là miện
+## nhảy sang đầu mình, rồi tới lượt mình bị đuổi. Máy của NGƯỜI CHẠM tự xin (mỗi máy chỉ nói về
+## nhân vật của mình), master duyệt — hai người cùng chạm thì gói nào tới trước thắng.
 ##
-##   1. **Không có đòn nào trong một trò PvP.** Người không giữ miện chẳng có việc gì làm ngoài
-##      chạy tới đụng. Không có chuyện chặn đường, không có chuyện tranh nhau.
-##   2. **Miện sang tay TỨC THÌ.** Không có khoảnh khắc miện nằm đất để mà giành. Người đến trước
-##      ăn tất, và cả ván là một chuỗi đụng-đổi-chủ.
-##
-## Giờ: ĐÁNH (phím F) trúng người đang giữ thì **miện RƠI xuống đúng chỗ họ đứng**, không bay
-## sang ai. Ai chạy tới trước thì nhặt. Đánh người không giữ miện thì chỉ hất — vẫn có ích, vì
-## đó là cách hẩy đối thủ ra khỏi quả miện đang nằm đất.
-##
-## Đòn đánh là đòn tay không dùng chung của `MiniGame3D` (bật `co_danh` trong `crown.tscn`).
-## Bản trước bắn cầu lửa — đánh xa được thì người giữ miện không chạy đâu thoát, và trò thành
-## bắn tỉa chứ không phải giành giật.
+## Hai đòn tay không của `MiniGame3D` (bật `co_danh` trong `crown.tscn`) vẫn còn nhưng KHÔNG làm
+## rơi miện: chuột trái đánh làm choáng (giữ chân người đội để kịp chạm, hay giữ chân kẻ đuổi để
+## chạy), chuột phải chưởng hất văng (đẩy kẻ đuổi ra xa).
 ##
 ## ## Vì sao có `NGHI_CUOP`
 ##
-## Không có nó thì người vừa bị hất quay lại nhặt luôn quả miện vừa rơi, và cú đòn thành vô nghĩa.
-## 1,1 giây đủ để người khác tới tranh.
+## Không có nó thì người vừa mất miện chạm ngược lại ngay — miện nhảy qua nhảy lại giữa hai người
+## đứng sát nhau mỗi khung hình. 1,1 giây là đủ để người vừa cướp chạy ra khỏi tầm.
 
-## Miện rơi xuống rồi chừng này giây sau mới nhặt được.
+## Miện vừa đổi chủ (hay vừa rơi) thì chừng này giây sau mới cướp/nhặt được.
 const NGHI_CUOP := 1.1
+## Hai tâm người cách nhau ngang chừng này mét là CHẠM: thân rộng 0,8 m, cộng chút dư cho trễ mạng.
+const CHAM := 1.1
+## Máy người chạm xin cướp tối đa mỗi chừng này giây — không thì đứng sát là gửi 60 gói/giây.
+const NHIP_XIN := 0.25
 ## Miện đội trên đầu người giữ.
 const CAO_DOI := 2.2
 ## Miện nằm dưới đất ở độ cao này khi chưa ai nhặt.
@@ -60,6 +56,7 @@ var _ai_giu := 0
 var _cho_nam := Vector3.ZERO
 ## Giờ ván sớm nhất được phép nhặt tiếp.
 var _cho_toi := 0.0
+var _xin_luc := -99.0
 ## player_id -> giây đã giữ. Mọi máy tự cộng; bảng của master là bảng quyết định.
 var _diem: Dictionary = {}
 
@@ -70,7 +67,7 @@ var _ban_kinh := 11.5
 func _ready() -> void:
 	super()
 	ten = "CROWN CAPTURE"
-	luat = "WASD chạy · F đánh (choáng) · G chưởng (hất) · trúng người đội miện thì miện rơi"
+	luat = "WASD chạy · chạm người đội miện là cướp được miện · chuột trái đánh · chuột phải chưởng"
 	giay_van = 60.0
 
 
@@ -118,17 +115,26 @@ func _luat_moi_nhip() -> void:
 	if not con_song(NetManager.local_id()):
 		return
 	giu_trong_san(_ban_kinh - 0.5)
-	# Chỉ máy của NGƯỜI SẮP NHẶT đi hỏi — mỗi máy chỉ tự nói về nhân vật của mình.
-	if _ai_giu != 0 or gio() < _cho_toi:
+	# Chỉ máy của NGƯỜI SẮP NHẶT/CƯỚP đi hỏi — mỗi máy chỉ tự nói về nhân vật của mình.
+	var id := NetManager.local_id()
+	if _ai_giu == id or gio() < _cho_toi or gio() - _xin_luc < NHIP_XIN:
 		return
-	var toi := _nguoi(NetManager.local_id())
-	# Hỏi thẳng `Area3D`: tầm nhặt CHÍNH LÀ cái vòng `VongNhat` dưới quả miện — cả hai lấy bán
-	# kính 1,5 trong `vuong_mien.tscn`.
-	#
-	# Bản trước comment bảo tầm nhặt bằng "quầng sáng", nhưng quầng sáng là `OmniLight` tầm 6,0
-	# còn vùng nhặt chỉ 1,5 — nói một đằng làm một nẻo.
-	if toi != null and _vung.overlaps_body(toi):
-		Fusion.rpc(_xin_cuop, NetManager.local_id())
+	var toi := _nguoi(id)
+	if toi == null:
+		return
+	var duoc := false
+	if _ai_giu == 0:
+		# Miện nằm đất: hỏi thẳng `Area3D` — tầm nhặt CHÍNH LÀ cái vòng `VongNhat` dưới quả miện,
+		# cả hai lấy bán kính 1,5 trong `vuong_mien.tscn`.
+		duoc = _vung.overlaps_body(toi)
+	else:
+		var nguoi_doi := _nguoi(_ai_giu)
+		if nguoi_doi != null:
+			var d := nguoi_doi.global_position - toi.global_position
+			duoc = Vector2(d.x, d.z).length() <= CHAM
+	if duoc:
+		_xin_luc = gio()
+		Fusion.rpc(_xin_cuop, id)
 
 
 ## Ô điểm chung ở đáy màn hình (`QuanTroMiniGame`): giây đã đội miện, và ♛ cho người đang đội.
@@ -151,25 +157,19 @@ func _toi_thua() -> bool:
 	return false
 
 
-## Trúng ĐÁNH hay CHƯỞNG đều làm người đang đội miện đánh rơi miện. Master tự phán theo
-## `_ai_giu` của nó.
-func _khi_bi_danh(_ke_danh: int, nan: int, _loai: int) -> void:
-	if NetManager.is_master() and nan == _ai_giu:
-		_xin_roi(nan)
-
-
 # ───────────────────────── trọng tài: master duyệt rồi phát ─────────────────────────
 
 @rpc("any_peer", "call_local")
 func _xin_cuop(ai: int) -> void:
-	# Hai người chạm miện cùng lúc thì gói nào tới master trước thắng, gói sau bị `_cho_toi`
-	# chặn. Không có trọng tài thì mỗi máy tự cho mình là người nhặt được.
-	if not NetManager.is_master() or _ai_giu != 0 or gio() < _cho_toi or not con_song(ai):
+	# Nhặt miện nằm đất HAY chạm cướp từ người đang đội — cùng một đường. Hai người cùng chạm thì
+	# gói nào tới master trước thắng, gói sau bị `_cho_toi` chặn. Không có trọng tài thì mỗi máy tự
+	# cho mình là người cướp được.
+	if not NetManager.is_master() or ai == _ai_giu or gio() < _cho_toi or not con_song(ai):
 		return
 	Fusion.rpc(_net_giu, ai, Vector3.ZERO)
 
 
-## Người đang đội miện vừa trúng đòn: miện rơi xuống đúng chỗ họ đứng.
+## Miện rơi xuống đúng chỗ người đội đứng. Giờ chỉ còn dùng khi người đội rời ván (xem dưới).
 @rpc("any_peer", "call_local")
 func _xin_roi(ai: int) -> void:
 	if not NetManager.is_master() or ai != _ai_giu:

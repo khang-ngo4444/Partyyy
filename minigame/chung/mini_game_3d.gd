@@ -40,9 +40,10 @@ const ROI_KHOI_SAN := 8.0
 ## HAI đòn tay không — trò nào cần thì bật `co_danh` trong `.tscn`. Lớp con nghe `_khi_bi_danh()`
 ## để thêm luật riêng (rơi vương miện...).
 ##
-##   - ĐÁNH (F, action `danh`): tầm NGẮN, nạn nhân bị CHOÁNG — đứng sững, không đi, không nhảy —
-##     nhưng không bị hất. Dùng để giữ chân người ta tại chỗ.
-##   - CHƯỞNG (G, action `chuong`): tầm xa hơn, HẤT nạn nhân văng ra, không choáng. Nghỉ lâu hơn.
+##   - ĐÁNH (CHUỘT TRÁI hoặc F, action `danh`): tầm NGẮN, nạn nhân bị CHOÁNG — đứng sững,
+##     không đi, không nhảy — nhưng không bị hất. Dùng để giữ chân người ta tại chỗ.
+##   - CHƯỞNG (CHUỘT PHẢI hoặc G, action `chuong`): tầm xa hơn, HẤT nạn nhân văng ra, không
+##     choáng. Nghỉ lâu hơn.
 ##
 ## Tầm tính từ TÂM người đánh tới TÂM nạn nhân. Hai thân người (bán kính 0,4) chạm nhau đã cách
 ## 0,8 m, nên tầm đánh 1,7 m là "sát người, chìa tay ra là tới"; chưởng 2,8 m là "cách một bước".
@@ -205,8 +206,10 @@ func _toi_thua() -> bool:
 
 # ───────────────────────────── đánh tay không ─────────────────────────────
 
-## Lớp con ghi đè `_unhandled_input` thì PHẢI gọi `super(event)`, không thì phím đánh chết.
-func _unhandled_input(event: InputEvent) -> void:
+## Đọc ở `_input`, không ở `_unhandled_input`: trong minigame chuột đang thả tự do, và cú bấm
+## chuột trái rơi vào HUD/chat sẽ bị GUI ăn mất trước khi tới `_unhandled_input` — cùng lý do
+## súng ở bàn party (`PhaBanCo._input`) đọc chuột ở đây.
+func _input(event: InputEvent) -> void:
 	if not co_danh or not _chay:
 		return
 	var loai := -1

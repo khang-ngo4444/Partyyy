@@ -23,8 +23,9 @@ extends MiniGame3D
 ## ## Đánh nhau
 ##
 ## Ô chữ là của chung, nên chen nhau là chuyện tự nhiên. Hai đòn chung của `MiniGame3D` (bật
-## `co_danh` trong `word_wars.tscn`): F ĐÁNH làm người ta choáng — đứng sững, không gõ được; G
-## CHƯỞNG hất người ta khỏi ô họ đang cần. Tiến độ không mất — mất chữ vì bị đánh là quá gắt.
+## `co_danh` trong `word_wars.tscn`): chuột trái ĐÁNH làm người ta choáng — đứng sững, không gõ
+## được; chuột phải CHƯỞNG hất người ta khỏi ô họ đang cần. Tiến độ không mất — mất chữ vì bị
+## đánh là quá gắt.
 
 ## Nút gõ. Trong sân không có gì để nhặt nên phím này rảnh.
 const NUT_GO := "interact"
@@ -59,7 +60,7 @@ var _go_luc := -99.0
 func _ready() -> void:
 	super()
 	ten = "WORD WARS"
-	luat = "WASD chạy · đứng lên ô chữ rồi bấm E · gõ đúng từ trên đầu mình · F đánh"
+	luat = "WASD chạy · đứng lên ô chữ rồi bấm E · gõ đúng từ trên đầu · chuột trái đánh"
 	giay_van = 60.0
 
 
@@ -90,7 +91,6 @@ func _luat_moi_nhip() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	super(event)
 	if not _chay or not event.is_action_pressed(NUT_GO):
 		return
 	if gio() - _go_luc < NGHI_GO or dang_choang():
