@@ -97,6 +97,9 @@ bản thân · **Chọn ô** = chọn một ô trong tầm.
   (lùi `floor(so_buoc / 2)` bước theo chính đường đó).
 - **Mất máu trong thời gian hiệu lực** → giật ngay về ô neo, hiệu lực kết thúc. Đòn bị Úp thúng
   chặn thì không tính là mất máu.
+- Đòn kích hoạt giật về chỉ gây **một nửa sát thương, làm tròn lên** (2→1, 3→2, 4→2, 5→3):
+  cái giá chính là mất quãng đường, không phải máu. Đòn gục (Dép tổ ong, Kính lúp, Chó ngao)
+  **vẫn gục**, không giảm.
 - Nếu đòn đó làm gục: về **ô neo** thay vì checkpoint (vẫn hồi đầy như gục thường). Đây là lợi ích
   chính của món: lao lên giành rương mà không sợ bị đánh về tận checkpoint.
 - Đi qua Rương báu trong lúc hiệu lực vẫn mở được bình thường; bị giật lùi qua rương **không**
