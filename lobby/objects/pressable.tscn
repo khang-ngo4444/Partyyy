@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/pressable.gd" id="1_press"]
 
@@ -19,6 +19,14 @@ radius = 0.24
 [sub_resource type="StandardMaterial3D" id="post_mat"]
 albedo_color = Color(0.24, 0.25, 0.29, 1)
 
+[sub_resource type="StandardMaterial3D" id="btn_mat"]
+resource_local_to_scene = true
+emission_enabled = true
+emission_energy_multiplier = 0.6
+
+[sub_resource type="BoxShape3D" id="vung_hinh"]
+resource_local_to_scene = true
+
 [node name="Pressable" type="Node3D"]
 script = ExtResource("1_press")
 
@@ -35,6 +43,7 @@ shape = SubResource("post_shape")
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+material_override = SubResource("btn_mat")
 mesh = SubResource("btn_mesh")
 
 [node name="Label" type="Label3D" parent="."]
@@ -44,3 +53,11 @@ billboard = 1
 font_size = 64
 outline_size = 12
 text = "NÚT"
+
+[node name="VungNgam" type="Area3D" parent="."]
+collision_layer = 16
+collision_mask = 0
+monitoring = false
+
+[node name="Hinh" type="CollisionShape3D" parent="VungNgam"]
+shape = SubResource("vung_hinh")

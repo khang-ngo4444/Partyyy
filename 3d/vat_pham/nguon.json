@@ -1,0 +1,5544 @@
+{
+ "bua_hoan_doi": {
+  "goc": "BuaHoanDoi",
+  "phan": [
+   {
+    "ten": "Box1",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.12,
+      0.3,
+      0.004
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.953,
+      0.827,
+      0.29,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.97815,
+     -0.20791,
+     0.0,
+     0.20791,
+     0.97815,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.04,
+     0.17,
+     0.0
+    ]
+   },
+   {
+    "ten": "Box2",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.12,
+      0.3,
+      0.004
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.953,
+      0.827,
+      0.29,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.97815,
+     0.20791,
+     0.0,
+     -0.20791,
+     0.97815,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.05,
+     0.17,
+     0.01
+    ]
+   },
+   {
+    "ten": "Box3",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.02,
+      0.24,
+      0.006
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.847,
+      0.227,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.97815,
+     -0.20791,
+     0.0,
+     0.20791,
+     0.97815,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.04,
+     0.17,
+     0.001
+    ]
+   },
+   {
+    "ten": "Box4",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.02,
+      0.24,
+      0.006
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.847,
+      0.227,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.97815,
+     0.20791,
+     0.0,
+     -0.20791,
+     0.97815,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.05,
+     0.17,
+     0.011
+    ]
+   },
+   {
+    "ten": "Tor1",
+    "loai": "Torus",
+    "tham_so": {
+     "inner_radius": 0.03,
+     "outer_radius": 0.04,
+     "rings": 24.0,
+     "ring_segments": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.847,
+      0.227,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     6.1232e-17,
+     -1.0,
+     0.0,
+     1.0,
+     6.1232e-17,
+     0.0,
+     0.22,
+     0.015
+    ]
+   }
+  ]
+ },
+ "can_cau": {
+  "goc": "CanCau",
+  "phan": [
+   {
+    "ten": "Cyl1",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.008,
+     "bottom_radius": 0.02,
+     "height": 0.75,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.541,
+      0.353,
+      0.169,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.81915,
+     0.57358,
+     0.0,
+     -0.57358,
+     0.81915,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl2",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.03,
+     "bottom_radius": 0.03,
+     "height": 0.03,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.788,
+      0.8,
+      0.824,
+      1.0
+     ],
+     "roughness": 0.25,
+     "metallic": 0.8
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     6.1232e-17,
+     -1.0,
+     0.0,
+     1.0,
+     6.1232e-17,
+     -0.12,
+     0.12,
+     0.03
+    ]
+   },
+   {
+    "ten": "Cyl3",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.002,
+     "bottom_radius": 0.002,
+     "height": 0.3,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.867,
+      0.867,
+      0.867,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.215,
+     0.45,
+     0.0
+    ]
+   },
+   {
+    "ten": "Sph1",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.025,
+     "height": 0.05,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.847,
+      0.227,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.215,
+     0.33,
+     0.0
+    ]
+   },
+   {
+    "ten": "Tor1",
+    "loai": "Torus",
+    "tham_so": {
+     "inner_radius": 0.012,
+     "outer_radius": 0.018,
+     "rings": 24.0,
+     "ring_segments": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.788,
+      0.8,
+      0.824,
+      1.0
+     ],
+     "roughness": 0.25,
+     "metallic": 0.8
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     6.1232e-17,
+     -1.0,
+     0.0,
+     1.0,
+     6.1232e-17,
+     0.215,
+     0.28,
+     0.0
+    ]
+   }
+  ]
+ },
+ "chao_hanh": {
+  "goc": "ChaoHanh",
+  "phan": [
+   {
+    "ten": "Cyl1",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.2,
+     "bottom_radius": 0.11,
+     "height": 0.13,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.957,
+      0.945,
+      0.91,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.065,
+     0.0
+    ]
+   },
+   {
+    "ten": "Tor1",
+    "loai": "Torus",
+    "tham_so": {
+     "inner_radius": 0.185,
+     "outer_radius": 0.21,
+     "rings": 24.0,
+     "ring_segments": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.184,
+      0.435,
+      0.702,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.12,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl2",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.18,
+     "bottom_radius": 0.18,
+     "height": 0.02,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.937,
+      0.89,
+      0.761,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.115,
+     0.0
+    ]
+   },
+   {
+    "ten": "Box1",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.04,
+      0.01,
+      0.015
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.31,
+      0.604,
+      0.227,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.86603,
+     0.0,
+     0.5,
+     0.0,
+     1.0,
+     0.0,
+     -0.5,
+     0.0,
+     0.86603,
+     0.05,
+     0.13,
+     0.03
+    ]
+   },
+   {
+    "ten": "Box2",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.04,
+      0.01,
+      0.015
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.31,
+      0.604,
+      0.227,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.76604,
+     0.0,
+     -0.64279,
+     0.0,
+     1.0,
+     0.0,
+     0.64279,
+     0.0,
+     0.76604,
+     -0.06,
+     0.13,
+     -0.02
+    ]
+   },
+   {
+    "ten": "Box3",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.04,
+      0.01,
+      0.015
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.31,
+      0.604,
+      0.227,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.17365,
+     0.0,
+     0.98481,
+     0.0,
+     1.0,
+     0.0,
+     -0.98481,
+     0.0,
+     0.17365,
+     0.0,
+     0.13,
+     -0.07
+    ]
+   },
+   {
+    "ten": "Cyl3",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.006,
+     "bottom_radius": 0.008,
+     "height": 0.34,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.71,
+      0.514,
+      0.353,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.5,
+     0.86603,
+     0.0,
+     -0.86603,
+     0.5,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.08,
+     0.2,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl4",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.006,
+     "bottom_radius": 0.008,
+     "height": 0.34,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.71,
+      0.514,
+      0.353,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.5,
+     0.86603,
+     0.0,
+     -0.86603,
+     0.5,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.08,
+     0.2,
+     0.04
+    ]
+   },
+   {
+    "ten": "Sph1",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.05,
+     "height": 0.1,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      1.0,
+      1.0,
+      1.0,
+      0.502
+     ],
+     "roughness": 0.7,
+     "transparency": 1.0
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.6,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.25,
+     0.0
+    ]
+   }
+  ]
+ },
+ "cho_ngao": {
+  "goc": "ChoNgao",
+  "phan": [
+   {
+    "ten": "Cap1",
+    "loai": "Capsule",
+    "tham_so": {
+     "radius": 0.09,
+     "height": 0.32,
+     "radial_segments": 16.0,
+     "rings": 6.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.478,
+      0.294,
+      0.137,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     6.1232e-17,
+     -1.0,
+     0.0,
+     1.0,
+     6.1232e-17,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.17,
+     0.0
+    ]
+   },
+   {
+    "ten": "Sph1",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.085,
+     "height": 0.17,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.478,
+      0.294,
+      0.137,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.19,
+     0.26,
+     0.0
+    ]
+   },
+   {
+    "ten": "Box1",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.08,
+      0.05,
+      0.07
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.361,
+      0.216,
+      0.094,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.26,
+     0.24,
+     0.0
+    ]
+   },
+   {
+    "ten": "Sph2",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.016,
+     "height": 0.032,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.118,
+      0.118,
+      0.133,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.3,
+     0.255,
+     0.0
+    ]
+   },
+   {
+    "ten": "Pri1",
+    "loai": "Prism",
+    "tham_so": {
+     "size": [
+      0.05,
+      0.07,
+      0.02
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.306,
+      0.18,
+      0.071,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.98481,
+     -0.17365,
+     0.0,
+     0.17365,
+     0.98481,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.17,
+     0.34,
+     0.05
+    ]
+   },
+   {
+    "ten": "Pri2",
+    "loai": "Prism",
+    "tham_so": {
+     "size": [
+      0.05,
+      0.07,
+      0.02
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.306,
+      0.18,
+      0.071,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.98481,
+     -0.17365,
+     0.0,
+     0.17365,
+     0.98481,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.17,
+     0.34,
+     -0.05
+    ]
+   },
+   {
+    "ten": "Tor1",
+    "loai": "Torus",
+    "tham_so": {
+     "inner_radius": 0.07,
+     "outer_radius": 0.085,
+     "rings": 24.0,
+     "ring_segments": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.847,
+      0.227,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.34202,
+     -0.93969,
+     0.0,
+     0.93969,
+     0.34202,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.15,
+     0.22,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl1",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.01,
+     "bottom_radius": 0.02,
+     "height": 0.14,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.478,
+      0.294,
+      0.137,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.64279,
+     -0.76604,
+     0.0,
+     0.76604,
+     0.64279,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.2,
+     0.25,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl2",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.022,
+     "bottom_radius": 0.022,
+     "height": 0.12,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.416,
+      0.247,
+      0.11,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.1,
+     0.06,
+     -0.05
+    ]
+   },
+   {
+    "ten": "Cyl3",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.022,
+     "bottom_radius": 0.022,
+     "height": 0.12,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.416,
+      0.247,
+      0.11,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.1,
+     0.06,
+     0.05
+    ]
+   },
+   {
+    "ten": "Cyl4",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.022,
+     "bottom_radius": 0.022,
+     "height": 0.12,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.416,
+      0.247,
+      0.11,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.1,
+     0.06,
+     -0.05
+    ]
+   },
+   {
+    "ten": "Cyl5",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.022,
+     "bottom_radius": 0.022,
+     "height": 0.12,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.416,
+      0.247,
+      0.11,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.1,
+     0.06,
+     0.05
+    ]
+   }
+  ]
+ },
+ "coi_trong_tai": {
+  "goc": "CoiTrongTai",
+  "phan": [
+   {
+    "ten": "Cyl1",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.05,
+     "bottom_radius": 0.05,
+     "height": 0.09,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.788,
+      0.8,
+      0.824,
+      1.0
+     ],
+     "roughness": 0.25,
+     "metallic": 0.8
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     6.1232e-17,
+     -1.0,
+     0.0,
+     1.0,
+     6.1232e-17,
+     0.0,
+     0.06,
+     0.0
+    ]
+   },
+   {
+    "ten": "Box1",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.12,
+      0.035,
+      0.05
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.788,
+      0.8,
+      0.824,
+      1.0
+     ],
+     "roughness": 0.25,
+     "metallic": 0.8
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.08,
+     0.075,
+     0.0
+    ]
+   },
+   {
+    "ten": "Tor1",
+    "loai": "Torus",
+    "tham_so": {
+     "inner_radius": 0.012,
+     "outer_radius": 0.02,
+     "rings": 24.0,
+     "ring_segments": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.788,
+      0.8,
+      0.824,
+      1.0
+     ],
+     "roughness": 0.25,
+     "metallic": 0.8
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     6.1232e-17,
+     -1.0,
+     0.0,
+     1.0,
+     6.1232e-17,
+     -0.06,
+     0.08,
+     0.0
+    ]
+   },
+   {
+    "ten": "Tor2",
+    "loai": "Torus",
+    "tham_so": {
+     "inner_radius": 0.11,
+     "outer_radius": 0.125,
+     "rings": 24.0,
+     "ring_segments": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.847,
+      0.227,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.16,
+     0.02,
+     0.0
+    ]
+   }
+  ]
+ },
+ "day_thun": {
+  "goc": "DayThun",
+  "phan": [
+   {
+    "ten": "Cyl1",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.03,
+     "bottom_radius": 0.03,
+     "height": 0.3,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.541,
+      0.353,
+      0.169,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.2,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl2",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.03,
+     "bottom_radius": 0.0,
+     "height": 0.08,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.369,
+      0.227,
+      0.102,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.01,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl3",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.04,
+     "bottom_radius": 0.04,
+     "height": 0.03,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.369,
+      0.227,
+      0.102,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.36,
+     0.0
+    ]
+   },
+   {
+    "ten": "Tor1",
+    "loai": "Torus",
+    "tham_so": {
+     "inner_radius": 0.03,
+     "outer_radius": 0.045,
+     "rings": 24.0,
+     "ring_segments": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.482,
+      0.839,
+      0.29,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     4.0,
+     0.0,
+     0.0,
+     0.0,
+     6.1232e-17,
+     -1.0,
+     0.0,
+     1.0,
+     6.1232e-17,
+     0.12,
+     0.28,
+     0.0
+    ]
+   },
+   {
+    "ten": "Tor2",
+    "loai": "Torus",
+    "tham_so": {
+     "inner_radius": 0.03,
+     "outer_radius": 0.045,
+     "rings": 24.0,
+     "ring_segments": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      1.0,
+      0.812,
+      0.227,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     2.8191,
+     -0.34202,
+     0.0,
+     6.2828e-17,
+     5.754e-17,
+     -1.0,
+     1.0261,
+     0.93969,
+     6.1232e-17,
+     0.08,
+     0.22,
+     0.0
+    ]
+   }
+  ]
+ },
+ "dep_to_ong": {
+  "goc": "DepToOng",
+  "phan": [
+   {
+    "ten": "Cap1",
+    "loai": "Capsule",
+    "tham_so": {
+     "radius": 0.06,
+     "height": 0.3,
+     "radial_segments": 16.0,
+     "rings": 6.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.184,
+      0.498,
+      0.839,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     6.1232e-17,
+     -0.22,
+     0.0,
+     1.0,
+     1.3471e-17,
+     0.0,
+     0.015,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cap2",
+    "loai": "Capsule",
+    "tham_so": {
+     "radius": 0.055,
+     "height": 0.29,
+     "radial_segments": 16.0,
+     "rings": 6.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.957,
+      0.945,
+      0.91,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     6.1232e-17,
+     -0.12,
+     0.0,
+     1.0,
+     7.3479e-18,
+     0.0,
+     0.035,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl1",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.008,
+     "bottom_radius": 0.008,
+     "height": 0.12,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.184,
+      0.498,
+      0.839,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.86603,
+     -0.5,
+     0.0,
+     0.40958,
+     0.70941,
+     -0.57358,
+     0.28679,
+     0.49673,
+     0.81915,
+     -0.025,
+     0.07,
+     -0.04
+    ]
+   },
+   {
+    "ten": "Cyl2",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.008,
+     "bottom_radius": 0.008,
+     "height": 0.12,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.184,
+      0.498,
+      0.839,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.86603,
+     0.5,
+     0.0,
+     -0.40958,
+     0.70941,
+     -0.57358,
+     -0.28679,
+     0.49673,
+     0.81915,
+     0.025,
+     0.07,
+     -0.04
+    ]
+   }
+  ]
+ },
+ "dua_roi": {
+  "goc": "DuaRoi",
+  "phan": [
+   {
+    "ten": "Sph1",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.16,
+     "height": 0.32,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.42,
+      0.259,
+      0.149,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     0.92,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.15,
+     0.0
+    ]
+   },
+   {
+    "ten": "Sph2",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.025,
+     "height": 0.05,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.169,
+      0.102,
+      0.063,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.29,
+     0.05
+    ]
+   },
+   {
+    "ten": "Sph3",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.025,
+     "height": 0.05,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.169,
+      0.102,
+      0.063,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.05,
+     0.28,
+     -0.03
+    ]
+   },
+   {
+    "ten": "Sph4",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.025,
+     "height": 0.05,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.169,
+      0.102,
+      0.063,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.05,
+     0.28,
+     -0.03
+    ]
+   },
+   {
+    "ten": "Box1",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.04,
+      0.005,
+      0.26
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.31,
+      0.604,
+      0.227,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.86603,
+     0.5,
+     0.0,
+     -0.46985,
+     0.8138,
+     -0.34202,
+     -0.17101,
+     0.2962,
+     0.93969,
+     0.06,
+     0.32,
+     0.0
+    ]
+   }
+  ]
+ },
+ "hai_hot": {
+  "goc": "HaiHot",
+  "phan": [
+   {
+    "ten": "Box1",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.13,
+      0.13,
+      0.13
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.957,
+      0.945,
+      0.91,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.96593,
+     0.0,
+     0.25882,
+     0.0,
+     1.0,
+     0.0,
+     -0.25882,
+     0.0,
+     0.96593,
+     -0.08,
+     0.065,
+     0.0
+    ]
+   },
+   {
+    "ten": "Box2",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.13,
+      0.13,
+      0.13
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.957,
+      0.945,
+      0.91,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.93969,
+     0.0,
+     -0.34202,
+     0.0,
+     1.0,
+     0.0,
+     0.34202,
+     0.0,
+     0.93969,
+     0.09,
+     0.065,
+     0.0
+    ]
+   },
+   {
+    "ten": "Sph1",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.016,
+     "height": 0.032,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.847,
+      0.227,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.08,
+     0.13,
+     0.0
+    ]
+   },
+   {
+    "ten": "Sph2",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.014,
+     "height": 0.028,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.118,
+      0.118,
+      0.133,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.06,
+     0.13,
+     -0.03
+    ]
+   },
+   {
+    "ten": "Sph3",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.014,
+     "height": 0.028,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.118,
+      0.118,
+      0.133,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.09,
+     0.13,
+     0.0
+    ]
+   },
+   {
+    "ten": "Sph4",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.014,
+     "height": 0.028,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.118,
+      0.118,
+      0.133,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.12,
+     0.13,
+     0.03
+    ]
+   }
+  ]
+ },
+ "khien": {
+  "goc": "Khien",
+  "phan": [
+   {
+    "ten": "Cyl1",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.17,
+     "bottom_radius": 0.27,
+     "height": 0.24,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.788,
+      0.604,
+      0.333,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.12,
+     0.0
+    ]
+   },
+   {
+    "ten": "Tor1",
+    "loai": "Torus",
+    "tham_so": {
+     "inner_radius": 0.25,
+     "outer_radius": 0.29,
+     "rings": 24.0,
+     "ring_segments": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.655,
+      0.478,
+      0.227,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.01,
+     0.0
+    ]
+   },
+   {
+    "ten": "Tor2",
+    "loai": "Torus",
+    "tham_so": {
+     "inner_radius": 0.21,
+     "outer_radius": 0.24,
+     "rings": 24.0,
+     "ring_segments": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.655,
+      0.478,
+      0.227,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.1,
+     0.0
+    ]
+   },
+   {
+    "ten": "Tor3",
+    "loai": "Torus",
+    "tham_so": {
+     "inner_radius": 0.17,
+     "outer_radius": 0.2,
+     "rings": 24.0,
+     "ring_segments": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.655,
+      0.478,
+      0.227,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.18,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl2",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.12,
+     "bottom_radius": 0.17,
+     "height": 0.02,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.722,
+      0.541,
+      0.271,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.25,
+     0.0
+    ]
+   }
+  ]
+ },
+ "kinh_lup": {
+  "goc": "KinhLup",
+  "phan": [
+   {
+    "ten": "Cyl1",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.02,
+     "bottom_radius": 0.025,
+     "height": 0.2,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.118,
+      0.118,
+      0.133,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.96593,
+     -0.25882,
+     0.0,
+     0.25882,
+     0.96593,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.1,
+     0.0
+    ]
+   },
+   {
+    "ten": "Tor1",
+    "loai": "Torus",
+    "tham_so": {
+     "inner_radius": 0.11,
+     "outer_radius": 0.13,
+     "rings": 24.0,
+     "ring_segments": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.949,
+      0.761,
+      0.188,
+      1.0
+     ],
+     "roughness": 0.25,
+     "metallic": 0.8
+    },
+    "transform": [
+     0.96593,
+     -0.25882,
+     0.0,
+     1.5848e-17,
+     5.9146e-17,
+     -1.0,
+     0.25882,
+     0.96593,
+     6.1232e-17,
+     -0.06,
+     0.31,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl2",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.11,
+     "bottom_radius": 0.11,
+     "height": 0.012,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.659,
+      0.847,
+      1.0,
+      0.502
+     ],
+     "roughness": 0.05,
+     "transparency": 1.0
+    },
+    "transform": [
+     0.96593,
+     -0.25882,
+     0.0,
+     1.5848e-17,
+     5.9146e-17,
+     -1.0,
+     0.25882,
+     0.96593,
+     6.1232e-17,
+     -0.06,
+     0.31,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl3",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.1,
+     "bottom_radius": 0.005,
+     "height": 0.3,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      1.0,
+      0.816,
+      0.251,
+      0.502
+     ],
+     "roughness": 0.7,
+     "emission": [
+      1.0,
+      0.816,
+      0.251,
+      1.0
+     ],
+     "emission_energy_multiplier": 1.2,
+     "transparency": 1.0
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     6.1232e-17,
+     -1.0,
+     0.0,
+     1.0,
+     6.1232e-17,
+     -0.06,
+     0.31,
+     0.16
+    ]
+   }
+  ]
+ },
+ "mam_tom": {
+  "goc": "MamTom",
+  "phan": [
+   {
+    "ten": "Cyl1",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.13,
+     "bottom_radius": 0.11,
+     "height": 0.16,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.549,
+      0.29,
+      0.169,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.08,
+     0.0
+    ]
+   },
+   {
+    "ten": "Tor1",
+    "loai": "Torus",
+    "tham_so": {
+     "inner_radius": 0.12,
+     "outer_radius": 0.15,
+     "rings": 24.0,
+     "ring_segments": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.431,
+      0.22,
+      0.122,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.16,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl2",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.12,
+     "bottom_radius": 0.12,
+     "height": 0.02,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.541,
+      0.31,
+      0.561,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.155,
+     0.0
+    ]
+   },
+   {
+    "ten": "Sph1",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.012,
+     "height": 0.024,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.118,
+      0.118,
+      0.133,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.05,
+     0.26,
+     0.02
+    ]
+   },
+   {
+    "ten": "Sph2",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.012,
+     "height": 0.024,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.118,
+      0.118,
+      0.133,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.06,
+     0.3,
+     -0.03
+    ]
+   },
+   {
+    "ten": "Sph3",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.012,
+     "height": 0.024,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.118,
+      0.118,
+      0.133,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.01,
+     0.34,
+     0.06
+    ]
+   },
+   {
+    "ten": "Box1",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.03,
+      0.002,
+      0.012
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.8,
+      0.8,
+      0.8,
+      0.502
+     ],
+     "roughness": 0.7,
+     "transparency": 1.0
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.05,
+     0.27,
+     0.02
+    ]
+   },
+   {
+    "ten": "Box2",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.03,
+      0.002,
+      0.012
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.8,
+      0.8,
+      0.8,
+      0.502
+     ],
+     "roughness": 0.7,
+     "transparency": 1.0
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.06,
+     0.31,
+     -0.03
+    ]
+   }
+  ]
+ },
+ "ong_heo": {
+  "goc": "OngHeo",
+  "phan": [
+   {
+    "ten": "Sph1",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.15,
+     "height": 0.3,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.949,
+      0.608,
+      0.69,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.15,
+     0.0,
+     0.0,
+     0.0,
+     0.95,
+     0.0,
+     0.0,
+     0.0,
+     0.95,
+     0.0,
+     0.16,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl1",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.045,
+     "bottom_radius": 0.05,
+     "height": 0.05,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.914,
+      0.541,
+      0.631,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     6.1232e-17,
+     -1.0,
+     0.0,
+     1.0,
+     6.1232e-17,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.18,
+     0.16,
+     0.0
+    ]
+   },
+   {
+    "ten": "Pri1",
+    "loai": "Prism",
+    "tham_so": {
+     "size": [
+      0.06,
+      0.06,
+      0.02
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.914,
+      0.541,
+      0.631,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.96593,
+     0.25882,
+     0.0,
+     -0.25882,
+     0.96593,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.09,
+     0.29,
+     0.07
+    ]
+   },
+   {
+    "ten": "Pri2",
+    "loai": "Prism",
+    "tham_so": {
+     "size": [
+      0.06,
+      0.06,
+      0.02
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.914,
+      0.541,
+      0.631,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.96593,
+     0.25882,
+     0.0,
+     -0.25882,
+     0.96593,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.09,
+     0.29,
+     -0.07
+    ]
+   },
+   {
+    "ten": "Box1",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.08,
+      0.008,
+      0.015
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.118,
+      0.118,
+      0.133,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.305,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl2",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.035,
+     "bottom_radius": 0.035,
+     "height": 0.008,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.949,
+      0.761,
+      0.188,
+      1.0
+     ],
+     "roughness": 0.25,
+     "metallic": 0.8
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     6.1232e-17,
+     -1.0,
+     0.0,
+     1.0,
+     6.1232e-17,
+     0.0,
+     0.34,
+     0.0
+    ]
+   },
+   {
+    "ten": "Sph2",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.012,
+     "height": 0.024,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.118,
+      0.118,
+      0.133,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.14,
+     0.21,
+     0.05
+    ]
+   },
+   {
+    "ten": "Sph3",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.012,
+     "height": 0.024,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.118,
+      0.118,
+      0.133,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.14,
+     0.21,
+     -0.05
+    ]
+   },
+   {
+    "ten": "Cyl3",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.025,
+     "bottom_radius": 0.025,
+     "height": 0.05,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.914,
+      0.541,
+      0.631,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.08,
+     0.03,
+     -0.07
+    ]
+   },
+   {
+    "ten": "Cyl4",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.025,
+     "bottom_radius": 0.025,
+     "height": 0.05,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.914,
+      0.541,
+      0.631,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.08,
+     0.03,
+     0.07
+    ]
+   },
+   {
+    "ten": "Cyl5",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.025,
+     "bottom_radius": 0.025,
+     "height": 0.05,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.914,
+      0.541,
+      0.631,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.08,
+     0.03,
+     -0.07
+    ]
+   },
+   {
+    "ten": "Cyl6",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.025,
+     "bottom_radius": 0.025,
+     "height": 0.05,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.914,
+      0.541,
+      0.631,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.08,
+     0.03,
+     0.07
+    ]
+   }
+  ]
+ },
+ "phao_day": {
+  "goc": "PhaoDay",
+  "phan": [
+   {
+    "ten": "Cyl1",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.006,
+     "bottom_radius": 0.006,
+     "height": 0.5,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.851,
+      0.698,
+      0.416,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.25,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl2",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.022,
+     "bottom_radius": 0.022,
+     "height": 0.1,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.847,
+      0.227,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.34202,
+     -0.93969,
+     0.0,
+     0.93969,
+     0.34202,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.05,
+     0.05,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl3",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.023,
+     "bottom_radius": 0.023,
+     "height": 0.012,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.949,
+      0.761,
+      0.188,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.34202,
+     -0.93969,
+     0.0,
+     0.93969,
+     0.34202,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.098,
+     0.05,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl4",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.022,
+     "bottom_radius": 0.022,
+     "height": 0.1,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.847,
+      0.227,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.34202,
+     0.93969,
+     0.0,
+     -0.93969,
+     0.34202,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.05,
+     0.105,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl5",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.023,
+     "bottom_radius": 0.023,
+     "height": 0.012,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.949,
+      0.761,
+      0.188,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.34202,
+     0.93969,
+     0.0,
+     -0.93969,
+     0.34202,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.098,
+     0.105,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl6",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.022,
+     "bottom_radius": 0.022,
+     "height": 0.1,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.847,
+      0.227,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.34202,
+     -0.93969,
+     0.0,
+     0.93969,
+     0.34202,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.05,
+     0.16,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl7",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.023,
+     "bottom_radius": 0.023,
+     "height": 0.012,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.949,
+      0.761,
+      0.188,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.34202,
+     -0.93969,
+     0.0,
+     0.93969,
+     0.34202,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.098,
+     0.16,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl8",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.022,
+     "bottom_radius": 0.022,
+     "height": 0.1,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.847,
+      0.227,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.34202,
+     0.93969,
+     0.0,
+     -0.93969,
+     0.34202,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.05,
+     0.215,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl9",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.023,
+     "bottom_radius": 0.023,
+     "height": 0.012,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.949,
+      0.761,
+      0.188,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.34202,
+     0.93969,
+     0.0,
+     -0.93969,
+     0.34202,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.098,
+     0.215,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl10",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.022,
+     "bottom_radius": 0.022,
+     "height": 0.1,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.847,
+      0.227,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.34202,
+     -0.93969,
+     0.0,
+     0.93969,
+     0.34202,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.05,
+     0.27,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl11",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.023,
+     "bottom_radius": 0.023,
+     "height": 0.012,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.949,
+      0.761,
+      0.188,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.34202,
+     -0.93969,
+     0.0,
+     0.93969,
+     0.34202,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.098,
+     0.27,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl12",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.022,
+     "bottom_radius": 0.022,
+     "height": 0.1,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.847,
+      0.227,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.34202,
+     0.93969,
+     0.0,
+     -0.93969,
+     0.34202,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.05,
+     0.325,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl13",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.023,
+     "bottom_radius": 0.023,
+     "height": 0.012,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.949,
+      0.761,
+      0.188,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.34202,
+     0.93969,
+     0.0,
+     -0.93969,
+     0.34202,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.098,
+     0.325,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl14",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.022,
+     "bottom_radius": 0.022,
+     "height": 0.1,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.847,
+      0.227,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.34202,
+     -0.93969,
+     0.0,
+     0.93969,
+     0.34202,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.05,
+     0.38,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl15",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.023,
+     "bottom_radius": 0.023,
+     "height": 0.012,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.949,
+      0.761,
+      0.188,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.34202,
+     -0.93969,
+     0.0,
+     0.93969,
+     0.34202,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.098,
+     0.38,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl16",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.022,
+     "bottom_radius": 0.022,
+     "height": 0.1,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.847,
+      0.227,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.34202,
+     0.93969,
+     0.0,
+     -0.93969,
+     0.34202,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.05,
+     0.435,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl17",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.023,
+     "bottom_radius": 0.023,
+     "height": 0.012,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.949,
+      0.761,
+      0.188,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.34202,
+     0.93969,
+     0.0,
+     -0.93969,
+     0.34202,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.098,
+     0.435,
+     0.0
+    ]
+   },
+   {
+    "ten": "Sph1",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.025,
+     "height": 0.05,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      1.0,
+      0.8,
+      0.2,
+      1.0
+     ],
+     "roughness": 0.7,
+     "emission": [
+      1.0,
+      0.8,
+      0.2,
+      1.0
+     ],
+     "emission_energy_multiplier": 2.0
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.51,
+     0.0
+    ]
+   }
+  ]
+ },
+ "rao_tre": {
+  "goc": "RaoTre",
+  "phan": [
+   {
+    "ten": "Cyl1",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.022,
+     "bottom_radius": 0.025,
+     "height": 0.42,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.612,
+      0.737,
+      0.29,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.2,
+     0.21,
+     0.0
+    ]
+   },
+   {
+    "ten": "Tor1",
+    "loai": "Torus",
+    "tham_so": {
+     "inner_radius": 0.022,
+     "outer_radius": 0.03,
+     "rings": 24.0,
+     "ring_segments": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.498,
+      0.604,
+      0.216,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.2,
+     0.15,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl2",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.022,
+     "bottom_radius": 0.025,
+     "height": 0.42,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.612,
+      0.737,
+      0.29,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.07,
+     0.21,
+     0.0
+    ]
+   },
+   {
+    "ten": "Tor2",
+    "loai": "Torus",
+    "tham_so": {
+     "inner_radius": 0.022,
+     "outer_radius": 0.03,
+     "rings": 24.0,
+     "ring_segments": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.498,
+      0.604,
+      0.216,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.07,
+     0.17,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl3",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.022,
+     "bottom_radius": 0.025,
+     "height": 0.42,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.612,
+      0.737,
+      0.29,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.07,
+     0.21,
+     0.0
+    ]
+   },
+   {
+    "ten": "Tor3",
+    "loai": "Torus",
+    "tham_so": {
+     "inner_radius": 0.022,
+     "outer_radius": 0.03,
+     "rings": 24.0,
+     "ring_segments": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.498,
+      0.604,
+      0.216,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.07,
+     0.19,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl4",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.022,
+     "bottom_radius": 0.025,
+     "height": 0.42,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.612,
+      0.737,
+      0.29,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.2,
+     0.21,
+     0.0
+    ]
+   },
+   {
+    "ten": "Tor4",
+    "loai": "Torus",
+    "tham_so": {
+     "inner_radius": 0.022,
+     "outer_radius": 0.03,
+     "rings": 24.0,
+     "ring_segments": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.498,
+      0.604,
+      0.216,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.2,
+     0.21,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl5",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.016,
+     "bottom_radius": 0.016,
+     "height": 0.5,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.525,
+      0.663,
+      0.235,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     6.1232e-17,
+     -1.0,
+     0.0,
+     1.0,
+     6.1232e-17,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.12,
+     0.03
+    ]
+   },
+   {
+    "ten": "Cyl6",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.016,
+     "bottom_radius": 0.016,
+     "height": 0.5,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.525,
+      0.663,
+      0.235,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     6.1232e-17,
+     -1.0,
+     0.0,
+     1.0,
+     6.1232e-17,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.3,
+     0.03
+    ]
+   }
+  ]
+ },
+ "sung_1_phat": {
+  "goc": "Sung1Phat",
+  "phan": [
+   {
+    "ten": "Cyl1",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.03,
+     "bottom_radius": 0.035,
+     "height": 0.24,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.541,
+      0.353,
+      0.169,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.12,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl2",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.025,
+     "bottom_radius": 0.03,
+     "height": 0.2,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.541,
+      0.353,
+      0.169,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.88295,
+     -0.46947,
+     0.0,
+     0.46947,
+     0.88295,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.06,
+     0.32,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl3",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.025,
+     "bottom_radius": 0.03,
+     "height": 0.2,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.541,
+      0.353,
+      0.169,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.88295,
+     0.46947,
+     0.0,
+     -0.46947,
+     0.88295,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.06,
+     0.32,
+     0.0
+    ]
+   },
+   {
+    "ten": "Sph1",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.035,
+     "height": 0.07,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.541,
+      0.353,
+      0.169,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.24,
+     0.0
+    ]
+   },
+   {
+    "ten": "Box1",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.012,
+      0.012,
+      0.16
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.753,
+      0.224,
+      0.169,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.11,
+     0.41,
+     0.07
+    ]
+   },
+   {
+    "ten": "Box2",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.012,
+      0.012,
+      0.16
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.753,
+      0.224,
+      0.169,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.11,
+     0.41,
+     0.07
+    ]
+   },
+   {
+    "ten": "Box3",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.25,
+      0.02,
+      0.05
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.478,
+      0.29,
+      0.165,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.41,
+     0.16
+    ]
+   },
+   {
+    "ten": "Sph2",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.03,
+     "height": 0.06,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.553,
+      0.553,
+      0.553,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.43,
+     0.16
+    ]
+   }
+  ]
+ },
+ "trau_dien": {
+  "goc": "TrauDien",
+  "phan": [
+   {
+    "ten": "Cap1",
+    "loai": "Capsule",
+    "tham_so": {
+     "radius": 0.1,
+     "height": 0.36,
+     "radial_segments": 16.0,
+     "rings": 6.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.29,
+      0.29,
+      0.314,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     6.1232e-17,
+     -1.0,
+     0.0,
+     1.0,
+     6.1232e-17,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.17,
+     0.0
+    ]
+   },
+   {
+    "ten": "Box1",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.12,
+      0.11,
+      0.12
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.29,
+      0.29,
+      0.314,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.22,
+     0.21,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl1",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.012,
+     "bottom_radius": 0.025,
+     "height": 0.14,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.91,
+      0.886,
+      0.816,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.96593,
+     0.25882,
+     0.0,
+     -0.12941,
+     0.48296,
+     -0.86603,
+     -0.22414,
+     0.83652,
+     0.5,
+     0.22,
+     0.3,
+     0.1
+    ]
+   },
+   {
+    "ten": "Cyl2",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.012,
+     "bottom_radius": 0.025,
+     "height": 0.14,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.91,
+      0.886,
+      0.816,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.96593,
+     0.25882,
+     0.0,
+     -0.12941,
+     0.48296,
+     0.86603,
+     0.22414,
+     -0.83652,
+     0.5,
+     0.22,
+     0.3,
+     -0.1
+    ]
+   },
+   {
+    "ten": "Sph1",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.014,
+     "height": 0.028,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      1.0,
+      0.231,
+      0.184,
+      1.0
+     ],
+     "roughness": 0.7,
+     "emission": [
+      1.0,
+      0.231,
+      0.184,
+      1.0
+     ],
+     "emission_energy_multiplier": 1.5
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.285,
+     0.23,
+     0.035
+    ]
+   },
+   {
+    "ten": "Sph2",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.014,
+     "height": 0.028,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      1.0,
+      0.231,
+      0.184,
+      1.0
+     ],
+     "roughness": 0.7,
+     "emission": [
+      1.0,
+      0.231,
+      0.184,
+      1.0
+     ],
+     "emission_energy_multiplier": 1.5
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.285,
+     0.23,
+     -0.035
+    ]
+   },
+   {
+    "ten": "Box2",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.03,
+      0.04,
+      0.08
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.173,
+      0.173,
+      0.188,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.29,
+     0.18,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl3",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.025,
+     "bottom_radius": 0.025,
+     "height": 0.12,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.227,
+      0.227,
+      0.251,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.11,
+     0.06,
+     -0.06
+    ]
+   },
+   {
+    "ten": "Cyl4",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.025,
+     "bottom_radius": 0.025,
+     "height": 0.12,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.227,
+      0.227,
+      0.251,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.11,
+     0.06,
+     0.06
+    ]
+   },
+   {
+    "ten": "Cyl5",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.025,
+     "bottom_radius": 0.025,
+     "height": 0.12,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.227,
+      0.227,
+      0.251,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.11,
+     0.06,
+     -0.06
+    ]
+   },
+   {
+    "ten": "Cyl6",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.025,
+     "bottom_radius": 0.025,
+     "height": 0.12,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.227,
+      0.227,
+      0.251,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.11,
+     0.06,
+     0.06
+    ]
+   }
+  ]
+ },
+ "vo_sau_rieng": {
+  "goc": "VoSauRieng",
+  "phan": [
+   {
+    "ten": "Sph1",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.18,
+     "height": 0.36,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.557,
+      0.604,
+      0.227,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     0.6,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.09,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl1",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.12,
+     "bottom_radius": 0.12,
+     "height": 0.02,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.945,
+      0.812,
+      0.333,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.17,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl2",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.015,
+     "bottom_radius": 0.02,
+     "height": 0.06,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.369,
+      0.227,
+      0.102,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.21,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl3",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.0,
+     "bottom_radius": 0.03,
+     "height": 0.08,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.49,
+      0.541,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.86603,
+     0.5,
+     0.0,
+     -0.5,
+     0.86603,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.1,
+     0.17,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl4",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.0,
+     "bottom_radius": 0.03,
+     "height": 0.08,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.49,
+      0.541,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.64874,
+     0.76101,
+     0.0,
+     -0.69595,
+     0.59328,
+     -0.40456,
+     -0.30787,
+     0.26245,
+     0.91451,
+     0.13515,
+     0.12,
+     0.065083
+    ]
+   },
+   {
+    "ten": "Cyl5",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.0,
+     "bottom_radius": 0.03,
+     "height": 0.08,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.49,
+      0.541,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.94718,
+     0.32069,
+     0.0,
+     -0.29419,
+     0.86892,
+     -0.39803,
+     -0.12764,
+     0.37701,
+     0.91737,
+     0.062349,
+     0.17,
+     0.078183
+    ]
+   },
+   {
+    "ten": "Cyl6",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.0,
+     "bottom_radius": 0.03,
+     "height": 0.08,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.49,
+      0.541,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.97727,
+     0.21198,
+     0.0,
+     -0.12573,
+     0.57964,
+     -0.80511,
+     -0.17067,
+     0.78681,
+     0.59312,
+     0.033378,
+     0.12,
+     0.14624
+    ]
+   },
+   {
+    "ten": "Cyl7",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.0,
+     "bottom_radius": 0.03,
+     "height": 0.08,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.49,
+      0.541,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.99322,
+     -0.11625,
+     0.0,
+     0.10143,
+     0.8666,
+     -0.48859,
+     0.056798,
+     0.48528,
+     0.87251,
+     -0.022252,
+     0.17,
+     0.097493
+    ]
+   },
+   {
+    "ten": "Cyl8",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.0,
+     "bottom_radius": 0.03,
+     "height": 0.08,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.49,
+      0.541,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.82618,
+     -0.56341,
+     0.0,
+     0.41205,
+     0.60422,
+     -0.68201,
+     0.38425,
+     0.56346,
+     0.73134,
+     -0.093523,
+     0.12,
+     0.11727
+    ]
+   },
+   {
+    "ten": "Cyl9",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.0,
+     "bottom_radius": 0.03,
+     "height": 0.08,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.49,
+      0.541,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.89078,
+     -0.45444,
+     0.0,
+     0.44277,
+     0.86789,
+     -0.22523,
+     0.10235,
+     0.20063,
+     0.97431,
+     -0.090097,
+     0.17,
+     0.043388
+    ]
+   },
+   {
+    "ten": "Cyl10",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.0,
+     "bottom_radius": 0.03,
+     "height": 0.08,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.49,
+      0.541,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.57358,
+     -0.81915,
+     0.0,
+     0.81915,
+     0.57358,
+     -1.1756e-16,
+     9.6298e-17,
+     6.7428e-17,
+     1.0,
+     -0.15,
+     0.12,
+     1.837e-17
+    ]
+   },
+   {
+    "ten": "Cyl11",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.0,
+     "bottom_radius": 0.03,
+     "height": 0.08,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.49,
+      0.541,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.89078,
+     -0.45444,
+     0.0,
+     0.44277,
+     0.86789,
+     0.22523,
+     -0.10235,
+     -0.20063,
+     0.97431,
+     -0.090097,
+     0.17,
+     -0.043388
+    ]
+   },
+   {
+    "ten": "Cyl12",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.0,
+     "bottom_radius": 0.03,
+     "height": 0.08,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.49,
+      0.541,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.82618,
+     -0.56341,
+     0.0,
+     0.41205,
+     0.60422,
+     0.68201,
+     -0.38425,
+     -0.56346,
+     0.73134,
+     -0.093523,
+     0.12,
+     -0.11727
+    ]
+   },
+   {
+    "ten": "Cyl13",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.0,
+     "bottom_radius": 0.03,
+     "height": 0.08,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.49,
+      0.541,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.99322,
+     -0.11625,
+     0.0,
+     0.10143,
+     0.8666,
+     0.48859,
+     -0.056798,
+     -0.48528,
+     0.87251,
+     -0.022252,
+     0.17,
+     -0.097493
+    ]
+   },
+   {
+    "ten": "Cyl14",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.0,
+     "bottom_radius": 0.03,
+     "height": 0.08,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.49,
+      0.541,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.97727,
+     0.21198,
+     0.0,
+     -0.12573,
+     0.57964,
+     0.80511,
+     0.17067,
+     -0.78681,
+     0.59312,
+     0.033378,
+     0.12,
+     -0.14624
+    ]
+   },
+   {
+    "ten": "Cyl15",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.0,
+     "bottom_radius": 0.03,
+     "height": 0.08,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.49,
+      0.541,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.94718,
+     0.32069,
+     0.0,
+     -0.29419,
+     0.86892,
+     0.39803,
+     0.12764,
+     -0.37701,
+     0.91737,
+     0.062349,
+     0.17,
+     -0.078183
+    ]
+   },
+   {
+    "ten": "Cyl16",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.0,
+     "bottom_radius": 0.03,
+     "height": 0.08,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.49,
+      0.541,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.64874,
+     0.76101,
+     0.0,
+     -0.69595,
+     0.59328,
+     0.40456,
+     0.30787,
+     -0.26245,
+     0.91451,
+     0.13515,
+     0.12,
+     -0.065083
+    ]
+   }
+  ]
+ },
+ "vot_luoi": {
+  "goc": "VotLuoi",
+  "phan": [
+   {
+    "ten": "Cyl1",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.015,
+     "bottom_radius": 0.018,
+     "height": 0.4,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.753,
+      0.541,
+      0.29,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     0.93969,
+     0.34202,
+     0.0,
+     -0.34202,
+     0.93969,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.2,
+     0.0
+    ]
+   },
+   {
+    "ten": "Tor1",
+    "loai": "Torus",
+    "tham_so": {
+     "inner_radius": 0.15,
+     "outer_radius": 0.17,
+     "rings": 24.0,
+     "ring_segments": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.788,
+      0.8,
+      0.824,
+      1.0
+     ],
+     "roughness": 0.25,
+     "metallic": 0.8
+    },
+    "transform": [
+     0.93969,
+     0.34202,
+     0.0,
+     -0.11698,
+     0.32139,
+     -0.93969,
+     -0.32139,
+     0.88302,
+     0.34202,
+     0.13,
+     0.48,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl2",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.155,
+     "bottom_radius": 0.02,
+     "height": 0.18,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      1.0,
+      1.0,
+      1.0,
+      0.667
+     ],
+     "roughness": 0.7,
+     "transparency": 1.0
+    },
+    "transform": [
+     0.93969,
+     0.34202,
+     0.0,
+     -0.11698,
+     0.32139,
+     -0.93969,
+     -0.32139,
+     0.88302,
+     0.34202,
+     0.17,
+     0.4,
+     0.04
+    ]
+   }
+  ]
+ },
+ "xe_phao": {
+  "goc": "XePhao",
+  "phan": [
+   {
+    "ten": "Box1",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.34,
+      0.08,
+      0.18
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.847,
+      0.227,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.07,
+     0.0
+    ]
+   },
+   {
+    "ten": "Box2",
+    "loai": "Box",
+    "tham_so": {
+     "size": [
+      0.14,
+      0.07,
+      0.16
+     ]
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.965,
+      0.82,
+      0.29,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     -0.05,
+     0.145,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl1",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.05,
+     "bottom_radius": 0.05,
+     "height": 0.05,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.847,
+      0.227,
+      0.18,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.08,
+     0.15,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl2",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.005,
+     "bottom_radius": 0.005,
+     "height": 0.06,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.851,
+      0.698,
+      0.416,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.08,
+     0.2,
+     0.0
+    ]
+   },
+   {
+    "ten": "Sph1",
+    "loai": "Sphere",
+    "tham_so": {
+     "radius": 0.012,
+     "height": 0.024,
+     "radial_segments": 20.0,
+     "rings": 10.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      1.0,
+      0.8,
+      0.2,
+      1.0
+     ],
+     "roughness": 0.7,
+     "emission": [
+      1.0,
+      0.8,
+      0.2,
+      1.0
+     ],
+     "emission_energy_multiplier": 2.0
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.08,
+     0.235,
+     0.0
+    ]
+   },
+   {
+    "ten": "Cyl3",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.04,
+     "bottom_radius": 0.04,
+     "height": 0.03,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.118,
+      0.118,
+      0.133,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     6.1232e-17,
+     -1.0,
+     0.0,
+     1.0,
+     6.1232e-17,
+     -0.11,
+     0.04,
+     -0.095
+    ]
+   },
+   {
+    "ten": "Cyl4",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.04,
+     "bottom_radius": 0.04,
+     "height": 0.03,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.118,
+      0.118,
+      0.133,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     6.1232e-17,
+     -1.0,
+     0.0,
+     1.0,
+     6.1232e-17,
+     -0.11,
+     0.04,
+     0.095
+    ]
+   },
+   {
+    "ten": "Cyl5",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.04,
+     "bottom_radius": 0.04,
+     "height": 0.03,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.118,
+      0.118,
+      0.133,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     6.1232e-17,
+     -1.0,
+     0.0,
+     1.0,
+     6.1232e-17,
+     0.11,
+     0.04,
+     -0.095
+    ]
+   },
+   {
+    "ten": "Cyl6",
+    "loai": "Cylinder",
+    "tham_so": {
+     "top_radius": 0.04,
+     "bottom_radius": 0.04,
+     "height": 0.03,
+     "radial_segments": 20.0,
+     "rings": 1.0
+    },
+    "vat_lieu": {
+     "albedo_color": [
+      0.118,
+      0.118,
+      0.133,
+      1.0
+     ],
+     "roughness": 0.7
+    },
+    "transform": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     6.1232e-17,
+     -1.0,
+     0.0,
+     1.0,
+     6.1232e-17,
+     0.11,
+     0.04,
+     0.095
+    ]
+   }
+  ]
+ }
+}

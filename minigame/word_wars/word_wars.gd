@@ -1,58 +1,32 @@
 extends MiniGame3D
 
-## WORD WARS — cả phòng gõ CÙNG một chuỗi từ tiếng Anh: từ hiện trên đầu, chạy tới ô chữ trên sàn
-## và bấm E để gõ từng chữ. Ai gõ nhanh hơn thì đi trước trong chuỗi.
-##
-## Khuôn T3. Sàn là 26 ô A–Z đặt sẵn trong `san_chu.tscn` (lưới 6 cột như bàn phím trải dưới
-## đất). Gõ xong một từ thì được một điểm và nhận từ mới. Hết giờ, ai nhiều từ nhất đứng đầu.
-##
-## ## Từ của mỗi người là hàm thuần — không gói tin nào để phát từ
-##
-## `tu_cua(hat_giong, so_tu_xong)` cho ra từ đang gõ. Chuỗi từ CHUNG cho cả phòng (không phụ
-## thuộc người): ai cũng gặp đúng những từ đó theo đúng thứ tự, nên thắng là do tay chứ không do
-## bốc được từ dễ. Mọi máy biết số từ đã xong của từng người (qua `_net_tien`), nên hiện đúng
-## chữ trên đầu mỗi người mà không ai phải gửi "từ của tôi là gì".
-##
-## ## Một gói cho mỗi chữ ĐÚNG
-##
-## Tiến độ phải gửi đi vì chữ trên đầu là thứ người khác nhìn để biết mình đang thua ai. Chữ
-## sai không tốn gói nào và không bị phạt — phạt chỉ dạy người chơi đứng yên không dám gõ.
-##
-## Mỗi người chỉ tự gõ cho chính mình, nên không có gì để tranh, không cần trọng tài.
-##
-## ## Đánh nhau
-##
-## Ô chữ là của chung, nên chen nhau là chuyện tự nhiên. Hai đòn chung của `MiniGame3D` (bật
-## `co_danh` trong `word_wars.tscn`): chuột trái ĐÁNH làm người ta choáng — đứng sững, không gõ
-## được; chuột phải CHƯỞNG hất người ta khỏi ô họ đang cần. Tiến độ không mất — mất chữ vì bị
-## đánh là quá gắt.
+## WORD WARS — cả phòng gõ cùng một chuỗi từ: chạy tới ô chữ trên sàn và bấm E từng chữ.
+## Từ là hàm của (hạt giống, số từ đã xong); mỗi chữ đúng gửi một gói. Đòn tay không gây choáng/hất.
 
-## Nút gõ. Trong sân không có gì để nhặt nên phím này rảnh.
+## E (trong sân không có gì để nhặt).
 const NUT_GO := "interact"
-## Nghỉ giữa hai lần gõ, giây. Chặn giữ phím E rồi lướt qua các ô.
+## Nghỉ giữa hai lần gõ (chặn giữ phím lướt qua ô).
 const NGHI_GO := 0.15
-## Kẹp người chơi trong bán kính này — sàn 11,5. Trò không chết vì rơi, nên cú đánh không được
-## hất ai ra khỏi sàn.
+## Kẹp người chơi trong sàn (không chết vì rơi).
 const BAN_KINH_GIU := 11.0
 
-## Từ tiếng Anh 3–6 chữ, chỉ chữ cái A–Z (khớp 26 ô trên sàn).
+## Từ 3–6 chữ, chỉ A–Z.
 const TU := ["CAT", "DOG", "SUN", "FOX", "BOX", "JAM", "KEY", "ZIP", "MOON", "STAR",
 		"FISH", "JUMP", "QUIZ", "WAVE", "BIKE", "GOLD", "FROG", "HAPPY", "PARTY", "PIZZA",
 		"ROBOT", "MAGIC", "QUEEN", "ZEBRA", "CROWN", "GHOST", "LEMON", "TIGER", "PLANET",
 		"BRIDGE", "WIZARD", "JUNGLE", "ROCKET", "CASTLE", "DRAGON", "PUZZLE"]
 
-## Chữ trên đầu của chính mình tô màu này, người khác màu trắng — nhìn sân đông là thấy ngay
-## mình ở đâu.
+## Màu chữ trên đầu của chính mình.
 const MAU_TOI := Color(1.0, 0.85, 0.2)
 
 @export var chu_tren_dau_scene: PackedScene = null
 
 var _o: Array[OChu] = []
-## player_id -> số từ đã gõ xong. Mọi máy cùng cộng từ RPC; bảng của master là bảng chốt.
+## player_id -> số từ đã xong; bảng của master là bảng chốt.
 var _diem: Dictionary = {}
-## player_id -> đã gõ đúng mấy chữ đầu của từ hiện tại.
+## player_id -> số chữ đầu đã gõ đúng của từ hiện tại.
 var _tien: Dictionary = {}
-## player_id -> Label3D trên đầu người đó. Nhãn là con của Player, phải tự gỡ khi xong ván.
+## player_id -> Label3D trên đầu (tự gỡ khi xong ván).
 var _nhan: Dictionary = {}
 var _go_luc := -99.0
 
@@ -110,9 +84,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		Fusion.rpc(_net_tien, id, k + 1)
 
 
-## Tiến độ mới của một người. Gõ đủ chữ thì cộng điểm và về 0 — từ mới tự suy ra từ điểm.
-##
-## Gửi CON SỐ tiến độ chứ không gửi "+1": gói tới trễ hay lặp lại cũng không cộng đúp.
+## Gửi con số tiến độ (không phải "+1") để gói trễ/lặp không cộng đúp.
 @rpc("any_peer", "call_local")
 func _net_tien(id: int, tien: int) -> void:
 	if not _tien.has(id) or tien != int(_tien[id]) + 1:
@@ -128,7 +100,7 @@ func tu_hien_tai(id: int) -> String:
 	return tu_cua(hat_giong, int(_diem.get(id, 0)))
 
 
-## Ô chữ đang ở dưới chân người này, null nếu không đứng trên ô nào.
+## null = không đứng trên ô nào.
 func _o_duoi_chan(p: Player) -> OChu:
 	for o in _o:
 		if o.vung.overlaps_body(p):
@@ -136,10 +108,9 @@ func _o_duoi_chan(p: Player) -> OChu:
 	return null
 
 
-# ───────────────────────── nhãn trên đầu ─────────────────────────
+# ─── nhãn trên đầu ───
 
-## Gắn một nhãn lên đầu MỌI người chơi trên máy này. Nhãn là scene đặt sẵn; ở đây chỉ
-## `instantiate()` vì số người chỉ biết lúc vào ván.
+## Gắn nhãn lên đầu mọi người chơi (instance scene lúc vào ván).
 func _gan_nhan() -> void:
 	_go_nhan()
 	if chu_tren_dau_scene == null:
@@ -153,7 +124,7 @@ func _gan_nhan() -> void:
 		n.modulate = MAU_TOI if p.is_mine else Color.WHITE
 		p.add_child(n)
 		_nhan[id] = n
-		# Tên người chơi nằm đúng chỗ nhãn từ — ẩn đi cho khỏi chồng chữ, trả lại khi xong ván.
+		# Ẩn tên người chơi cho khỏi chồng chữ.
 		p.name_tag.visible = false
 
 
@@ -167,9 +138,9 @@ func _go_nhan() -> void:
 		p.name_tag.visible = not p.is_mine
 
 
-# ───────────────────────── ô điểm + xếp hạng theo số từ ─────────────────────────
+# ─── ô điểm + xếp hạng theo số từ ───
 
-## Số từ đã gõ xong, cộng phần lẻ của từ đang gõ — để hai người cùng số từ vẫn xếp được.
+## Số từ xong + phần lẻ của từ đang gõ.
 func diem_cua(id: int) -> float:
 	if not _diem.has(id):
 		return NAN
@@ -193,15 +164,14 @@ func _chot_ket_qua() -> void:
 	Fusion.rpc(_net_xep_hang, xep)
 
 
-## Không ai rơi khỏi sàn trong trò này — xếp hạng chỉ theo số từ, chạy đủ giờ.
+## Không ai rơi; chạy đủ giờ.
 func _toi_thua() -> bool:
 	return false
 
 
-# ───────────────────────── luật: hàm thuần ─────────────────────────
+# ─── luật: hàm thuần ───
 
-## Từ thứ `so_xong` của ván có hạt giống `giong` — CHUNG cho cả phòng. Hai từ liền nhau không
-## trùng nhau (bốc lại nếu trùng), không thì gõ xong một từ lại gặp y nó.
+## Từ thứ `so_xong` (chung cả phòng); hai từ liền nhau không trùng.
 static func tu_cua(giong: int, so_xong: int) -> String:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash([giong, so_xong])
@@ -217,6 +187,6 @@ static func tu_cua_chi_so(giong: int, so_xong: int) -> int:
 	return TU.find(tu_cua(giong, so_xong))
 
 
-## Chữ hiện trên đầu: chữ đã gõ thành `•`, nên chữ ĐẦU TIÊN còn thấy là chữ phải gõ kế tiếp.
+## Chữ đã gõ thành `•`.
 static func hien_tu(tu: String, tien: int) -> String:
 	return "•".repeat(tien) + tu.substr(tien)

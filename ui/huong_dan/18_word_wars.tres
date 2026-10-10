@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "18 · Word Wars"
+noi_dung = "[color=#8fe7d4][b]PHÍM[/b][/color]
+[b]W A S D[/b] chạy · [b]E[/b] nhập chữ · [b]F[/b] đánh.
+
+[color=#8fe7d4][b]LUẬT[/b][/color]
+Đọc từ tiếng Anh trên đầu mình, lần lượt chạy tới ô mang chữ cái cần thiết rồi bấm E. Đúng hết từ sẽ ghi một điểm và nhận từ mới.
+
+Bị đánh sẽ bị hất và choáng ngắn, nhưng không mất tiến độ từ. Ván kéo dài 60 giây. [b]Xếp hạng:[/b] số từ hoàn thành; hoà thì ai đã tiến xa hơn trong từ hiện tại đứng trên."

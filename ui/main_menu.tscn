@@ -5,6 +5,27 @@
 [ext_resource type="AudioStream" path="res://asset/kenney_interface-sounds/Audio/click_003.ogg" id="4_click"]
 [ext_resource type="PackedScene" path="res://ui/character_creator.tscn" id="5_creator"]
 [ext_resource type="Script" path="res://ui/how_to_guide.gd" id="6_howto"]
+[ext_resource type="PackedScene" path="res://ui/nut_dong.tscn" id="r_nut_dong_scene"]
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="hd_script"]
+[ext_resource type="Resource" path="res://ui/huong_dan/01_muc_tieu.tres" id="hd_01_muc_tieu"]
+[ext_resource type="Resource" path="res://ui/huong_dan/02_phim_chung.tres" id="hd_02_phim_chung"]
+[ext_resource type="Resource" path="res://ui/huong_dan/03_ban_party.tres" id="hd_03_ban_party"]
+[ext_resource type="Resource" path="res://ui/huong_dan/04_o_dat.tres" id="hd_04_o_dat"]
+[ext_resource type="Resource" path="res://ui/huong_dan/05_o_mau.tres" id="hd_05_o_mau"]
+[ext_resource type="Resource" path="res://ui/huong_dan/06_o_tien.tres" id="hd_06_o_tien"]
+[ext_resource type="Resource" path="res://ui/huong_dan/07_vat_pham.tres" id="hd_07_vat_pham"]
+[ext_resource type="Resource" path="res://ui/huong_dan/08_ruong_hoi_sinh.tres" id="hd_08_ruong_hoi_sinh"]
+[ext_resource type="Resource" path="res://ui/huong_dan/09_minigame.tres" id="hd_09_minigame"]
+[ext_resource type="Resource" path="res://ui/huong_dan/10_tank.tres" id="hd_10_tank"]
+[ext_resource type="Resource" path="res://ui/huong_dan/11_breaking_blocks.tres" id="hd_11_breaking_blocks"]
+[ext_resource type="Resource" path="res://ui/huong_dan/12_laser_leap.tres" id="hd_12_laser_leap"]
+[ext_resource type="Resource" path="res://ui/huong_dan/13_spotlights.tres" id="hd_13_spotlights"]
+[ext_resource type="Resource" path="res://ui/huong_dan/14_magma.tres" id="hd_14_magma"]
+[ext_resource type="Resource" path="res://ui/huong_dan/15_explosive.tres" id="hd_15_explosive"]
+[ext_resource type="Resource" path="res://ui/huong_dan/16_crown.tres" id="hd_16_crown"]
+[ext_resource type="Resource" path="res://ui/huong_dan/17_temporal_trails.tres" id="hd_17_temporal_trails"]
+[ext_resource type="Resource" path="res://ui/huong_dan/18_word_wars.tres" id="hd_18_word_wars"]
+[ext_resource type="Resource" path="res://ui/huong_dan/19_dem_thu.tres" id="hd_19_dem_thu"]
 
 [sub_resource type="StyleBoxFlat" id="DockPanel"]
 bg_color = Color(0.006, 0.027, 0.037, 0.64)
@@ -63,6 +84,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_theme")
 script = ExtResource("1_menu")
+nut_dong_scene = ExtResource("r_nut_dong_scene")
 
 [node name="Atmosphere" type="ColorRect" parent="."]
 mouse_filter = 2
@@ -477,23 +499,14 @@ min_value = 1.0
 max_value = 999.0
 value = 10.0
 
-[node name="SecondGoldLabel" type="Label" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+[node name="SoVongLabel" type="Label" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
 layout_mode = 2
-text = "Vàng hạng 2 minigame"
-[node name="MinigameSecondGold" type="SpinBox" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
+text = "Số vòng (0 = tự tính)"
+[node name="SoVong" type="SpinBox" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
 unique_name_in_owner = true
 layout_mode = 2
-max_value = 999.0
-value = 30.0
-
-[node name="RewardDropLabel" type="Label" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
-layout_mode = 2
-text = "Vàng giảm mỗi hạng"
-[node name="MinigameRewardDrop" type="SpinBox" parent="MenuDock/SetupScreen/SetupControls/RuleScroll/RuleGrid"]
-unique_name_in_owner = true
-layout_mode = 2
-max_value = 999.0
-value = 10.0
+max_value = 99.0
+value = 0.0
 
 [node name="SetupStatus" type="Label" parent="MenuDock/SetupScreen"]
 unique_name_in_owner = true
@@ -662,6 +675,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.003, 0.015, 0.022, 0.72)
 script = ExtResource("6_howto")
+trang = Array[ExtResource("hd_script")]([ExtResource("hd_01_muc_tieu"), ExtResource("hd_02_phim_chung"), ExtResource("hd_03_ban_party"), ExtResource("hd_04_o_dat"), ExtResource("hd_05_o_mau"), ExtResource("hd_06_o_tien"), ExtResource("hd_07_vat_pham"), ExtResource("hd_08_ruong_hoi_sinh"), ExtResource("hd_09_minigame"), ExtResource("hd_10_tank"), ExtResource("hd_11_breaking_blocks"), ExtResource("hd_12_laser_leap"), ExtResource("hd_13_spotlights"), ExtResource("hd_14_magma"), ExtResource("hd_15_explosive"), ExtResource("hd_16_crown"), ExtResource("hd_17_temporal_trails"), ExtResource("hd_18_word_wars"), ExtResource("hd_19_dem_thu")])
 
 [node name="Center" type="CenterContainer" parent="HowToOverlay"]
 layout_mode = 1

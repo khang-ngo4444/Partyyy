@@ -1,0 +1,57 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://board/mui_ten.gd" id="1_mt"]
+
+[sub_resource type="StandardMaterial3D" id="Sang"]
+albedo_color = Color(1, 0.85, 0.2, 1)
+emission_enabled = true
+emission = Color(1, 0.7, 0.1, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="StandardMaterial3D" id="Mo"]
+transparency = 1
+albedo_color = Color(0.85, 0.9, 1, 0.55)
+emission_enabled = true
+emission = Color(0.4, 0.5, 0.8, 1)
+
+[sub_resource type="BoxMesh" id="ThanSang"]
+material = SubResource("Sang")
+size = Vector3(0.14, 0.07, 0.42)
+
+[sub_resource type="PrismMesh" id="DauSang"]
+material = SubResource("Sang")
+size = Vector3(0.42, 0.32, 0.07)
+
+[sub_resource type="BoxMesh" id="ThanMo"]
+material = SubResource("Mo")
+size = Vector3(0.14, 0.07, 0.42)
+
+[sub_resource type="PrismMesh" id="DauMo"]
+material = SubResource("Mo")
+size = Vector3(0.42, 0.32, 0.07)
+
+[node name="MuiTen" type="Node3D"]
+visible = false
+script = ExtResource("1_mt")
+
+[node name="Sang" type="Node3D" parent="."]
+transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, 0, 0, 0)
+
+[node name="Than" type="MeshInstance3D" parent="Sang"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.12)
+mesh = SubResource("ThanSang")
+
+[node name="Dau" type="MeshInstance3D" parent="Sang"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, -0.22)
+mesh = SubResource("DauSang")
+
+[node name="Mo" type="Node3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+
+[node name="Than" type="MeshInstance3D" parent="Mo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.12)
+mesh = SubResource("ThanMo")
+
+[node name="Dau" type="MeshInstance3D" parent="Mo"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, -0.22)
+mesh = SubResource("DauMo")

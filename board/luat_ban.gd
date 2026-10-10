@@ -1,24 +1,21 @@
 class_name LuatBan
 extends RefCounted
 
-## Luật thuần của bàn party. File này không đụng scene hay mạng; master áp luật rồi
-## PhaBanCo phát nguyên Dictionary trạng thái cho cả phòng.
-
-const TEN_DO := {
-	"khien": "Khiên",
-	"sung_1_phat": "Súng một phát",
-}
+## Luật thuần của bàn party (không đụng scene/mạng).
 
 enum Thue { DAT, MAU, TIEN, TRANG_BI }
 const TEN_THUE := ["đất", "máu", "tiền", "trang bị"]
+## Sát thương của món "gục ngay".
+const GUC := 1000
+## Bảng trạng thái giữ nguyên khi sang vòng mới.
+const BANG_GIU_QUA_VONG := ["bay", "rao", "neo", "doc", "heo", "quai", "chieu"]
 
 
 static func khoa(id) -> String:
 	return str(int(id))
 
 
-## Tạo trạng thái vòng mới và giữ tài nguyên của người còn trong phòng.
-## Khi `cu` rỗng, tất cả cùng đứng ô 0.
+## Trạng thái vòng mới, giữ tài nguyên của người còn trong phòng. `cu` rỗng = ván mới.
 static func trang_thai_moi(ds: Array, cu: Dictionary, settings: Dictionary) -> Dictionary:
 	var max_health := int(settings.get("max_health", 10))
 	var start_gold := int(settings.get("start_gold", 0))
@@ -34,9 +31,13 @@ static func trang_thai_moi(ds: Array, cu: Dictionary, settings: Dictionary) -> D
 		"chu_dat": (_bang(cu, "chu_dat").duplicate() if not cu.is_empty() else {}),
 		"thue_dat": (_bang(cu, "thue_dat").duplicate() if not cu.is_empty() else {}),
 		"loai_o": (cu.get("loai_o", []) as Array).duplicate(),
-		"ruong": (cu.get("ruong", []) as Array).duplicate(),
-		"ruong_that": int(cu.get("ruong_that", -1)),
+		"coc": {},
+		"ruong_o": int(cu.get("ruong_o", -1)),
+		"vong": int(cu.get("vong", 1)),
+		"so_vong": int(cu.get("so_vong", 1)),
 	}
+	for ten in BANG_GIU_QUA_VONG:
+		moi[ten] = _bang(cu, ten).duplicate(true)
 	for id in ds:
 		var k := khoa(id)
 		moi["o"][k] = int(_bang(cu, "o").get(k, 0))
@@ -45,13 +46,21 @@ static func trang_thai_moi(ds: Array, cu: Dictionary, settings: Dictionary) -> D
 		moi["do"][k] = (_bang(cu, "do").get(k, []) as Array).duplicate()
 		moi["buoc"][k] = int(_bang(cu, "buoc").get(k, 0))
 		moi["hoi_sinh"][k] = int(_bang(cu, "hoi_sinh").get(k, 0))
+		moi["coc"][k] = int(_bang(cu, "coc").get(k, 0))
 	return moi
 
 
-static func them_do(tt: Dictionary, k: String, mon: String) -> void:
+## Túi đầy thì bỏ món cũ nhất. Trả về lời báo mất món ("" = không mất gì).
+static func them_do(tt: Dictionary, k: String, mon: String) -> String:
+	if mon.is_empty():
+		return ""
 	var tui: Array = _bang(tt, "do").get(k, [])
 	tui.append(mon)
+	var roi := PackedStringArray()
+	while tui.size() > VatPham.TUI_TOI_DA:
+		roi.append(VatPham.ten(str(tui.pop_front())))
 	_bang(tt, "do")[k] = tui
+	return "" if roi.is_empty() else " (túi đầy, mất %s)" % ", ".join(roi)
 
 
 static func rut_do(tt: Dictionary, k: String, chi_so: int) -> String:
@@ -64,29 +73,7 @@ static func rut_do(tt: Dictionary, k: String, chi_so: int) -> String:
 	return mon
 
 
-## Bắn luôn tiêu một khẩu, kể cả trượt. `muc_tieu` rỗng nghĩa là tia không trúng người.
-## Raycast thuộc PhaBanCo; luật thuần này chỉ sở hữu túi đồ, khiên, máu và kết quả sự kiện.
-static func ban_sung(tt: Dictionary, nguoi_ban: String, muc_tieu: String,
-		sat_thuong: int) -> Dictionary:
-	var tui: Array = _bang(tt, "do").get(nguoi_ban, [])
-	var vi_tri := tui.find("sung_1_phat")
-	if vi_tri < 0:
-		return {"da_ban": false, "chet": false, "su_kien": ""}
-	tui.remove_at(vi_tri)
-	_bang(tt, "do")[nguoi_ban] = tui
-	if muc_tieu.is_empty() or muc_tieu == nguoi_ban:
-		return {"da_ban": true, "chet": false, "su_kien": "bắn trượt"}
-	var tui_muc_tieu: Array = _bang(tt, "do").get(muc_tieu, [])
-	var co_khien := tui_muc_tieu.has("khien")
-	var chet := tru_mau(tt, muc_tieu, sat_thuong)
-	if co_khien:
-		return {"da_ban": true, "chet": false, "su_kien": "bắn trúng · khiên đã chặn"}
-	return {"da_ban": true, "chet": chet,
-			"su_kien": "bắn trúng · -%d máu%s" % [sat_thuong, " · gục" if chet else ""]}
-
-
-## Ô hồi máu và ô tiền là luật thuần. Ô đất/rương/trang bị cần thông tin scene hoặc RNG
-## nên PhaBanCo xử lý ở lớp điều phối.
+## Hiệu ứng ô Máu và ô Tiền.
 static func hieu_ung_o(tt: Dictionary, k: String, loai: int, settings: Dictionary) -> String:
 	match loai:
 		BanDuong.Loai.MAU:
@@ -104,46 +91,37 @@ static func hieu_ung_o(tt: Dictionary, k: String, loai: int, settings: Dictionar
 	return ""
 
 
-## Khiên chặn trọn một lần mất máu. Trả về true nếu người chơi hết máu.
+## MỌI sát thương đi qua đây (Úp thúng, Dây thun). true = hết máu, người gọi phải `chet()`.
 static func tru_mau(tt: Dictionary, k: String, sat_thuong: int) -> bool:
 	if sat_thuong <= 0:
 		return false
-	var tui: Array = _bang(tt, "do").get(k, [])
-	if tui.has("khien"):
-		tui.erase("khien")
-		_bang(tt, "do")[k] = tui
+	if co_khien(tt, k):
+		tieu_khien(tt, k)
 		return false
+	sat_thuong = LuatHieuUng.khi_trung_don(tt, k, sat_thuong)
 	var mau: Dictionary = _bang(tt, "mau")
 	var con := int(mau.get(k, 0)) - sat_thuong
 	mau[k] = maxi(con, 0)
 	return con <= 0
 
 
-## Chết chỉ hồi máu và về checkpoint. Không xóa vàng/trang bị nếu phòng chưa bật luật đó.
+static func co_khien(tt: Dictionary, k: String) -> bool:
+	return (_bang(tt, "do").get(k, []) as Array).has("khien")
+
+
+static func tieu_khien(tt: Dictionary, k: String) -> void:
+	var tui: Array = _bang(tt, "do").get(k, [])
+	tui.erase("khien")
+	_bang(tt, "do")[k] = tui
+
+
+## Hồi đầy máu, về checkpoint (hoặc ô neo). Không mất vàng, không mất Cúp.
 static func chet(tt: Dictionary, k: String, settings: Dictionary) -> void:
 	_bang(tt, "mau")[k] = int(settings.get("max_health", 10))
-	_bang(tt, "o")[k] = int(_bang(tt, "hoi_sinh").get(k, 0))
+	_bang(tt, "o")[k] = LuatHieuUng.khi_guc(tt, k, int(_bang(tt, "hoi_sinh").get(k, 0)))
 
 
-## Thưởng sau minigame: hạng 1 nhận súng một phát; các hạng sau nhận vàng giảm dần.
-static func thuong_minigame(tt: Dictionary, xep_hang: Array, settings: Dictionary) -> String:
-	if xep_hang.is_empty():
-		return ""
-	them_do(tt, khoa(xep_hang[0]), "sung_1_phat")
-	var thuong := PackedStringArray(["Hạng 1 nhận Súng một phát"])
-	var moc := int(settings.get("minigame_second_gold", 30))
-	var giam := int(settings.get("minigame_reward_drop", 10))
-	var toi_thieu := int(settings.get("minigame_min_gold", 5))
-	for i in range(1, xep_hang.size()):
-		var vang := maxi(toi_thieu, moc - (i - 1) * giam)
-		var k := khoa(xep_hang[i])
-		_bang(tt, "tien")[k] = int(_bang(tt, "tien").get(k, 0)) + vang
-		thuong.append("Hạng %d +%d vàng" % [i + 1, vang])
-	return " · ".join(thuong)
-
-
-## Áp một lựa chọn thuế. Đất = chuyển một ô của khách cho chủ; nếu khách không có đất thì
-## tự rơi về thu tiền. Trang bị chuyển món đầu tiên trong túi.
+## Áp một loại thuế; không có đất/đồ để lấy thì thu tiền.
 static func thu_thue(tt: Dictionary, chu: String, khach: String, loai: int,
 		settings: Dictionary) -> String:
 	match loai:
@@ -171,7 +149,7 @@ static func thu_thue(tt: Dictionary, chu: String, khach: String, loai: int,
 				var mon := str(tui_khach.pop_front())
 				_bang(tt, "do")[khach] = tui_khach
 				them_do(tt, chu, mon)
-				return "thuế trang bị: %s" % TEN_DO.get(mon, mon)
+				return "thuế trang bị: %s" % VatPham.ten(mon)
 			return thu_thue(tt, chu, khach, Thue.TIEN, settings)
 		_:
 			var bang_tien: Dictionary = _bang(tt, "tien")

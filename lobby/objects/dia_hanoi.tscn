@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[sub_resource type="TorusMesh" id="dia_mesh"]
+resource_local_to_scene = true
+inner_radius = 0.024
+outer_radius = 0.2
+rings = 32
+ring_segments = 12
+
+[sub_resource type="StandardMaterial3D" id="dia_mat"]
+resource_local_to_scene = true
+roughness = 0.35
+
+[node name="DiaHanoi" type="MeshInstance3D"]
+material_override = SubResource("dia_mat")
+mesh = SubResource("dia_mesh")

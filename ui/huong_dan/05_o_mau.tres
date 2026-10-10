@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "05 · Ô Máu"
+noi_dung = "[color=#8fe7d4][b]HỒI MÁU[/b][/color]
+Dừng trên ô Máu để hồi máu ngay lập tức, tối đa bằng giới hạn máu của phòng.
+
+Thiết lập mặc định: hồi [b]3 máu[/b], tối đa [b]10 máu[/b]. Chủ phòng có thể đổi cả hai con số trước khi mở sảnh.
+
+Nếu máu đã đầy, ô không cộng thêm và bảng sự kiện sẽ báo máu đã đầy."

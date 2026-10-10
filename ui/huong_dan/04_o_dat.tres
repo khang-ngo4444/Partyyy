@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "04 · Ô Đất"
+noi_dung = "[color=#8fe7d4][b]CHIẾM ĐẤT[/b][/color]
+Ô đất chưa có chủ mang trạng thái unmarked. Người đầu tiên dừng trên ô sẽ đánh dấu ô bằng tên mình và chọn loại thuế.
+
+[b]1 — Thuế đất[/b]: lấy một ô đất của khách. Nếu khách không có đất, tự đổi thành thuế tiền.
+[b]2 — Thuế máu[/b]: lấy máu của khách và hồi lượng máu thực lấy được cho chủ đất.
+[b]3 — Thuế tiền[/b]: chuyển vàng từ khách sang chủ đất.
+[b]4 — Thuế trang bị[/b]: lấy món đầu tiên trong túi khách. Nếu khách không có đồ, tự đổi thành thuế tiền.
+
+Không chọn trong 12 giây thì ô mặc định dùng thuế tiền. Chủ đất trở lại đất của mình không phải trả thuế."

@@ -1,7 +1,6 @@
 extends Node
 
-## Quan ly ngan sach GPU theo kieu console/AAA: preset chat luong + dynamic resolution.
-## UI van ve o do phan giai goc; chi bo dem 3D duoc scale nen chu va HUD luon sac net.
+## Preset chất lượng + độ phân giải động cho cảnh 3D (UI giữ độ phân giải gốc).
 
 signal render_scale_changed(scale: float)
 signal graphics_mode_changed(mode: int)
@@ -22,7 +21,6 @@ const HIGH_SAMPLES_TO_RAISE := 6
 
 var graphics_mode: int = GraphicsMode.AUTO
 var current_scale := AUTO_START_SCALE
-
 var _sample_acc := 0.0
 var _warmup_left := WARMUP_SECONDS
 var _low_samples := 0
@@ -45,7 +43,6 @@ func set_graphics_mode(value: int) -> void:
 
 func _apply_mode() -> void:
 	var viewport := get_tree().root
-	# FSR 1 la spatial upscaler nhe, chay duoc tren nhieu GPU hon temporal upscaler.
 	viewport.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR
 	match graphics_mode:
 		GraphicsMode.PERFORMANCE:
@@ -100,7 +97,7 @@ func _set_scale(value: float) -> void:
 		return
 	current_scale = scale
 	get_tree().root.scaling_3d_scale = current_scale
-	# Khi ha do phan giai, cho mesh chuyen sang LOD thap som hon de giam ca vertex va shadow pass.
+	# Hạ độ phân giải thì chuyển LOD sớm hơn.
 	if graphics_mode == GraphicsMode.AUTO:
 		get_tree().root.mesh_lod_threshold = lerpf(2.0, 1.0,
 				inverse_lerp(AUTO_MIN_SCALE, AUTO_MAX_SCALE, current_scale))

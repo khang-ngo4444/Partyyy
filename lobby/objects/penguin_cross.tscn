@@ -1,29 +1,258 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/penguin_cross.gd" id="1_pc"]
 [ext_resource type="PackedScene" uid="uid://ccyjywo6gkyo0" path="res://asset/polypizza/penguin.glb" id="2_model"]
+[ext_resource type="PackedScene" path="res://lobby/objects/pressable.tscn" id="3_pl7ob"]
 
 [sub_resource type="BoxShape3D" id="Shape_StaticSurface_Table"]
 size = Vector3(0.92, 0.91, 3.36)
 
-[node name="PenguinCross" type="Node3D"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xvo7j"]
+albedo_color = Color(0.23921569, 0.2509804, 0.28235295, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_laejq"]
+size = Vector3(0.46, 0.75, 1.68)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3fxyv"]
+albedo_color = Color(0.18431373, 0.3647059, 0.24705882, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_aa0t1"]
+size = Vector3(0.92, 0.08, 3.36)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sa617"]
+albedo_color = Color(0.16862746, 0.22745098, 0.33333334, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ebf1x"]
+size = Vector3(0.42, 0.16, 3.06)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aaba3"]
+albedo_color = Color(0.8509804, 0.8235294, 0.77254903, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cndw8"]
+size = Vector3(0.42, 0.02, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v1ctk"]
+albedo_color = Color(0.8509804, 0.8235294, 0.77254903, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_asfru"]
+size = Vector3(0.42, 0.02, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pkm66"]
+albedo_color = Color(0.8509804, 0.8235294, 0.77254903, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_mbs4y"]
+size = Vector3(0.42, 0.02, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c11qq"]
+albedo_color = Color(0.8509804, 0.8235294, 0.77254903, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qv4jb"]
+size = Vector3(0.42, 0.02, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pgvw6"]
+albedo_color = Color(0.8509804, 0.8235294, 0.77254903, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gqofv"]
+size = Vector3(0.42, 0.02, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aas8y"]
+albedo_color = Color(0.8509804, 0.8235294, 0.77254903, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wlwi8"]
+size = Vector3(0.42, 0.02, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_emqdy"]
+albedo_color = Color(0.8509804, 0.8235294, 0.77254903, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xjtpx"]
+size = Vector3(0.42, 0.02, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_osva3"]
+albedo_color = Color(0.8509804, 0.8235294, 0.77254903, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lrxdw"]
+size = Vector3(0.42, 0.02, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_phsub"]
+albedo_color = Color(0.8509804, 0.8235294, 0.77254903, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_h401u"]
+size = Vector3(0.42, 0.02, 0.03)
+
+[node name="PenguinCross" type="Node3D" unique_id=1258347860]
 script = ExtResource("1_pc")
 
-[node name="Board" type="Label3D" parent="."]
+[node name="Board" type="Label3D" parent="." unique_id=1557573456]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, 0)
 pixel_size = 0.0028
 billboard = 1
+text = "PENGUIN CROSS - BAM DI TIEP DE CHOI"
 font_size = 40
-outline_size = 12
 
-[node name="Penguin" type="Node3D" parent="."]
+[node name="Penguin" type="Node3D" parent="." unique_id=1173326202]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.91, -1.36)
 
-[node name="Model" parent="Penguin" instance=ExtResource("2_model")]
+[node name="Model" parent="Penguin" unique_id=1556668472 instance=ExtResource("2_model")]
 transform = Transform3D(0.0014781966, 0, 0, 0, 0.0014781966, 0, 0, 0, 0.0014781966, 0, 0.13000274, 0)
 
-[node name="StaticSurface_Table" type="StaticBody3D" parent="."]
+[node name="StaticSurface_Table" type="StaticBody3D" parent="." unique_id=1391153250]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Table"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Table" unique_id=1867167798]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.455, 0)
 shape = SubResource("Shape_StaticSurface_Table")
+
+[node name="ChanBan" type="MeshInstance3D" parent="." unique_id=189060246]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.375, 0)
+material_override = SubResource("StandardMaterial3D_xvo7j")
+mesh = SubResource("BoxMesh_laejq")
+
+[node name="MatBan" type="MeshInstance3D" parent="." unique_id=17964324]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.71, 0)
+material_override = SubResource("StandardMaterial3D_3fxyv")
+mesh = SubResource("BoxMesh_aa0t1")
+
+[node name="Ray" type="MeshInstance3D" parent="." unique_id=1706284447]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.83, 0)
+material_override = SubResource("StandardMaterial3D_sa617")
+mesh = SubResource("BoxMesh_ebf1x")
+
+[node name="Vach0" type="MeshInstance3D" parent="." unique_id=880811881]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, -1.36)
+material_override = SubResource("StandardMaterial3D_aaba3")
+mesh = SubResource("BoxMesh_cndw8")
+
+[node name="HeSo0" type="Label3D" parent="." unique_id=1554180150]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.37, 1.01, -1.36)
+pixel_size = 0.0018
+billboard = 1
+modulate = Color(0.9607843, 0.8509804, 0.039215688, 1)
+text = "1.0x"
+font_size = 30
+outline_size = 6
+
+[node name="Vach1" type="MeshInstance3D" parent="." unique_id=1958690388]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, -1.02)
+material_override = SubResource("StandardMaterial3D_v1ctk")
+mesh = SubResource("BoxMesh_asfru")
+
+[node name="HeSo1" type="Label3D" parent="." unique_id=989783751]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.37, 1.01, -1.02)
+pixel_size = 0.0018
+billboard = 1
+modulate = Color(0.9529412, 0.779902, 0.07205883, 1)
+text = "1.2x"
+font_size = 30
+outline_size = 6
+
+[node name="Vach2" type="MeshInstance3D" parent="." unique_id=2013257552]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, -0.68)
+material_override = SubResource("StandardMaterial3D_pkm66")
+mesh = SubResource("BoxMesh_mbs4y")
+
+[node name="HeSo2" type="Label3D" parent="." unique_id=531454350]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.37, 1.01, -0.68)
+pixel_size = 0.0018
+billboard = 1
+modulate = Color(0.94509804, 0.70882356, 0.10490197, 1)
+text = "1.5x"
+font_size = 30
+outline_size = 6
+
+[node name="Vach3" type="MeshInstance3D" parent="." unique_id=1758751440]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, -0.34)
+material_override = SubResource("StandardMaterial3D_c11qq")
+mesh = SubResource("BoxMesh_qv4jb")
+
+[node name="HeSo3" type="Label3D" parent="." unique_id=1365864760]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.37, 1.01, -0.34)
+pixel_size = 0.0018
+billboard = 1
+modulate = Color(0.9372549, 0.6377451, 0.1377451, 1)
+text = "2.0x"
+font_size = 30
+outline_size = 6
+
+[node name="Vach4" type="MeshInstance3D" parent="." unique_id=2020732415]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0)
+material_override = SubResource("StandardMaterial3D_pgvw6")
+mesh = SubResource("BoxMesh_gqofv")
+
+[node name="HeSo4" type="Label3D" parent="." unique_id=874645402]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.37, 1.01, 0)
+pixel_size = 0.0018
+billboard = 1
+modulate = Color(0.92941177, 0.56666666, 0.17058824, 1)
+text = "3.0x"
+font_size = 30
+outline_size = 6
+
+[node name="Vach5" type="MeshInstance3D" parent="." unique_id=1966516127]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0.34)
+material_override = SubResource("StandardMaterial3D_aas8y")
+mesh = SubResource("BoxMesh_wlwi8")
+
+[node name="HeSo5" type="Label3D" parent="." unique_id=833831202]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.37, 1.01, 0.34)
+pixel_size = 0.0018
+billboard = 1
+modulate = Color(0.92156863, 0.49558824, 0.20343138, 1)
+text = "4.0x"
+font_size = 30
+outline_size = 6
+
+[node name="Vach6" type="MeshInstance3D" parent="." unique_id=1076464153]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0.68)
+material_override = SubResource("StandardMaterial3D_emqdy")
+mesh = SubResource("BoxMesh_xjtpx")
+
+[node name="HeSo6" type="Label3D" parent="." unique_id=2131592584]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.37, 1.01, 0.68)
+pixel_size = 0.0018
+billboard = 1
+modulate = Color(0.9137255, 0.4245098, 0.23627451, 1)
+text = "6.0x"
+font_size = 30
+outline_size = 6
+
+[node name="Vach7" type="MeshInstance3D" parent="." unique_id=475759511]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 1.02)
+material_override = SubResource("StandardMaterial3D_osva3")
+mesh = SubResource("BoxMesh_lrxdw")
+
+[node name="HeSo7" type="Label3D" parent="." unique_id=1217097514]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.37, 1.01, 1.02)
+pixel_size = 0.0018
+billboard = 1
+modulate = Color(0.90588236, 0.35343134, 0.26911765, 1)
+text = "8.0x"
+font_size = 30
+outline_size = 6
+
+[node name="Vach8" type="MeshInstance3D" parent="." unique_id=657693927]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 1.36)
+material_override = SubResource("StandardMaterial3D_phsub")
+mesh = SubResource("BoxMesh_h401u")
+
+[node name="HeSo8" type="Label3D" parent="." unique_id=1888326216]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.37, 1.01, 1.36)
+pixel_size = 0.0018
+billboard = 1
+modulate = Color(0.8980392, 0.28235292, 0.3019608, 1)
+text = "12.0x"
+font_size = 30
+outline_size = 6
+
+[node name="PenguinStep" parent="." unique_id=1199831941 instance=ExtResource("3_pl7ob")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.59, 0.75, -0.68)
+label = "DI TIEP"
+color = Color(0.9607843, 0.8509804, 0.039215688, 1)
+press_range = 2.4
+compact = true
+label_size = 30
+
+[node name="PenguinStop" parent="." unique_id=663294307 instance=ExtResource("3_pl7ob")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.59, 0.75, 0.68)
+label = "DUNG LAI"
+press_range = 2.4
+compact = true
+label_size = 30

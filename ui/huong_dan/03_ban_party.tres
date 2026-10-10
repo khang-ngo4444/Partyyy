@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "03 · Bàn party và lượt đi"
+noi_dung = "[color=#8fe7d4][b]TRONG LƯỢT CỦA BẠN[/b][/color]
+1. (Tuỳ chọn) bấm [b]1 – 9[/b] chọn một món rồi dùng nó — mỗi lượt tối đa một món, phải dùng TRƯỚC khi tung.
+2. [b]Space hoặc E[/b] — tung xúc xắc.
+
+[color=#8fe7d4][b]ĐI TRÊN BÀN[/b][/color]
+Bước đầu tiên của ván, bàn hỏi bạn đi [b]qua trái hay qua phải[/b]. Từ đó bạn luôn đi theo chiều đã chọn, [b]không bao giờ đi lùi[/b].
+
+Tới ngã rẽ, quân dừng lại và hiện [b]mũi tên[/b] cho mỗi hướng. [b]A / D[/b] đổi hướng, [b]Space / E[/b] đi tiếp theo hướng đó.
+
+Đi xong mới nhận hiệu ứng của ô dừng chân. Không thể dùng WASD để tự ý đi trên bàn. Khi tới lượt người khác, camera chuyển sang theo người đó."

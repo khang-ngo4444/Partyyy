@@ -1,28 +1,8 @@
 extends SceneTree
 
-## KIỂM LUẬT Explosive Exchange — chạy ngoài game, không nạp project:
-##
-##     godot --headless --path minigame/explosive --script kiem_luat.gd
-##
-## Hằng số CHÉP TAY từ `explosive.gd`, `bom_chuyen.tscn`, `san_tron.tscn`, `player.tscn`. Chép chứ
-## không `preload` vì `explosive.gd` kéo theo `MiniGame3D` → `Fusion` → cả project.
-##
-## Thứ bộ này tồn tại để chặn: **người ôm bom không còn biên nào để chuyền**.
-##
-## Mọi người cùng `Player.speed = 6.0`. Mô phỏng đuổi bắt 1v1 trên sàn tròn cho ra: không boost
-## thì bắt được từ đầu này sàn sang đầu kia mất **4,88 giây**, mà bom ngắn nhất chỉ 7 giây và còn
-## mất 0,9 giây nghỉ chuyền — còn **1,22 giây**. Quá sát: lỡ một nhịp quay đầu là chết.
-##
-## `TOC_OM_THEM = 1,6` hạ xuống 2,83 giây, còn lại 3,27 giây. Đó là cả lý do nó tồn tại, và kiểm
-## #1 là thứ giữ cho nó không bị ai "dọn cho gọn".
-##
-## Lưu ý về giới hạn của mô phỏng: kẻ chạy trốn ở đây chạy ngược hướng rồi men theo bờ — một người
-## thật biết vòng tròn sẽ khó bắt hơn. Nên 4,88 giây là biên DƯỚI của cái khó, không phải biên
-## trên. Lần đầu tôi viết kiểm này đã khẳng định "bằng tốc thì không bao giờ bắt được"; chính mô
-## phỏng bác lại, và con số trên là bản đã sửa.
-##
-## Dùng `ck()` chứ không `assert()`: `assert` fail trong `--headless --script` làm Godot ĐỨNG chờ
-## debugger, 0% CPU, không in một chữ nào.
+## Kiểm luật Explosive Exchange: godot --headless --path minigame/explosive --script kiem_luat.gd
+## Hằng số chép tay từ explosive.gd và các scene.
+## Dùng `ck()` vì `assert` làm Godot đứng chờ debugger.
 
 # explosive.gd
 const GIAY_DAU := 16.0
@@ -40,7 +20,6 @@ const BAN_KINH_SAN := 11.5
 const BAN_KINH_NGUOI := 0.4
 const CAO_NGUOI := 1.8
 const SPEED := 6.0
-
 const KEP := BAN_KINH_SAN - 0.5
 const D := 1.0 / 60.0
 
@@ -55,11 +34,7 @@ static func giay_dem(lan: int) -> float:
 	return lerpf(GIAY_DAU, GIAY_CUOI, clampf(float(lan) / float(SO_LAN_NGAN), 0.0, 1.0))
 
 
-## Duoi bat 1v1 tren san tron. Tra ve giay bat duoc, -1 neu khong bat duoc trong `tran` giay.
-##
-## Ke chay tron chay NGUOC huong nguoi om; sat bo thi chuyen sang tiep tuyen (cach tron toi uu
-## tren mot dia). Nguoi om lao THANG vao - ke duoi don duong se bat nhanh hon, nen con so o day
-## la bien tren.
+## Đuổi bắt 1v1 trên sàn tròn; trả về giây bắt được, -1 nếu không bắt được trong `tran` giây.
 static func duoi(them: float, tran: float, cach_dau: float) -> float:
 	var om := Vector2(-cach_dau * 0.5, 0.0)
 	var tron := Vector2(cach_dau * 0.5, 0.0)
@@ -113,10 +88,10 @@ func _init() -> void:
 	ck(lau_nhat >= 0.0 and lau_nhat < GIAY_CUOI,
 			"xau nhat bat %.2f s > bom ngan nhat %.1f s - 1v1 la nguoi om chet chac"
 			% [lau_nhat, GIAY_CUOI])
-	# Nhung cung khong duoc bat NGAY: khong thi ke chay tron khong co dat dien
+	# Nhưng không được bắt ngay, không thì kẻ chạy trốn hết đất diễn
 	ck(lau_nhat > 1.5, "bat duoc trong %.2f s tu moi cho - ke chay tron khong co co hoi nao" \
 			% lau_nhat)
-	# Nguoi VUA NHAN con bao nhieu giay sau khi het nghi chuyen
+	# Người vừa nhận còn bao nhiêu giây sau khi hết nghỉ chuyền
 	var con_sau_nghi: float = GIAY_CUOI - NGHI_CHUYEN
 	ck(con_sau_nghi > lau_nhat,
 			"vua nhan bom thi con %.2f s nhung bat nguoi khac mat toi %.2f s" \
@@ -145,12 +120,11 @@ func _init() -> void:
 			% [SO_LAN_NGAN, GIAY_CUOI])
 	ck(giay_dem(99) >= GIAY_CUOI, "bom khong duoc ngan hon %.1f s" % GIAY_CUOI)
 
-	# ── 5. DONG HO DU DAI DE CHUYEN DUOC ──
-	# Bom ngan nhat phai chua: nghi chuyen + di bat + bam nut
+	# ── 5. ĐỒNG HỒ ĐỦ DÀI ĐỂ CHUYỀN (nghỉ chuyền + đi bắt + bấm nút) ──
 	ck(GIAY_CUOI > NGHI_CHUYEN + lau_nhat,
 			"bom ngan nhat %.1f s < nghi %.1f + bat %.2f - khong the chuyen kip" \
 					% [GIAY_CUOI, NGHI_CHUYEN, lau_nhat])
-	# Nhung khong duoc dai den muc bo qua duoc bom
+	# Nhưng không được dài tới mức bỏ qua được bom
 	ck(GIAY_DAU < 25.0, "bom dau %.0f s - du lau de lo bom di choi viec khac" % GIAY_DAU)
 
 	# ── 6. CO CHANG GAP, ke ca tren bom NGAN NHAT ──
@@ -161,8 +135,7 @@ func _init() -> void:
 	ck(ti_gap <= 0.75, "chang gap chiem %.0f%% bom ngan nhat - gan nhu ca van dang gap" \
 			% (ti_gap * 100.0))
 
-	# ── 7. NGHI_CHUYEN: chong ping-pong nhung khong giam nguoi vua nhan ──
-	# Hai nguoi dung canh nhau: nghi phai du de nguoi vua nhan chay ra khoi tam chuyen
+	# ── 7. NGHI_CHUYEN: chống chuyền qua lại nhưng người vừa nhận vẫn kịp chạy ra ──
 	var chay_ra: float = (TAM_CHUYEN + BAN_KINH_NGUOI) / SPEED
 	ck(NGHI_CHUYEN >= chay_ra * 0.8,
 			"nghi %.2f s nhung chay ra khoi tam chuyen mat %.2f s - chuyen qua chuyen lai duoc"
@@ -177,7 +150,7 @@ func _init() -> void:
 	ck(tam_than <= 2.6, "chuyen duoc tu %.2f m (tam den tam) - xa vo ly" % tam_than)
 	ck(tam_than >= 1.2, "chi chuyen duoc tu %.2f m - phai cham sat moi an, kho den muc nham" \
 			% tam_than)
-	# Vung phai phu het than nguoi dung canh: cao 2.2 tu chan nguoi om
+	# Vùng phải phủ hết thân người đứng cạnh: cao 2.2 từ chân người ôm
 	ck(2.2 >= CAO_NGUOI, "Vung cao 2.2 m < nguoi cao %.1f m - chuyen hut khi dung sat" % CAO_NGUOI)
 
 	# ── 9. CHONG LACH LUAT: khong ai ra duoc khoi san ──
@@ -185,7 +158,7 @@ func _init() -> void:
 			% [KEP, BAN_KINH_SAN])
 	ck(BAN_KINH_SAN - KEP >= 0.4, "kep sat bo qua (%.2f m) - than nguoi co the lo ra ngoai" \
 			% (BAN_KINH_SAN - KEP))
-	# San du rong de duoi va chay: it nhat vai lan tam chuyen
+	# Sân đủ rộng để đuổi và chạy: ít nhất vài lần tầm chuyền
 	ck(duong_kinh > tam_than * 6.0, "san %.1f m chi gap %.1f lan tam chuyen" \
 			% [duong_kinh, duong_kinh / tam_than])
 

@@ -1,0 +1,69 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://board/dau_hieu_ban.gd" id="1_qa45b"]
+[ext_resource type="PackedScene" path="res://board/rao_tren_o.tscn" id="2_oqf52"]
+[ext_resource type="PackedScene" path="res://board/bay_tren_o.tscn" id="3_wd7j8"]
+[ext_resource type="PackedScene" path="res://board/neo_tren_o.tscn" id="4_4vfob"]
+
+[node name="DauHieuBan" type="Node3D" unique_id=1201822504]
+script = ExtResource("1_qa45b")
+
+[node name="Rao1" parent="." unique_id=1287243756 instance=ExtResource("2_oqf52")]
+
+[node name="Rao2" parent="." unique_id=1100900449 instance=ExtResource("2_oqf52")]
+
+[node name="Rao3" parent="." unique_id=1257585875 instance=ExtResource("2_oqf52")]
+
+[node name="Rao4" parent="." unique_id=1830974096 instance=ExtResource("2_oqf52")]
+
+[node name="Rao5" parent="." unique_id=1301853602 instance=ExtResource("2_oqf52")]
+
+[node name="Rao6" parent="." unique_id=1931449460 instance=ExtResource("2_oqf52")]
+
+[node name="Rao7" parent="." unique_id=2024091498 instance=ExtResource("2_oqf52")]
+
+[node name="Rao8" parent="." unique_id=1476707993 instance=ExtResource("2_oqf52")]
+
+[node name="Rao9" parent="." unique_id=1034089219 instance=ExtResource("2_oqf52")]
+
+[node name="Rao10" parent="." unique_id=990136071 instance=ExtResource("2_oqf52")]
+
+[node name="Bay1" parent="." unique_id=226251098 instance=ExtResource("3_wd7j8")]
+
+[node name="Bay2" parent="." unique_id=250181205 instance=ExtResource("3_wd7j8")]
+
+[node name="Bay3" parent="." unique_id=121303260 instance=ExtResource("3_wd7j8")]
+
+[node name="Bay4" parent="." unique_id=1495132550 instance=ExtResource("3_wd7j8")]
+
+[node name="Bay5" parent="." unique_id=1958765875 instance=ExtResource("3_wd7j8")]
+
+[node name="Bay6" parent="." unique_id=807419011 instance=ExtResource("3_wd7j8")]
+
+[node name="Bay7" parent="." unique_id=363938110 instance=ExtResource("3_wd7j8")]
+
+[node name="Bay8" parent="." unique_id=1422459137 instance=ExtResource("3_wd7j8")]
+
+[node name="Bay9" parent="." unique_id=1435106731 instance=ExtResource("3_wd7j8")]
+
+[node name="Bay10" parent="." unique_id=549529532 instance=ExtResource("3_wd7j8")]
+
+[node name="Neo1" parent="." unique_id=782198854 instance=ExtResource("4_4vfob")]
+
+[node name="Neo2" parent="." unique_id=811990591 instance=ExtResource("4_4vfob")]
+
+[node name="Neo3" parent="." unique_id=691015390 instance=ExtResource("4_4vfob")]
+
+[node name="Neo4" parent="." unique_id=1686328389 instance=ExtResource("4_4vfob")]
+
+[node name="Neo5" parent="." unique_id=1063438928 instance=ExtResource("4_4vfob")]
+
+[node name="Neo6" parent="." unique_id=2051480749 instance=ExtResource("4_4vfob")]
+
+[node name="Neo7" parent="." unique_id=1703385412 instance=ExtResource("4_4vfob")]
+
+[node name="Neo8" parent="." unique_id=1999178049 instance=ExtResource("4_4vfob")]
+
+[node name="Neo9" parent="." unique_id=2079072553 instance=ExtResource("4_4vfob")]
+
+[node name="Neo10" parent="." unique_id=1645723966 instance=ExtResource("4_4vfob")]

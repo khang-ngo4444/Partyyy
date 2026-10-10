@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" path="res://ui/bang_ban.tscn" id="4_bb"]
 [ext_resource type="PackedScene" path="res://ui/bang_thang.tscn" id="5_bt"]
 [ext_resource type="PackedScene" path="res://ui/trang_thai_ca_nhan.tscn" id="6_personal"]
+[ext_resource type="PackedScene" path="res://ui/bang_chon.tscn" id="7_chon"]
 
 [node name="HUD" type="Control"]
 layout_mode = 3
@@ -233,6 +234,9 @@ max_length = 120
 layout_mode = 1
 
 [node name="TrangThaiCaNhan" parent="." instance=ExtResource("6_personal")]
+layout_mode = 1
+
+[node name="BangChon" parent="." instance=ExtResource("7_chon")]
 layout_mode = 1
 
 [node name="BangThang" parent="." instance=ExtResource("5_bt")]

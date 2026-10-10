@@ -11,10 +11,29 @@
 [ext_resource type="Script" path="res://net/music_box.gd" id="9_box"]
 [ext_resource type="PackedScene" path="res://minigame/quan_tro_minigame.tscn" id="10_mg"]
 [ext_resource type="Script" path="res://board/pha_ban_co.gd" id="11_bc"]
+[ext_resource type="Script" path="res://board/dung_do.gd" id="13_dd"]
 [ext_resource type="PackedScene" path="res://ui/menu_background.tscn" id="12_menu_bg"]
+[ext_resource type="PackedScene" path="res://player/player.tscn" id="20_player"]
+[ext_resource type="PackedScene" path="res://lobby/lobby.tscn" id="21_lobby"]
+[ext_resource type="PackedScene" path="res://net/match_state.tscn" id="22_ms"]
+[ext_resource type="PackedScene" path="res://lobby/objects/chess_piece.tscn" id="23_chess"]
+[ext_resource type="PackedScene" path="res://lobby/objects/hammer.tscn" id="24_hammer"]
+[ext_resource type="PackedScene" path="res://lobby/objects/basketball.tscn" id="25_ball"]
+[ext_resource type="PackedScene" path="res://lobby/objects/dart.tscn" id="26_dart"]
+[ext_resource type="PackedScene" path="res://lobby/objects/die.tscn" id="27_die"]
+[ext_resource type="PackedScene" path="res://board/ban_party.tscn" id="28_ban"]
+[ext_resource type="PackedScene" path="res://board/xuc_xac_3d.tscn" id="29_xx"]
+[ext_resource type="PackedScene" path="res://board/hai_xuc_xac.tscn" id="29_hai"]
+[ext_resource type="Resource" path="res://board/danh_muc_vat_pham.tres" id="31_dm"]
+[ext_resource type="PackedScene" path="res://lobby/objects/card.tscn" id="30_card"]
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_main")
+player_scene = ExtResource("20_player")
+lobby_scene = ExtResource("21_lobby")
+match_state_scene = ExtResource("22_ms")
+chess_piece_scene = ExtResource("23_chess")
+vat_mang_scenes = Array[PackedScene]([ExtResource("24_hammer"), ExtResource("25_ball"), ExtResource("26_dart"), ExtResource("27_die")])
 
 [node name="FusionSpawner" type="FusionSpawner" parent="."]
 
@@ -24,12 +43,21 @@ script = ExtResource("1_main")
 
 [node name="CardDealer" type="Node" parent="."]
 script = ExtResource("5_dealer")
+card_scene = ExtResource("30_card")
 
 [node name="MusicBox" type="Node" parent="."]
 script = ExtResource("9_box")
 
 [node name="BanCo" type="Node" parent="."]
 script = ExtResource("11_bc")
+ban_scene = ExtResource("28_ban")
+xuc_xac_scene = ExtResource("29_xx")
+hai_xuc_xac_scene = ExtResource("29_hai")
+
+[node name="DungDo" type="Node" parent="BanCo" node_paths=PackedStringArray("quan_tro")]
+script = ExtResource("13_dd")
+quan_tro = NodePath("../../QuanTro")
+danh_muc = ExtResource("31_dm")
 
 [node name="QuanTro" parent="." instance=ExtResource("10_mg")]
 

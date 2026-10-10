@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://materials/mat_o_nguy_hiem.tres" id="1_m"]
+
+[sub_resource type="SphereMesh" id="Cau"]
+radius = 0.6
+height = 1.2
+radial_segments = 8
+rings = 4
+
+[node name="ThienThach" type="Node3D"]
+
+[node name="Hinh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 2.2, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("Cau")
+material_override = ExtResource("1_m")

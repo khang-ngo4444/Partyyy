@@ -1,12 +1,18 @@
 extends Control
 
-## Chỉ hiển thị. Nghe signal, không đọc thẳng vào Player hay MatchState.
+## HUD: chỉ hiển thị, nghe signal từ các hệ khác.
 
-## Chat vừa nhận một dòng lệnh. HUD chuyển tiếp cho `main.gd` — nó không tự thi hành gì.
+## Chuyển tiếp lệnh chat cho `main.gd`.
 signal lenh(id_nguoi_gui: int, doi_so: PackedStringArray)
 signal thue_da_chon(loai: int)
 
+## Dòng được chọn trong bảng chọn mục tiêu; -1 = huỷ.
+signal muc_tieu_da_chon(i: int)
+
 const STATUS_REFRESH := 0.2
+
+## Nhãn hành động poker (chỉ vẽ lựa chọn hợp lệ).
+const TEN_HD := {0: "[1] CHECK", 1: "[2] THEO", 2: "[3] TỐ", 3: "[4] BỎ", 4: "[5] ALL-IN"}
 
 var _peer_count := 0
 var _status_acc := STATUS_REFRESH
@@ -29,12 +35,14 @@ var _local_player: Player = null
 @onready var trang_thai_ca_nhan: PanelContainer = $TrangThaiCaNhan
 @onready var chat := $Chat
 @onready var bang_thang: Control = $BangThang
+@onready var bang_chon: BangChon = $BangChon
 @onready var performance_manager: Node = get_node("/root/PerformanceManager")
 
 
 func _ready() -> void:
 	chat.lenh.connect(func(id: int, ds: PackedStringArray): lenh.emit(id, ds))
 	bang_ban.thue_da_chon.connect(func(loai: int): thue_da_chon.emit(loai))
+	bang_chon.da_chon.connect(func(i: int): muc_tieu_da_chon.emit(i))
 	NetManager.room_joined.connect(_on_room_joined)
 	NetManager.peer_joined.connect(func(_id, _uid): _refresh_peers())
 	NetManager.peer_left.connect(func(_id, _inactive): _refresh_peers())
@@ -44,7 +52,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if not visible:
 		return
-	# Con trỏ chỉ có nghĩa khi chuột đang bị khoá vào game. Mở màn hình Esc thì tắt đi.
+	# Tâm ngắm chỉ hiện khi chuột đang khoá vào game.
 	crosshair.visible = Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
 	_ve_luc_nem()
 	_status_acc += delta
@@ -54,14 +62,12 @@ func _process(delta: float) -> void:
 	_refresh_status()
 
 
-## Chu va du lieu mang khong can cap nhat 60 lan/giay. Tach khoi phan tam ngam/thanh nem can
-## muot de tranh quet scene tree va kich hoat layout cua Control moi frame.
+## Chữ trạng thái cập nhật thưa (không cần mỗi khung).
 func _refresh_status() -> void:
 	ping_label.text = "ping %d ms  ·  %d FPS  ·  3D %d%%" % [NetManager.rtt_ms(),
 			Engine.get_frames_per_second(),
 			roundi(float(performance_manager.get("current_scale")) * 100.0)]
-	# Nhan vat toi SAU tin peer_joined mot nhip, nen phai dem lai deu chu khong chi dem
-	# luc co signal.
+	# Nhân vật tới sau tin peer_joined một nhịp — đếm lại đều.
 	_refresh_peers()
 	_nhac_bai()
 	_nhac_poker()
@@ -79,7 +85,7 @@ func _refresh_status() -> void:
 			ready_label.text = "%d/%d sẵn sàng — đứng lên ô giữa sàn" % [ms.ready_count(), ms.player_count()]
 
 
-## Thanh lực ném ngay dưới tâm ngắm: xanh → vàng → đỏ theo mức nạp. Chỉ hiện khi đang giữ E.
+## Thanh lực ném dưới tâm ngắm (chỉ hiện khi giữ E).
 func _ve_luc_nem() -> void:
 	var muc := -1.0
 	if _local_player != null and is_instance_valid(_local_player):
@@ -92,11 +98,7 @@ func _ve_luc_nem() -> void:
 			else Color("f5d90a").lerp(Color("e5484d"), (muc - 0.5) * 2.0))
 
 
-## Hiện TÊN PHÒNG chứ không chỉ số thứ tự người chơi.
-##
-## Không hiện thì hai người ngồi hai phòng khác nhau mà không ai biết: chủ phòng ngồi một
-## mình còn người kia thấy nhân vật của một phiên cũ. Triệu chứng nhìn y hệt lỗi đồng bộ,
-## nhưng chữa thì hoàn toàn khác — nên tên phòng phải nằm ngay trên màn hình.
+## Hiện tên phòng để biết hai người có cùng phòng không.
 func _on_room_joined() -> void:
 	room_label.text = "PHÒNG %s  ·  bạn là #%d%s" % [
 		NetManager.room_name, NetManager.local_id(),
@@ -104,13 +106,7 @@ func _on_room_joined() -> void:
 	_refresh_peers()
 
 
-## Đếm CẢ HAI con số và hiện cả hai khi chúng lệch nhau.
-##
-##   peer  = Photon báo có bao nhiêu máy trong phòng
-##   nhân vật = bao nhiêu object Player thật sự có mặt trên máy này
-##
-## Bình thường hai số bằng nhau. Lệch nhau nghĩa là có người trong phòng mà nhân vật của họ
-## chưa tới máy này — đó mới đúng là lỗi đồng bộ, và khác hẳn chuyện ngồi nhầm phòng.
+## Hiện số peer và số nhân vật; lệch nhau là lỗi đồng bộ.
 func _refresh_peers() -> void:
 	_peer_count = NetManager.peers_in_room().size()
 	var players := get_tree().get_nodes_in_group("players")
@@ -127,15 +123,12 @@ func _refresh_peers() -> void:
 				_peer_count, nhan_vat]
 
 
-## Nhac phim cho nguoi dang ngoi ban bai. Day la NOTE TREN MAN HINH chu khong phai nut noi
-## giua phong — sau ghe moi ban, moi ghe mot cap nut thi man hinh kin chu.
-##
-## Hoi thang cai ghe (`toi_dang_ngoi`) — ghe tu doc trang thai ban master phat ve.
+## Nhắc phím cho người đang ngồi bàn bài.
 func _nhac_bai() -> void:
-	# Ghe sofa khong dinh gi toi bai bac (`deck = -1`), nhung van phai nhac cach dung day.
-	for s in get_tree().get_nodes_in_group("card_seat"):
-		if s is GheNgoi and (s as GheNgoi).toi_dang_ngoi:
-			card_prompt.text = "Đang ngồi — [Q] đứng dậy  ·  [ESC] menu"
+	# Ghế ngoài bàn bài (`deck = -1`: sofa, ghế lái tàu) tự nói cách dùng.
+	for s: CardSeat in get_tree().get_nodes_in_group("card_seat"):
+		if s.toi_dang_ngoi and s.deck < 0:
+			card_prompt.text = s.loi_nhac()
 			return
 
 	var dealer := get_tree().get_first_node_in_group("card_dealer") as CardDealer
@@ -154,14 +147,8 @@ func _nhac_bai() -> void:
 	if int(dealer.pha_ban.get(deck, 0)) != CardDealer.PHA_CHOI:
 		card_prompt.text = "Đang ngồi tại bàn %s — [Q] đứng dậy  ·  [ESC] menu" % ten_ban
 		return
-	# Đang có ván: nói luôn là chưa đứng dậy được, thay vì để người chơi bấm Q rồi thấy im lặng.
 	card_prompt.text = ("Đang trong ván %s — chờ hết ván mới đứng dậy được" % ten_ban if poker
 			else "[1] RÚT THÊM      [2] DỪNG      ·  chờ hết ván mới đứng dậy được")
-
-
-## Thanh hành động của poker. Chỉ vẽ những lựa chọn HỢP LỆ — ẩn Check khi đã có người cược,
-## ẩn Call khi chưa ai cược. Người chơi không bấm nhầm rồi bị chặn im lặng.
-const TEN_HD := {0: "[1] CHECK", 1: "[2] THEO", 2: "[3] TỐ", 3: "[4] BỎ", 4: "[5] ALL-IN"}
 
 
 func _nhac_poker() -> void:
@@ -188,10 +175,9 @@ func _nhac_poker() -> void:
 	var dong: PackedStringArray = []
 	for h in hop_le:
 		dong.append(TEN_HD.get(h, "?"))
-	# Đồng hồ lượt nằm TRÊN BÀN (CardTable), không ở HUD: người đứng xem cũng phải thấy.
 	actions_label.text = "   ".join(dong)
 
-	# Thanh kéo chỉ hiện khi TỐ hợp lệ. Kéo để chọn số chip, rồi bấm 3.
+	# Thanh kéo chỉ hiện khi được tố.
 	raise_row.visible = hop_le.has(d.HD_RAISE)
 	if raise_row.visible:
 		var seat: int = d.ghe_cua_toi(deck)
@@ -204,18 +190,27 @@ func _nhac_poker() -> void:
 		raise_label.text = "Tố %d chip" % int(raise_slider.value)
 
 
-## Bàn party vừa phát trạng thái mới. `main.gd` nối tín hiệu `PhaBanCo.trang_thai_doi`
-## vào đây, HUD chuyển tiếp cho bảng của nó — main.gd không với sâu vào cây con của HUD.
+## Bàn party vừa phát trạng thái mới.
 func cap_nhat_ban(tt: Dictionary) -> void:
 	bang_ban.cap_nhat(tt)
 	trang_thai_ca_nhan.cap_nhat(tt)
 
 
-func cap_nhat_chon_huong(noi_dung: String) -> void:
-	bang_ban.cap_nhat_chon_huong(noi_dung)
+## Bảng máu/trang bị chỉ hiện ở bàn party; lúc đó ẩn dòng thông tin phòng chờ.
+func cap_nhat_giao_dien_ban(hien: bool, chon: int, duoc_dung: bool) -> void:
+	(trang_thai_ca_nhan as TrangThaiCaNhan).dat_giao_dien(hien, chon, duoc_dung)
+	$VBox.visible = not hien
 
 
-## Hết ván — hiện bảng thắng. `main.gd` gọi, rồi tự gọi `an_thang()` khi đóng bàn.
+func cap_nhat_chon_huong(noi_dung: String, tieu_de := "ĐÃ TUNG XÚC XẮC — CHỌN HƯỚNG") -> void:
+	bang_ban.cap_nhat_chon_huong(noi_dung, tieu_de)
+
+
+## `nhan` rỗng = đóng bảng.
+func mo_bang_chon(tieu_de: String, nhan: PackedStringArray) -> void:
+	bang_chon.mo(tieu_de, nhan)
+
+
 func bao_thang(chu: String) -> void:
 	bang_thang.hien(chu)
 
@@ -224,7 +219,7 @@ func an_thang() -> void:
 	bang_thang.an()
 
 
-## Phím poker đọc ở HUD chứ không ở CardDealer: chỉ chỗ này mới biết thanh kéo đang ở mức nào.
+## Phím poker đọc ở đây vì chỉ HUD biết giá trị thanh kéo.
 func _unhandled_input(event: InputEvent) -> void:
 	if not poker_bar.visible:
 		return

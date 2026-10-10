@@ -1,0 +1,97 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://minigame/chung/san_dau.tscn" id="1_sd"]
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 1
+background_color = Color(0.55, 0.78, 0.95, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.75, 0.8, 0.85, 1)
+ambient_light_energy = 0.8
+
+[sub_resource type="StandardMaterial3D" id="Co"]
+albedo_color = Color(0.42, 0.68, 0.3, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="Dat"]
+albedo_color = Color(0.72, 0.6, 0.4, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="Go"]
+albedo_color = Color(0.6, 0.42, 0.25, 1)
+
+[sub_resource type="BoxMesh" id="CoMesh"]
+material = SubResource("Co")
+size = Vector3(48, 0.2, 60)
+
+[sub_resource type="BoxShape3D" id="CoShape"]
+size = Vector3(48, 0.2, 60)
+
+[sub_resource type="BoxMesh" id="DatMesh"]
+material = SubResource("Dat")
+size = Vector3(36, 0.02, 12)
+
+[sub_resource type="BoxMesh" id="RaoMesh"]
+material = SubResource("Go")
+size = Vector3(36, 0.12, 0.12)
+
+[sub_resource type="BoxMesh" id="CotMesh"]
+material = SubResource("Go")
+size = Vector3(0.18, 1.0, 0.18)
+
+[node name="SanDemThu" type="Node3D"]
+
+[node name="SanDau" parent="." instance=ExtResource("1_sd")]
+
+[node name="Cam" parent="SanDau" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.848, 0.53, 0, -0.53, 0.848, 0, 9.5, 18)
+environment = SubResource("Env")
+fov = 60.0
+
+[node name="Den" parent="SanDau" index="1"]
+shadow_enabled = true
+
+[node name="Nen" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 8)
+
+[node name="Co" type="MeshInstance3D" parent="Nen"]
+mesh = SubResource("CoMesh")
+
+[node name="Hinh" type="CollisionShape3D" parent="Nen"]
+shape = SubResource("CoShape")
+
+[node name="DuongDat" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+mesh = SubResource("DatMesh")
+
+[node name="RaoTren" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, -6.5)
+mesh = SubResource("RaoMesh")
+
+[node name="RaoDuoi" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 6.5)
+mesh = SubResource("RaoMesh")
+
+[node name="CotTren1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.5, -6.5)
+mesh = SubResource("CotMesh")
+
+[node name="CotTren2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -6.5)
+mesh = SubResource("CotMesh")
+
+[node name="CotTren3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.5, -6.5)
+mesh = SubResource("CotMesh")
+
+[node name="CotDuoi1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.5, 6.5)
+mesh = SubResource("CotMesh")
+
+[node name="CotDuoi2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 6.5)
+mesh = SubResource("CotMesh")
+
+[node name="CotDuoi3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.5, 6.5)
+mesh = SubResource("CotMesh")

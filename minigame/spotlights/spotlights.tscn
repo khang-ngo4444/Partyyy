@@ -3,9 +3,13 @@
 [ext_resource type="Script" path="res://minigame/spotlights/spotlights.gd" id="1_sp"]
 [ext_resource type="PackedScene" path="res://minigame/spotlights/san_spot.tscn" id="2_san"]
 [ext_resource type="PackedScene" path="res://minigame/chung/thanh_mau.tscn" id="3_tm"]
+[ext_resource type="Environment" path="res://materials/env_san_toi.tres" id="x0_env_toi"]
+[ext_resource type="Environment" path="res://materials/env_san_sang.tres" id="x1_env_sang"]
 
 [node name="Spotlights" type="Node"]
 script = ExtResource("1_sp")
+env_toi = ExtResource("x0_env_toi")
+env_sang = ExtResource("x1_env_sang")
 san_scene = ExtResource("2_san")
 
 [node name="ThanhMau" parent="." instance=ExtResource("3_tm")]

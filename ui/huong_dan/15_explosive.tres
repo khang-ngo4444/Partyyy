@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "15 · Explosive Exchange"
+noi_dung = "[color=#8fe7d4][b]PHÍM[/b][/color]
+[b]W A S D[/b] chạy · [b]E[/b] chuyền bom.
+
+[color=#8fe7d4][b]LUẬT[/b][/color]
+Người đang ôm bom phải chạy tới gần một người trong vòng đỏ rồi bấm E để chuyền. Có hồi chiêu ngắn nên bom không thể nảy qua lại ngay lập tức.
+
+Ai giữ bom lúc đồng hồ nổ sẽ bị loại; thời gian bom ngắn dần sau mỗi vụ nổ. [b]Xếp hạng:[/b] thứ tự sống sót, người cuối cùng thắng."

@@ -1,17 +1,12 @@
 extends Control
 
-## Màn hình Esc. NƠI DUY NHẤT được đổi `Input.mouse_mode`.
-##
-## Trước đây CameraRig tự bắt Esc để nhả/khoá chuột. Giờ có menu thì hai bên tranh nhau: mở
-## menu ra là camera lập tức khoá chuột lại, bấm nút không được. Nên quyền đó chuyển hết về
-## đây, CameraRig chỉ còn việc xoay khi chuột đang bị khoá.
+## Màn Esc — nơi duy nhất đổi `Input.mouse_mode`.
 
 @onready var leave_button: Button = %LeaveButton
 
 
 func _ready() -> void:
-	# `visible = false` nam trong .tscn chu KHONG nam o day. Neu script lai roi ra khoi root
-	# (da dinh ba lan, xem muc 1q) thi menu van sinh ra o trang thai an, khong che man hinh.
+	# `visible = false` đặt trong .tscn.
 	%ResumeButton.pressed.connect(_dong)
 	leave_button.pressed.connect(func(): %LeaveConfirm.popup_centered())
 	%LeaveConfirm.confirmed.connect(func():
@@ -24,18 +19,21 @@ func _ready() -> void:
 	leave_button.disabled = true
 
 
-## _input chứ không phải _unhandled_input: menu phải mở được kể cả khi có Control nào đó
-## đang giữ phím.
 func _input(event: InputEvent) -> void:
 	if not event.is_action_pressed("ui_cancel"):
 		return
-	# Đang gõ chat thì Esc là HUỶ TIN — để Chat xử lý. PauseMenu đứng sau HUD trong cây nên
-	# nhận Esc trước; không nhường thì Esc mở menu, còn ô chat vẫn nằm đó giữ phím.
+	# Đang gõ chat thì Esc là huỷ tin (để Chat xử lý).
 	if not visible and get_viewport().gui_get_focus_owner() is LineEdit:
 		return
-	# Chưa vào phòng thì Esc không có việc gì làm — đang ở màn hình chính rồi.
+	# Chưa vào phòng thì Esc không làm gì.
 	if leave_button.disabled and not visible:
 		return
+	# Đang chọn mục tiêu vật phẩm trong thế giới: Esc huỷ lựa chọn, chưa mở menu.
+	if not visible:
+		for n in get_tree().get_nodes_in_group("esc_huy"):
+			if n.huy_bang_esc():
+				get_viewport().set_input_as_handled()
+				return
 	get_viewport().set_input_as_handled()
 	if visible:
 		_dong()
@@ -50,6 +48,6 @@ func _mo() -> void:
 
 func _dong() -> void:
 	visible = false
-	# Chua vao phong thi tra chuot lai cho menu chinh, dung khoa vao game.
+	# Chưa vào phòng thì trả chuột cho menu chính.
 	Input.mouse_mode = (Input.MOUSE_MODE_VISIBLE if leave_button.disabled
 			else Input.MOUSE_MODE_CAPTURED)

@@ -1,27 +1,10 @@
 extends SceneTree
 
-## KIỂM LUẬT Laser Leap — chạy ngoài game, không nạp project:
-##
-##     godot --headless --path minigame/laser_leap --script kiem_luat.gd
-##
-## Hằng số CHÉP TAY từ `laser_leap.gd`, `san_laser.tscn`, `san_tron.tscn`, `player.gd`. Chép chứ
-## không `preload` vì `laser_leap.gd` kéo theo `MiniGame3D` → `Fusion` → cả project.
-##
-## Bộ này tồn tại vì hai lỗi của bản trước KHÔNG thể thấy bằng mắt trong một ván chơi thử — phải
-## quét mới ra:
-##
-##   1. **Nhịp cố định.** Ba tia quay cùng tốc, pha cách đều, quanh đúng tâm → ở mọi chỗ, khoảng
-##      giữa hai lần tia đi qua gần như một hằng số. Nhảy theo nhịp là sống hết ván.
-##
-##      Kiểm #4 đo bằng **độ lệch của hai khoảng LIỀN NHAU**, không phải độ lệch chuẩn trên cả
-##      ván. Lần đầu tôi đo bằng độ lệch chuẩn và nó VÔ DỤNG: sơ đồ cũ ra 34% nên lọt qua ngưỡng
-##      35% — nhưng 34% đó là do tốc nền tăng dần suốt 60 giây, còn nhịp cục bộ vẫn đều tăm tắp
-##      (1,10 → 1,09 → 1,08 giây). Đo kề nhau thì sơ đồ cũ ra **1,6%**, lộ ngay là nhịp khoá.
-##   2. **Chỗ an toàn vĩnh viễn.** Tia lệch tâm mà thanh quá ngắn thì sinh một vành sàn tia không
-##      bao giờ với tới. Kiểm #3 quét 2000 điểm trên sàn và đòi mọi điểm đều bị quét.
-##
-## Dùng `ck()` chứ không `assert()`: `assert` fail trong `--headless --script` làm Godot ĐỨNG chờ
-## debugger, 0% CPU, không in một chữ nào.
+## Kiểm luật Laser Leap: godot --headless --path minigame/laser_leap --script kiem_luat.gd
+## Chặn nhịp cố định (#4) và chỗ đứng an toàn vĩnh viễn (#3).
+## Hằng số chép tay; dùng `ck()` thay `assert`.
+
+enum { MOT, DOI, CHEO, LIEN, NHIEU }
 
 # laser_leap.gd
 const CAO_THOAT := 0.9
@@ -37,7 +20,6 @@ const GIAY_CO_HET := 45.0
 const LECH_TOI_DA := 3.0
 const NHAN_TOC := Vector2(0.75, 1.35)
 const GIAY_VAN := 90.0
-enum { MOT, DOI, CHEO, LIEN, NHIEU }
 
 # san_laser.tscn / san_tron.tscn
 const DAI_THANH := 30.0
@@ -52,19 +34,24 @@ const SPEED := 6.0
 
 var _loi := 0
 
+
 func ck(dung: bool, msg: String) -> void:
 	if not dung:
 		_loi += 1
 		print("FAIL  ", msg)
 
+
 static func toc_do(t: float) -> float:
 	return lerpf(TOC_DAU, TOC_CUOI, clampf(t / GIAY_TANG_HET, 0.0, 1.0))
+
 
 static func dai_dot(t: float) -> float:
 	return lerpf(DOT_DAU, DOT_CUOI, clampf(t / GIAY_CO_HET, 0.0, 1.0))
 
+
 static func nghi(t: float) -> float:
 	return lerpf(NGHI_DAU, NGHI_CUOI, clampf(t / GIAY_CO_HET, 0.0, 1.0))
+
 
 static func goc_quay(pha: float, t: float, td: float, tc: float, th: float) -> float:
 	var k := minf(t, th)
@@ -73,17 +60,20 @@ static func goc_quay(pha: float, t: float, td: float, tc: float, th: float) -> f
 		quet += tc * (t - th)
 	return pha + quet
 
+
 static func kieu_cho_phep(t: float) -> Array:
 	if t < 10.0: return [MOT]
 	if t < 22.0: return [MOT, DOI]
 	if t < 34.0: return [DOI, CHEO, LIEN]
 	return [DOI, CHEO, LIEN, NHIEU]
 
+
 static func so_tia_cho(kieu: int, toi_da: int) -> int:
 	match kieu:
 		MOT: return 1
 		DOI, CHEO, LIEN: return mini(2, toi_da)
 		_: return mini(4, toi_da)
+
 
 static func lich_dot(giong: int, so_tia_co: int) -> Array:
 	var rng := RandomNumberGenerator.new()
@@ -126,8 +116,7 @@ static func lich_dot(giong: int, so_tia_co: int) -> Array:
 	return ds
 
 
-## Khoang cach tu diem `p` toi truc cua mot tia dang o goc `g`, tam quay `tam`.
-## Tia la mot thanh dai `DAI_THANH` di qua `tam`, nen diem bi quet khi vua gan truc vua trong tam.
+## Điểm `p` có nằm trong thanh tia ở góc `g`, tâm `tam` không.
 static func trong_tia(p: Vector2, tam: Vector2, g: float) -> bool:
 	var v := p - tam
 	var huong := Vector2(cos(g), sin(g))
@@ -143,8 +132,7 @@ func _init() -> void:
 			"nua thanh %.1f m < %.1f m can (san %.1f + lech %.1f) - co vanh khong bi quet"
 			% [DAI_THANH * 0.5, can, BAN_KINH_SAN, LECH_TOI_DA])
 
-	# ── 2. NHAY PHAI THOAT DUOC TIA ──
-	# Thoi gian o tren CAO_THOAT trong mot cu nhay, va be rong tia tinh theo thoi gian tia di qua.
+	# ── 2. NHẢY PHẢI THOÁT ĐƯỢC TIA ──
 	var v0: float = sqrt(2.0 * GRAVITY * JUMP_HEIGHT)
 	ck(JUMP_HEIGHT > CAO_THOAT, "nhay cao %.2f m khong qua duoc nguong thoat %.2f m" \
 			% [JUMP_HEIGHT, CAO_THOAT])
@@ -154,15 +142,14 @@ func _init() -> void:
 	if disc > 0.0:
 		t_tren = 2.0 * sqrt(disc) / GRAVITY
 	ck(t_tren > 0.12, "chi o tren nguong %.3f s - cua so nhay qua hep" % t_tren)
-	# Tia nhanh nhat di qua mot diem o ria san mat bao lau
+	# Tia nhanh nhất đi qua một điểm ở rìa sân mất bao lâu
 	var toc_ria: float = TOC_CUOI * NHAN_TOC.y * (BAN_KINH_SAN - LECH_TOI_DA)
 	var t_qua: float = DAY_THANH / toc_ria
 	ck(t_tren > t_qua,
 			"tia nhanh nhat qua trong %.3f s nhung nhay chi o tren %.3f s - khong the nhay qua"
 			% [t_qua, t_tren])
 
-	# ── 3. KHONG CO CHO DUNG AN TOAN VINH VIEN ──
-	# Quet 2000 diem tren san; moi diem phai bi it nhat mot tia quet trong 60 giay dau.
+	# ── 3. KHÔNG CÓ CHỖ ĐỨNG AN TOÀN VĨNH VIỄN (quét 2000 điểm trong 60 giây đầu) ──
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 7
 	var lich := lich_dot(99, SO_TIA)
@@ -190,9 +177,7 @@ func _init() -> void:
 			"%d/%d diem tren san KHONG bao gio bi tia quet - co cho dung an toan vinh vien"
 			% [diem.size() - bi_quet.size(), diem.size()])
 
-	# ── 4. KHONG CO NHIP CO DINH ──
-	# Do do lech cua hai khoang LIEN NHAU, lay trung vi. Nhip khoa -> gan 0.
-	# Da do so do cu bang dung phep nay: 1.6%. Nguong 15% la cach do mot khoang rong.
+	# ── 4. KHÔNG CÓ NHỊP CỐ ĐỊNH (độ lệch hai khoảng liền nhau, lấy trung vị) ──
 	var lech_min := INF
 	var cho_te := ""
 	for cho in [Vector2(0, 0), Vector2(5, 0), Vector2(0, -8), Vector2(7, 7), Vector2(-10, 2)]:
@@ -277,7 +262,7 @@ func _init() -> void:
 	ck(cuoi >= GIAY_VAN, "lich chi toi %.1f s nhung van dai toi %.1f s - cuoi van khong con tia" \
 			% [cuoi, GIAY_VAN])
 
-	# dem kieu dot de in ra cho de doc
+	# đếm kiểu đợt để in ra cho dễ đọc
 	var dem := {}
 	for d in lich:
 		var k: int = int(d["kieu"])

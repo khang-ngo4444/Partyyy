@@ -2,7 +2,13 @@
 
 [ext_resource type="Script" uid="uid://djcche2g26fq2" path="res://board/ban_duong.gd" id="1_bd"]
 [ext_resource type="PackedScene" path="res://board/o_ban.tscn" id="2_o"]
-[ext_resource type="Script" uid="uid://bssv1duuj6eu0" path="res://board/ban_party_map.gd" id="3_map"]
+[ext_resource type="PackedScene" path="res://board/ban_party_map.tscn" id="3_map"]
+[ext_resource type="PackedScene" path="res://board/ruong_bau.tscn" id="4_ruong"]
+[ext_resource type="PackedScene" path="res://board/cho_ngao.tscn" id="5_cho"]
+[ext_resource type="PackedScene" path="res://board/mui_ten.tscn" id="6_mt"]
+[ext_resource type="Script" path="res://board/camera_ban.gd" id="7_cam"]
+[ext_resource type="PackedScene" path="res://board/dau_hieu_ban.tscn" id="8_dh"]
+[ext_resource type="PackedScene" path="res://board/vong_muc_tieu.tscn" id="9_vmt"]
 
 [node name="BanParty" type="Node3D"]
 script = ExtResource("1_bd")
@@ -320,5 +326,22 @@ rotation = Vector3(0, 1.398606, 0)
 so = 55
 loai = 6
 
-[node name="MapModel" type="Node3D" parent="."]
-script = ExtResource("3_map")
+[node name="MapModel" parent="." instance=ExtResource("3_map")]
+
+[node name="RuongBau" parent="." instance=ExtResource("4_ruong")]
+
+[node name="ChoNgao" parent="." instance=ExtResource("5_cho")]
+
+[node name="MuiTen1" parent="." instance=ExtResource("6_mt")]
+
+[node name="MuiTen2" parent="." instance=ExtResource("6_mt")]
+
+[node name="MuiTen3" parent="." instance=ExtResource("6_mt")]
+
+[node name="DauHieuBan" parent="." instance=ExtResource("8_dh")]
+
+[node name="VongMucTieu" parent="." instance=ExtResource("9_vmt")]
+
+[node name="CameraBan" type="Camera3D" parent="."]
+fov = 60.0
+script = ExtResource("7_cam")

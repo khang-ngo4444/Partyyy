@@ -1,0 +1,93 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ui/dong_mau.gd" id="1_dm"]
+[ext_resource type="Texture2D" path="res://ui/icons/heart.svg" id="2_heart"]
+[ext_resource type="Texture2D" path="res://ui/icons/coin.svg" id="3_coin"]
+[ext_resource type="Texture2D" path="res://ui/icons/cup.svg" id="4_cup"]
+
+[sub_resource type="StyleBoxFlat" id="HealthBg"]
+bg_color = Color(0.12, 0.13, 0.18, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="HealthFill"]
+bg_color = Color(0.91, 0.22, 0.3, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="DongMau" type="HBoxContainer"]
+mouse_filter = 2
+theme_override_constants/separation = 8
+script = ExtResource("1_dm")
+
+[node name="MauNhanVat" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(5, 20)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Ten" type="Label" parent="."]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "ten"
+clip_text = true
+
+[node name="Tim" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("2_heart")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Thanh" type="ProgressBar" parent="."]
+custom_minimum_size = Vector2(110, 14)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_styles/background = SubResource("HealthBg")
+theme_override_styles/fill = SubResource("HealthFill")
+max_value = 10.0
+value = 10.0
+show_percentage = false
+
+[node name="So" type="Label" parent="."]
+custom_minimum_size = Vector2(42, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "10/10"
+
+[node name="Xu" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("3_coin")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Vang" type="Label" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.86, 0.35, 1)
+theme_override_font_sizes/font_size = 14
+text = "0"
+
+[node name="Coc" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("4_cup")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SoCoc" type="Label" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.86, 0.35, 1)
+theme_override_font_sizes/font_size = 14
+text = "0"

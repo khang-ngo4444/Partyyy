@@ -1,10 +1,48 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/card_seat.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://upcxsn31wdgn" path="res://asset/Chair by Quaternius - iMNqRzPwwe.glb" id="2_model"]
+
+[sub_resource type="CylinderMesh" id="glow_mesh"]
+top_radius = 0.34
+bottom_radius = 0.34
+height = 0.02
+
+[sub_resource type="StandardMaterial3D" id="glow_mat"]
+resource_local_to_scene = true
+albedo_color = Color(0.41960785, 0.2901961, 0.18431373, 1)
+emission_enabled = true
+emission = Color(0.41960785, 0.2901961, 0.18431373, 1)
+emission_energy_multiplier = 0.2
+
+[sub_resource type="BoxShape3D" id="vung_hinh"]
+size = Vector3(0.45, 0.92, 0.48)
 
 [node name="CardSeat" type="Node3D"]
 script = ExtResource("1_script")
 
 [node name="Model" parent="." instance=ExtResource("2_model")]
 transform = Transform3D(0.509115, 0, 0, 0, 0.509115, 0, 0, 0, 0.509115, 0, 0.0016889608, 0.016218396)
+
+[node name="Glow" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+material_override = SubResource("glow_mat")
+mesh = SubResource("glow_mesh")
+
+[node name="VungNgam" type="Area3D" parent="."]
+collision_layer = 16
+collision_mask = 0
+monitoring = false
+
+[node name="Hinh" type="CollisionShape3D" parent="VungNgam"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46, 0)
+shape = SubResource("vung_hinh")
+
+[node name="Tag" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+pixel_size = 0.002
+billboard = 1
+modulate = Color(0.8509804, 0.7882353, 0.5411765, 1)
+text = "NGOI"
+font_size = 28
+outline_size = 8

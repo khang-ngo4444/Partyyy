@@ -1,46 +1,30 @@
 class_name CommunityBoard
 extends Node3D
 
-## Bảng đọc bài chung: MỘT tấm gỗ mỏng dựng đứng ở MÉP BÀN phía nhà cái, quay mặt về dãy ghế.
-##
-## Thay cho cái trụ đen bốn mặt giữa bàn trước đây — nó to, tối, che mất người ngồi đối diện.
-## Bài thật vẫn nằm phẳng trên mặt nỉ (lệch về phía nhà cái); tấm này chỉ dựng chúng đứng lên
-## cho dễ đọc.
-##
-## HOÀN TOÀN CỤC BỘ, KHÔNG DÙNG MẠNG.
-##
-## Nó chỉ ĐỌC LẠI những lá bài chung đã nằm sẵn trên bàn — mà chúng vốn là object mạng đã
-## replicate cả vị trí lẫn `card_index` lẫn `face_down`. Máy nào cũng tự dựng ra đúng cùng
-## một bảng. Thêm một object mạng nữa chỉ để hiển thị là tốn băng thông vô ích, và tạo thêm
-## một nguồn sự thật thứ hai có thể lệch với bàn.
+## Bảng dựng đứng ở mép bàn phía nhà cái, hiện lại 5 lá bài chung cho dễ đọc.
+## Hoàn toàn cục bộ: đọc lại các lá đã replicate, không dùng mạng.
 
-## Ảnh bài: card_deck.tres, gán trong Inspector của community_board.tscn.
+## Đọc lại 4 lần/giây.
+const REFRESH := 0.25
+
+## Ảnh bài, gán trong community_board.tscn.
 @export var bo_bai: CardDeck
-
 @export var card_w := 0.08
-@export var card_h := 0.12
-## Khoảng TRỐNG giữa hai lá (không phải khoảng cách tâm).
+
+## Khe trống giữa hai lá.
 @export var card_space := 0.02
-## Spec ghi rộng 0.4 m, nhưng 5 lá × 0.08 + 4 khe × 0.02 đã là 0.48 m — 0.4 m không chứa nổi.
-@export var board_w := 0.52
+
 @export var board_h := 0.25
 @export var board_thick := 0.02
 
-## Đọc lại 4 lần/giây. Đây là bảng cho người đọc, không phải vật lý.
-const REFRESH := 0.25
-
-var spot: CardSpot = null
-
+## Ô bài chung để đọc (bàn poker đặt trong scene).
+@export var spot: CardSpot = null
 var _acc := 0.0
 var _dau_van := ""
-var _than: Node3D = null
 
 
 func _ready() -> void:
 	add_to_group("community_board")
-	_than = Node3D.new()
-	add_child(_than)
-	_dung_bang()
 
 
 func _process(delta: float) -> void:
@@ -54,10 +38,7 @@ func _process(delta: float) -> void:
 		_ve_lai()
 
 
-## Năm lá bài chung theo ĐÚNG THỨ TỰ CHIA (trái sang phải trên mặt bàn), kèm ngửa hay úp.
-##
-## Không dùng `CardSpot.cards()` vì hàm đó bỏ qua lá úp — ở đây cần cả năm chỗ, lá chưa lật
-## thì vẽ mặt lưng.
+## Năm lá chung theo thứ tự chia, kèm ngửa/úp (lá chưa lật vẽ mặt lưng).
 func _bai_chung() -> Array:
 	if spot == null:
 		return []
@@ -80,67 +61,23 @@ func _dau_van_hien_tai() -> String:
 	return s
 
 
-func _dung_bang() -> void:
-	# Gỗ mờ, không đen tuyền: bàn nỉ xanh đậm, bảng tối màu nữa thì bài dán lên nhìn như lơ lửng.
-	var go := _mat_tron(Color("8a5a36"))
-	var bang := MeshInstance3D.new()
-	var bm := BoxMesh.new()
-	bm.size = Vector3(board_w, board_h, board_thick)
-	bang.mesh = bm
-	bang.material_override = go
-	bang.position.y = board_h * 0.5 + 0.02
-	add_child(bang)
-	# Chân đế mỏng: không có thì tấm ván đứng trơ trọi trông như cắm xuyên mặt bàn.
-	var de := MeshInstance3D.new()
-	var dm := BoxMesh.new()
-	dm.size = Vector3(board_w, 0.02, 0.08)
-	de.mesh = dm
-	de.material_override = go
-	de.position.y = 0.01
-	add_child(de)
-
-
+## Mặt bài `Bai/Truoc*` và `Bai/Sau*` dựng sẵn trong scene; ở đây chỉ xếp và gán ảnh.
 func _ve_lai() -> void:
-	for c in _than.get_children():
-		c.queue_free()
 	var bai := _bai_chung()
-	if bai.is_empty():
-		return
-	var n := bai.size()
+	var n := mini(bai.size(), 5)
 	var y := board_h * 0.5 + 0.02
-	# Dán CẢ HAI MẶT ván: người đứng xem phía nhà cái cũng đọc được. Mặt sau đảo thứ tự x để
-	# nhìn từ phía đó vẫn đọc trái sang phải đúng thứ tự chia.
-	for mat_sau in [false, true]:
-		for i in n:
-			var q := MeshInstance3D.new()
-			var qm := QuadMesh.new()
-			qm.size = Vector2(card_w, card_h)
-			q.mesh = qm
-			q.material_override = _mat_bai(bai[i]["idx"], bai[i]["up"])
-			var dx := (i - (n - 1) * 0.5) * (card_w + card_space)
-			# Nhô khỏi mặt ván 2 mm — dán sát thì z-fight với ván.
-			var z := board_thick * 0.5 + 0.002
-			if mat_sau:
-				q.position = Vector3(-dx, y, -z)
-				q.rotation.y = PI
-			else:
-				q.position = Vector3(dx, y, z)
-			_than.add_child(q)
-
-
-func _mat_tron(c: Color) -> StandardMaterial3D:
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = c
-	mat.roughness = 0.85
-	return mat
-
-
-func _mat_bai(idx: int, up: bool) -> StandardMaterial3D:
-	var mat := StandardMaterial3D.new()
-	mat.albedo_texture = bo_bai.lung if up else bo_bai.anh(idx)
-	# Ảnh là pixel art 64×64. Lọc mịn làm nhoè hết chấm — phải để NEAREST.
-	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
-	return mat
+	var z := board_thick * 0.5 + 0.002
+	for i in 5:
+		var truoc := get_node("Bai/Truoc%d" % i) as MeshInstance3D
+		var sau := get_node("Bai/Sau%d" % i) as MeshInstance3D
+		truoc.visible = i < n
+		sau.visible = i < n
+		if i >= n:
+			continue
+		var anh: Texture2D = bo_bai.lung if bai[i]["up"] else bo_bai.anh(bai[i]["idx"])
+		var dx := (i - (n - 1) * 0.5) * (card_w + card_space)
+		# Mặt sau đảo thứ tự x để nhìn từ phía nhà cái vẫn đọc trái sang phải.
+		truoc.position = Vector3(dx, y, z)
+		sau.position = Vector3(-dx, y, -z)
+		(truoc.material_override as StandardMaterial3D).albedo_texture = anh
+		(sau.material_override as StandardMaterial3D).albedo_texture = anh

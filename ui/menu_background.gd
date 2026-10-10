@@ -1,15 +1,11 @@
 extends Node3D
 
-## Camera nền của màn hình chính. Dùng chính bàn PartyBash thay vì một ảnh chụp tĩnh,
-## nhưng giữ toàn bộ node này tách khỏi SceneRoot để không dính vào gameplay/network.
+## Cảnh nền màn hình chính: camera bay quanh bàn PartyBash (tách khỏi gameplay).
 
 @export var orbit_speed := 0.025
 @export var orbit_radius := 67.0
 @export var base_height := 27.0
 @export var look_height := 3.5
-
-@onready var camera: Camera3D = $CameraRig/MenuCamera
-@onready var map_model: Node3D = $BanPartyPreview/MapModel
 
 var _time := -0.65
 var _motion_enabled := true
@@ -18,10 +14,12 @@ var _world_environment: WorldEnvironment
 var _menu_environment: Environment
 var _previous_environment: Environment
 
+@onready var camera: Camera3D = $CameraRig/MenuCamera
+@onready var map_model: Node3D = $BanPartyPreview/MapModel
+
 
 func _ready() -> void:
-	# Preview chỉ để nhìn: vô hiệu hóa physics để các collider ẩn không chặn người chơi
-	# khi lobby/gameplay thật được nạp vào cùng World3D.
+	# Chỉ để nhìn: tắt va chạm.
 	for node in $BanPartyPreview.find_children("*", "CollisionObject3D", true, false):
 		var body := node as CollisionObject3D
 		body.collision_layer = 0
@@ -67,8 +65,7 @@ func _apply_environment(active: bool) -> void:
 
 
 func _update_camera() -> void:
-	# Quỹ đạo không tròn tuyệt đối để khung cảnh có cảm giác “bay” tự nhiên,
-	# nhưng biên độ rất nhỏ để người dùng vẫn đọc UI thoải mái.
+	# Quỹ đạo hơi lệch tròn cho có cảm giác bay.
 	var angle := _time
 	var radius := orbit_radius + sin(_time * 0.61) * 5.5
 	var height := base_height + sin(_time * 0.83) * 3.0

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "11 · Breaking Blocks"
+noi_dung = "[color=#8fe7d4][b]PHÍM[/b][/color]
+[b]W A S D[/b] chạy · [b]Space[/b] nhảy.
+
+[color=#8fe7d4][b]LUẬT[/b][/color]
+Đứng trên một ô quá lâu làm ô nứt rồi vỡ. Vết nứt được giữ lại khi bạn rời ô, vì vậy phải liên tục chọn đường an toàn và nhảy qua khe.
+
+Rơi khỏi sàn sẽ bị loại. [b]Xếp hạng:[/b] sống sót lâu hơn đứng trên."

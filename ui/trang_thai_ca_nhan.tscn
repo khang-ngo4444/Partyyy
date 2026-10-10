@@ -1,13 +1,11 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://ui/trang_thai_ca_nhan.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://ui/icons/heart.svg" id="2_heart"]
-[ext_resource type="Texture2D" path="res://ui/icons/coin.svg" id="3_coin"]
-[ext_resource type="Texture2D" path="res://ui/icons/shield.svg" id="4_shield"]
-[ext_resource type="Texture2D" path="res://ui/icons/gun.svg" id="5_gun"]
+[ext_resource type="PackedScene" path="res://ui/dong_mau.tscn" id="2_dong"]
+[ext_resource type="PackedScene" path="res://ui/o_trang_bi.tscn" id="3_o"]
 
 [sub_resource type="StyleBoxFlat" id="Panel"]
-bg_color = Color(0.035, 0.045, 0.07, 0.92)
+bg_color = Color(0.035, 0.045, 0.07, 0.88)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -20,138 +18,78 @@ corner_radius_bottom_left = 12
 shadow_color = Color(0, 0, 0, 0.45)
 shadow_size = 8
 
-[sub_resource type="StyleBoxFlat" id="HealthBg"]
-bg_color = Color(0.12, 0.13, 0.18, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
-[sub_resource type="StyleBoxFlat" id="HealthFill"]
-bg_color = Color(0.91, 0.22, 0.3, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
 [node name="TrangThaiCaNhan" type="PanelContainer"]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -355.0
-offset_top = -132.0
-offset_right = 355.0
-offset_bottom = -24.0
-grow_horizontal = 2
-grow_vertical = 0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 396.0
+offset_bottom = 60.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("Panel")
 script = ExtResource("1_script")
+dong_mau_scene = ExtResource("2_dong")
+o_trang_bi_scene = ExtResource("3_o")
 
 [node name="Le" type="MarginContainer" parent="."]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 16
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 10
 
 [node name="Cot" type="VBoxContainer" parent="Le"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
 
-[node name="Hang" type="HBoxContainer" parent="Le/Cot"]
+[node name="Vong" type="Label" parent="Le/Cot"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.86, 0.35, 1)
+theme_override_font_sizes/font_size = 15
+text = "VÒNG 1/1"
+
+[node name="TieuDeMau" type="Label" parent="Le/Cot"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.85, 0.95, 1)
+theme_override_font_sizes/font_size = 13
+text = "MÁU"
+
+[node name="DsMau" type="VBoxContainer" parent="Le/Cot"]
+unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 14
-alignment = 1
+theme_override_constants/separation = 4
 
-[node name="Heart" type="TextureRect" parent="Le/Cot/Hang"]
-custom_minimum_size = Vector2(30, 30)
+[node name="Ngan" type="HSeparator" parent="Le/Cot"]
 layout_mode = 2
 mouse_filter = 2
-texture = ExtResource("2_heart")
-expand_mode = 3
-stretch_mode = 5
 
-[node name="Mau" type="Label" parent="Le/Cot/Hang"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(72, 0)
+[node name="TieuDeDo" type="Label" parent="Le/Cot"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "10 / 10"
-vertical_alignment = 1
+theme_override_colors/font_color = Color(0.6, 0.85, 0.95, 1)
+theme_override_font_sizes/font_size = 13
+text = "TRANG BỊ"
 
-[node name="Coin" type="TextureRect" parent="Le/Cot/Hang"]
-custom_minimum_size = Vector2(30, 30)
+[node name="TrangBi" type="HFlowContainer" parent="Le/Cot"]
+unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
-texture = ExtResource("3_coin")
-expand_mode = 3
-stretch_mode = 5
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
 
-[node name="Vang" type="Label" parent="Le/Cot/Hang"]
+[node name="TrongTui" type="Label" parent="Le/Cot"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(58, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.82, 0.25, 1)
-theme_override_font_sizes/font_size = 20
-text = "0"
-vertical_alignment = 1
+theme_override_colors/font_color = Color(0.6, 0.62, 0.68, 1)
+theme_override_font_sizes/font_size = 13
+text = "Chưa có trang bị"
 
-[node name="Shield" type="TextureRect" parent="Le/Cot/Hang"]
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-mouse_filter = 2
-texture = ExtResource("4_shield")
-expand_mode = 3
-stretch_mode = 5
-
-[node name="Khien" type="Label" parent="Le/Cot/Hang"]
+[node name="GoiY" type="Label" parent="Le/Cot"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(42, 0)
+custom_minimum_size = Vector2(356, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.4, 0.82, 1, 1)
-theme_override_font_sizes/font_size = 20
-text = "x0"
-vertical_alignment = 1
-
-[node name="Gun" type="TextureRect" parent="Le/Cot/Hang"]
-custom_minimum_size = Vector2(34, 30)
-layout_mode = 2
-mouse_filter = 2
-texture = ExtResource("5_gun")
-expand_mode = 3
-stretch_mode = 5
-
-[node name="Sung" type="Label" parent="Le/Cot/Hang"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(42, 0)
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.67, 0.3, 1)
-theme_override_font_sizes/font_size = 20
-text = "x0"
-vertical_alignment = 1
-
-[node name="GoiYSung" type="Label" parent="Le/Cot/Hang"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
-theme_override_font_sizes/font_size = 16
-text = "CHUỘT TRÁI · BẮN"
-vertical_alignment = 1
-
-[node name="ThanhMau" type="ProgressBar" parent="Le/Cot"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 14)
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/background = SubResource("HealthBg")
-theme_override_styles/fill = SubResource("HealthFill")
-max_value = 10.0
-value = 10.0
-show_percentage = false
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 13
+text = ""
+autowrap_mode = 3

@@ -1,8 +1,9 @@
-[gd_scene load_steps=19 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/whack_a_mole.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://c01veiknsok0i" path="res://asset/sketchfab/whack_em_allwhack_a_mole_machine.glb" id="2_may"]
 [ext_resource type="PackedScene" uid="uid://b4ghfyt072tql" path="res://asset/sketchfab/whack-a-mole_animations.glb" id="3_chuot"]
+[ext_resource type="PackedScene" path="res://lobby/objects/pressable.tscn" id="16_xb7e4"]
 [ext_resource type="AudioStream" uid="uid://ct4ymmianciat" path="res://asset/kenney_interface-sounds/Audio/pluck_001.ogg" id="snd_0"]
 [ext_resource type="AudioStream" uid="uid://8als7syx4qu" path="res://asset/kenney_interface-sounds/Audio/pluck_002.ogg" id="snd_1"]
 [ext_resource type="AudioStream" uid="uid://buudc3w786ewc" path="res://asset/kenney_impact-sounds/Audio/impactPunch_medium_000.ogg" id="snd_2"]
@@ -14,7 +15,7 @@
 [ext_resource type="AudioStream" uid="uid://c7xna4n7xroy7" path="res://asset/kenney_interface-sounds/Audio/bong_001.ogg" id="snd_8"]
 [ext_resource type="AudioStream" uid="uid://cvlvyoon42alj" path="res://asset/kenney_interface-sounds/Audio/drop_002.ogg" id="snd_9"]
 [ext_resource type="AudioStream" uid="uid://dse2vvq61vplw" path="res://asset/kenney_interface-sounds/Audio/confirmation_002.ogg" id="snd_10"]
-[ext_resource type="ConcavePolygonShape3D" path="res://lobby/objects/whack_a_mole_machine_shape.res" id="surf_0"]
+[ext_resource type="Shape3D" path="res://lobby/objects/whack_a_mole_machine_shape.res" id="surf_0"]
 
 [sub_resource type="AudioStreamRandomizer" id="Rand_chuot"]
 streams_count = 2
@@ -32,98 +33,170 @@ stream_4/stream = ExtResource("snd_6")
 [sub_resource type="BoxShape3D" id="Shape_StaticSurface_ButtonStand"]
 size = Vector3(0.45, 0.6675, 0.8)
 
-[node name="WhackAMole" type="Node3D"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iaiwi"]
+albedo_color = Color(0.9607843, 0.8509804, 0.039215688, 1)
+emission_enabled = true
+emission = Color(0.9607843, 0.8509804, 0.039215688, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_s81dn"]
+material = SubResource("StandardMaterial3D_iaiwi")
+radius = 0.018
+height = 0.036
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_00bbn"]
+albedo_color = Color(0.23921569, 0.25490198, 0.3137255, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jasfv"]
+size = Vector3(0.45, 0.61749995, 0.8)
+
+[node name="WhackAMole" type="Node3D" unique_id=1678663931]
 script = ExtResource("1_script")
 
-[node name="May" parent="." instance=ExtResource("2_may")]
+[node name="May" parent="." unique_id=372202951 instance=ExtResource("2_may")]
 transform = Transform3D(-3.6080023e-09, 0, -0.08254147, 0, 0.08254147, 0, 0.08254147, 0, -3.6080023e-09, -1.024416, -0.0013312289, 0.41552424)
 
-[node name="Lo0" type="Node3D" parent="."]
+[node name="Lo0" type="Node3D" parent="." unique_id=1818493988]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18558407, 0.66616875, 0.2592743)
 
-[node name="Than" type="Node3D" parent="Lo0"]
-visible = false
+[node name="Than" type="Node3D" parent="Lo0" unique_id=387716387]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2025, 0)
+visible = false
 
-[node name="Chuot" parent="Lo0/Than" instance=ExtResource("3_chuot")]
+[node name="Chuot" parent="Lo0/Than" unique_id=1812308143 instance=ExtResource("3_chuot")]
 transform = Transform3D(0.04420114, 0, 0, 0, 0.04420114, 0, 0, 0, 0.04420114, 0, 0.118768424, 0)
 
-[node name="Lo1" type="Node3D" parent="."]
+[node name="Lo1" type="Node3D" parent="." unique_id=2075177972]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15816593, 0.66616875, 0.2592743)
 
-[node name="Than" type="Node3D" parent="Lo1"]
-visible = false
+[node name="Than" type="Node3D" parent="Lo1" unique_id=1102177904]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2025, 0)
+visible = false
 
-[node name="Chuot" parent="Lo1/Than" instance=ExtResource("3_chuot")]
+[node name="Chuot" parent="Lo1/Than" unique_id=1018840268 instance=ExtResource("3_chuot")]
 transform = Transform3D(0.04420114, 0, 0, 0, 0.04420114, 0, 0, 0, 0.04420114, 0, 0.118768424, 0)
 
-[node name="Lo2" type="Node3D" parent="."]
+[node name="Lo2" type="Node3D" parent="." unique_id=2118538381]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.27308404, 0.82366884, -0.045725673)
 
-[node name="Than" type="Node3D" parent="Lo2"]
-visible = false
+[node name="Than" type="Node3D" parent="Lo2" unique_id=49656783]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2025, 0)
+visible = false
 
-[node name="Chuot" parent="Lo2/Than" instance=ExtResource("3_chuot")]
+[node name="Chuot" parent="Lo2/Than" unique_id=1869728526 instance=ExtResource("3_chuot")]
 transform = Transform3D(0.04420114, 0, 0, 0, 0.04420114, 0, 0, 0, 0.04420114, 0, 0.118768424, 0)
 
-[node name="Lo3" type="Node3D" parent="."]
+[node name="Lo3" type="Node3D" parent="." unique_id=120366524]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.008084059, 0.82366884, -0.045725673)
 
-[node name="Than" type="Node3D" parent="Lo3"]
-visible = false
+[node name="Than" type="Node3D" parent="Lo3" unique_id=1491339442]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2025, 0)
+visible = false
 
-[node name="Chuot" parent="Lo3/Than" instance=ExtResource("3_chuot")]
+[node name="Chuot" parent="Lo3/Than" unique_id=42123226 instance=ExtResource("3_chuot")]
 transform = Transform3D(0.04420114, 0, 0, 0, 0.04420114, 0, 0, 0, 0.04420114, 0, 0.118768424, 0)
 
-[node name="Lo4" type="Node3D" parent="."]
+[node name="Lo4" type="Node3D" parent="." unique_id=1863290958]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.26191592, 0.82366884, -0.045725703)
 
-[node name="Than" type="Node3D" parent="Lo4"]
-visible = false
+[node name="Than" type="Node3D" parent="Lo4" unique_id=1821414123]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2025, 0)
+visible = false
 
-[node name="Chuot" parent="Lo4/Than" instance=ExtResource("3_chuot")]
+[node name="Chuot" parent="Lo4/Than" unique_id=391902452 instance=ExtResource("3_chuot")]
 transform = Transform3D(0.04420114, 0, 0, 0, 0.04420114, 0, 0, 0, 0.04420114, 0, 0.118768424, 0)
 
-[node name="Tieng" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+[node name="Tieng" type="Node3D" parent="." unique_id=1901222980]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
-[node name="chuot" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="chuot" type="AudioStreamPlayer3D" parent="Tieng" unique_id=579557488]
 stream = SubResource("Rand_chuot")
 
-[node name="dap" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="dap" type="AudioStreamPlayer3D" parent="Tieng" unique_id=2005520373]
 stream = SubResource("Rand_dap")
 
-[node name="dem" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="dem" type="AudioStreamPlayer3D" parent="Tieng" unique_id=1906231034]
 stream = ExtResource("snd_7")
 
-[node name="bat_dau" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="bat_dau" type="AudioStreamPlayer3D" parent="Tieng" unique_id=878109308]
 stream = ExtResource("snd_8")
 
-[node name="lam_lai" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="lam_lai" type="AudioStreamPlayer3D" parent="Tieng" unique_id=1507179792]
 stream = ExtResource("snd_9")
 
-[node name="thang" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="thang" type="AudioStreamPlayer3D" parent="Tieng" unique_id=1093456685]
 stream = ExtResource("snd_10")
 
-[node name="StaticSurface_Machine" type="StaticBody3D" parent="."]
+[node name="StaticSurface_Machine" type="StaticBody3D" parent="." unique_id=1482454075]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Machine"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Machine" unique_id=970937118]
 shape = ExtResource("surf_0")
 
-[node name="StaticSurface_ButtonStand" type="StaticBody3D" parent="."]
+[node name="StaticSurface_ButtonStand" type="StaticBody3D" parent="." unique_id=1435605368]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.85, 0.33374998, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_ButtonStand"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_ButtonStand" unique_id=655797406]
 shape = SubResource("Shape_StaticSurface_ButtonStand")
 
-[node name="SpawnPlaceholders" type="Node3D" parent="."]
+[node name="SpawnPlaceholders" type="Node3D" parent="." unique_id=800162942]
 
-[node name="Placeholder_Hammer_0" type="Node3D" parent="SpawnPlaceholders"]
+[node name="Placeholder_Hammer_0" type="Node3D" parent="SpawnPlaceholders" unique_id=586739319]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45, 0.5, 0.95)
 
-[node name="Placeholder_Hammer_1" type="Node3D" parent="SpawnPlaceholders"]
+[node name="Placeholder_Hammer_1" type="Node3D" parent="SpawnPlaceholders" unique_id=278147725]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 0.5, 0.95)
+
+[node name="Bang" type="Label3D" parent="." unique_id=953896991]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.35, 0.4)
+pixel_size = 0.003
+billboard = 1
+font_size = 40
+outline_size = 10
+
+[node name="Dem" type="Label3D" parent="." unique_id=1612905644]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.8)
+visible = false
+pixel_size = 0.004
+billboard = 1
+modulate = Color(0.9607843, 0.8509804, 0.039215688, 1)
+font_size = 120
+outline_size = 20
+
+[node name="No" type="CPUParticles3D" parent="." unique_id=563440680]
+top_level = true
+emitting = false
+amount = 30
+lifetime = 0.7
+one_shot = true
+explosiveness = 0.9
+mesh = SubResource("SphereMesh_s81dn")
+direction = Vector3(0, 1, 0)
+spread = 60.0
+initial_velocity_min = 1.2
+initial_velocity_max = 2.5
+
+[node name="WhackBatDau" parent="." unique_id=1073104696 instance=ExtResource("16_xb7e4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.85, 0.66749996, 0.22)
+label = "BAT DAU"
+color = Color(0.27450982, 0.654902, 0.34509805, 1)
+press_range = 2.6
+compact = true
+label_size = 30
+button_scale = 0.6
+
+[node name="WhackLamLai" parent="." unique_id=1946562395 instance=ExtResource("16_xb7e4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.85, 0.66749996, -0.22)
+label = "LAM LAI"
+color = Color(0.96862745, 0.41960785, 0.08235294, 1)
+press_range = 2.6
+compact = true
+label_size = 30
+button_scale = 0.6
+
+[node name="BangNut" type="MeshInstance3D" parent="." unique_id=912115536]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.85, 0.30874997, 0)
+material_override = SubResource("StandardMaterial3D_00bbn")
+mesh = SubResource("BoxMesh_jasfv")
+
+[connection signal="pressed" from="WhackBatDau" to="." method="_xin" binds= [0]]
+[connection signal="pressed" from="WhackLamLai" to="." method="_xin" binds= [1]]

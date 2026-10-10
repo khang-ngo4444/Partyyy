@@ -1,9 +1,6 @@
 extends Node
 
-## Autoload. Sở hữu DUY NHẤT luồng kết nối Photon và danh tính người chơi ở máy này.
-##
-## KHÔNG spawn gì, KHÔNG biết gameplay, KHÔNG proxy mọi hàm của Fusion.
-## Mọi hệ thống khác chạm vào mạng qua signal của node này, không gọi thẳng Fusion.
+## Autoload: kết nối Photon và danh tính người chơi ở máy này. Hệ khác dùng signal của nó.
 
 signal connected
 signal connect_failed(reason: String)
@@ -16,35 +13,33 @@ signal master_changed(new_id: int, old_id: int)
 
 const MAX_PLAYERS := 10
 
-## Bảng màu người chơi. Phải phân biệt được từ xa VÀ khi mù màu -> khác nhau cả độ sáng.
+## Màu người chơi — khác nhau cả độ sáng (dễ phân biệt khi mù màu).
 const PLAYER_COLORS: Array[Color] = [
 	Color("e5484d"), Color("3e63dd"), Color("f5d90a"), Color("46a758"),
 	Color("d6409f"), Color("f76b15"), Color("00b8d4"), Color("8e4ec6"),
 	Color("978365"), Color("e5e5e5"),
 ]
 
-## Danh tính CHỈ dùng ở máy này. Tên hiển thị cho người khác thấy phải là property
-## replicate trên object player — user_id của Photon nhìn từ máy khác về rỗng
-## (đã kiểm chứng, xem ROADMAP mục 1f).
+## Đọc lại danh sách phòng định kỳ (Photon không tự đẩy xuống ngay).
+const ROOM_LIST_REFRESH := 1.5
+## `FusionClient::ConnectionStatus.ConnectedToPhoton` (xem `addons/fusion/cs/Core/FusionEnums.cs`).
+const KET_NOI_SANH := 2
+
+## Danh tính cục bộ; tên cho người khác thấy nằm trên property replicate của Player.
 var player_name := ""
 var color_index := 0
-## Ngoại hình cục bộ được chọn trước khi vào phòng. Player copy các giá trị này vào
-## property replicated ngay khi spawn, vì vậy người vào muộn cũng thấy đúng nhân vật.
+
+## Ngoại hình chọn trước khi vào phòng; Player chép vào property replicate khi spawn.
 var model_index := 0
 var accent_index := 1
 var accessory_enabled := true
 
-## Photon chi day danh sach phong xuong khi no muon. Nguoi mo menu truoc luc ai do tao
-## phong co the ngoi nhin danh sach rong. Doc lai ban cache dinh ky cho chac.
-const ROOM_LIST_REFRESH := 1.5
-
-
+## Tên phòng (Fusion trả về chuỗi rỗng nên phải tự giữ).
+var room_name := ""
 var _refresh_timer := 0.0
 
 
-## Dem thang trong _process thay vi tao mot node Timer. Editor co tao instance cua autoload
-## NGOAI cay scene de kiem tra, luc do Timer.start() bao loi va lam ngap bang Errors —
-## che mat loi that. Bo node di la het ca loai van de do.
+## Đếm giờ trong `_process` thay vì Timer (editor tạo autoload ngoài cây).
 func _process(delta: float) -> void:
 	_refresh_timer += delta
 	if _refresh_timer >= ROOM_LIST_REFRESH:
@@ -63,7 +58,7 @@ func _ready() -> void:
 	Fusion.master_client_changed.connect(func(a, b): master_changed.emit(a, b))
 
 
-## Kết nối tới Photon. Chưa vào phòng nào — chỉ để lấy được danh sách phòng.
+## Kết nối Photon (chưa vào phòng), để lấy danh sách phòng.
 func connect_to_photon() -> bool:
 	if not has_app_id():
 		connect_failed.emit("Chưa có App ID trong Project Settings > Fusion > Connection")
@@ -72,22 +67,13 @@ func connect_to_photon() -> bool:
 	return true
 
 
-## Fusion tự add_child một node dịch vụ khi bắt đầu kết nối. Gọi thẳng trong _ready()
-## của bất kỳ node nào thì cây đang dựng dở -> add_child thất bại -> Fusion không có
-## vòng lặp xử lý và IM LẶNG không kết nối. Hoãn một frame là hết.
+## Hoãn một khung: gọi trong `_ready` thì Fusion không add_child được và im lặng không kết nối.
 func _connect_next_frame() -> void:
 	await get_tree().process_frame
 	Fusion.connect_to_photon(_make_user_id())
 
 
-## Ten phong DUY NHAT moi lan tao.
-##
-## Truoc day ten phong = ten nguoi choi. Choi hai phien lien tiep thi hai phong trung ten,
-## va neu phong cu chua kip chet thi ban be bam vao danh sach se roi vao PHONG CU — moi
-## nguoi ngoi mot phong ma khong ai biet. Trieu chung dung nhu da gap: chu phong ngoi mot
-## minh, nguoi kia lai "thay nhan vat" (thuc ra la nhan vat con sot trong phong cu).
-##
-## Duoi thanh 4 ky tu ngau nhien lam hai phong khong the trung ten nua.
+## Đuôi ngẫu nhiên cho tên phòng để không trùng phòng cũ.
 func _room_suffix() -> String:
 	const CHU := "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
 	var out := ""
@@ -101,19 +87,12 @@ func host_room() -> void:
 	opts.set_max_players(MAX_PLAYERS)
 	opts.set_is_open(true)
 	opts.set_is_visible(true)
-	# Nguoi mat ket noi bi bo suat ngay, khong giu cho. Con giu cho thi phong khong bao gio
-	# rong, ma phong khong rong thi `empty_room_ttl_ms(0)` khong bao gio don duoc no.
+	# Không giữ chỗ cho người mất kết nối (để phòng rỗng còn bị dọn).
 	opts.set_player_ttl_ms(0)
-	# Photon giu phong rong song tiep sau khi moi nguoi thoat. Khong tat thi danh sach
-	# phong day cac phong ma cua nhung lan choi truoc, va nguoi ta bam vao mot phong
-	# rong con cache object cu.
+	# Dọn phòng rỗng ngay.
 	opts.set_empty_room_ttl_ms(0)
 	room_name = "%s-%s" % [_safe_name(), _room_suffix()]
 	Fusion.create_room(room_name, opts)
-
-
-## Ten phong dang o. Fusion `get_room().get_name()` tra ve CHUOI RONG nen phai tu giu.
-var room_name := ""
 
 
 func join_room(ten: String) -> void:
@@ -121,8 +100,7 @@ func join_room(ten: String) -> void:
 	Fusion.join_room(ten, null)
 
 
-## Cho UI yeu cau cap nhat ngay thay vi doi nhip tu dong ROOM_LIST_REFRESH.
-## Van chi doc tu Photon khi dang o master server; `_publish_room_list` tu chan trong phong.
+## UI yêu cầu cập nhật danh sách phòng ngay.
 func refresh_room_list() -> void:
 	_refresh_timer = 0.0
 	_publish_room_list()
@@ -149,8 +127,7 @@ func has_app_id() -> bool:
 	return not String(ProjectSettings.get_setting("fusion/connection/app_id", "")).is_empty()
 
 
-## Id của mọi người đang ở trong phòng, KỂ CẢ người vào trước mình.
-## Cần hàm này vì signal player_joined chỉ bắn cho người vào SAU mình.
+## Mọi người trong phòng, kể cả người vào trước mình.
 func peers_in_room() -> Array:
 	var room := Fusion.get_room()
 	return room.get_players() if room != null else []
@@ -168,15 +145,14 @@ func _on_connect_failed(reason: String) -> void:
 	connect_failed.emit(reason)
 
 
-## Đổi danh sách phòng của Fusion sang mảng Dictionary thuần, để UI không phải
-## đụng vào kiểu dữ liệu của Fusion.
+## Danh sách phòng của Fusion → mảng Dictionary thuần cho UI.
 func _on_room_list_updated(_raw: Array) -> void:
 	_publish_room_list()
 
 
 func _publish_room_list() -> void:
-	# Trong phong thi khong con o master server nua -> goi get_room_list() se bao loi.
-	if not Fusion.is_connected_to_photon() or Fusion.is_in_room():
+	# Chỉ đọc được khi đang ở master server (không đang vào phòng hay đã trong phòng).
+	if Fusion.get_connection_status() != KET_NOI_SANH:
 		return
 	var out: Array = []
 	for listing in Fusion.get_room_list():

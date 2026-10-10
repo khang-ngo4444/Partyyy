@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[node name="NutChon" type="Button"]
+custom_minimum_size = Vector2(110, 36)
+toggle_mode = true
+alignment = 0

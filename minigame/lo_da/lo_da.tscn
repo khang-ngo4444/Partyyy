@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://minigame/lo_da/lo_da.gd" id="1_ld"]
+[ext_resource type="PackedScene" path="res://minigame/lo_da/san_doc.tscn" id="2_san"]
+[ext_resource type="PackedScene" path="res://minigame/lo_da/da.tscn" id="3_da"]
+
+[node name="LoDa" type="Node"]
+script = ExtResource("1_ld")
+da_scene = ExtResource("3_da")
+san_scene = ExtResource("2_san")
+co_danh = true

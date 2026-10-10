@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "14 · Magma & Mages"
+noi_dung = "[color=#8fe7d4][b]PHÍM[/b][/color]
+[b]W A S D[/b] chạy · [b]E[/b] bắn cầu lửa.
+
+[color=#8fe7d4][b]LUẬT[/b][/color]
+Cầu lửa gây sát thương và hất đối thủ. Các vành đỏ là cảnh báo khu vực sắp biến thành nham thạch; hãy rời khỏi đó hoặc hất người khác vào.
+
+Hết máu hoặc rơi khỏi sân sẽ bị loại. Ván kéo dài 75 giây. [b]Xếp hạng:[/b] sống sót lâu hơn đứng trên."

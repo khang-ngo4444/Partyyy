@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "06 · Ô Tiền"
+noi_dung = "[color=#8fe7d4][b]NHẬN VÀNG[/b][/color]
+Dừng trên ô Tiền để nhận vàng ngay lập tức.
+
+Thiết lập mặc định: [b]+15 vàng[/b]. Chủ phòng có thể đổi số vàng nhận được.
+
+Vàng dùng để mở Rương báu. Thuế tiền và Vợt bắt cá có thể làm giảm số vàng đang giữ."

@@ -1,22 +1,8 @@
 extends SceneTree
 
-## KIỂM LUẬT Searing Spotlights — chạy ngoài game, không nạp project:
-##
-##     godot --headless --path minigame/spotlights --script kiem_luat.gd
-##
-## Hằng số CHÉP TAY từ `spotlights.gd`, `san_spot.tscn`, `san_tron.tscn`, `player.gd`. Chép chứ
-## không `preload` vì `spotlights.gd` kéo theo `MiniGame3D` → `Fusion` → cả project.
-##
-## Hai thứ bộ này tồn tại để chặn, cả hai đều KHÔNG thấy được trong một ván chơi thử:
-##
-##   1. **Sáng phủ kín sàn.** Nón đèn cũ 18° rọi vệt bán kính 3,9 m; 8 đèn là ~92% sàn. Chơi thử
-##      3 đèn thì thấy thoải mái, tới chu kỳ 6 mới hết chỗ đi — mà lúc đó không ai còn đang test.
-##      Kiểm #5 quét sàn ở 600 mốc thời gian và đo phần sàn bị sáng.
-##   2. **Chuyển sáng tắt phụp.** `do_sang()` phải LIÊN TỤC; một bậc nhảy là tối đột ngột, đúng
-##      cái mục 4 của spec cấm. Kiểm #2 đo bước nhảy lớn nhất giữa hai khung hình.
-##
-## Dùng `ck()` chứ không `assert()`: `assert` fail trong `--headless --script` làm Godot ĐỨNG chờ
-## debugger, 0% CPU, không in một chữ nào.
+## Kiểm luật Searing Spotlights: godot --headless --path minigame/spotlights --script kiem_luat.gd
+## Chặn sàn bị sáng phủ kín (#5) và chuyển sáng tắt phụp (#2).
+## Hằng số chép tay; dùng `ck()` thay `assert`.
 
 # spotlights.gd
 const MAU_TOI_DA := 100.0
@@ -75,7 +61,7 @@ static func do_sang(t: float) -> float:
 func _init() -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 20261001
-	# Pha va nhip cua 8 den, dung nhu `_dung_san()` gieo
+	# Pha và nhịp của 8 đèn, đúng như `_dung_san()` gieo
 	var pha := PackedFloat32Array()
 	var nhip := PackedFloat32Array()
 	for _i in SO_DEN_CO:
@@ -89,7 +75,7 @@ func _init() -> void:
 	ck(GIAY_TOI >= 4.0, "chang TOI chi %.1f s - khong du de di trong toi" % GIAY_TOI)
 	ck(GIAY_MO >= 1.0, "toi dan chi %.1f s - gan nhu tat phut" % GIAY_MO)
 	ck(GIAY_SANG_LAI >= 1.0, "sang lai chi %.1f s - gan nhu bat phut" % GIAY_SANG_LAI)
-	# Toi phai dai hon sang: phan choi that la luc toi
+	# Tối phải dài hơn sáng: phần chơi thật là lúc tối
 	ck(GIAY_TOI > GIAY_SANG, "toi (%.1f s) phai dai hon sang (%.1f s)" % [GIAY_TOI, GIAY_SANG])
 
 	# ── 2. CHUYEN SANG PHAI LIEN TUC, khong tat phut ──
@@ -147,8 +133,7 @@ func _init() -> void:
 			"het van (%.0f s = chu ky %d) moi %d den, chua dat tran %d - progression cham"
 			% [GIAY_VAN, ck_cuoi + 1, so_den(GIAY_VAN - 0.01), DEN_TOI_DA])
 
-	# ── 5. SAN KHONG BAO GIO BI SANG PHU KIN ──
-	# Quet luoi diem tren san, do phan bi den chieu, o 600 moc thoi gian trai ca van.
+	# ── 5. SÀN KHÔNG BAO GIỜ BỊ SÁNG PHỦ KÍN (600 mốc thời gian) ──
 	var diem: Array = []
 	var b := -BAN_KINH_SAN
 	while b <= BAN_KINH_SAN:
@@ -187,7 +172,7 @@ func _init() -> void:
 			"co luc %.0f%% san bi sang (giay %.1f, %d den) - gan nhu khong con cho de di"
 			% [phu_max * 100.0, phu_tai, so_den(phu_tai)])
 	ck(phu_tb < 0.35, "trung binh %.0f%% san bi sang ca van - qua chat" % [phu_tb * 100.0])
-	# Nhung cung phai CO nguy hiem that
+	# Nhưng cũng phải có nguy hiểm thật
 	ck(phu_tb > 0.05, "trung binh chi %.1f%% san bi sang - den khong ep duoc ai" % [phu_tb * 100.0])
 
 	# ── 6. DEN PHAI NAM TRONG SAN, khong chay ra ngoai ──
@@ -213,11 +198,7 @@ func _init() -> void:
 	ck(SPEED > toc_den_max,
 			"den chay toi %.2f m/s, nguoi chi %.2f m/s - khong chay ra khoi den duoc"
 			% [toc_den_max, SPEED])
-	# Thoat khoi vung sang mat bao lau, so voi thoi gian chet.
-	#
-	# Mo phong that chu khong lay `BAN_KINH_DEN / (SPEED - toc_den)`: cong thuc do gia dinh nguoi
-	# chay dua CUNG HUONG voi den, va khi den gan nhanh bang nguoi thi no ra 266 giay - vo nghia.
-	# Nguoi that thoat bang cach di VUONG GOC voi huong den dang chay.
+	# Mô phỏng người thoát vuông góc với hướng đèn chạy.
 	var giay_chet: float = MAU_TOI_DA / MAT_MAU_MOI_GIAY
 	var thoat_lau_nhat := 0.0
 	var thoat_tai := 0.0
@@ -228,7 +209,7 @@ func _init() -> void:
 			var v := (cho_den(pha[i], nhip[i], t + 0.02) - c0) / 0.02
 			if v.length() < 0.01:
 				continue
-			# nguoi dung giua vung sang, chay vuong goc voi huong den
+			# người đứng giữa vùng sáng, chạy vuông góc với hướng đèn
 			var ra := Vector2(-v.y, v.x).normalized()
 			var p := c0
 			var tt := 0.0
@@ -246,8 +227,7 @@ func _init() -> void:
 			"xau nhat thoat den %.2f s (giay %.1f) > chet sau %.2f s - vao den la chet"
 			% [thoat_lau_nhat, thoat_tai, giay_chet])
 
-	# ── 8. DUONG DI DEN KHONG LAP LAI trong mot van (nho duong di la vo ich) ──
-	# So vi tri den 0 o thoi diem t voi t + chu ky, tren ca van.
+	# ── 8. ĐƯỜNG ĐI CỦA ĐÈN KHÔNG LẶP LẠI SAU MỘT CHU KỲ ──
 	var lap := 0
 	var mau_t := 0
 	t = 0.0

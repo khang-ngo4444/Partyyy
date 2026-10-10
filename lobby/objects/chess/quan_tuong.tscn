@@ -1,0 +1,37 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://lobby/objects/chess/quan_tuong.gd" id="1_8s1es"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fkqkp"]
+cull_mode = 2
+albedo_color = Color(0.9411765, 0.8901961, 0.78431374, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_uvb6e"]
+top_radius = 0.105
+bottom_radius = 0.105
+height = 0.055
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dp1g0"]
+resource_local_to_scene = true
+cull_mode = 2
+albedo_color = Color(0.72156864, 0.19607843, 0.17254902, 1)
+
+[sub_resource type="TextMesh" id="TextMesh_pgmdb"]
+resource_local_to_scene = true
+text = "兵"
+font_size = 64
+pixel_size = 0.0022
+depth = 0.012
+
+[node name="QuanTuong" type="Node3D" unique_id=645411324]
+script = ExtResource("1_8s1es")
+
+[node name="Dia" type="MeshInstance3D" parent="." unique_id=1099870763]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.028, 0)
+material_override = SubResource("StandardMaterial3D_fkqkp")
+mesh = SubResource("CylinderMesh_uvb6e")
+
+[node name="Chu" type="MeshInstance3D" parent="." unique_id=1177091147]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.058, 0)
+material_override = SubResource("StandardMaterial3D_dp1g0")
+mesh = SubResource("TextMesh_pgmdb")

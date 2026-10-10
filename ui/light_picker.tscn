@@ -1,6 +1,7 @@
 [gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://ui/light_picker.gd" id="1_lp"]
+[ext_resource type="PackedScene" path="res://ui/o_mau.tscn" id="r_o_mau_scene"]
 
 [sub_resource type="StyleBoxFlat" id="panel_bg"]
 bg_color = Color(0.09, 0.09, 0.12, 0.97)
@@ -22,6 +23,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_lp")
+o_mau_scene = ExtResource("r_o_mau_scene")
 
 [node name="Dim" type="ColorRect" parent="."]
 layout_mode = 1
@@ -76,14 +78,14 @@ text = "Hai nguồn sáng (pha gradient)"
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="ChipA" type="Button" parent="Panel/Outer/Scroll/Body/Chips"]
+[node name="ChipA" parent="Panel/Outer/Scroll/Body/Chips" instance=ExtResource("r_o_mau_scene")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 46)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "A"
 
-[node name="ChipB" type="Button" parent="Panel/Outer/Scroll/Body/Chips"]
+[node name="ChipB" parent="Panel/Outer/Scroll/Body/Chips" instance=ExtResource("r_o_mau_scene")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 46)
 layout_mode = 2

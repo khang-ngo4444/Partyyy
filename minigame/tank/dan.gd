@@ -1,7 +1,7 @@
 class_name Dan
 extends Node2D
 
-## MỘT viên đạn. Hình nằm trong `dan.tscn`; đạn tự bay, `TankBattle` chỉ phán nó trúng gì.
+## Một viên đạn tự bay.
 
 const TOC := 340.0
 

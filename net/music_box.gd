@@ -1,84 +1,50 @@
 class_name MusicBox
 extends Node
 
-## Máy nhạc của phòng chờ. Ai cũng trỏ được vào thư mục nhạc trên máy mình, thêm bài vào hàng
-## đợi chung, và CẢ PHÒNG nghe cùng một bài.
-##
-## ## Vì sao file nhạc KHÔNG đi qua Photon
-##
-## Đã đo trên chính bản Fusion Godot 3.0.0 Preview 555 này: không có `RpcChannel`, chỉ có
-## `rpc` / `rpc_to` / `rpc_to_player` — tức là mọi RPC đều là RPC thường, dính trần 512 byte
-## và bị huỷ IM LẶNG khi vượt. Cộng thêm hai giới hạn của Photon Cloud:
-##
-##   - Bộ đệm phía server 500 KB cho mỗi client. Đẩy một bài 5.8 MB vào là tràn đệm và người
-##     nhận bị NGẮT KẾT NỐI, không phải chậm mà là văng khỏi phòng.
-##   - Free tier 3 GB mỗi CCU mỗi tháng, tính cả chiều vào lẫn chiều ra. Lưu lượng nhân theo
-##     số người nghe: phòng 10 người nghe Ogg 192k là 240 KB/s, ăn hết hạn mức sau ~69 giờ.
-##
-## Nên ở đây Photon chỉ chở HÀNG ĐỢI — key, tên bài, độ dài, địa chỉ lấy file. Vài chục byte
-## mỗi bài. Byte nhạc đi đường HTTP riêng.
-##
-## ## Ai phục vụ file
-##
-## Chính máy người THÊM bài. Mỗi máy mở một server HTTP tí hon (`TCPServer`, có sẵn trong
-## Godot, không cần addon), và chỉ phục vụ đúng những file chủ máy đã tự tay thêm vào hàng đợi.
-##
-## Chạy thẳng trong mạng LAN, không cần hạ tầng gì. Qua Internet thì máy phục vụ cần mở cổng —
-## hoặc thay `dia_chi_phuc_vu()` bằng URL của một relay, phần còn lại của file này giữ nguyên.
-##
-## ## Định dạng
-##
-## Ogg Vorbis và MP3. Godot 4.7.1 KHÔNG có `AudioStreamFLAC` (đã đo) — FLAC không phát được
-## kể cả trên máy chủ sở hữu nó, nên bộ chọn thư mục lọc nó ra ngay từ đầu.
+## Máy nhạc phòng chờ: hàng đợi chung, cả phòng nghe cùng một bài.
+## Photon chỉ chở hàng đợi (RPC trần 512 byte); file nhạc đi HTTP trực tiếp từ máy người thêm bài
+## (`TCPServer`, chỉ phục vụ file chủ máy đã thêm). Phát Ogg/MP3; định dạng khác qua ffmpeg.
 
 signal hang_doi_doi
-## Bat dau chuyen ma mot bai (ten bai). Man hinh may nhac hien trang thai.
+## Bắt đầu chuyển mã một bài.
 signal dang_chuyen_ma(ten: String)
-## Co chuyen khong lam duoc — noi thang ra man hinh thay vi im lang.
+## Báo lỗi lên màn hình máy nhạc.
 signal bao_loi(ly_do: String)
 
 const CONG_DAU := 8777
 const CONG_CUOI := 8787
-## Chặn file quá to: một bài Ogg 192k dài 10 phút cũng chỉ ~14 MB.
+## Chặn file quá to.
 const CO_TOI_DA := 32 * 1024 * 1024
-## Godot phat thang duoc hai duoi nay.
+## Godot phát thẳng được.
 const DUOI_NHAN := ["ogg", "mp3"]
-## Nhung duoi phai chuyen ma truoc. ffmpeg doc het — da do tren may nay: `flac`,
-## `dsd_lsbf`/`dsd_msbf` (cho .dsf/.dff), `alac`, `ape`, `wavpack`.
+## Phải chuyển mã qua ffmpeg trước.
 const DUOI_CHUYEN := ["flac", "dsf", "dff", "wav", "aiff", "aif", "m4a",
 		"ape", "wv", "opus", "aac", "alac"]
-## Ban nhac da chuyen ma nam o day, dat ten theo key.
+## Bản đã chuyển mã, đặt tên theo key.
 const THU_MUC_TAM := "user://nhac_tam"
-## Tran kho tam. Vuot thi xoa dan file cu nhat.
+## Trần kho tạm; vượt thì xoá file cũ nhất.
 const KHO_TAM_TOI_DA := 4 * 1024 * 1024 * 1024
-## Bam tung nay byte dau file de lam key. KHONG doc ca file: mot ban DSD la vai tram MB, doc
-## het chi de bam la khung may vai giay va an sach RAM.
+## Chỉ băm chừng này byte đầu file để làm key.
 const BAM_DAU := 1 << 20
-## Chon bai xong ma qua tung nay giay loa van chua keu thi bo qua. File hong, tai truot,
-## hay ffmpeg ra file rong deu roi vao day. Rong rai vi mot ban FLAC dai co the mat vai
-## giay chuyen ma cong vai giay tai ve.
+## Chọn bài mà sau chừng này giây vẫn chưa kêu thì bỏ qua.
 const CHO_KEU := 25.0
-## Gửi chừng này byte mỗi khung hình cho mỗi người tải. 256 KB/khung ở 60 fps là thừa sức
-## bơm đầy một mạng LAN mà không làm khựng khung hình.
+## Byte gửi mỗi khung cho mỗi người tải.
 const GUI_MOI_KHUNG := 256 * 1024
 
-## Hàng đợi chung. Mỗi mục: {key, ten, giay, dia_chi}.
+## Mỗi mục: {key, ten, giay, dia_chi}.
 var hang_doi: Array[Dictionary] = []
-## Bài đang phát, rỗng = im lặng.
+## Rỗng = im lặng.
 var dang_phat := ""
 
-## Key -> đường dẫn file trên máy NÀY. Chỉ những file trong đây mới được phục vụ ra ngoài.
+## Key -> đường dẫn file trên máy này (chỉ những file này được phục vụ).
 var _chia_se: Dictionary = {}
-## Key -> PackedByteArray đã tải về.
 var _kho: Dictionary = {}
 var _dang_tai: Dictionary = {}
 
-## Key -> {pid, ra, ten, dia} cua cac ban dang chuyen ma.
+## Key -> {pid, ra, ten, dia} của các bản đang chuyển mã.
 var _dang_chuyen: Dictionary = {}
-## Giay may luc chon bai hien tai — de biet no da "im" bao lau.
 var _chon_luc := 0.0
 var _ffmpeg := ""
-
 var _may_chu: TCPServer = null
 var _cong := 0
 var _khach: Array = []
@@ -94,10 +60,7 @@ func _ready() -> void:
 	_don_kho_tam()
 
 
-## ffmpeg co san tren PATH thi dung luon; khong thi tim ngay canh file exe.
-##
-## KHONG dong goi ffmpeg vao ban build: no nang ~80 MB tren mot ban da 190 MB, va giay phep
-## thi tuy ban compile (LGPL hay GPL) — de nguoi dung tu cai thi khong phai gu roi chuyen do.
+## Tìm ffmpeg trên PATH hoặc cạnh file exe (không đóng gói kèm game).
 func _tim_ffmpeg() -> String:
 	var ra := []
 	if OS.execute("ffmpeg", ["-version"], ra, true) == 0:
@@ -113,7 +76,6 @@ func co_ffmpeg() -> bool:
 	return _ffmpeg != ""
 
 
-## Xoa bot ban chuyen ma cu khi kho tam vuot tran. Xoa theo thu tu cu nhat truoc.
 func _don_kho_tam() -> void:
 	var thu := ProjectSettings.globalize_path(THU_MUC_TAM)
 	var d := DirAccess.open(thu)
@@ -140,8 +102,7 @@ func _don_kho_tam() -> void:
 		tong -= int(m["co"])
 
 
-## Mở server HTTP tí hon. Thử lần lượt vài cổng — hai bản game chạy trên cùng một máy (hay
-## để lại một cổng chưa kịp nhả) thì cổng đầu đã bận.
+## Mở server HTTP, thử lần lượt vài cổng.
 func _mo_server() -> void:
 	_may_chu = TCPServer.new()
 	for c in range(CONG_DAU, CONG_CUOI + 1):
@@ -152,41 +113,27 @@ func _mo_server() -> void:
 	_may_chu = null
 
 
-## Các địa chỉ người khác dùng để lấy file của máy này, nối bằng `|`, xếp theo thứ tự đáng
-## thử trước.
-##
-## TRẢ VỀ NHIỀU ĐỊA CHỈ chứ không một cái. Máy Windows đời thật có cả đống card mạng ảo —
-## WSL, Hyper-V, Docker, VPN — và `IP.get_local_addresses()` KHÔNG đảm bảo thứ tự. Đã đo trên
-## chính máy build này: địa chỉ đầu tiên trả về là `172.31.240.1`, card ảo của WSL, không máy
-## nào trong LAN gọi tới được. Lấy đại cái đầu tiên là tính năng chết ngay lần dùng thật.
-##
-## Nên xếp ưu tiên theo dải LAN gia đình hay gặp rồi gửi vài cái; bên tải thử lần lượt tới khi
-## có cái chạy (xem `_tai`).
-##
-## ĐÂY LÀ CHỖ CẮM RELAY. Trả về URL gốc của relay thay vì danh sách IP, và đổi `them_bai`
-## thành một lần PUT — phần còn lại của file này giữ nguyên.
+## Các địa chỉ để máy khác lấy file (nối bằng `|`, ưu tiên dải LAN gia đình) — máy Windows
+## có nhiều card mạng ảo nên gửi vài địa chỉ cho bên tải thử lần lượt.
 func dia_chi_phuc_vu() -> String:
 	if _cong == 0:
 		return ""
 	var ds: Array[String] = []
 	for d in IP.get_local_addresses():
 		var s := String(d)
-		# Bỏ loopback và IPv6: máy khác không gọi được về 127.0.0.1, còn IPv6 trong LAN gia
-		# đình thường là địa chỉ tạm, đổi liên tục.
+		# Bỏ loopback và IPv6.
 		if s.begins_with("127.") or ":" in s:
 			continue
 		ds.append(s)
 	ds.sort_custom(func(a: String, b: String): return _hang_dia_chi(a) < _hang_dia_chi(b))
 	var ra: Array[String] = []
-	# Ba cái là đủ, và RPC chỉ chở được 512 byte.
+	# RPC chỉ chở được 512 byte.
 	for s in ds.slice(0, 3):
 		ra.append("http://%s:%d" % [s, _cong])
 	return "|".join(ra)
 
 
-## Nhỏ hơn = thử trước. 192.168 là dải router gia đình phổ biến nhất; 10.x hay gặp trong mạng
-## công ty; 172.16–31 thì đúng là dải riêng THẬT, nhưng cũng chính là chỗ WSL/Docker/Hyper-V
-## hay chiếm — nên để sau cùng.
+## Nhỏ hơn = thử trước (192.168 → 10.x → 172.16–31 vì hay là card ảo).
 static func _hang_dia_chi(s: String) -> int:
 	if s.begins_with("192.168."):
 		return 0
@@ -194,8 +141,7 @@ static func _hang_dia_chi(s: String) -> int:
 		return 1
 	if s.begins_with("172."):
 		return 3
-	# 169.254.x là APIPA — địa chỉ máy tự bịa ra khi KHÔNG xin được DHCP. Không bao giờ gọi
-	# tới được. Đo trên máy build: có hai cái, và chúng chiếm mất hai trong ba suất gửi đi.
+	# 169.254.x là APIPA, không gọi tới được.
 	if s.begins_with("169.254."):
 		return 4
 	return 2
@@ -224,14 +170,13 @@ func _chay_server() -> void:
 	_khach = con
 
 
-## Trả về false khi xong (hoặc hỏng) để gỡ khỏi danh sách.
+## false = xong hoặc hỏng.
 func _phuc_vu_mot(k: Dictionary) -> bool:
 	var p: StreamPeerTCP = k["p"]
 	p.poll()
 	if p.get_status() != StreamPeerTCP.STATUS_CONNECTED:
 		return false
 
-	# Còn đang đọc yêu cầu.
 	var vao: PackedByteArray = k["vao"]
 	var ra: PackedByteArray = k["ra"]
 	if ra.is_empty():
@@ -241,12 +186,11 @@ func _phuc_vu_mot(k: Dictionary) -> bool:
 			k["vao"] = vao
 		var txt: String = vao.get_string_from_utf8()
 		if not txt.contains("\r\n\r\n"):
-			# Yeu cau HTTP hop le khong bao gio dai the nay. Cat som, dung nuot vo han.
+			# Yêu cầu HTTP hợp lệ không dài thế này.
 			return vao.size() < 8192
 		ra = _dung_tra_loi(txt)
 		k["ra"] = ra
 
-	# Dang gui.
 	var het: int = ra.size()
 	var i: int = k["i"]
 	var n: int = mini(GUI_MOI_KHUNG, het - i)
@@ -257,12 +201,8 @@ func _phuc_vu_mot(k: Dictionary) -> bool:
 	return int(k["i"]) < het
 
 
-## Dựng nguyên một câu trả lời HTTP.
-##
-## KHÔNG BAO GIỜ lấy đường dẫn từ yêu cầu rồi đem đi mở file. Đây là một cái cổng mở trên máy
-## người chơi; để họ tự chọn đường dẫn là bất kỳ ai trong mạng cũng đọc được mọi file trên đĩa
-## của họ. Key trong yêu cầu chỉ dùng để TRA `_chia_se` — là bảng do chính chủ máy tự thêm vào
-## khi họ bỏ bài vào hàng đợi. Ngoài bảng đó ra, không có đường nào chạm tới hệ thống file.
+## Dựng câu trả lời HTTP. Key chỉ dùng để tra `_chia_se` — không bao giờ mở file theo đường dẫn
+## lấy từ yêu cầu.
 func _dung_tra_loi(yeu_cau: String) -> PackedByteArray:
 	var dong := yeu_cau.get_slice("\r\n", 0).split(" ")
 	if dong.size() < 2 or dong[0] != "GET":
@@ -281,22 +221,21 @@ func _dung_tra_loi(yeu_cau: String) -> PackedByteArray:
 	var than := tep.get_buffer(tep.get_length())
 	tep.close()
 
-	var dau := "HTTP/1.1 200 OK\r\nContent-Length: %d\r\nContent-Type: application/octet-stream\r\nConnection: close\r\n\r\n" % than.size()
+	var dau := ("HTTP/1.1 200 OK\r\nContent-Length: %d\r\n" % than.size()
+			+ "Content-Type: application/octet-stream\r\nConnection: close\r\n\r\n")
 	var ra := dau.to_utf8_buffer()
 	ra.append_array(than)
 	return ra
 
 
 func _loi(ma: int, ly_do: String) -> PackedByteArray:
-	return ("HTTP/1.1 %d %s\r\nContent-Length: 0\r\nConnection: close\r\n\r\n" % [ma, ly_do]).to_utf8_buffer()
+	var dau := "HTTP/1.1 %d %s\r\nContent-Length: 0\r\nConnection: close\r\n\r\n" % [ma, ly_do]
+	return dau.to_utf8_buffer()
 
 
 # ───────────────────────────── thêm bài ─────────────────────────────
 
-## Quét một thư mục trên máy này. Trả về danh sách {ten, duong, giay}.
-##
-## `giay` để 0: đọc độ dài thật phải nạp cả file lên rồi hỏi `AudioStream.get_length()`, mà
-## một thư mục vài trăm bài thì đó là vài GB. Độ dài chỉ cần biết lúc SẮP phát.
+## Quét thư mục → [{ten, duong, giay}] (`giay` = 0, chỉ đọc lúc sắp phát).
 static func quet_thu_muc(duong: String) -> Array[Dictionary]:
 	var ra: Array[Dictionary] = []
 	var d := DirAccess.open(duong)
@@ -312,13 +251,7 @@ static func quet_thu_muc(duong: String) -> Array[Dictionary]:
 	return ra
 
 
-## Bam 1 MB dau + kich thuoc file lam key.
-##
-## KHONG doc ca file: mot ban DSD la vai tram MB. Hai file khac nhau ma trung ca 1 MB dau lan
-## tong dung luong thi gan nhu khong co.
-##
-## Bam NGUON, khong bam ban da chuyen ma: cung mot ban FLAC thi ai them cung ra cung mot key,
-## nen ai da tai roi khong tai lai.
+## Key = băm 1 MB đầu + kích thước file nguồn.
 static func _bam_tep(duong: String) -> String:
 	var f := FileAccess.open(duong, FileAccess.READ)
 	if f == null:
@@ -333,13 +266,7 @@ static func _bam_tep(duong: String) -> String:
 	return hc.finish().hex_encode().substr(0, 24)
 
 
-## Them mot file tren may nay vao hang doi chung.
-##
-## Ogg/MP3 thi chia se thang file goc. Moi thu khac (FLAC, DSD, WAV, ALAC...) di qua ffmpeg
-## mot lan roi nho ban da chuyen lai trong `user://nhac_tam`.
-##
-## CHI chuyen ma dung bai duoc them, dung luc duoc them. Khong ai phai ngoi chuyen ca thu vien
-## 100 GB sang Ogg de nghe vai bai trong phong cho.
+## Thêm bài vào hàng đợi chung; định dạng không phát được thì chuyển mã một lần.
 func them_bai(duong: String, ten: String) -> void:
 	var dia := dia_chi_phuc_vu()
 	if dia == "":
@@ -349,7 +276,6 @@ func them_bai(duong: String, ten: String) -> void:
 	if key == "":
 		return
 
-	# Phat thang duoc: khong dong vao ffmpeg.
 	if DUOI_NHAN.has(duong.get_extension().to_lower()):
 		var f := FileAccess.open(duong, FileAccess.READ)
 		if f != null and f.get_length() > CO_TOI_DA:
@@ -362,7 +288,7 @@ func them_bai(duong: String, ten: String) -> void:
 		Fusion.rpc(_net_them, key, ten.left(60), 0, dia)
 		return
 
-	# Da chuyen ma lan truoc roi thi dung lai.
+	# Đã chuyển mã lần trước thì dùng lại.
 	var tam := "%s/%s.ogg" % [THU_MUC_TAM, key]
 	if FileAccess.file_exists(tam):
 		_chia_se[key] = ProjectSettings.globalize_path(tam)
@@ -376,12 +302,7 @@ func them_bai(duong: String, ten: String) -> void:
 		return
 
 	var ra := ProjectSettings.globalize_path(tam)
-	# -vn: bo anh bia. FLAC hay nhung anh bia vai MB, de nguyen thi no chui vao file Ogg va
-	#      Godot doc ra mot stream hong.
-	# -ac 2 -ar 48000: DSD chay o 2.8 MHz va nhieu ban FLAC la da kenh — phai ha ve stereo
-	#      48 kHz thi Godot moi phat duoc.
-	# -q:a 5: ~160 kbps, bai 4 phut ra ~4.8 MB. Qua loa may tinh trong phong cho thi khong
-	#      phan biet duoc voi ban goc.
+	# -vn bỏ ảnh bìa, -ac 2 -ar 48000 về stereo 48 kHz, -q:a 5 ≈ 160 kbps.
 	var pid := OS.create_process(_ffmpeg, [
 			"-y", "-v", "error", "-i", duong, "-vn", "-map_metadata", "-1",
 			"-ac", "2", "-ar", "48000", "-c:a", "libvorbis", "-q:a", "5", ra])
@@ -392,8 +313,7 @@ func them_bai(duong: String, ten: String) -> void:
 	dang_chuyen_ma.emit(ten)
 
 
-## Theo doi cac ban ffmpeg dang chay. `OS.create_process` khong chan khung hinh, nen chi viec
-## hoi xem no xong chua.
+## Theo dõi các tiến trình ffmpeg đang chạy.
 func _theo_doi_chuyen_ma() -> void:
 	if _dang_chuyen.is_empty():
 		return
@@ -444,13 +364,8 @@ func _net_bo_qua() -> void:
 
 # ───────────────────────────── phát ─────────────────────────────
 
-## Master quyết bài nào phát. Mọi máy tự tải và tự phát — không ai phát hộ ai.
-##
-## HẾT BÀI thì nghe tín hiệu `finished` của loa, KHÔNG hỏi `_loa.playing` mỗi khung hình.
-## `playing` không phân biệt được "chưa bắt đầu" với "đã hết": suốt quãng bài còn đang chuyển
-## mã hoặc còn đang tải, nó là `false`. Bản trước hỏi nó rồi kết luận "bài vừa hết" nên bắn
-## `_net_bo_qua` ngay lập tức, `dang_phat` về rỗng, khung sau lại chọn bài kế — một vòng lặp
-## RPC 60 lần mỗi giây nuốt sạch hàng đợi trước khi có nốt nhạc nào kịp kêu.
+## Master quyết bài phát; mọi máy tự tải và tự phát. Hết bài thì nghe `finished` của loa
+## (không hỏi `playing`, vì nó cũng false lúc đang tải).
 func _theo_doi_bai() -> void:
 	if not NetManager.is_master() or hang_doi.is_empty():
 		return
@@ -458,7 +373,7 @@ func _theo_doi_bai() -> void:
 	if dang_phat == "":
 		Fusion.rpc(_net_phat, String(hang_doi[0]["key"]))
 		return
-	# Đã chọn bài mà mãi không kêu: bỏ qua thay vì để hàng đợi đứng im vĩnh viễn.
+	# Chọn bài mà mãi không kêu thì bỏ qua.
 	if _loa != null and not _loa.playing and not _loa.stream_paused:
 		if _gio() - _chon_luc > CHO_KEU:
 			push_warning("MusicBox: %s khong keu sau %d giay, bo qua" % [dang_phat, CHO_KEU])
@@ -469,13 +384,13 @@ static func _gio() -> float:
 	return Time.get_ticks_msec() / 1000.0
 
 
-## Loa báo hết bài. Chỉ master được quyết chuyển bài, không thì mười máy cùng bắn một lệnh.
+## Chỉ master chuyển bài.
 func _het_bai() -> void:
 	if NetManager.is_master() and dang_phat != "":
 		Fusion.rpc(_net_bo_qua)
 
 
-## Bấm PHÁT: chưa có gì kêu thì bắt đầu từ đầu hàng đợi, đang kêu thì tạm dừng / chạy tiếp.
+## Chưa phát thì bắt đầu; đang phát thì tạm dừng/chạy tiếp.
 func bat_dau_hoac_tiep() -> void:
 	if dang_phat == "":
 		if not hang_doi.is_empty():
@@ -506,8 +421,7 @@ func _net_phat(key: String) -> void:
 		if ms != null:
 			ms.nhac_key = key
 	_nap_roi_phat(key)
-	# Tải trước bài kế ngay bây giờ, trong lúc bài này còn đang phát — đến lúc chuyển bài là
-	# file đã nằm sẵn trong RAM, không có khoảng lặng chờ tải.
+	# Tải trước bài kế.
 	if hang_doi.size() > 1:
 		_tai(String(hang_doi[1]["key"]))
 
@@ -516,7 +430,7 @@ func _nap_roi_phat(key: String) -> void:
 	if _kho.has(key):
 		_dat_vao_loa(key)
 		return
-	# File nam ngay tren may nay thi doc thang tu dia — khong di duong mang vong ve chinh minh.
+	# File trên máy này thì đọc thẳng từ đĩa.
 	if _chia_se.has(key):
 		var f := FileAccess.open(_chia_se[key], FileAccess.READ)
 		if f != null:
@@ -527,10 +441,7 @@ func _nap_roi_phat(key: String) -> void:
 	_tai(key)
 
 
-## Tải file về từ máy người đã thêm bài.
-##
-## Thử lần lượt từng địa chỉ họ gửi kèm: cái đầu có thể là card ảo không ai gọi tới được
-## (xem `dia_chi_phuc_vu`). Hết danh sách mới chịu thua.
+## Tải file từ máy người thêm bài, thử lần lượt từng địa chỉ.
 func _tai(key: String, thu := 0) -> void:
 	if _kho.has(key) or _dang_tai.has(key):
 		return
@@ -543,7 +454,6 @@ func _tai(key: String, thu := 0) -> void:
 		return
 
 	var req := HTTPRequest.new()
-	# Giữ nguyên trong RAM: nhạc là thứ dùng xong bỏ, không rải file lạ lên đĩa người chơi.
 	req.use_threads = true
 	add_child(req)
 	_dang_tai[key] = req
@@ -551,7 +461,7 @@ func _tai(key: String, thu := 0) -> void:
 		_dang_tai.erase(key)
 		req.queue_free()
 		if ma != 200:
-			_tai(key, thu + 1)          # địa chỉ này không ăn, thử cái kế
+			_tai(key, thu + 1)  # thử địa chỉ kế
 			return
 		_kho[key] = than
 		if dang_phat == key:
@@ -563,9 +473,7 @@ func _dat_vao_loa(key: String) -> void:
 	if _tim_loa() == null:
 		return
 	var than: PackedByteArray = _kho[key]
-	# Thu Ogg truoc roi MP3 — KHONG doan theo duoi ten bai. Bai FLAC da qua ffmpeg thi noi
-	# dung la Ogg trong khi ten van la ".flac"; doan theo duoi la sai ngay truong hop chinh.
-	# Ca hai lop deu tu tra ve null khi noi dung khong khop.
+	# Thử Ogg rồi MP3 theo nội dung (bài đã chuyển mã vẫn giữ đuôi gốc).
 	var st: AudioStream = AudioStreamOggVorbis.load_from_buffer(than)
 	if st == null:
 		st = AudioStreamMP3.load_from_buffer(than)
@@ -584,7 +492,7 @@ func _muc(key: String) -> Dictionary:
 	return {}
 
 
-## Loa nằm ở tháp đồng hồ trong lobby — lobby nạp sau MusicBox nên phải tìm lại mỗi lần.
+## Loa ở tháp đồng hồ trong sảnh (sảnh nạp sau nên tìm lại mỗi lần).
 func _tim_loa() -> AudioStreamPlayer3D:
 	if _loa != null and is_instance_valid(_loa):
 		return _loa
@@ -594,8 +502,7 @@ func _tim_loa() -> AudioStreamPlayer3D:
 	return _loa
 
 
-## Người vào muộn: đọc bài đang phát từ MatchState rồi tự tải về. Không đồng bộ tới từng giây —
-## nhạc nền phòng chờ, vào giữa bài là nghe từ đầu bài đó.
+## Người vào muộn: tải bài đang phát (nghe từ đầu bài).
 func dong_bo_vao_muon() -> void:
 	var ms := get_tree().get_first_node_in_group("match_state") as MatchState
 	if ms != null and ms.nhac_key != "" and dang_phat == "":

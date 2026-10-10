@@ -1,8 +1,6 @@
 extends SceneTree
 
-## Self-check GDExtension — chạy không cần App ID, không cần mở editor:
-##   godot --headless --path . --script res://check_fusion.gd
-## Fail ở đây = addon chưa nạp đúng, đừng debug gameplay.
+## Kiểm GDExtension Fusion đã nạp: godot --headless --path . --script res://check_fusion.gd
 
 const REQUIRED_CLASSES := [
 	"FusionSharedReplicator", "FusionServerReplicator", "FusionSpawner",

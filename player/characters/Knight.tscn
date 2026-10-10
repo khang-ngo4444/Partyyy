@@ -1,8 +1,15 @@
 [gd_scene format=3]
 
 [ext_resource type="PackedScene" path="res://asset/KayKit_Adventurers_2.0_FREE/Characters/gltf/Knight.glb" id="1_k3a35"]
+[ext_resource type="AnimationLibrary" path="res://player/characters/hoat_anh_rig_medium.res" id="2_hoat_anh"]
 
 [node name="Knight" type="Node3D" unique_id=534676161]
 
 [node name="Model" type="Node3D" parent="." unique_id=2070747345 instance=ExtResource("1_k3a35")]
 transform = Transform3D(-0.6687, 0, -5.84594899e-08, 0, 0.6687, 0, 5.84594899e-08, 0, -0.6687, 0, 0, 0)
+
+[node name="PartyAnimationPlayer" type="AnimationPlayer" parent="Model"]
+root_node = NodePath("..")
+libraries = {
+&"": ExtResource("2_hoat_anh")
+}

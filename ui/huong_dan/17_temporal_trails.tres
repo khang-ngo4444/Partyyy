@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "17 · Temporal Trails"
+noi_dung = "[color=#8fe7d4][b]PHÍM[/b][/color]
+[b]W A S D[/b] chạy.
+
+[color=#8fe7d4][b]LUẬT[/b][/color]
+Mỗi vòng, hãy ghi nhớ hình của vệt sáng mang màu của bạn. Khi vệt tắt, đi lại đúng con đường đó từ đầu tới cuối. Đi lệch khỏi vệt sẽ mất máu.
+
+Ván kết thúc sau vòng cuối hoặc khi người chơi hết máu/rơi khỏi sân. [b]Xếp hạng:[/b] tổng tỷ lệ các vệt đã hoàn thành; bằng nhau thì người sống lâu hơn đứng trên."

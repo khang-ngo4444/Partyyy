@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/basketball_hoop.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://ckbxqlkwfrpbo" path="res://asset/Basket ball and hoop by Armory_3D - i3LLacyQP4.glb" id="2_model"]
+[ext_resource type="PackedScene" path="res://lobby/objects/chu_bay.tscn" id="chu_bay"]
 
 [sub_resource type="BoxShape3D" id="Shape_Pole"]
 size = Vector3(0.12, 3.1, 0.12)
@@ -19,100 +20,185 @@ radius = 0.018
 height = 0.08
 radius = 0.16
 
-[node name="BasketballHoop" type="Node3D"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8ksc2"]
+albedo_color = Color(0.22745098, 0.22745098, 0.24705882, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_txo71"]
+size = Vector3(0.12, 3.1, 0.12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gn7cy"]
+size = Vector3(0.08, 0.08, 0.45)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bksji"]
+albedo_color = Color(0.9490196, 0.9372549, 0.9019608, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_h6ipk"]
+size = Vector3(1.2, 0.8, 0.04)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lrv7a"]
+albedo_color = Color(0.8980392, 0.28235295, 0.3019608, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dhcal"]
+size = Vector3(0.46, 0.34, 0.005)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8jilo"]
+size = Vector3(0.03, 0.02, 0.15)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gnpqt"]
+albedo_color = Color(0.96862745, 0.41960785, 0.08235294, 1)
+emission_enabled = true
+emission = Color(0.96862745, 0.41960785, 0.08235294, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_ov1l6"]
+material = SubResource("StandardMaterial3D_gnpqt")
+radius = 0.025
+height = 0.05
+
+[node name="BasketballHoop" type="Node3D" unique_id=647517569]
 script = ExtResource("1_script")
+chu_bay_scene = ExtResource("chu_bay")
 
-[node name="Model" parent="." instance=ExtResource("2_model")]
+[node name="Model" parent="." unique_id=1346824700 instance=ExtResource("2_model")]
 
-[node name="ring" parent="Model/RootNode" index="0"]
+[node name="ring" parent="Model/RootNode" parent_id_path=PackedInt32Array(1346824700, 810064938) index="0" unique_id=2139994853]
 transform = Transform3D(38.38885, 0, 0, 0, -1.67803e-06, 38.38885, 0, -38.38885, -1.67803e-06, 0.0043474208, 2.5000002, 0.37989286)
 
-[node name="Sphere" parent="Model/RootNode" index="1"]
+[node name="Sphere" parent="Model/RootNode" parent_id_path=PackedInt32Array(1346824700, 810064938) index="1" unique_id=105329884]
 visible = false
 
-[node name="StaticSurface_Hoop" type="StaticBody3D" parent="."]
+[node name="StaticSurface_Hoop" type="StaticBody3D" parent="." unique_id=1492981874]
 
-[node name="Pole" type="CollisionShape3D" parent="StaticSurface_Hoop"]
+[node name="Pole" type="CollisionShape3D" parent="StaticSurface_Hoop" unique_id=1376330346]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, -0.45)
 shape = SubResource("Shape_Pole")
 
-[node name="Arm" type="CollisionShape3D" parent="StaticSurface_Hoop"]
+[node name="Arm" type="CollisionShape3D" parent="StaticSurface_Hoop" unique_id=1506980416]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.85, -0.225)
 shape = SubResource("Shape_Arm")
 
-[node name="Board" type="CollisionShape3D" parent="StaticSurface_Hoop"]
+[node name="Board" type="CollisionShape3D" parent="StaticSurface_Hoop" unique_id=945692826]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, 0)
 shape = SubResource("Shape_Board")
 
-[node name="Rim0" type="CollisionShape3D" parent="StaticSurface_Hoop"]
+[node name="Rim0" type="CollisionShape3D" parent="StaticSurface_Hoop" unique_id=829962545]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.23, 2.5, 0.38)
 shape = SubResource("Shape_Rim")
 
-[node name="Rim1" type="CollisionShape3D" parent="StaticSurface_Hoop"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.21249229, 2.5, 0.46801719)
+[node name="Rim1" type="CollisionShape3D" parent="StaticSurface_Hoop" unique_id=491810743]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.21249229, 2.5, 0.4680172)
 shape = SubResource("Shape_Rim")
 
-[node name="Rim2" type="CollisionShape3D" parent="StaticSurface_Hoop"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16263456, 2.5, 0.54263456)
+[node name="Rim2" type="CollisionShape3D" parent="StaticSurface_Hoop" unique_id=1007508535]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16263457, 2.5, 0.54263455)
 shape = SubResource("Shape_Rim")
 
-[node name="Rim3" type="CollisionShape3D" parent="StaticSurface_Hoop"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08801719, 2.5, 0.59249229)
+[node name="Rim3" type="CollisionShape3D" parent="StaticSurface_Hoop" unique_id=1869274488]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08801719, 2.5, 0.5924923)
 shape = SubResource("Shape_Rim")
 
-[node name="Rim4" type="CollisionShape3D" parent="StaticSurface_Hoop"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 2.5, 0.61)
+[node name="Rim4" type="CollisionShape3D" parent="StaticSurface_Hoop" unique_id=2061356908]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0.61)
 shape = SubResource("Shape_Rim")
 
-[node name="Rim5" type="CollisionShape3D" parent="StaticSurface_Hoop"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08801719, 2.5, 0.59249229)
+[node name="Rim5" type="CollisionShape3D" parent="StaticSurface_Hoop" unique_id=468336827]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08801719, 2.5, 0.5924923)
 shape = SubResource("Shape_Rim")
 
-[node name="Rim6" type="CollisionShape3D" parent="StaticSurface_Hoop"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.16263456, 2.5, 0.54263456)
+[node name="Rim6" type="CollisionShape3D" parent="StaticSurface_Hoop" unique_id=1402847788]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.16263457, 2.5, 0.54263455)
 shape = SubResource("Shape_Rim")
 
-[node name="Rim7" type="CollisionShape3D" parent="StaticSurface_Hoop"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.21249229, 2.5, 0.46801719)
+[node name="Rim7" type="CollisionShape3D" parent="StaticSurface_Hoop" unique_id=1325918250]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.21249229, 2.5, 0.4680172)
 shape = SubResource("Shape_Rim")
 
-[node name="Rim8" type="CollisionShape3D" parent="StaticSurface_Hoop"]
+[node name="Rim8" type="CollisionShape3D" parent="StaticSurface_Hoop" unique_id=1877262912]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23, 2.5, 0.38)
 shape = SubResource("Shape_Rim")
 
-[node name="Rim9" type="CollisionShape3D" parent="StaticSurface_Hoop"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.21249229, 2.5, 0.29198281)
+[node name="Rim9" type="CollisionShape3D" parent="StaticSurface_Hoop" unique_id=1151824569]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.21249229, 2.5, 0.2919828)
 shape = SubResource("Shape_Rim")
 
-[node name="Rim10" type="CollisionShape3D" parent="StaticSurface_Hoop"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.16263456, 2.5, 0.21736544)
+[node name="Rim10" type="CollisionShape3D" parent="StaticSurface_Hoop" unique_id=1575751673]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.16263457, 2.5, 0.21736544)
 shape = SubResource("Shape_Rim")
 
-[node name="Rim11" type="CollisionShape3D" parent="StaticSurface_Hoop"]
+[node name="Rim11" type="CollisionShape3D" parent="StaticSurface_Hoop" unique_id=1083500066]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08801719, 2.5, 0.16750771)
 shape = SubResource("Shape_Rim")
 
-[node name="Rim12" type="CollisionShape3D" parent="StaticSurface_Hoop"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0, 2.5, 0.15)
+[node name="Rim12" type="CollisionShape3D" parent="StaticSurface_Hoop" unique_id=735722543]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0.15)
 shape = SubResource("Shape_Rim")
 
-[node name="Rim13" type="CollisionShape3D" parent="StaticSurface_Hoop"]
+[node name="Rim13" type="CollisionShape3D" parent="StaticSurface_Hoop" unique_id=450722130]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08801719, 2.5, 0.16750771)
 shape = SubResource("Shape_Rim")
 
-[node name="Rim14" type="CollisionShape3D" parent="StaticSurface_Hoop"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16263456, 2.5, 0.21736544)
+[node name="Rim14" type="CollisionShape3D" parent="StaticSurface_Hoop" unique_id=157557343]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16263457, 2.5, 0.21736544)
 shape = SubResource("Shape_Rim")
 
-[node name="Rim15" type="CollisionShape3D" parent="StaticSurface_Hoop"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.21249229, 2.5, 0.29198281)
+[node name="Rim15" type="CollisionShape3D" parent="StaticSurface_Hoop" unique_id=1104239331]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.21249229, 2.5, 0.2919828)
 shape = SubResource("Shape_Rim")
 
-[node name="ScoreZone" type="Area3D" parent="."]
+[node name="ScoreZone" type="Area3D" parent="." unique_id=1668968201]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, 0.38)
 collision_mask = 8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="ScoreZone"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ScoreZone" unique_id=442454543]
 shape = SubResource("Shape_ScoreZone")
+
+[node name="Tru" type="MeshInstance3D" parent="." unique_id=1145323278]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, -0.45)
+material_override = SubResource("StandardMaterial3D_8ksc2")
+mesh = SubResource("BoxMesh_txo71")
+
+[node name="TayDon" type="MeshInstance3D" parent="." unique_id=1278602390]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.85, -0.225)
+material_override = SubResource("StandardMaterial3D_8ksc2")
+mesh = SubResource("BoxMesh_gn7cy")
+
+[node name="Bang" type="MeshInstance3D" parent="." unique_id=1826755307]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, 0)
+material_override = SubResource("StandardMaterial3D_bksji")
+mesh = SubResource("BoxMesh_h6ipk")
+
+[node name="OVuong" type="MeshInstance3D" parent="." unique_id=291229610]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.65, 0.022)
+material_override = SubResource("StandardMaterial3D_lrv7a")
+mesh = SubResource("BoxMesh_dhcal")
+
+[node name="ThanhNoi" type="MeshInstance3D" parent="." unique_id=944317637]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0.075)
+material_override = SubResource("StandardMaterial3D_8ksc2")
+mesh = SubResource("BoxMesh_8jilo")
+
+[node name="BangDiem" type="Label3D" parent="." unique_id=1914162841]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 0)
+pixel_size = 0.003
+billboard = 1
+text = "BONG RO
+vao ro: 2 diem, ngoai vach: 3 diem"
+font_size = 40
+outline_size = 10
+
+[node name="No" type="CPUParticles3D" parent="." unique_id=1451286070]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0.38)
+emitting = false
+amount = 40
+lifetime = 0.9
+one_shot = true
+explosiveness = 0.9
+mesh = SubResource("SphereMesh_ov1l6")
+direction = Vector3(0, 1, 0)
+spread = 70.0
+initial_velocity_min = 1.5
+initial_velocity_max = 3.0
+
+[connection signal="body_entered" from="ScoreZone" to="." method="_khi_bong_vao"]
 
 [editable path="Model"]

@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://board/dau_hieu_o.gd" id="1_dh"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/day_thun.tscn" id="2_mh"]
+
+[node name="NeoTrenO" type="Node3D"]
+visible = false
+script = ExtResource("1_dh")
+
+[node name="MoHinh" parent="." instance=ExtResource("2_mh")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -1.4, 0, 0)

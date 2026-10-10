@@ -2,10 +2,21 @@
 
 [ext_resource type="Script" path="res://minigame/quan_tro_minigame.gd" id="1_qt"]
 [ext_resource type="PackedScene" path="res://minigame/chung/o_diem.tscn" id="2_od"]
+[ext_resource type="PackedScene" path="res://minigame/tank/tank_battle.tscn" id="g0"]
+[ext_resource type="PackedScene" path="res://minigame/breaking_blocks/breaking_blocks.tscn" id="g1"]
+[ext_resource type="PackedScene" path="res://minigame/laser_leap/laser_leap.tscn" id="g2"]
+[ext_resource type="PackedScene" path="res://minigame/spotlights/spotlights.tscn" id="g3"]
+[ext_resource type="PackedScene" path="res://minigame/explosive/explosive.tscn" id="g5"]
+[ext_resource type="PackedScene" path="res://minigame/crown/crown.tscn" id="g6"]
+[ext_resource type="PackedScene" path="res://minigame/magma/magma.tscn" id="g4"]
+[ext_resource type="PackedScene" path="res://minigame/word_wars/word_wars.tscn" id="g8"]
+[ext_resource type="PackedScene" path="res://minigame/dem_thu/dem_thu.tscn" id="g9"]
+[ext_resource type="PackedScene" path="res://minigame/lo_da/lo_da.tscn" id="g10"]
 
 [node name="QuanTroMiniGame" type="Node"]
 script = ExtResource("1_qt")
 o_diem_scene = ExtResource("2_od")
+tro_choi = Array[PackedScene]([ExtResource("g0"), ExtResource("g1"), ExtResource("g2"), ExtResource("g3"), ExtResource("g5"), ExtResource("g4"), ExtResource("g6"), ExtResource("g8"), ExtResource("g9"), ExtResource("g10")])
 
 [node name="Lop" type="CanvasLayer" parent="."]
 visible = false

@@ -20,7 +20,7 @@ chúng rất dễ bị nhầm là một, nên phải tách bạch ngay từ đ�
 | Kết thúc thế nào | **Không kết thúc.** Chơi chán thì đi chỗ khác | Hết giờ hoặc còn một người → **bắt buộc** kết thúc |
 | Sinh ra cái gì | Không gì. Vui là chính | **Bảng xếp hạng** — quyết định thứ tự lượt vòng sau |
 | Class | Không có class chung | `extends MiniGame` |
-| Đăng ký ở đâu | Không đăng ký. Kéo vào `lobby.tscn` là xong | `QuanTroMiniGame.DANH_SACH` |
+| Đăng ký ở đâu | Không đăng ký. Kéo vào `lobby.tscn` là xong | Mảng `tro_choi` của `quan_tro_minigame.tscn` (Inspector) |
 
 **Câu phân biệt gọn nhất:** trò phòng chờ *không có người thắng*, minigame pha 3 *bắt buộc
 phải đẻ ra một thứ hạng cho mọi người*.
@@ -53,6 +53,14 @@ không cái nào đăng ký được vào `DANH_SACH` (lý do ở mục 4).
 ---
 
 # 3. Minigame pha 3 — hiện có 15 TRÒ
+
+> **Đang lên kế hoạch (2026-10-07): Lở Đá** — leo dốc kiểu Fall Guys, đá rơi rồi lăn, chạm là chết. Chưa code, xem mục 10.
+>
+> **Đã xoá (2026-10-05): Sidestep Slope** — gỡ khỏi `DANH_SACH`, xoá `minigame/sidestep/` và khuôn `minigame/chung/mini_game_lan.gd` (không còn trò nào dùng khuôn T4).
+>
+> **Mới (2026-10-05): Đếm thú** (`minigame/dem_thu/`) — khuôn T5: thú chạy phải → trái, 3 vòng, đếm 1 loại, đúng +1, hoà thì chốt nhanh hơn xếp trên. 1 gói/người/vòng.
+>
+> **Đã xoá (2026-10-05): Slippery Sprint** — mỗi người tự chạy một làn, không tương tác. Gỡ khỏi `DANH_SACH`, xoá `minigame/slippery/`, `minigame/chung/san_lan.tscn`, `minigame/chung/lan.tscn`. Sidestep Slope giờ là trò chạy duy nhất: một dốc chung, xe + thùng lăn + bóng nảy.
 
 > **Đã xoá (2026-10-02): Acidic Atoll (chìm đảo), Nhặt quà né rác và Bounding Blocks** — gỡ khỏi `QuanTroMiniGame.DANH_SACH`, xoá thư mục `minigame/acidic_atoll/`, `minigame/nhat_qua/`, `minigame/bounding_blocks/`, `materials/mat_axit.tres` và `minigame/chung/san_luoi.tscn` (lưới 13×13 chỉ Bounding Blocks dùng). Các đoạn bên dưới còn nhắc tới hai trò này là lịch sử.
 
@@ -102,7 +110,7 @@ func bat_dau(nguoi_choi: Array, hat_giong: int) -> void   # danh sách player_id
 signal xong(xep_hang: Array)                              # player_id, giỏi nhất đầu, ra
 ```
 
-Đăng ký là một dòng trong `QuanTroMiniGame.DANH_SACH`.
+Đăng ký = kéo scene vào mảng `tro_choi` của `quan_tro_minigame.tscn` trong Inspector. Mã của trò là tên file scene (`dem_thu`, `tank_battle`...) — lệnh chat `/minigame <mã>` và Còi trọng tài dùng mã này. (Trước 2026-10-05 là hằng `DANH_SACH` chứa chuỗi đường dẫn — đã bỏ.)
 
 Minigame **không biết** gì về chìa khoá, cốc, bàn cờ. Bàn cờ **không biết** luật minigame nào.
 Nhờ vậy thêm một trò không phải sửa dòng nào bên bàn.
@@ -590,3 +598,150 @@ bỏ qua.
   Đã hỏi và bạn chọn giữ nguyên — ghi lại để sau không ai tưởng là bỏ sót.
 - **Slippery Sprint** chạy đường thẳng nên nó vừa thuộc T2 vừa dùng khuôn làn của T4.
 - 18 trò là **kế hoạch**; 15 trò đã dựng và đã đăng ký trong `DANH_SACH`.
+
+---
+
+# 10. Lở Đá — KẾ HOẠCH (2026-10-07, chưa code)
+
+Leo dốc kiểu Fall Guys. Đá rơi từ trời, có vòng đỏ báo trước, chạm đất thì **lăn xuống dốc**.
+**Chạm đá là chết.** Ai lên tới đỉnh trước thì xếp trên.
+
+Tham khảo: *Boulder Ball* (Mario Party 3) — leo dốc né đá; *Fruit Chute* (Fall Guys) — leo
+ngược, vật lăn đi thẳng; *Rain of Fire* (Mario Party 5) — đồ rơi có bóng báo trước.
+
+```
+ten  = "LỞ ĐÁ"
+luat = "W leo lên đỉnh · né vòng đỏ và đá lăn · chạm đá là chết"
+```
+
+## Vì sao phải là dốc
+
+Đá rơi rồi lăn xuống chân dốc, nên đá rơi **phía trên** mình cũng sẽ lăn tới mình. Càng ở thấp
+càng nhiều đá lăn qua → chính con dốc đẩy người chơi đi lên. **Không cần nham dâng** (đề xuất
+trước có, đã bỏ — một nguồn áp lực là đủ).
+
+## Sân `san_doc.tscn`
+
+| | Số | Ghi chú |
+|---|---|---|
+| Bệ xuất phát | phẳng, dài 6 m | 8 người xếp một hàng ngang (`_cho_vao` ghi đè) |
+| Dốc | rộng 14 m, dài 110 m, nghiêng 15° (cao ~28 m) | lên dốc = −Z = phím W (`che_do_san`) |
+| Đỉnh | phẳng, dài 8 m, có vạch đích | đá không rơi vào đây |
+| Hai mép | tường thấp 1,5 m | không rơi khỏi dốc — chết chỉ vì đá |
+| `Cam` | bám người chơi máy này theo trục dốc, `x` giữa dốc | lùi ~9 m, cao ~9 m, thấy ~20 m phía trước |
+
+> Phải thử: 15° < `floor_max_angle` 45° mặc định, nhưng cần xem `Player` đứng yên trên dốc có
+> bị trượt không.
+
+## Đá — một loại, hai cỡ, ba giai đoạn
+
+| Cỡ | Bán kính | Né thế nào |
+|---|---|---|
+| Nhỏ | 0,45 m | **nhảy qua** được (`jump_height` 1,2 m) |
+| To | 1,0 m | phải **tránh ngang** |
+
+1. **Báo** (`t_roi − BAO` → `t_roi`): vòng đỏ trên mặt dốc, đậm dần. Bán kính vòng = bán kính
+   vùng chết, **một hằng số cho cả hai** (như Magma) nên hình và luật không lệch nhau.
+2. **Rơi** (0,5 s cuối trước `t_roi`): đá rơi thẳng xuống tâm vòng. Đứng trong vòng lúc này = chết.
+3. **Lăn**: `s(t) = s_roi − V_LAN·(t − t_roi)`, `x` cố định, đi thẳng, xuyên qua đá khác.
+   `V_LAN = 7,5 m/s` > `Player.speed` 6 → không chạy thoát xuống được, phải né ngang hoặc nhảy.
+   Lăn qua khỏi bệ xuất phát thì xoá.
+
+Vị trí đá là **hàm thuần** `vi_tri_da(da, t)`, chạm là hàm thuần `cham(da, t, vi_tri_nguoi)`:
+khoảng cách trên mặt dốc < `r + 0,35` **và** chân người thấp hơn đỉnh đá. **Không RigidBody**
+(mỗi máy lăn một kiểu), không cần `Area3D`. `kiem_luat.gd` gọi thẳng hai hàm này.
+
+## Lịch rơi `lich_da(giong) -> Array` — từ hạt giống, 0 gói tin
+
+| Giây | Nhịp rơi | Đá to | Báo trước |
+|---|---|---|---|
+| 0–12 | 1 cục / 0,9 s | 20% | 1,4 s |
+| 12–30 | dày dần | 20 → 45% | 1,4 → 0,9 s |
+| 30–60 | 1 cục / 0,3 s | 45% | 0,9 s |
+
+- `s_roi` rải đều trên cả dốc, `x` rải đều trong bề ngang (trừ bán kính).
+- **Hàng có khe** — khoảnh khắc Fall Guys: từ giây 12, cứ 10 s rơi cùng lúc một hàng đá to chắn
+  ngang dốc, chừa **một khe 3 m** ở chỗ ngẫu nhiên. Đá rải trong ±2 s quanh hàng không được rơi
+  vào khe.
+- `RandomNumberGenerator` riêng, `seed = hat_giong`. Không `randf()` / `shuffle()` toàn cục.
+
+## Đánh nhau: BẬT `co_danh`
+
+Fall Guys có túm và đẩy nhau. Ở đây chưởng hất người khác vào đường đá lăn = giết họ. Có sẵn
+trong `MiniGame3D`, chỉ bật cờ. Không muốn thì bỏ tick `co_danh` trong `lo_da.tscn`.
+
+## Về đích · chết · xem
+
+- **Về đích**: máy mình thấy mình qua vạch → phát `_net_ve_dich(id)` (1 gói), khoá di chuyển,
+  tắt kiểm chạm đá.
+- **Chết**: `xin_chet()` có sẵn; ẩn `model_root` như Spotlights; cam chuyển sang bám người
+  **còn sống cao nhất** (vị trí đã replicate, 0 gói).
+
+## Xếp hạng — master chốt, ghi đè `_chot_ket_qua` (như Crown)
+
+1. **Về đích**: theo thứ tự master nhận `_net_ve_dich`.
+2. **Còn sống, chưa về**: `s` (quãng đường trên dốc) lúc chốt, lớn đứng trên. Số thực — không
+   cần phá hoà. Master đọc vị trí replicate.
+3. **Chết**: chết sau đứng trên (`_thu_tu_chet` có sẵn).
+
+## Kết thúc
+
+- `giay_van = 60`.
+- Master chốt sớm khi **không còn ai đang leo** (mọi người đã về đích hoặc chết).
+- Lớp cha tự chốt khi `so_con_song() <= 1`. Người về đích vẫn là "còn sống" nên 1 về đích + 1
+  đang leo thì ván chạy tiếp — đúng. 7 chết + 1 đang leo thì chốt luôn, người đó hạng 1 — chấp
+  nhận, thứ hạng không đổi mà ván ngắn hơn.
+- ⚠️ Luật chốt sớm + luật lớp cha có thể gọi `_chot_ket_qua` **hai lần trong một khung** →
+  chặn bằng cờ.
+
+## Gói tin
+
+| | Gói |
+|---|---|
+| Đá (báo, rơi, lăn) | **0** |
+| Chết | 1 / người (có sẵn) |
+| Về đích | 1 / người (mới) |
+| Đòn | 1 / đòn (có sẵn) |
+| Xếp hạng | 1 (có sẵn) |
+
+## `kiem_luat.gd` — chặn những thứ chơi thử không thấy
+
+1. **Luôn có lối**: 200 hạt giống × mỗi 0,05 s × mỗi dải dốc dày 1 m — phần bề ngang bị đá
+   (đang lăn, đang rơi, hoặc vòng đỏ) chiếm phải chừa ít nhất **một khe ≥ 1,5 m**.
+2. **Báo đủ**: mọi cục có thời gian báo ≥ 0,9 s.
+3. **Nhảy**: đá nhỏ — người đang ở đỉnh cú nhảy không chạm; đá to — chạm.
+4. **Tất định**: cùng hạt giống gọi hai lần ra cùng lịch.
+5. **Không giết lúc xuất phát**: không cục nào báo trước giây 1,5; không rơi lên bệ xuất phát
+   hay đỉnh.
+
+Hằng số chép tay từ `lo_da.gd` như các bộ kiểm khác; dùng `ck()`, không `assert`.
+
+## File
+
+| File | Việc |
+|---|---|
+| `minigame/lo_da/lo_da.gd` | `extends MiniGame3D`: lịch, đá, chạm, về đích, cam, xếp hạng |
+| `minigame/lo_da/lo_da.tscn` | script + `san_scene` + `co_danh` |
+| `minigame/lo_da/san_doc.tscn` | bệ, dốc, đỉnh, tường, vạch đích, `Cam` |
+| `minigame/lo_da/da.tscn` | `Than` (hình đá) + `Vong` (vòng đỏ) |
+| `minigame/lo_da/kiem_luat.gd` | bộ kiểm |
+| `minigame/quan_tro_minigame.tscn` | thêm `lo_da.tscn` vào `tro_choi` |
+
+Chạy thử tay: `/mg lo_da`.
+
+## Asset — ghi vào `ASSET-CAN-THEM.md` lúc dựng
+
+- Hình đá low-poly (tạm: `SphereMesh`).
+- Vòng đỏ báo rơi (tạm: `CylinderMesh` mỏng).
+- Vật liệu dốc đất đá.
+- Âm: đá đập đất (`asset/kenney_impact-sounds/` có sẵn), đá lăn (loop), chết.
+
+## Núm chỉnh sau chơi thử
+
+`DAI_DOC` 110 · `V_LAN` 7,5 · nhịp rơi · tỷ lệ đá to · `BAO`. Đích: người giỏi về đích ~30 s,
+ván 30–60 s, ít nhất nửa phòng chết.
+
+## Còn để mở
+
+- Chưa rõ vì sao **Sidestep Slope** bị xoá (cũng là dốc chung + vật lăn). Lở Đá khác ở: đồ rơi
+  từ trời có báo trước, chạm là chết, đua tới đích.

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "08 · Rương báu và hồi sinh"
+noi_dung = "[color=#8fe7d4][b]RƯƠNG BÁU[/b][/color]
+Bàn có [b]một Rương báu[/b]. Đi qua hoặc dừng trên ô rương mà đủ vàng là tự mở: trả giá rương (mặc định [b]100 vàng[/b]) và nhận [b]+1 Cúp[/b]. Rương sau đó dời tới một ô cách xa ít nhất 10 ô.
+
+Cúp không bao giờ mất: không bị cướp, không rơi khi gục.
+
+[color=#8fe7d4][b]CHECKPOINT[/b][/color]
+Sau một số bước nhất định, game mở điểm hồi sinh cá nhân ở ô cạnh đường đi. Mặc định là mỗi 18 bước.
+Khi hết máu, bạn hồi đầy máu tại checkpoint; vàng, đồ và Cúp được giữ lại (trừ Ống heo đất bị vỡ). Đang neo Dây thun thì hồi sinh ở ô neo."

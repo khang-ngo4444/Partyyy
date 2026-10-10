@@ -1,102 +1,93 @@
 class_name Pickable
 extends RigidBody3D
 
-## Vat nhat duoc: quan co, xuc xac, bong ro, phi tieu, la bai. Tat ca la RigidBody3D THAT.
-##
-## MASTER SO HUU VINH VIEN va la may QUYET DINH vat bay di dau. Fusion ban Godot KHONG co
-## NetworkRigidBody3D rieng: RigidBody3D lam goc + FusionSharedReplicator con, `root_replication_mode
-## = Auto`. May khac VAN CHAY vat ly tai cho, replicator nan ban sao ve trang thai master
-## (`root_interpolation_mode = Forecast` + lo xo, dat trong .tscn cua tung vat).
-##
-## `root_forecast_gravity = false` trong .tscn la BAT BUOC. Mac dinh `true` + `root_max_forecast_time
-## = 0.25`: may khac du doan roi tu do 0.25 s ca voi vat DANG NAM YEN — do duoc moi vat nam tren
-## may khac lun 0.32 m (= 1/2 * 9.8 * 0.25^2), quan co va xuc xac xuyen xuong duoi san.
-##
-## Dung owner_mode mac dinh (TRANSACTION) chu KHONG dung MASTER_CLIENT: MASTER_CLIENT lam hong
-## viec replicate vi tri (da do: may khac khong nhan duoc vi tri moi).
-##
-## Khong chuyen quyen so huu khi nhat: nguoi choi gui RPC xin cam, master gan `holder_id`, roi
-## chinh master dieu khien vat (vi tri + goc nhin nguoi choi da replicate san).
-##
-## HAI KIEU CAM:
-##   - SIEU LINH (mac dinh): vat lo lung truoc mat, VAN LA VAT LY — va vao ban, bi tuong chan,
-##     vat nang tre hon. Master keo no bang mot lo xo mem co gioi han luc (xem `_keo_sieu_linh`).
-##   - TRONG TAY (`sieu_linh = false`): dung cu can nam dung cho — bua, phi tieu. Tat
-##     vat ly, dat thang theo camera nguoi cam.
-##
-## Trang thai than vat ly SUY RA moi nhip tu (co ai cam, co bi khoa) — khong bat/tat rai rac o
-## tung cho, nen khong co duong nao quen bat lai trong luc.
+## Vật nhặt được (quân cờ, xúc xắc, bóng rổ, phi tiêu, lá bài): RigidBody3D thật do master
+## sở hữu và quyết định; máy khác vẫn chạy vật lý, replicator nắn về trạng thái master.
+## ⚠️ `root_forecast_gravity = false` trong .tscn, không thì vật lún sàn.
+## ⚠️ Giữ owner_mode TRANSACTION; MASTER_CLIENT làm hỏng replicate vị trí.
+## Hai kiểu cầm: siêu linh (lò xo vật lý, mặc định) và trong tay (`sieu_linh = false`, tắt vật lý).
 
-## Lop va cham cua vat nhat duoc. Nguoi choi nam lop rieng (Player.LOP_NGUOI) va hai ben khong
-## va nhau: di qua ban co khong xo do quan, quan co khong chan chan.
+## Lớp va chạm của vật; không va với người chơi (Player.LOP_NGUOI).
 const LOP_VAT := 1 << 3
 const LOP_THE_GIOI := 1
-## Duoi do cao nay coi nhu roi khoi phong — tra ve cho de san.
+
+## Rơi dưới độ cao này thì trả về chỗ để sẵn.
 const DAY_VUC := -5.0
-## Dung yen tren cao qua chung nay giay (ket tren noc bang ro, tren tu) thi tra ve cho cu.
+
+## Đứng yên trên cao quá chừng này giây (kẹt trên nóc) thì trả về chỗ cũ.
 const CAO_KET := 1.5
 const GIAY_KET := 2.0
 
-## Ai dang cam. 0 = khong ai. Chi master ghi.
+## Số điểm tối đa đưa vào hình lồi.
+const DIEM_LOI_TOI_DA := 256
+
+## Cache hình lồi theo khoá (loại quân + góc xoay).
+static var _hinh_da_dung := {}
+
+## Ai đang cầm, 0 = không ai. Chỉ master ghi.
 @export var holder_id: int = 0
-## Cho cam kieu TRONG TAY, trong he toa do CAMERA nguoi cam: +X phai, +Y len, -Z phia truoc.
+
+## Chỗ cầm kiểu trong tay, hệ toạ độ camera (+X phải, +Y lên, -Z trước).
 @export var cam_offset := Vector3(0.27, -0.24, -0.6)
-## 0 = xoay khop ngay theo camera. > 0 = xoay duoi theo camera voi toc do nay.
+
+## 0 = xoay khớp camera ngay; > 0 = xoay đuổi theo với tốc độ này.
 @export var do_tre_xoay := 0.0
 
-## Cam kieu SIEU LINH. Tay la mot LO XO MEM CO GIOI HAN LUC, theo "Soft Constraints: Reinventing
-## the Spring" (Erin Catto, GDC 2011) va mouse joint cua Box2D: do cung cho bang TAN SO (Hz) va
-## TI LE TAT DAN thay vi he so tho, nen vat nang nhe deu bam tay cung mot kieu — chi khac o gioi
-## han luc. Tat cho dung cu phai nam dung trong tay.
+## Cầm siêu linh: lò xo mềm giới hạn lực (Catto, "Soft Constraints", GDC 2011).
+## Tắt cho dụng cụ cầm tay.
 @export var sieu_linh := true
-## Tan so lo xo. Cao = bam sat hon. Box2D: giu duoi mot nua nhip vat ly (60 Hz -> duoi 30 Hz).
+
+## Tần số lò xo (Hz); giữ dưới nửa nhịp vật lý.
 @export var sieu_linh_hz := 5.0
-## 1 = tat dan toi han: toi dich khong vuot qua, khong rung. Duoi 1 thi nay lac lu.
+
+## 1 = tắt dần tới hạn (không vượt, không rung).
 @export var sieu_linh_tat_dan := 1.0
-## Luc tay toi da = so nay x trong luong vat. Duoi 1 thi khong nhac noi.
+
+## Lực tay tối đa = số này × trọng lượng vật.
 @export var sieu_linh_luc := 4.0
-## Vat lo lung cach mat nguoi cam chung nay met, hoi thap duoi tam nhin.
+
+## Khoảng cách vật lơ lửng trước mặt, mét.
 @export var sieu_linh_xa := 1.3
-## Ham xoay trong luc lo lung, de vat khong quay tit mai sau moi cu va.
+
+## Hãm xoay khi lơ lửng.
 @export var sieu_linh_ham_xoay := 4.0
 
-## Chi so vat ly. Lop con dat trong `_init`.
+## Chỉ số vật lý; lớp con đặt trong `_init`.
 @export var nay := 0.2
 @export var ma_sat := 0.6
-## Ham khi dang cham mat (lan, truot). Tren khong LUON bang 0 — nem xa bao nhieu la do luc tay.
+
+## Hãm khi chạm mặt; trên không luôn bằng 0.
 @export var ham_mat_dat := 0.8
 @export var ham_xoay := 0.5
 
-## Vat dang KHOA vat ly dong: la bai nam trong o nha cai, phi tieu dang cam tren bia. Replicate —
-## may khac cung phai khoa, khong thi ban sao tu roi khoi bia roi bi nan nguoc lai.
+## Khoá vật lý (lá bài trong ô nhà cái, phi tiêu cắm bia). Replicate để máy khác cũng khoá.
 @export var dinh_co_dinh := false
-## Master ghi luc tha: ai tha, va nguoi do dung dau (bong ro tinh 2 hay 3 diem).
+
+## Master ghi lúc thả: ai thả (bóng rổ tính 2 hay 3 điểm).
 var nguoi_nem := 0
 var cho_nem := Vector3.ZERO
-## Cho de san. Roi khoi phong / ket tren cao thi vat ve day. Chua ai gan thi lay cho luc sinh ra.
+
+## Chỗ để sẵn; rơi hoặc kẹt thì về đây.
 var cho_mac_dinh := Vector3.ZERO
 
-@onready var sync: FusionSharedReplicator = $Replicator
-
-## Goc xoay dang duoi theo camera, giu RIENG o may nay. Khong doc lai tu `global_transform`:
-## o may nguoi cam (khong phai master), replicator ghi de goc xoay bang gia tri cu mot nhip mang.
+## Góc xoay đuổi theo camera, giữ riêng ở máy này (replicator ghi đè `global_transform`).
 var _xoay_tay := Basis.IDENTITY
-## Dang duoi theo tay ai (0 = khong). Doi nguoi cam thi bat dau lai tu dung huong camera.
+
+## Đang đuổi theo tay ai (0 = không).
 var _tay_cua := 0
 var _dung_yen := 0.0
+
+@onready var sync: FusionSharedReplicator = $Replicator
 
 
 func _ready() -> void:
 	add_to_group("pickable")
-	# Phan lon vat dung lo xo vat ly (`sieu_linh`) va _process chi return ngay. Tat callback
-	# render rong cho chung; vat cam cung van theo tay trong _physics_process.
+	# Vật siêu linh không cần _process.
 	set_process(not sieu_linh)
-	# Chay SAU replicator (priority 0). O may nguoi cam, vat duoc dat theo camera cua chinh ho;
-	# chay truoc thi replicator ghi de bang vi tri cu tu mang va vat giat lui moi nhip.
+	# Chạy sau replicator, không thì vật bị kéo về vị trí cũ mỗi nhịp.
 	process_priority = 1
 	continuous_cd = true
-	# REPLACE chu khong COMBINE: COMBINE cong them ham 0.1 cua Project Settings, vat mat toc do
-	# giua khong trung (da do: 4/4 cu nem ro hut).
+	# REPLACE: COMBINE cộng thêm hãm mặc định, ném hụt.
 	linear_damp_mode = RigidBody3D.DAMP_MODE_REPLACE
 	angular_damp_mode = RigidBody3D.DAMP_MODE_REPLACE
 	linear_damp = 0.0
@@ -105,32 +96,31 @@ func _ready() -> void:
 	vat_lieu.bounce = nay
 	vat_lieu.friction = ma_sat
 	physics_material_override = vat_lieu
-	# Can biet dang cham mat hay dang bay de bat ham (xem `_physics_process`).
+	# Để biết đang chạm mặt hay đang bay.
 	contact_monitor = true
 	max_contacts_reported = 4
 	freeze_mode = RigidBody3D.FREEZE_MODE_KINEMATIC
-	# Khoa cho toi nhip vat ly dau tien — luc do moi biet chac may nay co phai master khong.
+	# Khoá tới nhịp vật lý đầu, lúc đó mới biết có phải master.
 	freeze = true
 	collision_layer = LOP_VAT
 	collision_mask = LOP_THE_GIOI | LOP_VAT
 
 
-## Nguoi choi goi o may cua ho. Chi la loi de nghi — master moi quyet.
+## Người chơi gọi ở máy họ; master quyết.
 func request_pick() -> void:
 	if holder_id != 0:
 		return
 	Fusion.rpc(_net_pick, NetManager.local_id())
 
 
-## Tha tay: vat roi tu do ngay tai cho dang cam.
+## Thả rơi tại chỗ.
 func drop() -> void:
 	if holder_id != NetManager.local_id():
 		return
 	Fusion.rpc(_net_drop)
 
 
-## Nem theo huong nhin voi toc do `toc_do` (m/s). Huong va luc la INPUT cua nguoi choi nen may
-## ho gui di; chi master dat van toc cho than vat ly.
+## Ném theo hướng nhìn, `toc_do` m/s; master đặt vận tốc.
 func throw(direction: Vector3, toc_do: float) -> void:
 	if holder_id != NetManager.local_id():
 		return
@@ -139,8 +129,7 @@ func throw(direction: Vector3, toc_do: float) -> void:
 
 @rpc("any_peer", "call_local")
 func _net_pick(by_id: int) -> void:
-	# Chi master xu ly. Hai nguoi xin cung luc thi RPC toi master theo thu tu — nguoi sau thay
-	# `holder_id` da khac 0 va bi tu choi. Khong co tranh chap.
+	# Chỉ master; RPC tới theo thứ tự nên người sau thấy `holder_id` khác 0.
 	if not sync.has_authority() or holder_id != 0:
 		return
 	holder_id = by_id
@@ -159,13 +148,11 @@ func _net_throw(direction: Vector3, toc_do: float) -> void:
 func _net_drop() -> void:
 	if not sync.has_authority() or holder_id == 0:
 		return
-	# Giu nguyen da dang co: vat sieu linh dang bay ma buong tay thi bay tiep theo quan tinh. Vat
-	# cam TRONG TAY dang khoa nen van toc san la 0 — roi thang xuong nhu truoc.
+	# Giữ vận tốc đang có: vật siêu linh bay tiếp theo quán tính.
 	_tha(linear_velocity)
 
 
-## Master tha vat voi mot van toc. Mo khoa than vat ly NGAY (khong doi nhip sau) de van toc co
-## tac dung trong nhip nay.
+## Master thả vật với vận tốc; mở khoá ngay để vận tốc có tác dụng nhịp này.
 func _tha(van_toc: Vector3) -> void:
 	nguoi_nem = holder_id
 	var p := _find_player(holder_id)
@@ -179,13 +166,12 @@ func _tha(van_toc: Vector3) -> void:
 
 
 func _process(delta: float) -> void:
-	# Vat sieu linh do VAT LY dua di (xem `_keo_sieu_linh`), khong dat theo tay.
+	# Vật siêu linh do vật lý kéo đi (xem `_keo_sieu_linh`).
 	if sieu_linh:
 		_tay_cua = 0
 		return
 	if not sync.has_authority():
-		# May cua NGUOI DANG CAM: tu dat vat theo camera cua chinh minh moi frame, khong doi
-		# master. May khac thay vi tri master tinh bang CUNG cong thuc (Player.diem_cam).
+		# Máy người cầm tự đặt vật theo camera mình; máy khác tính cùng công thức (Player.diem_cam).
 		if holder_id != 0 and holder_id == NetManager.local_id():
 			_theo_tay(delta)
 		else:
@@ -195,7 +181,7 @@ func _process(delta: float) -> void:
 		_tay_cua = 0
 		return
 	if not _theo_tay(delta):
-		# Nguoi cam da roi phong — tha roi tu do tai cho.
+		# Người cầm đã rời phòng.
 		_tha(Vector3.ZERO)
 
 
@@ -204,7 +190,7 @@ func _physics_process(delta: float) -> void:
 	if la_master and cho_mac_dinh == Vector3.ZERO:
 		cho_mac_dinh = global_position
 	if holder_id != 0 and sieu_linh:
-		# Lo lung: VAN LA VAT LY DONG, van va cham. May khac thay no bay y nhu vat dang bay.
+		# Lơ lửng nhưng vẫn là vật lý động, vẫn va chạm.
 		_mo_khoa()
 		linear_damp = 0.0
 		angular_damp = sieu_linh_ham_xoay
@@ -216,7 +202,7 @@ func _physics_process(delta: float) -> void:
 		_khoa(holder_id != 0)
 		return
 	_mo_khoa()
-	# Tren khong khong ham; cham mat moi ham cho vat khoi lan mai.
+	# Trên không không hãm.
 	linear_damp = ham_mat_dat if get_contact_count() > 0 else 0.0
 	if not la_master:
 		return
@@ -234,23 +220,14 @@ func _physics_process(delta: float) -> void:
 	_khi_bay_vat_ly(delta)
 
 
-## Tay sieu linh (chi master). Lo xo - giam chan dat theo tan so va ti le tat dan, nhan khoi
-## luong de do cung KHONG phu thuoc vat nang hay nhe:
-##     w = 2 pi f          F = m (w^2 * lech  -  2 * zeta * w * v)
-## roi CAT o `sieu_linh_luc` lan trong luong: vat nang bi tuong/ban chan thi tay khong du luc
-## xuyen qua, va vat cham dich cham hon mot chut. Trong luc van tac dung, nen vat dung yen xe
-## xuong g / w^2 (5 Hz: khoang 1 cm) — nhu nang bang tay that.
-##
-## Dat LUC (apply_central_force) chu khong ghi thang `linear_velocity`: tai lieu Godot noi ghi
-## thang trang thai moi nhip thi may vat ly khong mo phong dung duoc; va cong thuc gan van toc
-## `v = K * lech - C * v` doi dau moi nhip khi C >= 1.
-##
-## ponytail: chua tinh van toc cua diem giu (Catto co). Di nhanh thi vat tre sau ~2*zeta*v/w
-## (chay 6 m/s, 5 Hz: ~0.38 m). Them van toc diem giu vao so hang giam chan neu can bam sat hon.
+## Tay siêu linh (master): F = m(w²·lệch − 2ζw·v), w = 2πf, cắt ở `sieu_linh_luc` × trọng lượng.
+## Đặt lực thay vì ghi thẳng `linear_velocity` để vật lý mô phỏng đúng.
+## ponytail: chưa tính vận tốc điểm giữ, chạy nhanh vật trễ ~2ζv/w;
+## thêm vào số hạng giảm chấn nếu cần bám sát hơn.
 func _keo_sieu_linh() -> void:
 	var p := _find_player(holder_id)
 	if p == null:
-		_tha(linear_velocity)       # nguoi cam roi phong: buong tay, vat bay tiep
+		_tha(linear_velocity)  # người cầm rời phòng
 		return
 	var dich := p.diem_cam(Vector3(0.0, -0.15, -sieu_linh_xa)).origin
 	var w := TAU * sieu_linh_hz
@@ -269,8 +246,7 @@ func _mo_khoa() -> void:
 	collision_mask = LOP_THE_GIOI | LOP_VAT
 
 
-## Dang cam TRONG TAY thi tat ca va cham: mot vat vo hinh truoc mat nguoi cam se huc do moi thu
-## no di qua.
+## Cầm trong tay thì tắt va chạm.
 func _khoa(dang_cam: bool) -> void:
 	if not freeze:
 		freeze = true
@@ -287,7 +263,7 @@ func _ve_cho_cu() -> void:
 	global_transform = Transform3D(Basis.IDENTITY, cho_mac_dinh)
 
 
-## Dat vat vao tay nguoi dang cam: truoc camera cua ho, lech `cam_offset`, xoay theo huong nhin.
+## Đặt vật theo camera người cầm, lệch `cam_offset`.
 func _theo_tay(delta: float) -> bool:
 	var p := _find_player(holder_id)
 	if p == null:
@@ -302,40 +278,25 @@ func _theo_tay(delta: float) -> bool:
 	return true
 
 
-## Lop con goi sau khi dung xong hinh. Moi vat MOT hinh va cham, dat lai moi lan hinh doi.
+## Lớp con gọi sau khi dựng hình; gán hình cho `HinhVaCham` (có sẵn trong scene mỗi vật).
 func _dat_hinh(hinh: Shape3D, vi_tri := Vector3.ZERO) -> void:
 	if hinh == null:
 		return
-	var cs := get_node_or_null("HinhVaCham") as CollisionShape3D
-	if cs == null:
-		cs = CollisionShape3D.new()
-		cs.name = "HinhVaCham"
-		add_child(cs)
+	var cs := $HinhVaCham as CollisionShape3D
 	cs.shape = hinh
 	cs.position = vi_tri
 
 
-## Hinh loi da dung, theo khoa (loai quan + goc xoay). Moi loai chi dung MOT lan cho ca phong.
-static var _hinh_da_dung := {}
-## Toi da chung nay diem dua vao hinh loi — may vat ly tu bao loi tu cac diem do.
-const DIEM_LOI_TOI_DA := 256
-
-
-## Hinh loi (convex) bao moi luoi duoi `goc`, tinh trong he toa do cua vat. Cho vat hinh la
-## (quan co vua): hop chu nhat thi quan nga khong dung dang.
-##
-## KHONG dung `Mesh.create_convex_shape()`: do duoc 64–119 ms MOI model (5–14 nghin dinh). 32 quan
-## cung sinh ra la chan luong chinh 6.9 s — Photon khong duoc phuc vu, hang doi goi den day (canh
-## bao 1035) va may vao sau bi ngat (1040). Lay thua dinh, de may vat ly tu bao loi, va nho lai.
-##
-## Bo qua luoi dang cho xoa (dung lai hinh trong cung frame) va vo sang highlight ("vien_ngam").
+## Hình lồi bao mọi lưới dưới `goc`, toạ độ của vật; bỏ lưới đang chờ xoá.
+## ⚠️ Không dùng `Mesh.create_convex_shape()`: 64–119 ms mỗi model,
+## chặn luồng chính làm Photon ngắt kết nối.
 func _hinh_loi_tu_luoi(goc: Node3D, khoa: String) -> ConvexPolygonShape3D:
 	if _hinh_da_dung.has(khoa):
 		return _hinh_da_dung[khoa]
 	var diem := PackedVector3Array()
 	for m in goc.find_children("*", "MeshInstance3D", true, false):
 		var luoi := m as MeshInstance3D
-		if luoi.mesh == null or luoi.is_queued_for_deletion() or luoi.is_in_group("vien_ngam"):
+		if luoi.mesh == null or luoi.is_queued_for_deletion():
 			continue
 		var t := _bien_doi_toi_goc(luoi)
 		for mat in luoi.mesh.get_surface_count():
@@ -363,7 +324,7 @@ func _bien_doi_toi_goc(n: Node3D) -> Transform3D:
 	return t
 
 
-## Cac moc cho lop con. Chi chay tren master.
+## Móc cho lớp con, chỉ chạy trên master.
 func _khi_duoc_nhat() -> void:
 	pass
 

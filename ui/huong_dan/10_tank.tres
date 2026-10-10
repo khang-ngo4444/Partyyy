@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "10 · Tank 1990"
+noi_dung = "[color=#8fe7d4][b]PHÍM[/b][/color]
+[b]W A S D[/b] lái xe theo 4 hướng · [b]J hoặc Space[/b] bắn.
+
+[color=#8fe7d4][b]LUẬT[/b][/color]
+Đạn trúng là bị loại ngay, không có máu và không hồi sinh. Tường gạch có thể bị phá để mở đường. Ván kéo dài tối đa 75 giây hoặc kết thúc khi còn một xe.
+
+[b]Xếp hạng:[/b] sống sót lâu hơn đứng trên; người sống cuối cùng đứng hạng nhất."

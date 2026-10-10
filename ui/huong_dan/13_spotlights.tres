@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "13 · Searing Spotlights"
+noi_dung = "[color=#8fe7d4][b]PHÍM[/b][/color]
+[b]W A S D[/b] chạy.
+
+[color=#8fe7d4][b]LUẬT[/b][/color]
+Khi sân còn sáng, ghi nhớ vị trí và đường quét của đèn. Khi tối, tránh các vùng sáng đang di chuyển; đứng trong vùng sáng làm mất máu.
+
+Viền sân là tường vô hình nên không chết vì chạy khỏi mép. Ván kéo dài 75 giây. [b]Xếp hạng:[/b] sống sót lâu hơn đứng trên."

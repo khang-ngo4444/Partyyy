@@ -1,0 +1,44 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://lobby/objects/ghe_lai.gd" id="1_lai"]
+
+[sub_resource type="BoxShape3D" id="Box_than_xe"]
+size = Vector3(0.6, 0.57, 1.35)
+
+[sub_resource type="BoxShape3D" id="Box_hang_xe"]
+size = Vector3(0.4, 0.21, 1.05)
+
+[sub_resource type="BoxShape3D" id="vung_hinh"]
+size = Vector3(0.8, 0.9, 1.5)
+
+[node name="GheLai" type="Node3D"]
+script = ExtResource("1_lai")
+
+[node name="Hitbox" type="AnimatableBody3D" parent="."]
+sync_to_physics = false
+
+[node name="Than" type="CollisionShape3D" parent="Hitbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5445, 0)
+shape = SubResource("Box_than_xe")
+
+[node name="Hang" type="CollisionShape3D" parent="Hitbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8635, 0)
+shape = SubResource("Box_hang_xe")
+
+[node name="VungNgam" type="Area3D" parent="."]
+collision_layer = 16
+collision_mask = 0
+monitoring = false
+
+[node name="Hinh" type="CollisionShape3D" parent="VungNgam"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+shape = SubResource("vung_hinh")
+
+[node name="Tag" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+pixel_size = 0.002
+billboard = 1
+modulate = Color(0.8509804, 0.7882353, 0.5411765, 1)
+text = "E - LAI TAU"
+font_size = 28
+outline_size = 8

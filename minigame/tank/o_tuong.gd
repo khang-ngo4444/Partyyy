@@ -1,14 +1,9 @@
 class_name OTuong
 extends Node2D
 
-## MỘT ô tường trong đấu trường Tank.
-##
-## Hình nằm trong `o_tuong.tscn`. Script này **không dựng node nào** — nó chỉ đổi màu theo
-## loại, y như `o_ban.gd` làm với vật liệu ô bàn cờ.
-##
-## Sửa bản đồ = mở `ban_do_tank.tscn` lên kéo ô trong editor, không đụng tới code.
+## Một ô tường Tank: đổi màu theo loại.
 
-## Gạch vỡ được khi trúng đạn, thép thì không. Đó là toàn bộ khác biệt giữa hai loại.
+## Gạch vỡ được, thép thì không.
 enum Loai { GACH, THEP }
 
 @export var loai: Loai = Loai.GACH:
@@ -17,8 +12,7 @@ enum Loai { GACH, THEP }
 		if is_node_ready():
 			_ve()
 
-## Hai màu theo đúng thứ tự enum `Loai`, đặt sẵn trong `o_tuong.tscn`. Mọi instance thừa
-## hưởng mảng này nên từng ô chỉ cần đặt `loai`.
+## Màu theo thứ tự enum `Loai`.
 @export var mau: Array[Color] = []
 
 @onready var _mau: ColorRect = $Mau

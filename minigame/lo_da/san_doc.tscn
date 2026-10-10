@@ -1,0 +1,182 @@
+[gd_scene format=3]
+
+[ext_resource type="Environment" path="res://materials/env_san_sang.tres" id="1_env"]
+[ext_resource type="Material" path="res://materials/mat_limestone.tres" id="2_be"]
+[ext_resource type="Material" path="res://materials/mat_vien_san.tres" id="3_le"]
+[ext_resource type="Material" path="res://materials/mat_vet_loi.tres" id="4_dich"]
+[ext_resource type="PackedScene" path="res://minigame/lo_da/thien_thach.tscn" id="5_tt"]
+
+[sub_resource type="StandardMaterial3D" id="MatDoc"]
+albedo_color = Color(0.55, 0.42, 0.3, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="MatLua"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.35, 0.05, 0.45)
+
+[sub_resource type="BoxMesh" id="MeshBe"]
+size = Vector3(14, 1, 6)
+
+[sub_resource type="BoxShape3D" id="HinhBe"]
+size = Vector3(14, 1, 6)
+
+[sub_resource type="BoxMesh" id="MeshDoc"]
+size = Vector3(14, 1, 143.1277)
+
+[sub_resource type="BoxShape3D" id="HinhDoc"]
+size = Vector3(14, 1, 143.1277)
+
+[sub_resource type="BoxMesh" id="MeshLe"]
+size = Vector3(0.3, 0.5, 143.1277)
+
+[sub_resource type="BoxMesh" id="MeshDinh"]
+size = Vector3(14, 1, 8)
+
+[sub_resource type="BoxShape3D" id="HinhDinh"]
+size = Vector3(14, 1, 8)
+
+[sub_resource type="BoxMesh" id="MeshVach"]
+size = Vector3(14, 0.05, 0.8)
+
+[sub_resource type="BoxMesh" id="MeshCot"]
+size = Vector3(0.4, 5, 0.4)
+
+[sub_resource type="BoxMesh" id="MeshXa"]
+size = Vector3(15.2, 0.6, 0.4)
+
+[sub_resource type="BoxShape3D" id="HinhTuongDoc"]
+size = Vector3(1, 44, 154)
+
+[sub_resource type="BoxShape3D" id="HinhTuongNgang"]
+size = Vector3(16, 8, 1)
+
+[sub_resource type="BoxMesh" id="MeshLua"]
+size = Vector3(16, 7, 0.3)
+
+[node name="SanDoc" type="Node3D"]
+
+[node name="Cam" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.848048, -0.529919, 0, 0.529919, 0.848048, 0, 9, 11)
+environment = ExtResource("1_env")
+fov = 65.0
+
+[node name="Den" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866, -0.354, 0.354, 0, 0.707, 0.707, -0.5, -0.612, 0.612, 0, 40, 0)
+light_energy = 1.1
+shadow_enabled = true
+
+[node name="Be" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 3)
+
+[node name="Mat" type="MeshInstance3D" parent="Be"]
+mesh = SubResource("MeshBe")
+material_override = ExtResource("2_be")
+
+[node name="Hinh" type="CollisionShape3D" parent="Be"]
+shape = SubResource("HinhBe")
+
+[node name="Doc" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.978148, 0.207912, 0, -0.207912, 0.978148, 0, 14.389886, -70.103956)
+
+[node name="Mat" type="MeshInstance3D" parent="Doc"]
+mesh = SubResource("MeshDoc")
+material_override = SubResource("MatDoc")
+
+[node name="Hinh" type="CollisionShape3D" parent="Doc"]
+shape = SubResource("HinhDoc")
+
+[node name="LeTrai" type="MeshInstance3D" parent="Doc"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.15, 0.75, 0)
+mesh = SubResource("MeshLe")
+material_override = ExtResource("3_le")
+
+[node name="LePhai" type="MeshInstance3D" parent="Doc"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.15, 0.75, 0)
+mesh = SubResource("MeshLe")
+material_override = ExtResource("3_le")
+
+[node name="Dinh" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 29.257919, -144)
+
+[node name="Mat" type="MeshInstance3D" parent="Dinh"]
+mesh = SubResource("MeshDinh")
+material_override = ExtResource("2_be")
+
+[node name="Hinh" type="CollisionShape3D" parent="Dinh"]
+shape = SubResource("HinhDinh")
+
+[node name="VachDich" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 29.79, -141)
+mesh = SubResource("MeshVach")
+material_override = ExtResource("4_dich")
+
+[node name="CotTrai" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.4, 32.26, -141)
+mesh = SubResource("MeshCot")
+material_override = ExtResource("3_le")
+
+[node name="CotPhai" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.4, 32.26, -141)
+mesh = SubResource("MeshCot")
+material_override = ExtResource("3_le")
+
+[node name="XaDich" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 34.96, -141)
+mesh = SubResource("MeshXa")
+material_override = ExtResource("4_dich")
+
+[node name="TuongTrai" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 18, -71)
+
+[node name="Hinh" type="CollisionShape3D" parent="TuongTrai"]
+shape = SubResource("HinhTuongDoc")
+
+[node name="TuongPhai" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 18, -71)
+
+[node name="Hinh" type="CollisionShape3D" parent="TuongPhai"]
+shape = SubResource("HinhTuongDoc")
+
+[node name="TuongSau" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 6.5)
+
+[node name="Hinh" type="CollisionShape3D" parent="TuongSau"]
+shape = SubResource("HinhTuongNgang")
+
+[node name="TuongDinh" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 33, -148.5)
+
+[node name="Hinh" type="CollisionShape3D" parent="TuongDinh"]
+shape = SubResource("HinhTuongNgang")
+
+[node name="PhaBom" type="Node3D" parent="."]
+
+[node name="TuongLua" type="MeshInstance3D" parent="PhaBom"]
+visible = false
+mesh = SubResource("MeshLua")
+material_override = SubResource("MatLua")
+
+[node name="ThienThach0" parent="PhaBom" instance=ExtResource("5_tt")]
+visible = false
+
+[node name="ThienThach1" parent="PhaBom" instance=ExtResource("5_tt")]
+visible = false
+
+[node name="ThienThach2" parent="PhaBom" instance=ExtResource("5_tt")]
+visible = false
+
+[node name="ThienThach3" parent="PhaBom" instance=ExtResource("5_tt")]
+visible = false
+
+[node name="ThienThach4" parent="PhaBom" instance=ExtResource("5_tt")]
+visible = false
+
+[node name="ThienThach5" parent="PhaBom" instance=ExtResource("5_tt")]
+visible = false
+
+[node name="ThienThach6" parent="PhaBom" instance=ExtResource("5_tt")]
+visible = false
+
+[node name="ThienThach7" parent="PhaBom" instance=ExtResource("5_tt")]
+visible = false

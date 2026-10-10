@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://c1iu1qkpwskk5"]
 
 [ext_resource type="Script" uid="uid://kdsu72skf6sv" path="res://lobby/lobby.gd" id="1_e"]
-[ext_resource type="Script" uid="uid://darj8nwm4qjaa" path="res://lobby/canopy_line.gd" id="2_e"]
 [ext_resource type="Material" path="res://materials/mat_limestone.tres" id="3_e"]
 [ext_resource type="Material" path="res://materials/mat_brass.tres" id="4_e"]
 [ext_resource type="Material" path="res://materials/mat_brass_dark.tres" id="5_e"]
@@ -9,12 +8,10 @@
 [ext_resource type="Material" path="res://materials/mat_stone_dado.tres" id="7_e"]
 [ext_resource type="Material" path="res://materials/mat_stone_light.tres" id="8_e"]
 [ext_resource type="PackedScene" path="res://lobby/objects/ready_pad.tscn" id="9_e"]
-[ext_resource type="PackedScene" path="res://lobby/objects/chess_board.tscn" id="10_e"]
 [ext_resource type="PackedScene" path="res://lobby/objects/pressable.tscn" id="11_e"]
 [ext_resource type="PackedScene" path="res://lobby/objects/chicken_race.tscn" id="12_e"]
 [ext_resource type="PackedScene" path="res://lobby/objects/dice_table.tscn" id="13_e"]
 [ext_resource type="PackedScene" path="res://lobby/objects/penguin_cross.tscn" id="14_e"]
-[ext_resource type="PackedScene" path="res://lobby/objects/card_table.tscn" id="15_e"]
 [ext_resource type="PackedScene" path="res://lobby/objects/basketball_court.tscn" id="16_e"]
 [ext_resource type="PackedScene" path="res://lobby/objects/dartboard.tscn" id="17_e"]
 [ext_resource type="PackedScene" path="res://lobby/objects/hanoi_tower.tscn" id="18_e"]
@@ -28,7 +25,18 @@
 [ext_resource type="PackedScene" uid="uid://dkjnnjk2256ix" path="res://asset/kenney_nature-kit/Models/GLTF format/plant_bushDetailed.glb" id="26_e"]
 [ext_resource type="PackedScene" uid="uid://ddkreirk81qdv" path="res://asset/kenney_furniture-kit/Models/GLTF format/loungeSofa.glb" id="27_e"]
 [ext_resource type="PackedScene" uid="uid://bkrm0dtsvwm1i" path="res://asset/kenney_furniture-kit/Models/GLTF format/tableCoffee.glb" id="28_e"]
-[ext_resource type="PackedScene" uid="uid://xy756w8etjkf" path="res://asset/kenney_train-kit/Models/GLB format/train-carriage-wood.glb" id="29_e"]
+[ext_resource type="PackedScene" path="res://lobby/objects/ghe_ngoi.tscn" id="30_e"]
+[ext_resource type="PackedScene" path="res://lobby/objects/ban_poker.tscn" id="31_e"]
+[ext_resource type="PackedScene" path="res://lobby/objects/ban_xi_dach.tscn" id="32_e"]
+[ext_resource type="PackedScene" path="res://lobby/objects/ban_co.tscn" id="33_e"]
+[ext_resource type="PackedScene" path="res://lobby/objects/ban_caro.tscn" id="34_e"]
+[ext_resource type="PackedScene" path="res://lobby/khung_nha.tscn" id="35_e"]
+[ext_resource type="PackedScene" path="res://lobby/dong_ho.tscn" id="36_e"]
+[ext_resource type="PackedScene" path="res://lobby/canopy_line.tscn" id="37_e"]
+[ext_resource type="Material" path="res://materials/mat_leaf_palm.tres" id="mat_mat_leaf_palm"]
+[ext_resource type="Material" path="res://materials/mat_leaf_fern.tres" id="mat_mat_leaf_fern"]
+[ext_resource type="Material" path="res://materials/mat_leaf_deep.tres" id="mat_mat_leaf_deep"]
+[ext_resource type="Material" path="res://materials/mat_cane.tres" id="mat_mat_cane"]
 
 [sub_resource type="ProceduralSkyMaterial" id="s1"]
 sky_top_color = Color(0.498, 0.6588, 0.7882, 1)
@@ -182,13 +190,6 @@ size = Vector3(0.5, 1, 2.2)
 [sub_resource type="BoxMesh" id="s32"]
 size = Vector3(0.5, 1, 2.2)
 
-[sub_resource type="Curve3D" id="Curve3D_2fvh6"]
-_data = {
-"points": PackedVector3Array(0, -0.19999999, 1.1166664, 0, 0.19999999, -1.1166664, 0, 0.4, -11.5, -2.7, -0.68333334, -1.5833334, 2.7, 0.68333334, 1.5833334, 0, 2.6, -16.3, -1.9166666, -0.73333335, -4.633333, 1.9166666, 0.73333335, 4.633333, 16.2, 4.5, -2, 2.5, 0, 0, -2.5, 0, 0, 11.5, 7, 11.5, 4.616667, -0.33333334, 2.25, -4.616667, 0.33333334, -2.25, -11.5, 9, 11.5, -0.9166667, 0.5, 4.1666665, 0.9166667, -0.5, -4.1666665, -16.2, 9, -2, -3.0333335, 1, 1, 3.0333335, -1, -1, -6, 6, -13.5, -1.0131435, 0.16210297, -1.094195, 2.0833333, -0.33333334, 2.25, 2, 3, -8, 0.33333334, -0.33333334, -2.3166666, -0.33333334, 0.33333334, 2.3166666, 6.5, 4, 0, 1.9166666, -0.26666665, 0, -1.9166666, 0.26666665, 0, 0, 5, 5.9, 0, -0.6000001, 1.9833332, 0, 0.6000001, -1.9833332, -5, 5.6, 0, -1.2333333, -0.93333334, 0, 1.2333333, 0.93333334, 0, 0, 8.6, -6, 0, -0.43333325, -1, 0, 0.43333325, 1, 2.4, 11.2, 0, 0.8666666, 0, 0, -0.8666666, 0, 0, 0, 11.2, 0, 0.5, 0.7833333, -1.5, -0.5, -0.7833333, 1.5, -2.8, 11.2, 0, 2.1333334, 1.3666667, -0.5, -2.1333334, -1.3666667, 0.5, -3, 6.5, 9, 0.6666667, 0.53333336, 3.5, -0.6666667, -0.53333336, -3.5, -15.6, 3, 3, -2.4333334, -0.066666685, 1.4333334, 2.4333334, 0.066666685, -1.4333334, -7, 3.3, -12, -1.1666666, 0.31666666, -0.39999995, 1.1666666, -0.31666666, 0.39999995, -1, 3.4, -5.6, -0.16666667, 0.5, 0.98333335, 0.16666667, -0.5, -0.98333335, 0, 1.4, -9.6, 0, -0.19999999, 1.1166664, 0, 0.19999999, -1.1166664, 0, 0.4, -11.5),
-"tilts": PackedFloat32Array(0, 0, 0.31415927, 0.20943952, 0.41887903, 0.38397244, -0.17453292, 0, 0.4886922, 0.5235988, 0.5934119, 0.6632251, 0.6981317, 0.34906584, 0, -0.13962634, 0.2443461, 0.10471976, 0.06981317, 0, 0)
-}
-point_count = 21
-
 [sub_resource type="BoxMesh" id="s34"]
 size = Vector3(1.1, 0.4, 3.7)
 
@@ -264,6 +265,10 @@ size = Vector3(3.6, 0.1, 0.16)
 
 [node name="Lobby" type="Node3D" unique_id=1074837372]
 script = ExtResource("1_e")
+mat_la_palm = ExtResource("mat_mat_leaf_palm")
+mat_la_fern = ExtResource("mat_mat_leaf_fern")
+mat_la_ground = ExtResource("mat_mat_leaf_deep")
+mat_may = ExtResource("mat_mat_cane")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1738267932]
 environment = SubResource("s3")
@@ -314,6 +319,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 14, 0)
 material_override = ExtResource("6_e")
 cast_shadow = 0
 mesh = SubResource("s9")
+
+[node name="KhungNha" parent="." instance=ExtResource("35_e")]
 
 [node name="ReadyPad" parent="." unique_id=31432666 instance=ExtResource("9_e")]
 
@@ -430,17 +437,25 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15.2, 0)
 material_override = ExtResource("4_e")
 mesh = SubResource("s28")
 
+[node name="Dial0" parent="ClockTower" instance=ExtResource("36_e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.6, 1.43)
+
+[node name="Dial1" parent="ClockTower" instance=ExtResource("36_e")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 1.43, 9.6, 0)
+
+[node name="Dial2" parent="ClockTower" instance=ExtResource("36_e")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 9.6, -1.43)
+
+[node name="Dial3" parent="ClockTower" instance=ExtResource("36_e")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -1.43, 9.6, 0)
+
 [node name="BayA_CardRoom" type="Node3D" parent="." unique_id=2033206483]
 
-[node name="PokerTable" parent="BayA_CardRoom" unique_id=566022676 instance=ExtResource("15_e")]
+[node name="PokerTable" parent="BayA_CardRoom" unique_id=566022676 instance=ExtResource("31_e")]
 transform = Transform3D(-0.299464, 0, -0.954107, 0, 1, 0, 0.954107, 0, -0.299464, 13.7, 0, 4.3)
-poker = true
-deck_id = 1
-felt_color = Color(0.1255, 0.3137, 0.2353, 1)
 
-[node name="BlackjackTable" parent="BayA_CardRoom" unique_id=1558528591 instance=ExtResource("15_e")]
+[node name="BlackjackTable" parent="BayA_CardRoom" unique_id=1558528591 instance=ExtResource("32_e")]
 transform = Transform3D(-0.633238, 0, -0.773957, 0, 1, 0, 0.773957, 0, -0.633238, 11, 0, 9)
-felt_color = Color(0.1255, 0.3137, 0.2353, 1)
 
 [node name="DiceTable" parent="BayA_CardRoom" unique_id=1458149939 instance=ExtResource("13_e")]
 transform = Transform3D(-0.864938, 0, -0.501878, 0, 1, 0, 0.501878, 0, -0.864938, 4.7, 0, 8.1)
@@ -453,8 +468,7 @@ transform = Transform3D(-0.867786, 0, -0.496937, 0, 1, 0, 0.496937, 0, -0.867786
 [node name="ChessStation" type="Node3D" parent="BayB_LongGallery" unique_id=2024762190]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.7, 0, 3)
 
-[node name="ChessBoard" parent="BayB_LongGallery/ChessStation" unique_id=1695109772 instance=ExtResource("10_e")]
-cell_size = 0.85
+[node name="ChessBoard" parent="BayB_LongGallery/ChessStation" unique_id=1695109772 instance=ExtResource("33_e")]
 
 [node name="BeCoVua" type="StaticBody3D" parent="BayB_LongGallery/ChessStation" unique_id=1808587228]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 4.55)
@@ -484,9 +498,7 @@ label_size = 40
 [node name="CaroStation" type="Node3D" parent="BayB_LongGallery" unique_id=1212431092]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.2, 0, 11.3)
 
-[node name="CaroBoard" parent="BayB_LongGallery/CaroStation" unique_id=1731012904 instance=ExtResource("10_e")]
-mode = 2
-cell_size = 0.18
+[node name="CaroBoard" parent="BayB_LongGallery/CaroStation" unique_id=1731012904 instance=ExtResource("34_e")]
 
 [node name="BeCaro" type="StaticBody3D" parent="BayB_LongGallery/CaroStation" unique_id=160096227]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.77, 0.5, 0)
@@ -667,54 +679,7 @@ light_color = Color(1, 0.8784, 0.6824, 1)
 light_energy = 1.4
 omni_range = 6.0
 
-[node name="CanopyLine" type="Path3D" parent="." unique_id=1150651480]
-curve = SubResource("Curve3D_2fvh6")
-script = ExtResource("2_e")
-sleeper_material = ExtResource("5_e")
-
-[node name="RailL" type="CSGPolygon3D" parent="CanopyLine" unique_id=1726889515]
-polygon = PackedVector2Array(-0.34, -0.04, -0.26, -0.04, -0.26, 0.04, -0.34, 0.04)
-mode = 2
-path_node = NodePath("..")
-path_interval_type = 0
-path_interval = 0.5
-path_simplify_angle = 0.0
-path_rotation = 2
-path_rotation_accurate = false
-path_local = true
-path_continuous_u = true
-path_u_distance = 1.0
-path_joined = true
-material = ExtResource("4_e")
-
-[node name="RailR" type="CSGPolygon3D" parent="CanopyLine" unique_id=1693345370]
-polygon = PackedVector2Array(0.26, -0.04, 0.34, -0.04, 0.34, 0.04, 0.26, 0.04)
-mode = 2
-path_node = NodePath("..")
-path_interval_type = 0
-path_interval = 0.5
-path_simplify_angle = 0.0
-path_rotation = 2
-path_rotation_accurate = false
-path_local = true
-path_continuous_u = true
-path_u_distance = 1.0
-path_joined = true
-material = ExtResource("4_e")
-
-[node name="Car" type="PathFollow3D" parent="CanopyLine" unique_id=1944856764]
-transform = Transform3D(-1, 0, 0, 0, 0.9843367, 0.17629912, 0, 0.17629912, -0.9843367, 0, 0.4, -11.5)
-rotation_mode = 4
-use_model_front = true
-
-[node name="Model" parent="CanopyLine/Car" unique_id=608817695 instance=ExtResource("29_e")]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.18, 0)
-
-[node name="Headlamp" type="OmniLight3D" parent="CanopyLine/Car" unique_id=1356078915]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0.7)
-light_color = Color(1, 0.7686, 0.4196, 1)
-light_energy = 1.5
-omni_range = 7.0
+[node name="CanopyLine" parent="." unique_id=1150651480 instance=ExtResource("37_e")]
 
 [node name="Station" type="Node3D" parent="." unique_id=806910586]
 
@@ -808,6 +773,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
 [node name="Shape" type="CollisionShape3D" parent="Decor/Sofa1/Body" unique_id=67041148]
 shape = SubResource("s45")
+
+[node name="Sofa1_ChoTrai" parent="Decor/Sofa1" instance=ExtResource("30_e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.52, 0, 0.62)
+
+[node name="Sofa1_ChoPhai" parent="Decor/Sofa1" instance=ExtResource("30_e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, 0, 0.62)
 
 [node name="Fern1" type="Node3D" parent="Decor" unique_id=1499340219]
 transform = Transform3D(0.554373, 0, -0.832268, 0, 1, 0, 0.832268, 0, 0.554373, 7.85, 0, 6.78)
@@ -944,6 +915,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 [node name="Shape" type="CollisionShape3D" parent="Decor/Sofa2/Body" unique_id=957038267]
 shape = SubResource("s48")
 
+[node name="Sofa2_ChoTrai" parent="Decor/Sofa2" instance=ExtResource("30_e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.52, 0, 0.62)
+
+[node name="Sofa2_ChoPhai" parent="Decor/Sofa2" instance=ExtResource("30_e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, 0, 0.62)
+
 [node name="Fern5" type="Node3D" parent="Decor" unique_id=1899972261]
 transform = Transform3D(0.948166, 0, -0.317774, 0, 1, 0, 0.317774, 0, 0.948166, 7.88, 0, -13.14)
 
@@ -1019,6 +996,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 [node name="Shape" type="CollisionShape3D" parent="Decor/Sofa3/Body" unique_id=152518004]
 shape = SubResource("s50")
 
+[node name="Sofa3_ChoTrai" parent="Decor/Sofa3" instance=ExtResource("30_e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.52, 0, 0.62)
+
+[node name="Sofa3_ChoPhai" parent="Decor/Sofa3" instance=ExtResource("30_e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, 0, 0.62)
+
 [node name="Fern7" type="Node3D" parent="Decor" unique_id=2128312597]
 transform = Transform3D(-0.954306, 0, -0.298831, 0, 1, 0, 0.298831, 0, -0.954306, -8.63, 0, -11.88)
 
@@ -1067,6 +1050,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 [node name="Shape" type="CollisionShape3D" parent="Decor/SofaPlinth0/Body" unique_id=1076635982]
 shape = SubResource("s51")
 
+[node name="SofaPlinth0_ChoTrai" parent="Decor/SofaPlinth0" instance=ExtResource("30_e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.52, 0, 0.62)
+
+[node name="SofaPlinth0_ChoPhai" parent="Decor/SofaPlinth0" instance=ExtResource("30_e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, 0, 0.62)
+
 [node name="SofaPlinth1" type="Node3D" parent="Decor" unique_id=362435932]
 transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, 2.7, 0, 0)
 
@@ -1078,6 +1067,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
 [node name="Shape" type="CollisionShape3D" parent="Decor/SofaPlinth1/Body" unique_id=165090991]
 shape = SubResource("s52")
+
+[node name="SofaPlinth1_ChoTrai" parent="Decor/SofaPlinth1" instance=ExtResource("30_e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.52, 0, 0.62)
+
+[node name="SofaPlinth1_ChoPhai" parent="Decor/SofaPlinth1" instance=ExtResource("30_e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, 0, 0.62)
 
 [node name="SofaPlinth2" type="Node3D" parent="Decor" unique_id=1861380159]
 transform = Transform3D(-1, 0, 1.22465e-16, 0, 1, 0, -1.22465e-16, 0, -1, 0, 0, -2.7)
@@ -1091,6 +1086,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 [node name="Shape" type="CollisionShape3D" parent="Decor/SofaPlinth2/Body" unique_id=1095038088]
 shape = SubResource("s53")
 
+[node name="SofaPlinth2_ChoTrai" parent="Decor/SofaPlinth2" instance=ExtResource("30_e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.52, 0, 0.62)
+
+[node name="SofaPlinth2_ChoPhai" parent="Decor/SofaPlinth2" instance=ExtResource("30_e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, 0, 0.62)
+
 [node name="SofaPlinth3" type="Node3D" parent="Decor" unique_id=1170677038]
 transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, -2.7, 0, 0)
 
@@ -1102,6 +1103,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
 [node name="Shape" type="CollisionShape3D" parent="Decor/SofaPlinth3/Body" unique_id=1562690981]
 shape = SubResource("s54")
+
+[node name="SofaPlinth3_ChoTrai" parent="Decor/SofaPlinth3" instance=ExtResource("30_e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.52, 0, 0.62)
+
+[node name="SofaPlinth3_ChoPhai" parent="Decor/SofaPlinth3" instance=ExtResource("30_e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, 0, 0.62)
 
 [node name="WallStation" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 16.9)

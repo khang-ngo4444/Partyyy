@@ -1,8 +1,0 @@
-[gd_scene format=3]
-
-[ext_resource type="PackedScene" path="res://asset/kenney_mini-characters/Models/GLB format/character-male-b.glb" id="1_4qe7c"]
-
-[node name="CharacterMaleB" type="Node3D" unique_id=390574356]
-
-[node name="Model" type="Node3D" parent="." unique_id=118222185 instance=ExtResource("1_4qe7c")]
-transform = Transform3D(-2.68, 0, -2.3429304e-07, 0, 2.68, 0, 2.3429304e-07, 0, -2.68, 0, 0, 0)

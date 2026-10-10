@@ -1,7 +1,8 @@
-[gd_scene load_steps=19 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/liar_bar.gd" id="1_script"]
 [ext_resource type="Resource" path="res://lobby/objects/card_deck.tres" id="2_deck"]
+[ext_resource type="PackedScene" path="res://lobby/objects/pressable.tscn" id="16_hw2b0"]
 [ext_resource type="AudioStream" uid="uid://d3k3yqwnkxv1r" path="res://asset/kenney_impact-sounds/Audio/impactPlate_light_000.ogg" id="snd_0"]
 [ext_resource type="AudioStream" uid="uid://bs16xhv18mib4" path="res://asset/kenney_impact-sounds/Audio/impactPlate_light_001.ogg" id="snd_1"]
 [ext_resource type="AudioStream" uid="uid://dut8os8d0rbrt" path="res://asset/kenney_impact-sounds/Audio/impactPlate_light_002.ogg" id="snd_2"]
@@ -15,6 +16,8 @@
 [ext_resource type="AudioStream" uid="uid://2ojqjeqlii2q" path="res://asset/kenney_interface-sounds/Audio/tick_001.ogg" id="snd_10"]
 [ext_resource type="AudioStream" uid="uid://c7xna4n7xroy7" path="res://asset/kenney_interface-sounds/Audio/bong_001.ogg" id="snd_11"]
 [ext_resource type="AudioStream" uid="uid://cvlvyoon42alj" path="res://asset/kenney_interface-sounds/Audio/drop_002.ogg" id="snd_12"]
+[ext_resource type="PackedScene" path="res://lobby/objects/la_bai_liar.tscn" id="la_bai_scene"]
+[ext_resource type="PackedScene" path="res://lobby/objects/nut_bai_liar.tscn" id="nut_bai_scene"]
 
 [sub_resource type="AudioStreamRandomizer" id="Rand_danh"]
 streams_count = 5
@@ -31,48 +34,607 @@ radius = 1.25
 [sub_resource type="BoxShape3D" id="Shape_StaticSurface_ButtonStand"]
 size = Vector3(1.5, 0.9, 0.5)
 
-[node name="LiarBar" type="Node3D"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_syh3a"]
+albedo_color = Color(0.12156863, 0.23137255, 0.17254902, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_6iyoo"]
+top_radius = 1.25
+bottom_radius = 1.25
+height = 0.08
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3r2ml"]
+albedo_color = Color(0.2901961, 0.17254902, 0.13333334, 1)
+
+[sub_resource type="TorusMesh" id="TorusMesh_cqro5"]
+inner_radius = 1.22
+outer_radius = 1.3
+rings = 32
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_4yowu"]
+top_radius = 0.16
+bottom_radius = 0.35
+height = 0.87
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hlqb2"]
+albedo_color = Color(0.41960785, 0.1764706, 0.22745098, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ex4ms"]
+top_radius = 0.17
+bottom_radius = 0.14
+height = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k8ajv"]
+albedo_color = Color(0.23921569, 0.25490198, 0.3137255, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pthlq"]
+top_radius = 0.05
+bottom_radius = 0.09
+height = 0.65
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_asow7"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_vaesy"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8fhrq"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_mb66h"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6facg"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_i55wr"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d51hb"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_5cxxt"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_illlv"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_5hp0n"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j3pcp"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_xi340"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ylrjh"]
+albedo_color = Color(0.41960785, 0.1764706, 0.22745098, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_4k7hl"]
+top_radius = 0.17
+bottom_radius = 0.14
+height = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6j2kb"]
+albedo_color = Color(0.23921569, 0.25490198, 0.3137255, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_63tjl"]
+top_radius = 0.05
+bottom_radius = 0.09
+height = 0.65
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_clhcd"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ctpbd"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h3ov3"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_wlrmt"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h57st"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_kubc1"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_duiik"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_cn80a"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lbr11"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_kfrh2"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g7vxl"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_q7l75"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eunj8"]
+albedo_color = Color(0.41960785, 0.1764706, 0.22745098, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_t1okj"]
+top_radius = 0.17
+bottom_radius = 0.14
+height = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4o2qc"]
+albedo_color = Color(0.23921569, 0.25490198, 0.3137255, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_brj8h"]
+top_radius = 0.05
+bottom_radius = 0.09
+height = 0.65
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mq5ua"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_p1odx"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y6ww7"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_kusif"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4vuaw"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_te40g"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wiswf"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_bcbxk"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2mb0e"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_aqiu6"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2f1wl"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_quvu6"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ukgpt"]
+albedo_color = Color(0.41960785, 0.1764706, 0.22745098, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_uuadm"]
+top_radius = 0.17
+bottom_radius = 0.14
+height = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6ftgk"]
+albedo_color = Color(0.23921569, 0.25490198, 0.3137255, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_j7v6m"]
+top_radius = 0.05
+bottom_radius = 0.09
+height = 0.65
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ieo5t"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rasn0"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m5rcr"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_2kbir"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v1hoq"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_daufb"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cyymg"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_7gmg5"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bhyju"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_vld1b"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f6npe"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rj734"]
+top_radius = 0.022
+bottom_radius = 0.022
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h3xv6"]
+albedo_color = Color(0.23921569, 0.25490198, 0.3137255, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_12pw0"]
+size = Vector3(1.5, 0.9, 0.5)
+
+[node name="LiarBar" type="Node3D" unique_id=520310056]
 script = ExtResource("1_script")
+la_bai_scene = ExtResource("la_bai_scene")
+nut_bai_scene = ExtResource("nut_bai_scene")
 bo_bai = ExtResource("2_deck")
 
-[node name="Tieng" type="Node3D" parent="."]
+[node name="Tieng" type="Node3D" parent="." unique_id=1638039126]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
 
-[node name="danh" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="danh" type="AudioStreamPlayer3D" parent="Tieng" unique_id=1235100520]
 stream = SubResource("Rand_danh")
 
-[node name="chon" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="chon" type="AudioStreamPlayer3D" parent="Tieng" unique_id=159962623]
 stream = ExtResource("snd_5")
 
-[node name="ngoi" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="ngoi" type="AudioStreamPlayer3D" parent="Tieng" unique_id=1855704435]
 stream = ExtResource("snd_6")
 
-[node name="liar" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="liar" type="AudioStreamPlayer3D" parent="Tieng" unique_id=613077949]
 stream = ExtResource("snd_7")
 
-[node name="chet" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="chet" type="AudioStreamPlayer3D" parent="Tieng" unique_id=1616099464]
 stream = ExtResource("snd_8")
 
-[node name="hut" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="hut" type="AudioStreamPlayer3D" parent="Tieng" unique_id=1266092215]
 stream = ExtResource("snd_9")
 
-[node name="dem" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="dem" type="AudioStreamPlayer3D" parent="Tieng" unique_id=1036404681]
 stream = ExtResource("snd_10")
 
-[node name="bat_dau" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="bat_dau" type="AudioStreamPlayer3D" parent="Tieng" unique_id=1412029356]
 stream = ExtResource("snd_11")
 
-[node name="lam_lai" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="lam_lai" type="AudioStreamPlayer3D" parent="Tieng" unique_id=824418868]
 stream = ExtResource("snd_12")
 
-[node name="StaticSurface_Table" type="StaticBody3D" parent="."]
+[node name="StaticSurface_Table" type="StaticBody3D" parent="." unique_id=870882139]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Table"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Table" unique_id=1838477534]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.475, 0)
 shape = SubResource("Shape_StaticSurface_Table")
 
-[node name="StaticSurface_ButtonStand" type="StaticBody3D" parent="."]
+[node name="StaticSurface_ButtonStand" type="StaticBody3D" parent="." unique_id=951178488]
 transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, 1.6617008, 0.45, 1.6617008)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_ButtonStand"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_ButtonStand" unique_id=687055435]
 shape = SubResource("Shape_StaticSurface_ButtonStand")
+
+[node name="MatBan" type="MeshInstance3D" parent="." unique_id=2019322538]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.91, 0)
+material_override = SubResource("StandardMaterial3D_syh3a")
+mesh = SubResource("CylinderMesh_6iyoo")
+
+[node name="Vanh" type="MeshInstance3D" parent="." unique_id=1824705478]
+transform = Transform3D(1, 0, 0, 0, 0.5, 0, 0, 0, 1, 0, 0.93, 0)
+material_override = SubResource("StandardMaterial3D_3r2ml")
+mesh = SubResource("TorusMesh_cqro5")
+
+[node name="Chan" type="MeshInstance3D" parent="." unique_id=409994518]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.435, 0)
+material_override = SubResource("StandardMaterial3D_3r2ml")
+mesh = SubResource("CylinderMesh_4yowu")
+
+[node name="Ghe0" type="MeshInstance3D" parent="." unique_id=1349840981]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 1.85)
+material_override = SubResource("StandardMaterial3D_hlqb2")
+mesh = SubResource("CylinderMesh_ex4ms")
+
+[node name="Cot0" type="MeshInstance3D" parent="." unique_id=68625306]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.32, 1.85)
+material_override = SubResource("StandardMaterial3D_k8ajv")
+mesh = SubResource("CylinderMesh_pthlq")
+
+[node name="NhanGhe0" type="Label3D" parent="." unique_id=785853730]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 1.85)
+pixel_size = 0.002
+billboard = 1
+font_size = 26
+outline_size = 8
+
+[node name="Vien0_0" type="MeshInstance3D" parent="." unique_id=239540688]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1375, 0.96, 1.16)
+material_override = SubResource("StandardMaterial3D_asow7")
+mesh = SubResource("CylinderMesh_vaesy")
+
+[node name="Vien0_1" type="MeshInstance3D" parent="." unique_id=1506541743]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0825, 0.96, 1.16)
+material_override = SubResource("StandardMaterial3D_8fhrq")
+mesh = SubResource("CylinderMesh_mb66h")
+
+[node name="Vien0_2" type="MeshInstance3D" parent="." unique_id=1572316283]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0275, 0.96, 1.16)
+material_override = SubResource("StandardMaterial3D_6facg")
+mesh = SubResource("CylinderMesh_i55wr")
+
+[node name="Vien0_3" type="MeshInstance3D" parent="." unique_id=2090056247]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0275, 0.96, 1.16)
+material_override = SubResource("StandardMaterial3D_d51hb")
+mesh = SubResource("CylinderMesh_5cxxt")
+
+[node name="Vien0_4" type="MeshInstance3D" parent="." unique_id=254823766]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0825, 0.96, 1.16)
+material_override = SubResource("StandardMaterial3D_illlv")
+mesh = SubResource("CylinderMesh_5hp0n")
+
+[node name="Vien0_5" type="MeshInstance3D" parent="." unique_id=230256595]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1375, 0.96, 1.16)
+material_override = SubResource("StandardMaterial3D_j3pcp")
+mesh = SubResource("CylinderMesh_xi340")
+
+[node name="Ghe1" type="MeshInstance3D" parent="." unique_id=1016708401]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.85, 0.65, 1.1327609e-16)
+material_override = SubResource("StandardMaterial3D_ylrjh")
+mesh = SubResource("CylinderMesh_4k7hl")
+
+[node name="Cot1" type="MeshInstance3D" parent="." unique_id=304260977]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.85, 0.32, 1.1327609e-16)
+material_override = SubResource("StandardMaterial3D_6j2kb")
+mesh = SubResource("CylinderMesh_63tjl")
+
+[node name="NhanGhe1" type="Label3D" parent="." unique_id=992042920]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.85, 1.5, 1.1327609e-16)
+pixel_size = 0.002
+billboard = 1
+font_size = 26
+outline_size = 8
+
+[node name="Vien1_0" type="MeshInstance3D" parent="." unique_id=1603575103]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.16, 0.96, 0.1375)
+material_override = SubResource("StandardMaterial3D_clhcd")
+mesh = SubResource("CylinderMesh_ctpbd")
+
+[node name="Vien1_1" type="MeshInstance3D" parent="." unique_id=627948282]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.16, 0.96, 0.0825)
+material_override = SubResource("StandardMaterial3D_h3ov3")
+mesh = SubResource("CylinderMesh_wlrmt")
+
+[node name="Vien1_2" type="MeshInstance3D" parent="." unique_id=98404575]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.16, 0.96, 0.0275)
+material_override = SubResource("StandardMaterial3D_h57st")
+mesh = SubResource("CylinderMesh_kubc1")
+
+[node name="Vien1_3" type="MeshInstance3D" parent="." unique_id=557061606]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.16, 0.96, -0.0275)
+material_override = SubResource("StandardMaterial3D_duiik")
+mesh = SubResource("CylinderMesh_cn80a")
+
+[node name="Vien1_4" type="MeshInstance3D" parent="." unique_id=1895431001]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.16, 0.96, -0.0825)
+material_override = SubResource("StandardMaterial3D_lbr11")
+mesh = SubResource("CylinderMesh_kfrh2")
+
+[node name="Vien1_5" type="MeshInstance3D" parent="." unique_id=899743078]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.16, 0.96, -0.1375)
+material_override = SubResource("StandardMaterial3D_g7vxl")
+mesh = SubResource("CylinderMesh_q7l75")
+
+[node name="Ghe2" type="MeshInstance3D" parent="." unique_id=1538555648]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2655217e-16, 0.65, -1.85)
+material_override = SubResource("StandardMaterial3D_eunj8")
+mesh = SubResource("CylinderMesh_t1okj")
+
+[node name="Cot2" type="MeshInstance3D" parent="." unique_id=1364080796]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2655217e-16, 0.32, -1.85)
+material_override = SubResource("StandardMaterial3D_4o2qc")
+mesh = SubResource("CylinderMesh_brj8h")
+
+[node name="NhanGhe2" type="Label3D" parent="." unique_id=1986490888]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2655217e-16, 1.5, -1.85)
+pixel_size = 0.002
+billboard = 1
+font_size = 26
+outline_size = 8
+
+[node name="Vien2_0" type="MeshInstance3D" parent="." unique_id=1791752101]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1375, 0.96, -1.16)
+material_override = SubResource("StandardMaterial3D_mq5ua")
+mesh = SubResource("CylinderMesh_p1odx")
+
+[node name="Vien2_1" type="MeshInstance3D" parent="." unique_id=520131179]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0825, 0.96, -1.16)
+material_override = SubResource("StandardMaterial3D_y6ww7")
+mesh = SubResource("CylinderMesh_kusif")
+
+[node name="Vien2_2" type="MeshInstance3D" parent="." unique_id=289447886]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0275, 0.96, -1.16)
+material_override = SubResource("StandardMaterial3D_4vuaw")
+mesh = SubResource("CylinderMesh_te40g")
+
+[node name="Vien2_3" type="MeshInstance3D" parent="." unique_id=2060658002]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0275, 0.96, -1.16)
+material_override = SubResource("StandardMaterial3D_wiswf")
+mesh = SubResource("CylinderMesh_bcbxk")
+
+[node name="Vien2_4" type="MeshInstance3D" parent="." unique_id=262016219]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0825, 0.96, -1.16)
+material_override = SubResource("StandardMaterial3D_2mb0e")
+mesh = SubResource("CylinderMesh_aqiu6")
+
+[node name="Vien2_5" type="MeshInstance3D" parent="." unique_id=1428445523]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1375, 0.96, -1.16)
+material_override = SubResource("StandardMaterial3D_2f1wl")
+mesh = SubResource("CylinderMesh_quvu6")
+
+[node name="Ghe3" type="MeshInstance3D" parent="." unique_id=1426295407]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.85, 0.65, -3.3982827e-16)
+material_override = SubResource("StandardMaterial3D_ukgpt")
+mesh = SubResource("CylinderMesh_uuadm")
+
+[node name="Cot3" type="MeshInstance3D" parent="." unique_id=1324624522]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.85, 0.32, -3.3982827e-16)
+material_override = SubResource("StandardMaterial3D_6ftgk")
+mesh = SubResource("CylinderMesh_j7v6m")
+
+[node name="NhanGhe3" type="Label3D" parent="." unique_id=587795829]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.85, 1.5, -3.3982827e-16)
+pixel_size = 0.002
+billboard = 1
+font_size = 26
+outline_size = 8
+
+[node name="Vien3_0" type="MeshInstance3D" parent="." unique_id=574245484]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.16, 0.96, -0.1375)
+material_override = SubResource("StandardMaterial3D_ieo5t")
+mesh = SubResource("CylinderMesh_rasn0")
+
+[node name="Vien3_1" type="MeshInstance3D" parent="." unique_id=158681426]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.16, 0.96, -0.0825)
+material_override = SubResource("StandardMaterial3D_m5rcr")
+mesh = SubResource("CylinderMesh_2kbir")
+
+[node name="Vien3_2" type="MeshInstance3D" parent="." unique_id=1270727064]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.16, 0.96, -0.0275)
+material_override = SubResource("StandardMaterial3D_v1hoq")
+mesh = SubResource("CylinderMesh_daufb")
+
+[node name="Vien3_3" type="MeshInstance3D" parent="." unique_id=1183632002]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.16, 0.96, 0.0275)
+material_override = SubResource("StandardMaterial3D_cyymg")
+mesh = SubResource("CylinderMesh_7gmg5")
+
+[node name="Vien3_4" type="MeshInstance3D" parent="." unique_id=971078374]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.16, 0.96, 0.0825)
+material_override = SubResource("StandardMaterial3D_bhyju")
+mesh = SubResource("CylinderMesh_vld1b")
+
+[node name="Vien3_5" type="MeshInstance3D" parent="." unique_id=1440337196]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.16, 0.96, 0.1375)
+material_override = SubResource("StandardMaterial3D_f6npe")
+mesh = SubResource("CylinderMesh_rj734")
+
+[node name="BangNut" type="MeshInstance3D" parent="." unique_id=1300097324]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, 1.6617008, 0.45, 1.6617008)
+material_override = SubResource("StandardMaterial3D_h3xv6")
+mesh = SubResource("BoxMesh_12pw0")
+
+[node name="LiarNgoi" parent="." unique_id=689644420 instance=ExtResource("16_hw2b0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2657211, 0.9, 2.0576806)
+label = "VAO BAN"
+color = Color(0.24313726, 0.3882353, 0.8666667, 1)
+press_range = 2.6
+compact = true
+label_size = 26
+button_scale = 0.5
+
+[node name="LiarBatDau" parent="." unique_id=2136227881 instance=ExtResource("16_hw2b0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4637109, 0.9, 1.8596908)
+label = "BAT DAU"
+color = Color(0.27450982, 0.654902, 0.34509805, 1)
+press_range = 2.6
+compact = true
+label_size = 26
+button_scale = 0.5
+
+[node name="LiarDanh" parent="." unique_id=1524347006 instance=ExtResource("16_hw2b0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6617008, 0.9, 1.6617008)
+label = "DANH"
+color = Color(0.9607843, 0.8509804, 0.039215688, 1)
+press_range = 2.6
+compact = true
+label_size = 26
+button_scale = 0.5
+
+[node name="LiarLiar" parent="." unique_id=1454691095 instance=ExtResource("16_hw2b0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8596908, 0.9, 1.4637109)
+label = "LIAR!"
+press_range = 2.6
+compact = true
+label_size = 26
+button_scale = 0.5
+
+[node name="LiarLamLai" parent="." unique_id=2133837405 instance=ExtResource("16_hw2b0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0576806, 0.9, 1.2657211)
+label = "LAM LAI"
+color = Color(0.96862745, 0.41960785, 0.08235294, 1)
+press_range = 2.6
+compact = true
+label_size = 26
+button_scale = 0.5
+
+[node name="Bang" type="Label3D" parent="." unique_id=1739230757]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
+pixel_size = 0.003
+billboard = 1
+font_size = 40
+outline_size = 10
+
+[node name="Dem" type="Label3D" parent="." unique_id=1998440531]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, 0)
+visible = false
+pixel_size = 0.004
+billboard = 1
+modulate = Color(0.9607843, 0.8509804, 0.039215688, 1)
+font_size = 120
+outline_size = 20
+
+[connection signal="pressed" from="LiarNgoi" to="." method="_xin_ngoi"]
+[connection signal="pressed" from="LiarBatDau" to="." method="_xin_bat_dau"]
+[connection signal="pressed" from="LiarDanh" to="." method="_xin_danh"]
+[connection signal="pressed" from="LiarLiar" to="." method="_xin_liar"]
+[connection signal="pressed" from="LiarLamLai" to="." method="_xin_lam_lai"]

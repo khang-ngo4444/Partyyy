@@ -1,8 +1,7 @@
 class_name GameplaySettings
 extends RefCounted
 
-## Cấu hình luật dùng chung cho màn tạo phòng, MatchState và bàn party.
-## Chỉ lưu kiểu JSON-safe để có thể replicate nguyên gói qua Fusion.
+## Cấu hình luật của phòng. Chỉ chứa kiểu JSON-safe để replicate cả gói.
 
 const DEFAULTS := {
 	"tile_land": 40,
@@ -17,10 +16,9 @@ const DEFAULTS := {
 	"respawn_steps": 18,
 	"tax_health": 2,
 	"tax_money": 10,
-	"weapon_damage": 3,
-	"minigame_second_gold": 30,
-	"minigame_reward_drop": 10,
-	"minigame_min_gold": 5,
+	"weapon_damage": 4,
+	# 0 = tự tính theo số người.
+	"so_vong": 0,
 }
 
 const PERCENT_KEYS := ["tile_land", "tile_health", "tile_money", "tile_equipment"]
@@ -46,9 +44,7 @@ static func sanitize(raw: Dictionary) -> Dictionary:
 	out["tax_health"] = clampi(int(out["tax_health"]), 1, int(out["max_health"]))
 	out["tax_money"] = clampi(int(out["tax_money"]), 1, 999)
 	out["weapon_damage"] = clampi(int(out["weapon_damage"]), 1, int(out["max_health"]))
-	out["minigame_second_gold"] = clampi(int(out["minigame_second_gold"]), 0, 999)
-	out["minigame_reward_drop"] = clampi(int(out["minigame_reward_drop"]), 0, 999)
-	out["minigame_min_gold"] = clampi(int(out["minigame_min_gold"]), 0, 999)
+	out["so_vong"] = clampi(int(out["so_vong"]), 0, 99)
 	return out
 
 
@@ -68,7 +64,7 @@ static func encode(settings: Dictionary) -> String:
 
 
 static func decode(value: String) -> Dictionary:
-	# Rỗng = MatchState chưa nhận gói replicate đầu tiên. `parse_string("")` báo lỗi đỏ mỗi lần.
+	# Rỗng = chưa nhận gói đầu tiên.
 	if value.strip_edges() == "":
 		return defaults()
 	var parsed = JSON.parse_string(value)

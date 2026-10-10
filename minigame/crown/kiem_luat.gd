@@ -1,20 +1,8 @@
 extends SceneTree
 
-## KIỂM LUẬT Crown Capture — chạy ngoài game, không nạp project:
-##
-##     godot --headless --path minigame/crown --script kiem_luat.gd
-##
-## Hằng số CHÉP TAY từ `crown.gd`, `vuong_mien.tscn`, `san_tron.tscn`, `cau_lua.gd`, `player.gd`.
-## Chép chứ không `preload` vì `crown.gd` kéo theo `MiniGame3D` → `Fusion` → cả project.
-##
-## Thứ bộ này tồn tại để chặn: **thắng bằng người giữ miện CUỐI thay vì tổng giây giữ**.
-##
-## Đó là lỗi một dòng: `xep.sort_custom` so sai khoá, hay `_diem` bị xoá lúc mất miện. Chơi thử
-## không bắt được vì hai cách xếp thường ra cùng kết quả — người giữ nhiều nhất cũng hay là người
-## đang giữ lúc hết giờ. Kiểm #1 dựng hẳn một dòng thời gian mà hai cách xếp ra kết quả KHÁC NHAU.
-##
-## Dùng `ck()` chứ không `assert()`: `assert` fail trong `--headless --script` làm Godot ĐỨNG chờ
-## debugger, 0% CPU, không in một chữ nào.
+## Kiểm luật Crown Capture: godot --headless --path minigame/crown --script kiem_luat.gd
+## Chặn xếp hạng theo người giữ cuối thay vì tổng giây giữ (#1).
+## Hằng số chép tay; dùng `ck()` thay `assert`.
 
 # crown.gd
 const NGHI_CUOP := 1.1
@@ -35,7 +23,6 @@ const SPEED := 6.0
 const BAN_KINH_NGUOI := 0.4
 const CAO_NGUOI := 1.8
 const DAY_TAT_DAN := 9.0
-
 const KEP := BAN_KINH_SAN - 0.5
 
 var _loi := 0
@@ -46,9 +33,8 @@ func ck(dung: bool, msg: String) -> void:
 		print("FAIL  ", msg)
 
 
-## Chay mot dong thoi gian doi chu mien, tra ve bang diem (giay giu) va nguoi giu CUOI.
-##
-## `moc` = [[giay_bat_dau, ai_giu], ...] sap theo thoi gian. `ai_giu` = 0 la mien nam dat.
+## Chạy dòng thời gian đổi chủ miện → bảng điểm và người giữ cuối.
+## `moc` = [[giây, ai_giu], ...].
 static func chay(moc: Array, het: float) -> Dictionary:
 	var diem := {}
 	var cuoi := 0
@@ -64,7 +50,7 @@ static func chay(moc: Array, het: float) -> Dictionary:
 	return {"diem": diem, "cuoi": cuoi}
 
 
-## Xep hang theo TONG giay giu — dung nhu `_chot_ket_qua()`.
+## Xếp theo tổng giây giữ (như `_chot_ket_qua`).
 static func xep_theo_diem(diem: Dictionary) -> Array:
 	var ids: Array = []
 	for id in diem:
@@ -74,9 +60,7 @@ static func xep_theo_diem(diem: Dictionary) -> Array:
 
 
 func _init() -> void:
-	# ── 1. THANG BANG TONG GIAY, KHONG bang nguoi giu cuoi ──
-	# Dong thoi gian co y: nguoi 1 giu 40 giay dau, nguoi 2 giu 15 giay cuoi va dang giu luc het
-	# gio. Xep dung -> nguoi 1 nhat. Xep theo "ai dang giu" -> nguoi 2 nhat. Hai ket qua khac nhau.
+	# ── 1. THẮNG BẰNG TỔNG GIÂY, KHÔNG BẰNG NGƯỜI GIỮ CUỐI ──
 	var r := chay([[0.0, 1], [40.0, 0], [45.0, 2]], GIAY_VAN)
 	var diem: Dictionary = r["diem"]
 	var cuoi: int = int(r["cuoi"])
@@ -97,34 +81,32 @@ func _init() -> void:
 			"nguoi 1 giu 10 + 10 giay phai duoc 20, dang duoc %.1f - diem bi xoa khi mat mien"
 			% float(d2.get(1, 0.0)))
 	ck(is_equal_approx(float(d2.get(2, 0.0)), 10.0), "nguoi 2 phai duoc 10 giay")
-	# Mien nam dat thi KHONG ai an diem
+	# Miện nằm đất thì không ai ăn điểm
 	var tong := 0.0
 	for id in d2:
 		tong += float(d2[id])
 	ck(tong < GIAY_VAN - 25.0, "tong %.1f s > thoi gian co chu - mien nam dat ma van cong diem" \
 			% tong)
 
-	# ── 3. NHAT MIEN KHONG CHO DIEM, chi giu moi cho ──
-	# Nhat roi mat ngay (0 giay giu) thi phai duoc 0 diem.
+	# ── 3. NHẶT MIỆN KHÔNG CHO ĐIỂM (nhặt rồi mất ngay = 0) ──
 	var r3 := chay([[0.0, 5], [0.0, 0]], GIAY_VAN)
 	ck(float((r3["diem"] as Dictionary).get(5, 0.0)) <= 0.001,
 			"nhat roi mat ngay ma duoc %.3f diem - diem trao khi NHAT chu khong phai khi GIU"
 			% float((r3["diem"] as Dictionary).get(5, 0.0)))
 
-	# ── 4. HAT ROI MIEN: nguoi bi hat khong duoc tu nhat lai ngay ──
-	# _day giam tuyen tinh ve 0 voi DAY_TAT_DAN m/s^2 -> hat xa v^2/(2a), keo dai v/a.
+	# ── 4. BỊ HẤT THÌ KHÔNG TỰ NHẶT LẠI NGAY ──
 	var hat_xa: float = DAY_NGANG * DAY_NGANG / (2.0 * DAY_TAT_DAN)
 	var hat_lau: float = DAY_NGANG / DAY_TAT_DAN
 	var tam_than: float = TAM_NHAT + BAN_KINH_NGUOI
 	ck(hat_xa > tam_than,
 			"hat xa %.2f m <= tam nhat %.2f m - nguoi bi hat van dung trong vong, nhat lai ngay"
 			% [hat_xa, tam_than])
-	# Thoi gian nguoi bi hat quay ve duoc
+	# Thời gian người bị hất quay về được
 	var ve_lai: float = hat_lau + (hat_xa - tam_than) / SPEED
 	ck(ve_lai > NGHI_CUOP,
 			"nguoi bi hat ve duoc sau %.2f s nhung mien mo nhat tu %.2f s - cu don thanh vo nghia"
 			% [ve_lai, NGHI_CUOP])
-	# Nhung cung phai co cua cho nguoi KHAC: trong NGHI_CUOP ai o gan bao nhieu met thi toi duoc
+	# Người khác cũng phải có cửa: trong NGHI_CUOP, ở gần bao nhiêu mét thì tới được
 	var cua: float = NGHI_CUOP * SPEED + (ve_lai - NGHI_CUOP) * SPEED
 	ck(cua > 4.0, "chi ai o trong %.1f m moi tranh duoc - cua qua hep" % cua)
 
@@ -144,7 +126,7 @@ func _init() -> void:
 	ck(TOC_CAU > SPEED, "cau %.1f m/s khong nhanh hon nguoi %.1f m/s - di bo cung ne duoc" \
 			% [TOC_CAU, SPEED])
 	ck(NGHI_BAN >= 0.4, "nghi ban %.2f s - giu phim la mot voi lua" % NGHI_BAN)
-	# Nguoi doi mien phai bi ban trung duoc kha thuong xuyen: moi nguoi ban bao nhieu phat mot van
+	# Người đội miện phải bị bắn trúng khá thường xuyên: mỗi người bắn bao nhiêu phát một ván
 	var phat: float = GIAY_VAN / NGHI_BAN
 	ck(phat >= 40.0, "moi nguoi chi ban %.0f phat ca van - mien doi chu qua it" % phat)
 
@@ -152,7 +134,7 @@ func _init() -> void:
 	ck(KEP < BAN_KINH_SAN, "kep %.1f >= san %.1f - nguoi choi ra duoc khoi san va chet" \
 			% [KEP, BAN_KINH_SAN])
 	ck(BAN_KINH_SAN - KEP >= 0.4, "kep sat bo qua (%.2f m)" % (BAN_KINH_SAN - KEP))
-	# Hat manh nhat cung khong duoc day ai ra khoi vung kep
+	# Hất mạnh nhất cũng không được đẩy ai ra khỏi vùng kẹp
 	ck(hat_xa < duong_kinh * 0.5,
 			"mot cu hat di %.2f m tren san ban kinh %.1f - hat tu tam la ra toi bo" % [hat_xa, KEP])
 
@@ -163,8 +145,7 @@ func _init() -> void:
 	ck(CAO_NAM > 0.3, "mien nam o %.2f m - lut xuong san" % CAO_NAM)
 	ck(CAO_NAM < CAO_DOI, "mien nam (%.2f) cao hon luc doi (%.2f) - doc lon" % [CAO_NAM, CAO_DOI])
 
-	# ── 9. VAN DU DAI DE MIEN DOI CHU NHIEU LAN ──
-	# Moi lan doi chu ton it nhat NGHI_CUOP + thoi gian chay toi mien
+	# ── 9. VÁN ĐỦ DÀI ĐỂ MIỆN ĐỔI CHỦ NHIỀU LẦN ──
 	var mot_vong: float = NGHI_CUOP + (duong_kinh * 0.25) / SPEED
 	var so_lan: float = GIAY_VAN / mot_vong
 	ck(so_lan >= 8.0, "ca van chi doi chu duoc ~%.0f lan - khong thanh tranh gianh" % so_lan)

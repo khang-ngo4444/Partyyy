@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "12 · Laser Leap"
+noi_dung = "[color=#8fe7d4][b]PHÍM[/b][/color]
+[b]W A S D[/b] chạy · [b]Space[/b] nhảy.
+
+[color=#8fe7d4][b]LUẬT[/b][/color]
+Nhảy qua các tia laser đang quét sàn. Tia đổi hướng, tốc độ và tâm quay theo từng đợt nên không thể chỉ học một nhịp cố định.
+
+Chạm tia hoặc rơi khỏi sàn sẽ bị loại. Ván tối đa 90 giây. [b]Xếp hạng:[/b] sống sót lâu hơn đứng trên."

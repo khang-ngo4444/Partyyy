@@ -1,7 +1,6 @@
 extends Control
 
-## Presentation-only menu. Network actions are emitted to Main/NetManager; this node owns
-## navigation, validation, loading states and local user settings.
+## Menu chính: điều hướng, kiểm tra nhập, cài đặt cục bộ; việc mạng phát signal cho Main.
 
 signal host_requested
 signal join_requested(room_name: String)
@@ -14,6 +13,15 @@ const SETTINGS_PATH := "user://party_settings.cfg"
 const NETWORK_TIMEOUT := 12.0
 const GRAPHICS_AUTO := 0
 const GRAPHICS_QUALITY := 3
+
+@export var nut_dong_scene: PackedScene = null
+
+var _gameplay_controls: Dictionary = {}
+var _connected := false
+var _busy := false
+var _request_token := 0
+var _rooms: Array = []
+var _saved_player_name := ""
 
 @onready var main_screen: VBoxContainer = %MainScreen
 @onready var online_screen: VBoxContainer = %OnlineScreen
@@ -64,16 +72,7 @@ const GRAPHICS_QUALITY := 3
 @onready var respawn_steps: SpinBox = %RespawnSteps
 @onready var tax_health: SpinBox = %TaxHealth
 @onready var tax_money: SpinBox = %TaxMoney
-@onready var minigame_second_gold: SpinBox = %MinigameSecondGold
-@onready var minigame_reward_drop: SpinBox = %MinigameRewardDrop
-
-var _gameplay_controls: Dictionary = {}
-
-var _connected := false
-var _busy := false
-var _request_token := 0
-var _rooms: Array = []
-var _saved_player_name := ""
+@onready var so_vong: SpinBox = %SoVong
 
 
 func _ready() -> void:
@@ -124,8 +123,7 @@ func _ready() -> void:
 		"respawn_steps": respawn_steps,
 		"tax_health": tax_health,
 		"tax_money": tax_money,
-		"minigame_second_gold": minigame_second_gold,
-		"minigame_reward_drop": minigame_reward_drop,
+		"so_vong": so_vong,
 	}
 	for control: SpinBox in _gameplay_controls.values():
 		control.value_changed.connect(func(_value): _refresh_gameplay_total())
@@ -358,12 +356,10 @@ func _rebuild_room_list(rooms: Array) -> void:
 		child.queue_free()
 	empty_hint.visible = rooms.is_empty()
 	for room in rooms:
-		var button := Button.new()
+		var button := nut_dong_scene.instantiate() as Button
 		var full := int(room["players"]) >= int(room["max"])
 		button.text = "%s    ·    %d/%d%s" % [
 			room["label"], room["players"], room["max"], "    ĐẦY" if full else ""]
-		button.custom_minimum_size.y = 36
-		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.set_meta("room_full", full)
 		button.disabled = full or _busy or not _connected
 		button.tooltip_text = ("Phòng đã đầy" if full
@@ -464,7 +460,7 @@ func _load_settings() -> void:
 	_set_volume(volume)
 	_set_fullscreen(fullscreen)
 	performance_manager.call("set_graphics_mode", graphics_mode)
-	# Parent connects this signal after child _ready; defer preserves the saved state.
+	# Node cha nối signal sau `_ready` của con — gọi trễ để giữ trạng thái đã lưu.
 	camera_motion_changed.emit.bind(motion).call_deferred()
 
 

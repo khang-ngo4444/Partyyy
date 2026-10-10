@@ -1,6 +1,8 @@
-[gd_scene load_steps=21 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/hanoi_tower.gd" id="1_script"]
+[ext_resource type="Script" path="res://lobby/objects/pressable.gd" id="17_otakp"]
+[ext_resource type="PackedScene" path="res://lobby/objects/pressable.tscn" id="18_marws"]
 [ext_resource type="AudioStream" uid="uid://dqg8vlqiajh2m" path="res://asset/kenney_impact-sounds/Audio/impactWood_light_000.ogg" id="snd_0"]
 [ext_resource type="AudioStream" uid="uid://154hqawghglk" path="res://asset/kenney_impact-sounds/Audio/impactWood_light_001.ogg" id="snd_1"]
 [ext_resource type="AudioStream" uid="uid://jm33tbg56tcd" path="res://asset/kenney_impact-sounds/Audio/impactWood_light_002.ogg" id="snd_2"]
@@ -16,6 +18,8 @@
 [ext_resource type="AudioStream" uid="uid://c7xna4n7xroy7" path="res://asset/kenney_interface-sounds/Audio/bong_001.ogg" id="snd_12"]
 [ext_resource type="AudioStream" uid="uid://dse2vvq61vplw" path="res://asset/kenney_interface-sounds/Audio/confirmation_002.ogg" id="snd_13"]
 [ext_resource type="AudioStream" uid="uid://cvlvyoon42alj" path="res://asset/kenney_interface-sounds/Audio/drop_002.ogg" id="snd_14"]
+[ext_resource type="PackedScene" path="res://lobby/objects/dia_hanoi.tscn" id="dia"]
+[ext_resource type="PackedScene" path="res://lobby/objects/chu_bay.tscn" id="chu_bay"]
 
 [sub_resource type="AudioStreamRandomizer" id="Rand_nhat"]
 streams_count = 5
@@ -37,43 +41,350 @@ stream_4/stream = ExtResource("snd_9")
 size = Vector3(1.8, 0.9, 0.7)
 
 [sub_resource type="BoxShape3D" id="Shape_StaticSurface_ButtonStand"]
-size = Vector3(1.05, 1.0, 0.45)
+size = Vector3(1.05, 1, 0.45)
 
-[node name="HanoiTower" type="Node3D"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8r363"]
+albedo_color = Color(0.5411765, 0.3529412, 0.23137255, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ffvwg"]
+size = Vector3(1.8, 0.06, 0.7)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m3igf"]
+albedo_color = Color(0.2901961, 0.1882353, 0.1254902, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8ybi3"]
+size = Vector3(0.06, 0.84, 0.06)
+
+[sub_resource type="BoxMesh" id="BoxMesh_x1ju2"]
+size = Vector3(0.06, 0.84, 0.06)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dfae4"]
+size = Vector3(0.06, 0.84, 0.06)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2gsgt"]
+size = Vector3(0.06, 0.84, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7u53b"]
+albedo_color = Color(0.7529412, 0.5411765, 0.35686275, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_m0avq"]
+size = Vector3(1.52, 0.06, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2hvm2"]
+albedo_color = Color(0.9098039, 0.8509804, 0.72156864, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rkfj6"]
+top_radius = 0.016
+bottom_radius = 0.016
+height = 0.42
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gstb1"]
+albedo_color = Color(0.3529412, 0.22745098, 0.14901961, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_baxvh"]
+top_radius = 0.22
+bottom_radius = 0.22
+height = 0.008
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qpaki"]
+resource_local_to_scene = true
+size = Vector3(0.44, 0.42000002, 0.44)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ku11x"]
+albedo_color = Color(0.9098039, 0.8509804, 0.72156864, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_u4tqv"]
+top_radius = 0.016
+bottom_radius = 0.016
+height = 0.42
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kyn0b"]
+albedo_color = Color(0.3529412, 0.22745098, 0.14901961, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_4mdwu"]
+top_radius = 0.22
+bottom_radius = 0.22
+height = 0.008
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pjo0q"]
+resource_local_to_scene = true
+size = Vector3(0.44, 0.42000002, 0.44)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o8nd7"]
+albedo_color = Color(0.9098039, 0.8509804, 0.72156864, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rqmu6"]
+top_radius = 0.016
+bottom_radius = 0.016
+height = 0.42
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sfsre"]
+albedo_color = Color(0.3529412, 0.22745098, 0.14901961, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_vgh8f"]
+top_radius = 0.22
+bottom_radius = 0.22
+height = 0.008
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_86kbv"]
+resource_local_to_scene = true
+size = Vector3(0.44, 0.42000002, 0.44)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bk4og"]
+albedo_color = Color(0.9607843, 0.8509804, 0.039215688, 1)
+emission_enabled = true
+emission = Color(0.9607843, 0.8509804, 0.039215688, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_qcogs"]
+material = SubResource("StandardMaterial3D_bk4og")
+size = Vector3(0.03, 0.03, 0.005)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5knim"]
+albedo_color = Color(0.23921569, 0.25490198, 0.3137255, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cpjug"]
+size = Vector3(1.05, 1, 0.45)
+
+[node name="HanoiTower" type="Node3D" unique_id=1705536666]
 script = ExtResource("1_script")
+dia_scene = ExtResource("dia")
+chu_bay_scene = ExtResource("chu_bay")
 
-[node name="Tieng" type="Node3D" parent="."]
+[node name="Tieng" type="Node3D" parent="." unique_id=93198795]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
 
-[node name="nhat" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="nhat" type="AudioStreamPlayer3D" parent="Tieng" unique_id=868920661]
 stream = SubResource("Rand_nhat")
 
-[node name="dat" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="dat" type="AudioStreamPlayer3D" parent="Tieng" unique_id=344198382]
 stream = SubResource("Rand_dat")
 
-[node name="sai" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="sai" type="AudioStreamPlayer3D" parent="Tieng" unique_id=1773301079]
 stream = ExtResource("snd_10")
 
-[node name="dem" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="dem" type="AudioStreamPlayer3D" parent="Tieng" unique_id=1414626257]
 stream = ExtResource("snd_11")
 
-[node name="bat_dau" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="bat_dau" type="AudioStreamPlayer3D" parent="Tieng" unique_id=1812404943]
 stream = ExtResource("snd_12")
 
-[node name="thang" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="thang" type="AudioStreamPlayer3D" parent="Tieng" unique_id=547356844]
 stream = ExtResource("snd_13")
 
-[node name="lam_lai" type="AudioStreamPlayer3D" parent="Tieng"]
+[node name="lam_lai" type="AudioStreamPlayer3D" parent="Tieng" unique_id=2111438469]
 stream = ExtResource("snd_14")
 
-[node name="StaticSurface_Table" type="StaticBody3D" parent="."]
+[node name="StaticSurface_Table" type="StaticBody3D" parent="." unique_id=1584872221]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Table"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Table" unique_id=954532366]
 shape = SubResource("Shape_StaticSurface_Table")
 
-[node name="StaticSurface_ButtonStand" type="StaticBody3D" parent="."]
+[node name="StaticSurface_ButtonStand" type="StaticBody3D" parent="." unique_id=1382378292]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.58, 0.5, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_ButtonStand"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_ButtonStand" unique_id=610800348]
 shape = SubResource("Shape_StaticSurface_ButtonStand")
+
+[node name="MatBan" type="MeshInstance3D" parent="." unique_id=1905630941]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.87, 0)
+material_override = SubResource("StandardMaterial3D_8r363")
+mesh = SubResource("BoxMesh_ffvwg")
+
+[node name="Chan0" type="MeshInstance3D" parent="." unique_id=743014258]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.84, 0.42, -0.29)
+material_override = SubResource("StandardMaterial3D_m3igf")
+mesh = SubResource("BoxMesh_8ybi3")
+
+[node name="Chan1" type="MeshInstance3D" parent="." unique_id=155188734]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.84, 0.42, 0.29)
+material_override = SubResource("StandardMaterial3D_m3igf")
+mesh = SubResource("BoxMesh_x1ju2")
+
+[node name="Chan2" type="MeshInstance3D" parent="." unique_id=1256159825]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.84, 0.42, -0.29)
+material_override = SubResource("StandardMaterial3D_m3igf")
+mesh = SubResource("BoxMesh_dfae4")
+
+[node name="Chan3" type="MeshInstance3D" parent="." unique_id=820869123]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.84, 0.42, 0.29)
+material_override = SubResource("StandardMaterial3D_m3igf")
+mesh = SubResource("BoxMesh_2gsgt")
+
+[node name="DeCoc" type="MeshInstance3D" parent="." unique_id=896789743]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.93, 0)
+material_override = SubResource("StandardMaterial3D_7u53b")
+mesh = SubResource("BoxMesh_m0avq")
+
+[node name="HanoiCoc0" type="Node3D" parent="." unique_id=355819179]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 0)
+script = ExtResource("17_otakp")
+label = "A"
+color = Color(1, 1, 1, 1)
+to_mau = false
+press_range = 2.8
+label_size = 48
+
+[node name="Mesh" type="MeshInstance3D" parent="HanoiCoc0" unique_id=769701728]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.17, 0)
+material_override = SubResource("StandardMaterial3D_2hvm2")
+mesh = SubResource("CylinderMesh_rkfj6")
+
+[node name="De" type="MeshInstance3D" parent="HanoiCoc0" unique_id=138136823]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.964, 0)
+material_override = SubResource("StandardMaterial3D_gstb1")
+mesh = SubResource("CylinderMesh_baxvh")
+
+[node name="Label" type="Label3D" parent="HanoiCoc0" unique_id=185430980]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+pixel_size = 0.004
+billboard = 1
+text = "A"
+font_size = 48
+
+[node name="VungNgam" type="Area3D" parent="HanoiCoc0" unique_id=1292789573]
+collision_layer = 16
+collision_mask = 0
+monitoring = false
+
+[node name="Hinh" type="CollisionShape3D" parent="HanoiCoc0/VungNgam" unique_id=1365453006]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.17, 0)
+shape = SubResource("BoxShape3D_qpaki")
+
+[node name="HanoiCoc1" type="Node3D" parent="." unique_id=482387590]
+script = ExtResource("17_otakp")
+label = "B"
+color = Color(1, 1, 1, 1)
+to_mau = false
+press_range = 2.8
+label_size = 48
+
+[node name="Mesh" type="MeshInstance3D" parent="HanoiCoc1" unique_id=1849739046]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.17, 0)
+material_override = SubResource("StandardMaterial3D_ku11x")
+mesh = SubResource("CylinderMesh_u4tqv")
+
+[node name="De" type="MeshInstance3D" parent="HanoiCoc1" unique_id=1375784813]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.964, 0)
+material_override = SubResource("StandardMaterial3D_kyn0b")
+mesh = SubResource("CylinderMesh_4mdwu")
+
+[node name="Label" type="Label3D" parent="HanoiCoc1" unique_id=54759022]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+pixel_size = 0.004
+billboard = 1
+text = "B"
+font_size = 48
+
+[node name="VungNgam" type="Area3D" parent="HanoiCoc1" unique_id=1491111997]
+collision_layer = 16
+collision_mask = 0
+monitoring = false
+
+[node name="Hinh" type="CollisionShape3D" parent="HanoiCoc1/VungNgam" unique_id=2012219293]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.17, 0)
+shape = SubResource("BoxShape3D_pjo0q")
+
+[node name="HanoiCoc2" type="Node3D" parent="." unique_id=222369243]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0)
+script = ExtResource("17_otakp")
+label = "C"
+color = Color(1, 1, 1, 1)
+to_mau = false
+press_range = 2.8
+label_size = 48
+
+[node name="Mesh" type="MeshInstance3D" parent="HanoiCoc2" unique_id=1346870465]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.17, 0)
+material_override = SubResource("StandardMaterial3D_o8nd7")
+mesh = SubResource("CylinderMesh_rqmu6")
+
+[node name="De" type="MeshInstance3D" parent="HanoiCoc2" unique_id=1414572073]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.964, 0)
+material_override = SubResource("StandardMaterial3D_sfsre")
+mesh = SubResource("CylinderMesh_vgh8f")
+
+[node name="Label" type="Label3D" parent="HanoiCoc2" unique_id=825757023]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+pixel_size = 0.004
+billboard = 1
+text = "C"
+font_size = 48
+
+[node name="VungNgam" type="Area3D" parent="HanoiCoc2" unique_id=978911319]
+collision_layer = 16
+collision_mask = 0
+monitoring = false
+
+[node name="Hinh" type="CollisionShape3D" parent="HanoiCoc2/VungNgam" unique_id=1824403523]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.17, 0)
+shape = SubResource("BoxShape3D_86kbv")
+
+[node name="Bang" type="Label3D" parent="." unique_id=181445488]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.08, 0)
+pixel_size = 0.003
+billboard = 1
+font_size = 40
+outline_size = 10
+
+[node name="Dem" type="Label3D" parent="." unique_id=1748035946]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.212, 0.25)
+visible = false
+pixel_size = 0.004
+billboard = 1
+modulate = Color(0.9607843, 0.8509804, 0.039215688, 1)
+font_size = 120
+outline_size = 20
+
+[node name="No" type="CPUParticles3D" parent="." unique_id=1128162024]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1.38, 0)
+emitting = false
+amount = 60
+lifetime = 1.2
+one_shot = true
+explosiveness = 0.9
+mesh = SubResource("BoxMesh_qcogs")
+direction = Vector3(0, 1, 0)
+spread = 60.0
+initial_velocity_min = 1.5
+initial_velocity_max = 3.0
+
+[node name="BangNut" type="MeshInstance3D" parent="." unique_id=411229987]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.58, 0.5, 0)
+material_override = SubResource("StandardMaterial3D_5knim")
+mesh = SubResource("BoxMesh_cpjug")
+
+[node name="HanoiBatDau" parent="." unique_id=1068568335 instance=ExtResource("18_marws")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.24, 1, 0)
+label = "BAT DAU"
+color = Color(0.27450982, 0.654902, 0.34509805, 1)
+press_range = 2.6
+compact = true
+label_size = 30
+button_scale = 0.6
+
+[node name="HanoiSoDia" parent="." unique_id=572425468 instance=ExtResource("18_marws")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.58, 1, 0)
+label = "6 DIA"
+color = Color(0.24313726, 0.3882353, 0.8666667, 1)
+press_range = 2.6
+compact = true
+label_size = 30
+button_scale = 0.6
+
+[node name="HanoiLamLai" parent="." unique_id=1982941280 instance=ExtResource("18_marws")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.92, 1, 0)
+label = "LAM LAI"
+color = Color(0.96862745, 0.41960785, 0.08235294, 1)
+press_range = 2.6
+compact = true
+label_size = 30
+button_scale = 0.6
+
+[connection signal="pressed" from="HanoiCoc0" to="." method="_xin" binds= [0, 0]]
+[connection signal="pressed" from="HanoiCoc1" to="." method="_xin" binds= [0, 1]]
+[connection signal="pressed" from="HanoiCoc2" to="." method="_xin" binds= [0, 2]]
+[connection signal="pressed" from="HanoiBatDau" to="." method="_xin" binds= [1]]
+[connection signal="pressed" from="HanoiSoDia" to="." method="_xin" binds= [3]]
+[connection signal="pressed" from="HanoiLamLai" to="." method="_xin" binds= [2]]

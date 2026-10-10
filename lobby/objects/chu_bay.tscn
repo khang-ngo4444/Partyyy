@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://lobby/objects/chu_bay.gd" id="1_chu"]
+
+[node name="ChuBay" type="Label3D"]
+pixel_size = 0.004
+billboard = 1
+modulate = Color(0.9607843, 0.8509804, 0.039215688, 1)
+font_size = 64
+outline_size = 14
+script = ExtResource("1_chu")

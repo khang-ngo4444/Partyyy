@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "07 · Ô Trang bị và vật phẩm"
+noi_dung = "[color=#8fe7d4][b]NHẬN ĐỒ[/b][/color]
+Dừng trên ô Trang bị sẽ tự nhận ngẫu nhiên một món (đồ Thường hay rơi, đồ Hiếm ít hơn). Đồ Huyền thoại chỉ có từ hạng 1 minigame. Túi chứa tối đa [b]3 món[/b]; nhặt món thứ 4 thì món cũ nhất bị bỏ.
+
+[color=#8fe7d4][b]THƯỜNG[/b][/color]
+[b]Ná cao su[/b] ngắm, 7 ô, −4 máu · [b]Úp thúng[/b] tự chặn trọn một đòn, chặn cả đổi chỗ và móc kéo · [b]Bát cháo hành[/b] +5 máu · [b]Vỏ sầu riêng[/b] bẫy: −2 máu, số bước còn lại chia đôi · [b]Pháo dây[/b] −2 máu mọi người trong 2 ô · [b]Rào tre[/b] người đi tới phải dừng trước rào · [b]Hai hột xí ngầu[/b] lượt này tung 2 xúc xắc
+
+[color=#8fe7d4][b]HIẾM[/b][/color]
+[b]Cần câu[/b] kéo người trúng về ô mình · [b]Vợt bắt cá[/b] cướp một món (hoặc 15 vàng) · [b]Xe đồ chơi chở pháo[/b] nổ một ô trong 5 ô · [b]Dừa rơi[/b] −3 máu người bất kỳ · [b]Bùa hoán đổi[/b] đổi chỗ, hết lượt · [b]Trâu điên[/b] lao 8 ô, −4 máu mỗi người trên đường · [b]Ống heo đất[/b] mỗi vòng +5 vàng (tối đa 30), gục là vỡ · [b]Còi trọng tài[/b] chọn minigame · [b]Dây thun[/b] neo rồi giật về · [b]Dép tổ ong[/b] ném thẳng 5 ô: gục
+
+[color=#8fe7d4][b]HUYỀN THOẠI[/b][/color]
+[b]Nồi mắm tôm[/b] khoá đồ 3 lượt, −1 máu mỗi lượt · [b]Kính lúp hội tụ[/b] ngắm, tầm vô hạn: gục · [b]Chó ngao xổng chuồng[/b] đi tuần 3 vòng, cắn gục ai trên đường"

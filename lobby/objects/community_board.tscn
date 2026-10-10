@@ -1,8 +1,169 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/community_board.gd" id="1_script"]
 [ext_resource type="Resource" path="res://lobby/objects/card_deck.tres" id="2_deck"]
+[ext_resource type="Texture2D" uid="uid://bqmvowx2n3tve" path="res://asset/kenney_playing-cards/PNG/Cards (medium)/card_back.png" id="3_16v2t"]
 
-[node name="CommunityBoard" type="Node3D"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d64rr"]
+resource_local_to_scene = true
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+albedo_texture = ExtResource("3_16v2t")
+texture_filter = 0
+
+[sub_resource type="QuadMesh" id="QuadMesh_r43eh"]
+size = Vector2(0.08, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o0qm6"]
+resource_local_to_scene = true
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+albedo_texture = ExtResource("3_16v2t")
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4y5wl"]
+resource_local_to_scene = true
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+albedo_texture = ExtResource("3_16v2t")
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xsn0j"]
+resource_local_to_scene = true
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+albedo_texture = ExtResource("3_16v2t")
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hv8ku"]
+resource_local_to_scene = true
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+albedo_texture = ExtResource("3_16v2t")
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1o3wm"]
+resource_local_to_scene = true
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+albedo_texture = ExtResource("3_16v2t")
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iyey8"]
+resource_local_to_scene = true
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+albedo_texture = ExtResource("3_16v2t")
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yg1cm"]
+resource_local_to_scene = true
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+albedo_texture = ExtResource("3_16v2t")
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lpgfh"]
+resource_local_to_scene = true
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+albedo_texture = ExtResource("3_16v2t")
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rycng"]
+resource_local_to_scene = true
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+albedo_texture = ExtResource("3_16v2t")
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_faem4"]
+albedo_color = Color(0.5411765, 0.3529412, 0.21176471, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="BoxMesh_dnapj"]
+size = Vector3(0.52, 0.25, 0.02)
+
+[sub_resource type="BoxMesh" id="BoxMesh_62o4g"]
+size = Vector3(0.52, 0.02, 0.08)
+
+[node name="CommunityBoard" type="Node3D" unique_id=1563067429]
 script = ExtResource("1_script")
 bo_bai = ExtResource("2_deck")
+
+[node name="Bai" type="Node3D" parent="." unique_id=1773546796]
+
+[node name="Truoc0" type="MeshInstance3D" parent="Bai" unique_id=633218779]
+visible = false
+material_override = SubResource("StandardMaterial3D_d64rr")
+mesh = SubResource("QuadMesh_r43eh")
+
+[node name="Truoc1" type="MeshInstance3D" parent="Bai" unique_id=1489039242]
+visible = false
+material_override = SubResource("StandardMaterial3D_o0qm6")
+mesh = SubResource("QuadMesh_r43eh")
+
+[node name="Truoc2" type="MeshInstance3D" parent="Bai" unique_id=220434181]
+visible = false
+material_override = SubResource("StandardMaterial3D_4y5wl")
+mesh = SubResource("QuadMesh_r43eh")
+
+[node name="Truoc3" type="MeshInstance3D" parent="Bai" unique_id=2139800388]
+visible = false
+material_override = SubResource("StandardMaterial3D_xsn0j")
+mesh = SubResource("QuadMesh_r43eh")
+
+[node name="Truoc4" type="MeshInstance3D" parent="Bai" unique_id=363205017]
+visible = false
+material_override = SubResource("StandardMaterial3D_hv8ku")
+mesh = SubResource("QuadMesh_r43eh")
+
+[node name="Sau0" type="MeshInstance3D" parent="Bai" unique_id=348339984]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_1o3wm")
+mesh = SubResource("QuadMesh_r43eh")
+
+[node name="Sau1" type="MeshInstance3D" parent="Bai" unique_id=961333593]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_iyey8")
+mesh = SubResource("QuadMesh_r43eh")
+
+[node name="Sau2" type="MeshInstance3D" parent="Bai" unique_id=874883421]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_yg1cm")
+mesh = SubResource("QuadMesh_r43eh")
+
+[node name="Sau3" type="MeshInstance3D" parent="Bai" unique_id=993441652]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_lpgfh")
+mesh = SubResource("QuadMesh_r43eh")
+
+[node name="Sau4" type="MeshInstance3D" parent="Bai" unique_id=965072363]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_rycng")
+mesh = SubResource("QuadMesh_r43eh")
+
+[node name="Van" type="MeshInstance3D" parent="." unique_id=1700013777]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.145, 0)
+material_override = SubResource("StandardMaterial3D_faem4")
+mesh = SubResource("BoxMesh_dnapj")
+
+[node name="De" type="MeshInstance3D" parent="." unique_id=1337560858]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+material_override = SubResource("StandardMaterial3D_faem4")
+mesh = SubResource("BoxMesh_62o4g")

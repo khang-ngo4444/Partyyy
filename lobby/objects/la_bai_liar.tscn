@@ -1,0 +1,42 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" uid="uid://bqmvowx2n3tve" path="res://asset/kenney_playing-cards/PNG/Cards (medium)/card_back.png" id="1_bagoe"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hntlx"]
+albedo_color = Color(0.95686275, 0.94509804, 0.91764706, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_c7xnt"]
+size = Vector3(0.144, 0.004, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mmppo"]
+resource_local_to_scene = true
+transparency = 1
+shading_mode = 0
+albedo_texture = ExtResource("1_bagoe")
+texture_filter = 0
+
+[sub_resource type="QuadMesh" id="QuadMesh_poqk5"]
+size = Vector2(0.144, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oudpn"]
+transparency = 1
+shading_mode = 0
+albedo_texture = ExtResource("1_bagoe")
+texture_filter = 0
+
+[sub_resource type="QuadMesh" id="QuadMesh_lah1h"]
+size = Vector2(0.144, 0.2)
+
+[node name="LaBai" type="MeshInstance3D" unique_id=460849251]
+material_override = SubResource("StandardMaterial3D_hntlx")
+mesh = SubResource("BoxMesh_c7xnt")
+
+[node name="MatTruoc" type="MeshInstance3D" parent="." unique_id=2141857096]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.0025, 0)
+material_override = SubResource("StandardMaterial3D_mmppo")
+mesh = SubResource("QuadMesh_poqk5")
+
+[node name="MatSau" type="MeshInstance3D" parent="." unique_id=1590694807]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, -0.0025, 0)
+material_override = SubResource("StandardMaterial3D_oudpn")
+mesh = SubResource("QuadMesh_lah1h")

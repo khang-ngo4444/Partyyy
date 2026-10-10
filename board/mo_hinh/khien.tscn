@@ -1,0 +1,5 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://3d/vat_pham/khien.glb" id="1_glb"]
+
+[node name="Khien" instance=ExtResource("1_glb")]

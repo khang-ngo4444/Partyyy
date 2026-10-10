@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/dart.gd" id="1_dart"]
 [ext_resource type="FusionReplicationConfig" path="res://lobby/objects/pickable_replication.tres" id="2_cfg"]
@@ -6,16 +6,74 @@
 [sub_resource type="BoxShape3D" id="Shape_hinh"]
 size = Vector3(0.02, 0.02, 0.16)
 
-[node name="Dart" type="RigidBody3D"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p86wn"]
+albedo_color = Color(0.7882353, 0.8, 0.8235294, 1)
+metallic = 0.8
+roughness = 0.3
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ukpix"]
+top_radius = 0.0015
+bottom_radius = 0.0005
+height = 0.035
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t32fu"]
+albedo_color = Color(0.16862746, 0.1764706, 0.2, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_gf33r"]
+top_radius = 0.006
+bottom_radius = 0.006
+height = 0.045
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ob045"]
+top_radius = 0.0022
+bottom_radius = 0.0022
+height = 0.06
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_diws6"]
+cull_mode = 2
+albedo_color = Color(0.8980392, 0.28235295, 0.3019608, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bcgnk"]
+size = Vector3(0.045, 0.001, 0.04)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4ru1m"]
+size = Vector3(0.045, 0.001, 0.04)
+
+[node name="Dart" type="RigidBody3D" unique_id=1641062830]
 script = ExtResource("1_dart")
 
-[node name="HinhVaCham" type="CollisionShape3D" parent="."]
+[node name="HinhVaCham" type="CollisionShape3D" parent="." unique_id=1812631941]
 shape = SubResource("Shape_hinh")
 
-[node name="Replicator" type="FusionSharedReplicator" parent="."]
+[node name="Replicator" type="FusionSharedReplicator" parent="." unique_id=428425133]
 root_path = NodePath("..")
 replication_config = ExtResource("2_cfg")
 owner_mode = 0
 root_replication_mode = 1
 root_interpolation_mode = 2
 root_forecast_gravity = false
+
+[node name="Kim" type="MeshInstance3D" parent="." unique_id=801587115]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -0.0625)
+material_override = SubResource("StandardMaterial3D_p86wn")
+mesh = SubResource("CylinderMesh_ukpix")
+
+[node name="Than" type="MeshInstance3D" parent="." unique_id=206796834]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -0.023)
+material_override = SubResource("StandardMaterial3D_t32fu")
+mesh = SubResource("CylinderMesh_gf33r")
+
+[node name="Duoi" type="MeshInstance3D" parent="." unique_id=1145850228]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0.035)
+material_override = SubResource("StandardMaterial3D_t32fu")
+mesh = SubResource("CylinderMesh_ob045")
+
+[node name="Canh0" type="MeshInstance3D" parent="." unique_id=1204586988]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.06)
+material_override = SubResource("StandardMaterial3D_diws6")
+mesh = SubResource("BoxMesh_bcgnk")
+
+[node name="Canh1" type="MeshInstance3D" parent="." unique_id=1753720177]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0.06)
+material_override = SubResource("StandardMaterial3D_diws6")
+mesh = SubResource("BoxMesh_4ru1m")

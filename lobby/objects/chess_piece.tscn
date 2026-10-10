@@ -14,6 +14,9 @@
 [ext_resource type="PackedScene" path="res://lobby/objects/chess/knight_black.tscn" id="3_c9"]
 [ext_resource type="PackedScene" path="res://lobby/objects/chess/queen_black.tscn" id="3_c10"]
 [ext_resource type="PackedScene" path="res://lobby/objects/chess/king_black.tscn" id="3_c11"]
+[ext_resource type="PackedScene" path="res://lobby/objects/chess/quan_tuong.tscn" id="quan_tuong_scene"]
+[ext_resource type="PackedScene" path="res://lobby/objects/chess/quan_caro_trang.tscn" id="caro_scenes0"]
+[ext_resource type="PackedScene" path="res://lobby/objects/chess/quan_caro_den.tscn" id="caro_scenes1"]
 
 [sub_resource type="CylinderShape3D" id="Shape_hinh"]
 height = 0.54
@@ -21,6 +24,8 @@ radius = 0.135
 
 [node name="ChessPiece" type="RigidBody3D"]
 script = ExtResource("1_piece")
+quan_tuong_scene = ExtResource("quan_tuong_scene")
+caro_scenes = Array[PackedScene]([ExtResource("caro_scenes0"), ExtResource("caro_scenes1")])
 chess_scenes = Array[PackedScene]([ExtResource("3_c0"), ExtResource("3_c1"), ExtResource("3_c2"), ExtResource("3_c3"), ExtResource("3_c4"), ExtResource("3_c5"), ExtResource("3_c6"), ExtResource("3_c7"), ExtResource("3_c8"), ExtResource("3_c9"), ExtResource("3_c10"), ExtResource("3_c11")])
 piece_scale = 3.7125
 

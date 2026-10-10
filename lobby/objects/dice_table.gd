@@ -1,30 +1,22 @@
 class_name DiceTable
 extends Node3D
 
-## Bàn gieo xúc xắc. CHỈ là cái bàn và một bảng cộng điểm.
-##
-## Không có nút, không có hoạt hình gieo. Hai viên xúc xắc là vật CẦM ĐƯỢC (`Die`) — nhặt
-## lên, ném ra, chúng tự lộn nhào rồi nằm một mặt. Bàn chỉ ngồi đó cộng hai viên đang nằm
-## trên nó.
-##
-## Đọc theo VỊ TRÍ, giống `CardSpot`: vị trí và mặt của xúc xắc đã replicate sẵn nên máy nào
-## cũng cộng ra cùng một số. Không tốn thêm một byte mạng nào.
+## Bàn gieo xúc xắc: cộng hai viên `Die` đang nằm trên bàn (đọc theo vị trí đã replicate).
+
+## Đọc lại 4 lần/giây.
+const REFRESH := 0.25
 
 @export var table_radius := 0.9
 @export var table_height := 0.75
-## Đọc lại 4 lần/giây. Đây là bảng số cho người đọc, không phải vật lý.
-const REFRESH := 0.25
-
-@onready var board: Label3D = $Result
 
 var _acc := 0.0
 var _last := ""
 
+@onready var board: Label3D = $Result
+
 
 func _ready() -> void:
 	add_to_group("dice_table")
-	_build_table()
-	board.text = "NEM XUC XAC LEN BAN"
 
 
 func _process(delta: float) -> void:
@@ -38,14 +30,13 @@ func _process(delta: float) -> void:
 		board.text = txt
 
 
-## Xúc xắc đang NẰM trên mặt bàn này. Viên đang cầm trên tay không tính — không lọc thì đi
-## ngang qua bàn là điểm nhảy loạn.
+## Xúc xắc đang nằm trên bàn; viên đang cầm không tính.
 func _doc() -> String:
 	var tong := 0
 	var n := 0
 	for d in get_tree().get_nodes_in_group("die"):
 		var die := d as Die
-		# value 0 = vien dang lan, chua co mat ngua.
+		# value 0 = viên đang lăn.
 		if die == null or die.holder_id != 0 or die.value == 0:
 			continue
 		var v := die.global_position - global_position
@@ -58,32 +49,3 @@ func _doc() -> String:
 		return "%d  (moi co 1 vien tren ban)" % tong
 	return "%d" % tong
 
-
-func _build_table() -> void:
-	# Va chạm bàn: node StaticSurface_Table trong dice_table.tscn.
-
-	var top := MeshInstance3D.new()
-	var cm := CylinderMesh.new()
-	cm.top_radius = table_radius
-	cm.bottom_radius = table_radius * 0.85
-	cm.height = table_height
-	top.mesh = cm
-	top.material_override = _mat(Color("2f5d3f"))
-	top.position.y = table_height * 0.5
-	add_child(top)
-
-	# Vành gỗ quanh mép: xúc xắc ném hụt thì rơi ra sàn, có vành mới ra dáng bàn gieo.
-	var vien := MeshInstance3D.new()
-	var tm := TorusMesh.new()
-	tm.inner_radius = table_radius - 0.04
-	tm.outer_radius = table_radius + 0.04
-	vien.mesh = tm
-	vien.material_override = _mat(Color("6b4a2f"))
-	vien.position.y = table_height
-	add_child(vien)
-
-
-func _mat(c: Color) -> StandardMaterial3D:
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = c
-	return mat

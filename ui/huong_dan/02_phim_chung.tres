@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "02 · Toàn bộ phím chung"
+noi_dung = "[color=#8fe7d4][b]DI CHUYỂN VÀ TƯƠNG TÁC[/b][/color]
+[b]W A S D[/b] — di chuyển
+[b]Chuột[/b] — xoay góc nhìn
+[b]Space[/b] — nhảy; nhân vật có thể nhảy hai lần
+[b]E[/b] — tương tác, nhặt vật; giữ rồi thả E để ném vật đang cầm
+[b]Q[/b] — đặt vật xuống hoặc đứng dậy khỏi ghế
+[b]F[/b] — đánh tay không trong minigame có cho phép đánh
+[b]M[/b] — đổi mẫu nhân vật khi đang ở sảnh
+
+[color=#8fe7d4][b]GIAO DIỆN[/b][/color]
+[b]Enter[/b] — mở chat; Enter lần nữa để gửi
+[b]Esc[/b] — huỷ chat hoặc mở/đóng menu tạm dừng
+
+[color=#8fe7d4][b]TRÊN BÀN PARTY[/b][/color]
+[b]1 – 9[/b] — chọn món trong túi · [b]Chuột trái[/b] — dùng món đang chọn
+[b]Space / E[/b] — tung xúc xắc · [b]A / D[/b] — đổi hướng ở ngã rẽ
+
+Mỗi minigame có phím riêng được ghi ở trang của trò đó."

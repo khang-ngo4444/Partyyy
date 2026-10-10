@@ -1,46 +1,37 @@
 extends Control
 
-## Màn hình trộn màu đèn, mở từ nút DOI MAU DEN trên tường phòng chờ.
-##
-## Màu là trạng thái CẢ PHÒNG: chọn xong là gửi RPC, mọi người đổi theo, người vào muộn đọc
-## lại từ `MatchState`. Màn hình này không giữ gì riêng ngoài hai màu đang soạn.
-##
-## HAI NGUỒN: bấm ô A hoặc B để chọn đang sửa màu nào, bánh xe sửa đúng ô đó. Bật "Hai nguồn"
-## thì phòng thành gradient — đèn bên trái ăn màu A, bên phải màu B, đỉnh trời A chân trời B.
-## Tắt thì cả phòng một màu A.
-##
-## Dùng `ColorPicker` có sẵn của Godot thay vì tự dựng ba thanh trượt: đã có bánh xe, thanh
-## RGB/HSV và ô mã hex — trộn được mọi màu, không phải viết dòng nào.
-##
-## Gửi lúc bấm ÁP DỤNG, KHÔNG nối thẳng `color_changed`: bánh xe bắn signal mỗi pixel con trỏ
-## đi qua, nối thẳng vào RPC là kéo một đường ngang phát vài trăm gói tin và dựng lại radiance
-## cubemap của bầu trời từng ấy lần — đúng cái lỗi lag đã phải đi sửa một lần rồi.
+## Màn trộn màu đèn cả phòng. Hai nguồn A/B (gradient) hoặc một màu.
+## Chỉ gửi RPC khi bấm ÁP DỤNG (không nối `color_changed` để tránh vài trăm gói tin).
 
-## Vài màu đặt sẵn cho ai không muốn ngồi trộn.
+signal mau_da_chon(mau_a: Color, mau_b: Color, hai_mau: bool)
+signal xin_mau_goc
+
+## Màu đặt sẵn.
 const DAT_SAN: Array[Color] = [
 	Color("ffc46b"), Color("ffffff"), Color("ff5fa2"),
 	Color("4d8cff"), Color("46d97a"), Color("a56bff"),
 	Color("ff3b30"), Color("00e5ff"),
 ]
-## Chừa quanh mép màn hình chừng này pixel. Bảng không bao giờ tràn ra ngoài.
+
+## Chừa quanh mép màn hình (px).
 const CHUA_LE := 28.0
 const RONG_TOI_DA := 520.0
 
-signal mau_da_chon(mau_a: Color, mau_b: Color, hai_mau: bool)
-signal xin_mau_goc
+@export var o_mau_scene: PackedScene = null
+
+var _mau := [Color("ffc46b"), Color("4d8cff")]
+
+## 0 = A, 1 = B.
+var _dang_sua := 0
+var _dai := GradientTexture2D.new()
 
 @onready var _khung: PanelContainer = %Panel
 @onready var _banh_xe: ColorPicker = %Wheel
 @onready var _dat_san: GridContainer = %PresetGrid
-@onready var _o_a: Button = %ChipA
-@onready var _o_b: Button = %ChipB
+@onready var _o_a: OMau = %ChipA
+@onready var _o_b: OMau = %ChipB
 @onready var _bat_b: CheckButton = %TwoToggle
 @onready var _xem_truoc: TextureRect = %GradientPreview
-
-var _mau := [Color("ffc46b"), Color("4d8cff")]
-## Đang sửa ô nào: 0 = A, 1 = B.
-var _dang_sua := 0
-var _dai := GradientTexture2D.new()
 
 
 func _ready() -> void:
@@ -61,9 +52,7 @@ func _ready() -> void:
 		_ve_lai())
 
 	_o_a.pressed.connect(func(): _chon_o(0))
-	# Bam o B la TU BAT che do hai nguon luon. Truoc day o B bi `disabled` cho toi khi tich
-	# cai o "Hai nguon sang" — ma nut `disabled` thi khong ban `pressed`, nen bam vao no im
-	# lang hoan toan: nhin nhu tinh nang chet. Khong bat ai phai tim ra cai cong tac truoc.
+	# Bấm ô B là tự bật chế độ hai nguồn.
 	_o_b.pressed.connect(func():
 		_bat_b.button_pressed = true
 		_chon_o(1))
@@ -75,15 +64,10 @@ func _ready() -> void:
 	_xem_truoc.texture = _dai
 
 	for m in DAT_SAN:
-		var b := Button.new()
-		b.custom_minimum_size = Vector2(48, 34)
-		var kieu := StyleBoxFlat.new()
-		kieu.bg_color = m
-		kieu.set_corner_radius_all(5)
-		for tt in ["normal", "hover", "pressed", "focus"]:
-			b.add_theme_stylebox_override(tt, kieu)
+		var b := o_mau_scene.instantiate() as OMau
+		b.dat(m)
 		var mau := m
-		# Bấm màu đặt sẵn là gán vào Ô ĐANG SỬA, không áp thẳng: còn phải chọn ô kia nữa.
+		# Màu đặt sẵn gán vào ô đang sửa.
 		b.pressed.connect(func():
 			_mau[_dang_sua] = mau
 			_banh_xe.color = mau
@@ -91,8 +75,7 @@ func _ready() -> void:
 		_dat_san.add_child(b)
 
 	_chon_o(0)
-	# `is_inside_tree` la bat buoc: tin hieu nay khong tu ngat khi node roi khoi cay, va
-	# `get_viewport_rect()` tren mot node da roi ra la loi.
+	# Phải kiểm `is_inside_tree`: tín hiệu không tự ngắt khi node rời cây.
 	get_viewport().size_changed.connect(func():
 		if is_inside_tree():
 			_vua_man_hinh())
@@ -115,11 +98,7 @@ func _input(event: InputEvent) -> void:
 		dong()
 
 
-## Ép bảng nằm gọn trong màn hình NGƯỜI DÙNG, không phải trong một cỡ chép cứng.
-##
-## Bảng cũ cao cố định 620 px: cửa sổ thấp hơn thế thì tiêu đề bị cắt mất ở trên và ba nút
-## VỀ MÀU GỐC / ĐÓNG / ÁP DỤNG bị cắt mất ở dưới — bấm không tới. Giờ đo `get_visible_rect()`
-## mỗi lần mở và mỗi lần đổi cỡ cửa sổ; phần nội dung dài hơn thì `ScrollContainer` cuộn.
+## Ép bảng nằm gọn trong màn hình; nội dung dài thì cuộn.
 func _vua_man_hinh() -> void:
 	var man := get_viewport_rect().size
 	var rong := minf(RONG_TOI_DA, man.x - CHUA_LE * 2.0)
@@ -138,21 +117,13 @@ func _chon_o(i: int) -> void:
 
 func _ve_lai() -> void:
 	var hai := _bat_b.button_pressed
-	# Tat hai nguon thi quay ve sua o A — khong de con tro ket o cai o dang khong duoc dung.
+	# Tắt hai nguồn thì quay về sửa ô A.
 	if not hai and _dang_sua == 1:
 		_dang_sua = 0
 		_banh_xe.color = _mau[0]
-	# O B mo di khi khong dung, nhung VAN BAM DUOC: bam vao la bat hai nguon len.
+	# Ô B mờ khi không dùng, vẫn bấm được.
 	_o_b.modulate = Color(1, 1, 1, 1.0 if hai else 0.45)
-	for i in 2:
-		var o: Button = _o_a if i == 0 else _o_b
-		var kieu := StyleBoxFlat.new()
-		kieu.bg_color = _mau[i]
-		kieu.set_corner_radius_all(6)
-		if i == _dang_sua:
-			kieu.set_border_width_all(3)
-			kieu.border_color = Color.WHITE
-		for tt in ["normal", "hover", "pressed", "focus"]:
-			o.add_theme_stylebox_override(tt, kieu)
+	_o_a.dat(_mau[0], _dang_sua == 0)
+	_o_b.dat(_mau[1], _dang_sua == 1)
 	_dai.gradient.set_color(0, _mau[0])
 	_dai.gradient.set_color(1, _mau[1] if hai else _mau[0])

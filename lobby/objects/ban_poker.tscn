@@ -1,0 +1,520 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://lobby/objects/card_table.gd" id="1_oq5xq"]
+[ext_resource type="Script" path="res://lobby/objects/card_spot.gd" id="2_usxaa"]
+[ext_resource type="PackedScene" path="res://lobby/objects/community_board.tscn" id="3_k855x"]
+[ext_resource type="PackedScene" path="res://lobby/objects/card_seat.tscn" id="6_q6h8n"]
+
+[sub_resource type="CylinderShape3D" id="Shape_StaticSurface_Table"]
+height = 0.75
+radius = 1.75
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_byjmd"]
+albedo_color = Color(0.1255, 0.3137, 0.2353, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_owvwo"]
+top_radius = 1.75
+bottom_radius = 1.54
+height = 0.75
+radial_segments = 48
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xhywi"]
+albedo_color = Color(0.41960785, 0.2901961, 0.18431373, 1)
+
+[sub_resource type="TorusMesh" id="TorusMesh_pa7qt"]
+inner_radius = 1.66
+outer_radius = 1.8
+rings = 48
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0n1q4"]
+shading_mode = 0
+albedo_color = Color(0.8509804, 0.7882353, 0.5411765, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_kiled"]
+size = Vector3(0.98, 0.01, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qy3mr"]
+size = Vector3(0.98, 0.01, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5u8s4"]
+size = Vector3(0.03, 0.01, 0.38)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pe4ma"]
+size = Vector3(0.03, 0.01, 0.38)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ki1rf"]
+shading_mode = 0
+albedo_color = Color(0.8509804, 0.7882353, 0.5411765, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_icg2d"]
+size = Vector3(0.5, 0.01, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_niw72"]
+size = Vector3(0.5, 0.01, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vydoj"]
+size = Vector3(0.03, 0.01, 0.38)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0hbji"]
+size = Vector3(0.03, 0.01, 0.38)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_86p60"]
+shading_mode = 0
+albedo_color = Color(0.8509804, 0.7882353, 0.5411765, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8w2g0"]
+size = Vector3(0.5, 0.01, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vcfel"]
+size = Vector3(0.5, 0.01, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_np4o2"]
+size = Vector3(0.03, 0.01, 0.38)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pv346"]
+size = Vector3(0.03, 0.01, 0.38)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hsldr"]
+shading_mode = 0
+albedo_color = Color(0.8509804, 0.7882353, 0.5411765, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_st28i"]
+size = Vector3(0.5, 0.01, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ldcnu"]
+size = Vector3(0.5, 0.01, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_yknex"]
+size = Vector3(0.03, 0.01, 0.38)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wcpw8"]
+size = Vector3(0.03, 0.01, 0.38)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2n72y"]
+shading_mode = 0
+albedo_color = Color(0.8509804, 0.7882353, 0.5411765, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_uqv37"]
+size = Vector3(0.5, 0.01, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6ivt0"]
+size = Vector3(0.5, 0.01, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_127n3"]
+size = Vector3(0.03, 0.01, 0.38)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wreq0"]
+size = Vector3(0.03, 0.01, 0.38)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f4k7n"]
+shading_mode = 0
+albedo_color = Color(0.8509804, 0.7882353, 0.5411765, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_mhcix"]
+size = Vector3(0.5, 0.01, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_kq24f"]
+size = Vector3(0.5, 0.01, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_apgyf"]
+size = Vector3(0.03, 0.01, 0.38)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8e701"]
+size = Vector3(0.03, 0.01, 0.38)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p0gvy"]
+shading_mode = 0
+albedo_color = Color(0.8509804, 0.7882353, 0.5411765, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fwhju"]
+size = Vector3(0.5, 0.01, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lie1i"]
+size = Vector3(0.5, 0.01, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_a8sk1"]
+size = Vector3(0.03, 0.01, 0.38)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tmbn4"]
+size = Vector3(0.03, 0.01, 0.38)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xy17x"]
+albedo_color = Color(0.9490196, 0.9372549, 0.9019608, 1)
+emission_enabled = true
+emission = Color(0.9490196, 0.9372549, 0.9019608, 1)
+emission_energy_multiplier = 0.5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_6cujb"]
+top_radius = 0.06
+bottom_radius = 0.06
+height = 0.02
+
+[node name="BanPoker" type="Node3D" unique_id=1966964146]
+script = ExtResource("1_oq5xq")
+poker = true
+deck_id = 1
+
+[node name="StaticSurface_Table" type="StaticBody3D" parent="." unique_id=1199257811]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Table" unique_id=127902664]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.375, 0)
+shape = SubResource("Shape_StaticSurface_Table")
+
+[node name="Ni" type="MeshInstance3D" parent="." unique_id=359716604]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.375, 0)
+material_override = SubResource("StandardMaterial3D_byjmd")
+mesh = SubResource("CylinderMesh_owvwo")
+
+[node name="Vien" type="MeshInstance3D" parent="." unique_id=1809442536]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+material_override = SubResource("StandardMaterial3D_xhywi")
+mesh = SubResource("TorusMesh_pa7qt")
+
+[node name="Board" type="Label3D" parent="." unique_id=776797380]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+pixel_size = 0.0026
+billboard = 1
+text = "NGOI VAO GHE DE CHIA BAI"
+font_size = 36
+
+[node name="TenBan" type="Label3D" parent="." unique_id=168792547]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
+pixel_size = 0.0024
+billboard = 1
+modulate = Color(0.8509804, 0.7882353, 0.5411765, 1)
+text = "POKER"
+font_size = 40
+
+[node name="OCai" type="Node3D" parent="." unique_id=1586740836]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -0.7)
+script = ExtResource("2_usxaa")
+mode = 1
+size = Vector2(1.88, 0.44)
+label_text = "BAI CHUNG"
+
+[node name="Canh0" type="MeshInstance3D" parent="OCai" unique_id=927111569]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012, -0.19)
+material_override = SubResource("StandardMaterial3D_0n1q4")
+mesh = SubResource("BoxMesh_kiled")
+
+[node name="Canh1" type="MeshInstance3D" parent="OCai" unique_id=1014865729]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012, 0.19)
+material_override = SubResource("StandardMaterial3D_0n1q4")
+mesh = SubResource("BoxMesh_qy3mr")
+
+[node name="Canh2" type="MeshInstance3D" parent="OCai" unique_id=534847385]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.49, 0.012, 0)
+material_override = SubResource("StandardMaterial3D_0n1q4")
+mesh = SubResource("BoxMesh_5u8s4")
+
+[node name="Canh3" type="MeshInstance3D" parent="OCai" unique_id=499966208]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.49, 0.012, 0)
+material_override = SubResource("StandardMaterial3D_0n1q4")
+mesh = SubResource("BoxMesh_pe4ma")
+
+[node name="Readout" type="Label3D" parent="OCai" unique_id=238425245]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+pixel_size = 0.0022
+billboard = 1
+text = "BAI CHUNG"
+outline_size = 8
+
+[node name="BangChung" parent="." unique_id=1563067429 node_paths=PackedStringArray("spot") instance=ExtResource("3_k855x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -1.59)
+spot = NodePath("../OCai")
+
+[node name="O0" type="Node3D" parent="." unique_id=823683678 node_paths=PackedStringArray("chung")]
+transform = Transform3D(-0.50000006, 0, -0.8660254, 0, 1, 0, 0.8660254, 0, -0.50000006, -1.2427465, 0.75, -0.7175)
+script = ExtResource("2_usxaa")
+mode = 1
+size = Vector2(0.5, 0.38)
+chung = NodePath("../OCai")
+
+[node name="Canh0" type="MeshInstance3D" parent="O0" unique_id=1042097089]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012, -0.19)
+material_override = SubResource("StandardMaterial3D_ki1rf")
+mesh = SubResource("BoxMesh_icg2d")
+
+[node name="Canh1" type="MeshInstance3D" parent="O0" unique_id=1931400982]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012, 0.19)
+material_override = SubResource("StandardMaterial3D_ki1rf")
+mesh = SubResource("BoxMesh_niw72")
+
+[node name="Canh2" type="MeshInstance3D" parent="O0" unique_id=650256029]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.012, 0)
+material_override = SubResource("StandardMaterial3D_ki1rf")
+mesh = SubResource("BoxMesh_vydoj")
+
+[node name="Canh3" type="MeshInstance3D" parent="O0" unique_id=690970536]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.012, 0)
+material_override = SubResource("StandardMaterial3D_ki1rf")
+mesh = SubResource("BoxMesh_0hbji")
+
+[node name="Readout" type="Label3D" parent="O0" unique_id=1475891168]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+visible = false
+pixel_size = 0.0022
+billboard = 1
+outline_size = 8
+
+[node name="Seat1_0" parent="." unique_id=948068886 instance=ExtResource("6_q6h8n")]
+transform = Transform3D(0.49999997, 0, 0.86602545, 0, 1, 0, -0.86602545, 0, 0.49999997, -1.9052559, 0, -1.1)
+deck = 1
+
+[node name="O1" type="Node3D" parent="." unique_id=656279052 node_paths=PackedStringArray("chung")]
+transform = Transform3D(0.30901697, 0, -0.95105654, 0, 1, 0, 0.95105654, 0, 0.30901697, -1.3647661, 0.75, 0.4434394)
+script = ExtResource("2_usxaa")
+mode = 1
+size = Vector2(0.5, 0.38)
+chung = NodePath("../OCai")
+
+[node name="Canh0" type="MeshInstance3D" parent="O1" unique_id=1740084899]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012, -0.19)
+material_override = SubResource("StandardMaterial3D_86p60")
+mesh = SubResource("BoxMesh_8w2g0")
+
+[node name="Canh1" type="MeshInstance3D" parent="O1" unique_id=575948817]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012, 0.19)
+material_override = SubResource("StandardMaterial3D_86p60")
+mesh = SubResource("BoxMesh_vcfel")
+
+[node name="Canh2" type="MeshInstance3D" parent="O1" unique_id=1098979007]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.012, 0)
+material_override = SubResource("StandardMaterial3D_86p60")
+mesh = SubResource("BoxMesh_np4o2")
+
+[node name="Canh3" type="MeshInstance3D" parent="O1" unique_id=177520210]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.012, 0)
+material_override = SubResource("StandardMaterial3D_86p60")
+mesh = SubResource("BoxMesh_pv346")
+
+[node name="Readout" type="Label3D" parent="O1" unique_id=235781623]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+visible = false
+pixel_size = 0.0022
+billboard = 1
+outline_size = 8
+
+[node name="Seat1_1" parent="." unique_id=811453975 instance=ExtResource("6_q6h8n")]
+transform = Transform3D(-0.30901703, 0, 0.9510565, 0, 1, 0, -0.9510565, 0, -0.30901703, -2.0923243, 0, 0.6798374)
+deck = 1
+index = 1
+
+[node name="O2" type="Node3D" parent="." unique_id=2080115893 node_paths=PackedStringArray("chung")]
+transform = Transform3D(0.9135454, 0, -0.40673664, 0, 1, 0, 0.40673664, 0, 0.9135454, -0.5836671, 0.75, 1.3109378)
+script = ExtResource("2_usxaa")
+mode = 1
+size = Vector2(0.5, 0.38)
+chung = NodePath("../OCai")
+
+[node name="Canh0" type="MeshInstance3D" parent="O2" unique_id=937574792]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012, -0.19)
+material_override = SubResource("StandardMaterial3D_hsldr")
+mesh = SubResource("BoxMesh_st28i")
+
+[node name="Canh1" type="MeshInstance3D" parent="O2" unique_id=1701794303]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012, 0.19)
+material_override = SubResource("StandardMaterial3D_hsldr")
+mesh = SubResource("BoxMesh_ldcnu")
+
+[node name="Canh2" type="MeshInstance3D" parent="O2" unique_id=1269239937]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.012, 0)
+material_override = SubResource("StandardMaterial3D_hsldr")
+mesh = SubResource("BoxMesh_yknex")
+
+[node name="Canh3" type="MeshInstance3D" parent="O2" unique_id=1667728501]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.012, 0)
+material_override = SubResource("StandardMaterial3D_hsldr")
+mesh = SubResource("BoxMesh_wcpw8")
+
+[node name="Readout" type="Label3D" parent="O2" unique_id=1381002510]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+visible = false
+pixel_size = 0.0022
+billboard = 1
+outline_size = 8
+
+[node name="Seat1_2" parent="." unique_id=428824556 instance=ExtResource("6_q6h8n")]
+transform = Transform3D(-0.9135455, 0, 0.40673658, 0, 1, 0, -0.40673658, 0, -0.9135455, -0.89482063, 0, 2.0098)
+deck = 1
+index = 2
+
+[node name="O3" type="Node3D" parent="." unique_id=741567401 node_paths=PackedStringArray("chung")]
+transform = Transform3D(0.9135454, 0, 0.40673664, 0, 1, 0, -0.40673664, 0, 0.9135454, 0.5836671, 0.75, 1.3109378)
+script = ExtResource("2_usxaa")
+mode = 1
+size = Vector2(0.5, 0.38)
+chung = NodePath("../OCai")
+
+[node name="Canh0" type="MeshInstance3D" parent="O3" unique_id=1004935933]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012, -0.19)
+material_override = SubResource("StandardMaterial3D_2n72y")
+mesh = SubResource("BoxMesh_uqv37")
+
+[node name="Canh1" type="MeshInstance3D" parent="O3" unique_id=116938765]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012, 0.19)
+material_override = SubResource("StandardMaterial3D_2n72y")
+mesh = SubResource("BoxMesh_6ivt0")
+
+[node name="Canh2" type="MeshInstance3D" parent="O3" unique_id=534504052]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.012, 0)
+material_override = SubResource("StandardMaterial3D_2n72y")
+mesh = SubResource("BoxMesh_127n3")
+
+[node name="Canh3" type="MeshInstance3D" parent="O3" unique_id=1290768685]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.012, 0)
+material_override = SubResource("StandardMaterial3D_2n72y")
+mesh = SubResource("BoxMesh_wreq0")
+
+[node name="Readout" type="Label3D" parent="O3" unique_id=1684573888]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+visible = false
+pixel_size = 0.0022
+billboard = 1
+outline_size = 8
+
+[node name="Seat1_3" parent="." unique_id=1046085828 instance=ExtResource("6_q6h8n")]
+transform = Transform3D(-0.9135454, 0, -0.40673673, 0, 1, 0, 0.40673673, 0, -0.9135454, 0.89482063, 0, 2.0098)
+deck = 1
+index = 3
+
+[node name="O4" type="Node3D" parent="." unique_id=2144992216 node_paths=PackedStringArray("chung")]
+transform = Transform3D(0.30901697, 0, 0.95105654, 0, 1, 0, -0.95105654, 0, 0.30901697, 1.3647661, 0.75, 0.4434394)
+script = ExtResource("2_usxaa")
+mode = 1
+size = Vector2(0.5, 0.38)
+chung = NodePath("../OCai")
+
+[node name="Canh0" type="MeshInstance3D" parent="O4" unique_id=947015574]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012, -0.19)
+material_override = SubResource("StandardMaterial3D_f4k7n")
+mesh = SubResource("BoxMesh_mhcix")
+
+[node name="Canh1" type="MeshInstance3D" parent="O4" unique_id=1363636221]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012, 0.19)
+material_override = SubResource("StandardMaterial3D_f4k7n")
+mesh = SubResource("BoxMesh_kq24f")
+
+[node name="Canh2" type="MeshInstance3D" parent="O4" unique_id=693543105]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.012, 0)
+material_override = SubResource("StandardMaterial3D_f4k7n")
+mesh = SubResource("BoxMesh_apgyf")
+
+[node name="Canh3" type="MeshInstance3D" parent="O4" unique_id=1446780182]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.012, 0)
+material_override = SubResource("StandardMaterial3D_f4k7n")
+mesh = SubResource("BoxMesh_8e701")
+
+[node name="Readout" type="Label3D" parent="O4" unique_id=2082364509]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+visible = false
+pixel_size = 0.0022
+billboard = 1
+outline_size = 8
+
+[node name="Seat1_4" parent="." unique_id=617172500 instance=ExtResource("6_q6h8n")]
+transform = Transform3D(-0.3090171, 0, -0.9510565, 0, 1, 0, 0.9510565, 0, -0.3090171, 2.0923243, 0, 0.6798374)
+deck = 1
+index = 4
+
+[node name="O5" type="Node3D" parent="." unique_id=722873936 node_paths=PackedStringArray("chung")]
+transform = Transform3D(-0.50000006, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, -0.50000006, 1.2427465, 0.75, -0.7175)
+script = ExtResource("2_usxaa")
+mode = 1
+size = Vector2(0.5, 0.38)
+chung = NodePath("../OCai")
+
+[node name="Canh0" type="MeshInstance3D" parent="O5" unique_id=58684938]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012, -0.19)
+material_override = SubResource("StandardMaterial3D_p0gvy")
+mesh = SubResource("BoxMesh_fwhju")
+
+[node name="Canh1" type="MeshInstance3D" parent="O5" unique_id=117896191]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012, 0.19)
+material_override = SubResource("StandardMaterial3D_p0gvy")
+mesh = SubResource("BoxMesh_lie1i")
+
+[node name="Canh2" type="MeshInstance3D" parent="O5" unique_id=1960628661]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.012, 0)
+material_override = SubResource("StandardMaterial3D_p0gvy")
+mesh = SubResource("BoxMesh_a8sk1")
+
+[node name="Canh3" type="MeshInstance3D" parent="O5" unique_id=1409513116]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.012, 0)
+material_override = SubResource("StandardMaterial3D_p0gvy")
+mesh = SubResource("BoxMesh_tmbn4")
+
+[node name="Readout" type="Label3D" parent="O5" unique_id=1811716367]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+visible = false
+pixel_size = 0.0022
+billboard = 1
+outline_size = 8
+
+[node name="Seat1_5" parent="." unique_id=588157609 instance=ExtResource("6_q6h8n")]
+transform = Transform3D(0.4999999, 0, -0.86602545, 0, 1, 0, 0.86602545, 0, 0.4999999, 1.9052559, 0, -1.1)
+deck = 1
+index = 5
+
+[node name="DongHo" type="Label3D" parent="." unique_id=1302097903]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+visible = false
+pixel_size = 0.0032
+billboard = 1
+font_size = 80
+outline_size = 16
+
+[node name="Pot" type="Label3D" parent="." unique_id=1543005611]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.37, 0)
+pixel_size = 0.0026
+billboard = 1
+modulate = Color(0.9607843, 0.8509804, 0.039215688, 1)
+font_size = 44
+outline_size = 10
+
+[node name="Chip0" type="Label3D" parent="." unique_id=1381699505]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4700781, 0.91, -0.84875)
+pixel_size = 0.0022
+billboard = 1
+font_size = 30
+outline_size = 8
+
+[node name="Chip1" type="Label3D" parent="." unique_id=1019815119]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6144184, 0.91, 0.52455634)
+pixel_size = 0.0022
+billboard = 1
+font_size = 30
+outline_size = 8
+
+[node name="Chip2" type="Label3D" parent="." unique_id=1262985423]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.69043547, 0.91, 1.5507435)
+pixel_size = 0.0022
+billboard = 1
+font_size = 30
+outline_size = 8
+
+[node name="Chip3" type="Label3D" parent="." unique_id=2012366220]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.69043547, 0.91, 1.5507435)
+pixel_size = 0.0022
+billboard = 1
+font_size = 30
+outline_size = 8
+
+[node name="Chip4" type="Label3D" parent="." unique_id=760955443]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6144184, 0.91, 0.52455634)
+pixel_size = 0.0022
+billboard = 1
+font_size = 30
+outline_size = 8
+
+[node name="Chip5" type="Label3D" parent="." unique_id=1406320363]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4700781, 0.91, -0.84875)
+pixel_size = 0.0022
+billboard = 1
+font_size = 30
+outline_size = 8
+
+[node name="NutD" type="MeshInstance3D" parent="." unique_id=358989455]
+visible = false
+material_override = SubResource("StandardMaterial3D_xy17x")
+mesh = SubResource("CylinderMesh_6cujb")

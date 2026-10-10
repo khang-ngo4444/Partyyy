@@ -1,62 +1,22 @@
 extends MiniGame3D
 
-## EXPLOSIVE EXCHANGE — chuyền bom đếm ngược. Ai đang ôm lúc nó nổ thì ra.
-##
-## Khuôn T1. Trò DUY NHẤT trong nhóm T1 cần trọng tài: hai người chạm nhau cùng lúc thì "ai đang
-## ôm bom" là một câu hỏi mà mỗi máy tự trả lời sẽ ra hai đáp án khác nhau. Nên master giữ một
-## biến `_ai_om` và phát ra — đúng mẫu mục 8 của GUIDE: **client xin, master duyệt, master phát**.
-##
-## Toàn bộ phần còn lại vẫn 0 gói tin: bom nằm ở đâu thì mọi máy tự treo nó lên đầu người đang
-## ôm, đồng hồ đếm ngược là hàm của `gio()`.
-##
-## ## Nổ KHÔNG do master tuyên
-##
-## Tới giờ nổ, chính máy của người đang ôm gọi `xin_chet()` — đúng luật xuyên suốt dự án: nạn
-## nhân tự khai tử. Master chỉ nghe tin ấy rồi chọn người ôm tiếp theo. Nhờ vậy lớp cha lo trọn
-## phần xếp hạng, ở đây không có dòng nào về điểm.
-##
-## Bom **loại thẳng**, không trừ máu. Hai trò T1 kia dùng `ThanhMau` vì ở đó bị hất vào nham/axit
-## là chuyện xảy ra liên tục; ở đây "ôm bom lúc nó nổ" là một sự kiện dứt khoát và người chơi đã
-## có cả `GIAY_DAU` giây để tránh nó.
-##
-## ## Vì sao người ôm bom chạy NHANH HƠN
-##
-## Mọi người cùng `Player.speed = 6.0`. `kiem_luat.gd` mô phỏng đuổi bắt 1v1 trên sàn tròn và đo
-## được: không boost thì bắt từ đầu này sàn sang đầu kia mất **4,88 giây**, trong khi bom ngắn
-## nhất chỉ 7 giây và còn mất 0,9 giây nghỉ chuyền — còn **1,22 giây** để làm mọi thứ. Lỡ một
-## nhịp quay đầu là chết, và người ôm bom gần như không có việc gì để chơi ngoài cầu may.
-##
-## `TOC_OM_THEM = 1,6` hạ xuống 2,83 giây, còn lại 3,27 giây. Đủ để khép dần khoảng cách nếu đuổi
-## đúng hướng, không đủ để bắt ngay — kẻ chạy trốn vẫn có đất diễn.
-##
-## Phải TRẢ LẠI khi hết ôm và trong `dung_som()`, không thì người chơi mang tốc độ đó về phòng
-## chờ — đúng cái bẫy `Player.truot` của Slippery Sprint đã dính một lần.
-##
-## ## Vì sao chuyền bằng NÚT chứ không tự chuyền khi chạm
-##
-## Bản trước tự chuyền cho người gần nhất ngay khi hết `NGHI_CHUYEN`. Nó tiện nhưng biến cú
-## chuyền thành chuyện xảy ra với người chơi chứ không phải việc họ làm: chạy ngang qua ai đó là
-## mất bom, kể cả khi đang muốn giữ để dồn người khác vào góc. Giờ phải bấm `interact`.
-##
-## ## Vì sao có `NGHI_CHUYEN`
-##
-## Không có nó thì hai người đứng cạnh nhau chuyền qua chuyền lại mỗi khung hình: bom nhấp nháy
-## giữa hai cái đầu và mạng đầy gói `xin_chuyen`. 0,9 giây đủ để người vừa nhận phải chạy đi.
+## EXPLOSIVE EXCHANGE — chuyền bom đếm ngược; ai đang ôm lúc nổ thì ra.
+## Master giữ `_ai_om` (client xin chuyền, master duyệt rồi phát). Nổ thì máy người ôm tự khai tử.
+## Người ôm bom chạy nhanh hơn `TOC_OM_THEM` (trả lại khi hết ôm). Chuyền bằng nút E.
 
-## Nút chuyền. `interact` (E) — trong sân không có vật nào để nhặt nên phím này rảnh.
+## E (trong sân không có gì để nhặt).
 const NUT_CHUYEN := "interact"
-## Bom nổ sau chừng này giây kể từ lúc được trao — lần đầu, và về sau.
+## Thời gian bom đếm lần đầu.
 const GIAY_DAU := 16.0
 const GIAY_CUOI := 7.0
 ## Ngắn hết cỡ sau chừng này lần nổ.
 const SO_LAN_NGAN := 4
 ## Vừa nhận bom thì chừng này giây sau mới chuyền được.
 const NGHI_CHUYEN := 0.9
-## Bom treo trên đầu người ôm.
 const CAO_TREO := 2.3
-## Người ôm bom chạy nhanh hơn chừng này m/s. `Player.speed` mặc định 6,0.
+## Người ôm bom chạy nhanh thêm (m/s).
 const TOC_OM_THEM := 1.6
-## Còn dưới chừng này giây thì bom vào trạng thái GẤP: phồng, sáng rực, chữ đỏ.
+## Dưới chừng này giây thì bom vào trạng thái gấp.
 const GIAY_GAP := 4.0
 
 
@@ -67,20 +27,18 @@ var _sang: OmniLight3D = null
 var _mat: Node3D = null
 var _vong: Node3D = null
 
-## Ai đang ôm. 0 = chưa ai. Chỉ đổi qua `_net_trao`, kể cả trên máy master.
+## 0 = chưa ai. Chỉ đổi qua `_net_trao`.
 var _ai_om := 0
-## Giờ ván (theo `gio()`) mà bom sẽ nổ.
+## `gio()` lúc bom nổ.
 var _no_luc := 0.0
-## Giờ ván sớm nhất được phép chuyền tiếp.
+## `gio()` sớm nhất được chuyền tiếp.
 var _cho_toi := 0.0
-## Đã nổ bao nhiêu lần — để rút ngắn dần đồng hồ.
 var _lan_no := 0
-## Master đã bốc người ôm đầu tiên chưa. Gói `_net_trao` mất một chuyến đi mới về, không có cờ
-## này thì master bốc lại mỗi khung hình cho tới khi gói đầu tiên quay về.
+## Master đã bốc người ôm đầu tiên chưa.
 var _da_thap := false
-## Tốc độ gốc của nhân vật máy này, để còn trả lại.
+## Tốc gốc của nhân vật máy này, để trả lại.
 var _toc_goc := -1.0
-## Bán kính sàn, ĐỌC từ mesh chứ không chép tay.
+## Đọc từ mesh sàn.
 var _ban_kinh := 11.5
 
 
@@ -88,7 +46,7 @@ func _ready() -> void:
 	super()
 	ten = "EXPLOSIVE EXCHANGE"
 	luat = "WASD chạy · E chuyền bom cho người trong vòng đỏ · đừng ôm lúc nó nổ"
-	giay_van = 0.0                      # bom rút ngắn dần, ván tự kết thúc
+	giay_van = 0.0  # bom rút ngắn dần, ván tự kết thúc
 
 
 func _dung_san() -> void:
@@ -102,11 +60,7 @@ func _dung_san() -> void:
 	_mat = _bom.get_node("Mat") as Node3D
 	_vong = _bom.get_node("VongTam") as Node3D
 	_bom.visible = false
-	# KHÔNG đặt lại `_ai_om` / `_no_luc` / `_cho_toi` ở đây. Mỗi máy đếm ngược 3 giây bằng đồng hồ
-	# riêng nên master vào ván sớm hơn nửa RTT và trao bom NGAY — gói `_net_trao` tới máy khác
-	# TRƯỚC khi máy đó chạy tới đây. Đặt lại là xoá mất người ôm: máy kia không thấy bom, người
-	# ôm không biết mình ôm nên không chuyền được và không bao giờ nổ. Node minigame được tạo mới
-	# mỗi ván nên giá trị mặc định đã đúng sẵn.
+	# Không đặt lại `_ai_om`/`_no_luc`: gói `_net_trao` của master có thể tới trước lúc này.
 	_toc_goc = -1.0
 	var bon := san.get_node_or_null("SanTron") as Node3D
 	var m := bon.get_node_or_null("Mat") as MeshInstance3D if bon != null else null
@@ -115,8 +69,7 @@ func _dung_san() -> void:
 		_ban_kinh = cyl.top_radius
 
 
-## Trả tốc độ gốc trước khi ra khỏi sân. Thiếu dòng này thì ai đang ôm bom lúc ván dừng sẽ mang
-## tốc độ đó về phòng chờ.
+## Trả tốc gốc trước khi ra khỏi sân.
 func dung_som() -> void:
 	_dat_toc(false)
 	super()
@@ -125,8 +78,7 @@ func dung_som() -> void:
 func _luat_moi_nhip() -> void:
 	if _bom == null:
 		return
-	# Bốc người ôm đầu tiên ở đây chứ KHÔNG ở `_dung_san()`: lúc đó lớp cha chưa đặt lại mốc thời
-	# gian, `gio()` còn là giờ của ván trước và bom sẽ nổ ngay khi vừa thắp.
+	# Bốc người ôm đầu tiên ở đây (lúc `gio()` đã đặt lại).
 	if NetManager.is_master() and not _da_thap:
 		_da_thap = true
 		_trao_cho_ai_do()
@@ -140,35 +92,29 @@ func _luat_moi_nhip() -> void:
 	var con_lai := maxf(_no_luc - gio(), 0.0)
 	_ve_bom(con_lai)
 
-	# Lưới đỡ: người ôm đã quá giờ nổ mà máy họ không khai (mất gói, rớt mạng) thì master khai hộ.
-	# Không có nó thì ván đứng im mãi — trò này không có giới hạn giờ.
+	# Người ôm quá giờ nổ mà máy họ không khai thì master khai hộ.
 	if NetManager.is_master() and not toi and gio() >= _no_luc + 1.5 and con_song(_ai_om):
 		Fusion.rpc(_net_chet, _ai_om, _no_luc)
 	if not toi:
 		return
 	giu_trong_san(_ban_kinh - 0.5)
-	# Chỉ máy của người đang ôm mới tự khai tử — không thì cả phòng cùng gửi một tin.
+	# Chỉ máy người đang ôm tự khai tử.
 	if gio() >= _no_luc:
 		xin_chet()
 
 
-## Bom gấp dần: phồng lên, sáng rực, chữ đổi sang đỏ. Vòng tầm chuyền mờ đi khi chưa chuyền được.
-##
-## Không có đoạn này thì cả ván bom chỉ là một con số đang tụt, và "sắp nổ" với "mới nhận" nhìn
-## y như nhau — mục 1/2/12 của thiết kế đòi người chơi nhận ra độ gấp mà không phải đọc số.
+## Bom gấp dần: phồng, sáng, chữ đỏ; vòng tầm chuyền chỉ sáng khi chuyền được.
 func _ve_bom(con_lai: float) -> void:
 	_dem.text = "%.1f" % con_lai
 	var gap := 1.0 - clampf(con_lai / GIAY_GAP, 0.0, 1.0)
-	# Nhịp phồng nhanh dần: 2 nhịp/giây lúc thường, 9 nhịp/giây lúc sắp nổ.
+	# Phồng nhanh dần.
 	var nhip := sin(gio() * TAU * lerpf(2.0, 9.0, gap))
 	_mat.scale = Vector3.ONE * (1.0 + gap * 0.35 + nhip * 0.06 * (0.3 + gap))
 	_sang.light_energy = lerpf(3.0, 9.0, gap)
 	_dem.modulate = Color(1.0, 0.85, 0.5).lerp(Color(1.0, 0.25, 0.15), gap)
-	# Vòng chỉ sáng khi ĐANG chuyền được — nó là thứ trả lời "bấm E lúc này có ăn không".
 	_vong.visible = gio() >= _cho_toi
 
 
-## Bật/tắt tốc độ của người ôm bom, chỉ trên nhân vật của máy này.
 func _dat_toc(dang_om: bool) -> void:
 	var p := _nguoi(NetManager.local_id())
 	if p == null:
@@ -178,7 +124,7 @@ func _dat_toc(dang_om: bool) -> void:
 	p.speed = _toc_goc + TOC_OM_THEM if dang_om else _toc_goc
 
 
-## Bấm E để chuyền. Cố ý bắt bấm: xem ghi chú "vì sao chuyền bằng nút" đầu file.
+## E để chuyền.
 func _unhandled_input(event: InputEvent) -> void:
 	if not _chay or not event.is_action_pressed(NUT_CHUYEN):
 		return
@@ -191,14 +137,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	Fusion.rpc(_xin_chuyen, NetManager.local_id(), nan_nhan)
 
 
-## Người gần bom nhất mà không phải người đang ôm. 0 nếu không có ai.
-##
-## Hỏi thẳng `Area3D` của quả bom: tầm chuyền CHÍNH LÀ cái vòng đỏ `VongTam` dưới chân người ôm —
-## cả hai lấy bán kính 1,8 trong `bom_chuyen.tscn`, không phải một con số chép tay trong code.
-##
-## Bản trước để `Vung` ngay tại quả bom (trên đầu, cao 2,3 m) nên tầm thật là một hình cầu lơ
-## lửng, không ứng với thứ gì nhìn thấy được: comment bảo nó bằng "quầng sáng" nhưng quầng sáng
-## là `OmniLight` tầm 6,0 còn quả bom chỉ bán kính 0,55.
+## Người gần nhất trong vòng `VongTam` (không phải người đang ôm); 0 = không ai.
 func _ai_gan_bom() -> int:
 	var gan := 0
 	var cach := INF
@@ -213,23 +152,19 @@ func _ai_gan_bom() -> int:
 	return gan
 
 
-# ───────────────────────── trọng tài: master duyệt rồi phát ─────────────────────────
+# ─── trọng tài: master duyệt rồi phát ───
 
 @rpc("any_peer", "call_local")
 func _xin_chuyen(tu: int, den: int) -> void:
 	if not NetManager.is_master():
 		return
-	# Chỉ người ĐANG ôm mới chuyền được, và chỉ chuyền cho người còn sống. Hai người chạm nhau
-	# cùng lúc thì gói nào tới trước thắng — và chỉ một gói được duyệt, vì gói sau đã sai `tu`.
+	# Chỉ người đang ôm chuyền được, cho người còn sống; gói tới trước thắng.
 	if tu != _ai_om or not con_song(den) or gio() < _cho_toi:
 		return
 	Fusion.rpc(_net_trao, den, _no_luc, gio() + NGHI_CHUYEN)
 
 
-## Master chọn người ôm bom mới và đặt đồng hồ mới.
-##
-## Không cần tránh "trao lại cho người vừa ôm": hàm này chỉ chạy khi người ôm cũ đã CHẾT (xem
-## `_khi_ai_do_chet`), nên `con_song` đã loại họ ra. Lặp lại người ôm là chuyện không xảy ra được.
+## Master chọn người ôm mới và đặt đồng hồ.
 func _trao_cho_ai_do() -> void:
 	var song: Array = []
 	for id in _song:
@@ -237,13 +172,12 @@ func _trao_cho_ai_do() -> void:
 			song.append(int(id))
 	if song.is_empty():
 		return
-	song.sort()                         # sắp trước khi bốc: cùng hạt giống thì cùng kết quả
+	song.sort()  # cùng hạt giống thì cùng kết quả
 	var ai := int(song[_rng.randi() % song.size()])
 	Fusion.rpc(_net_trao, ai, gio() + giay_dem(_lan_no), gio() + NGHI_CHUYEN)
 
 
-## Mọi mốc giờ do MASTER tính rồi gửi kèm. Máy nhận có thể chưa vào ván (xem `_dung_san`), lúc
-## đó `gio()` của nó còn là giờ máy thô — tự cộng `NGHI_CHUYEN` vào đó là cấm chuyền vài phút.
+## Mọi mốc giờ do master tính rồi gửi kèm.
 @rpc("any_peer", "call_local")
 func _net_trao(ai: int, no_luc: float, cho_toi: float) -> void:
 	_ai_om = ai
@@ -251,7 +185,7 @@ func _net_trao(ai: int, no_luc: float, cho_toi: float) -> void:
 	_cho_toi = cho_toi
 
 
-## Người ôm bom vừa nổ: master thắp quả tiếp theo. Lớp cha đã ghi nhận cái chết rồi.
+## Người ôm vừa nổ: master thắp quả tiếp theo.
 func _khi_ai_do_chet(id: int) -> void:
 	if not NetManager.is_master() or id != _ai_om:
 		return
@@ -259,8 +193,8 @@ func _khi_ai_do_chet(id: int) -> void:
 	_trao_cho_ai_do()
 
 
-# ───────────────────────── luật: hàm thuần, kiểm bằng assert ─────────────────────────
+# ─── luật: hàm thuần ───
 
-## Bom lần thứ `lan` đếm được bao nhiêu giây. Ngắn dần rồi dừng ở `GIAY_CUOI`.
+## Ngắn dần rồi dừng ở `GIAY_CUOI`.
 static func giay_dem(lan: int) -> float:
 	return lerpf(GIAY_DAU, GIAY_CUOI, clampf(float(lan) / float(SO_LAN_NGAN), 0.0, 1.0))

@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://c7tayroea01bd"]
+
+[ext_resource type="PackedScene" uid="uid://xfjb2ttqkpeo" path="res://asset/KayKit_Skeletons_1.1_FREE/characters/gltf/Skeleton_Warrior.glb" id="1_760gm"]
+
+[node name="Skeleton_Warrior" unique_id=1580141900 instance=ExtResource("1_760gm")]

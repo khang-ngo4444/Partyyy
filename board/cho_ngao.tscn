@@ -1,0 +1,21 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://board/vat_tren_o.gd" id="1_vt"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/cho_ngao.tscn" id="2_mh"]
+
+[node name="ChoNgao" type="Node3D"]
+visible = false
+script = ExtResource("1_vt")
+
+[node name="Than" type="Node3D" parent="."]
+
+[node name="MoHinh" parent="Than" instance=ExtResource("2_mh")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -0.15, -0.9, 0)
+
+[node name="Chu" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+billboard = 1
+modulate = Color(1, 0.45, 0.35, 1)
+outline_size = 10
+text = "CHO NGAO"
+font_size = 40

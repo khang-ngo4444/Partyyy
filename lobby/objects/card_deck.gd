@@ -1,8 +1,7 @@
 class_name CardDeck
 extends Resource
 
-## Ảnh bộ bài dùng chung cho Card, CommunityBoard và LiarBar — một chỗ duy nhất, gán trong
-## Inspector của card_deck.tres. Đổi bộ bài: kéo ảnh mới vào đây, không phải sửa code.
+## Ảnh bộ bài dùng chung cho Card, CommunityBoard và LiarBar.
 
 ## 52 mặt theo thứ tự `Card.card_index`: chuồn, rô, cơ, bích; mỗi chất A, 2..10, J, Q, K.
 @export var mat: Array[Texture2D] = []

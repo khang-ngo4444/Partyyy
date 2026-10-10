@@ -1,0 +1,36 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://materials/mat_stone_light.tres" id="1_m"]
+[ext_resource type="AudioStream" path="res://asset/kenney_impact-sounds/Audio/impactMining_000.ogg" id="2_a"]
+
+[sub_resource type="SphereMesh" id="Cau"]
+radial_segments = 8
+rings = 5
+
+[sub_resource type="CylinderMesh" id="Dia"]
+top_radius = 1.0
+bottom_radius = 1.0
+height = 0.06
+radial_segments = 32
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="MatVong"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.15, 0.1, 0.55)
+
+[node name="Da" type="Node3D"]
+
+[node name="Than" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("Cau")
+material_override = ExtResource("1_m")
+
+[node name="Vong" type="MeshInstance3D" parent="."]
+mesh = SubResource("Dia")
+material_override = SubResource("MatVong")
+
+[node name="Dap" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_a")
+unit_size = 6.0
+max_distance = 40.0

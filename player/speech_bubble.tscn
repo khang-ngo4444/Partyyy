@@ -1,0 +1,40 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://player/speech_bubble.gd" id="1_sb"]
+
+[sub_resource type="StandardMaterial3D" id="MatNen"]
+resource_local_to_scene = true
+render_priority = -1
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+
+[sub_resource type="StandardMaterial3D" id="MatVien"]
+resource_local_to_scene = true
+render_priority = -2
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+
+[node name="SpeechBubble" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
+visible = false
+script = ExtResource("1_sb")
+
+[node name="Vien" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.006)
+material_override = SubResource("MatVien")
+cast_shadow = 0
+
+[node name="Nen" type="MeshInstance3D" parent="."]
+material_override = SubResource("MatNen")
+cast_shadow = 0
+
+[node name="Chu" type="Label3D" parent="." groups=["chu_rieng"]]
+render_priority = 1
+cast_shadow = 0
+pixel_size = 0.0034
+font_size = 56
+outline_size = 18
+autowrap_mode = 3
+width = 500.0

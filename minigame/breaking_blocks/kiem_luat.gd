@@ -1,11 +1,14 @@
 extends SceneTree
 
-# Kiem luat Breaking Blocks. Hang so chep tu breaking_blocks.gd + player.gd.
+## Kiểm luật Breaking Blocks; hằng số chép từ breaking_blocks.gd + player.gd.
+## Chạy: godot --headless --path minigame/breaking_blocks --script kiem_luat.gd
+
+enum { LANH, NHE, NANG, SAP_VO }
+
 const CANH := 8
 const RONG_O := 2.8
 const KHE := 1.2
 const BUOC := RONG_O + KHE
-
 const GIAY_VO_MOT_NGUOI := 3.0
 const THEM_MOI_NGUOI := 0.75
 const GIAY_MOC_LAI := 4.5
@@ -17,30 +20,32 @@ const MOC_SAP_VO := 0.7
 const GIAY_BAO_TOI_THIEU := 0.6
 const CAO_TINH := 3.0
 const GIAY_VAN := 60.0
-
 const SPEED := 6.0
 const JUMP_HEIGHT := 1.2
 const GRAVITY := 20.0
 
-enum { LANH, NHE, NANG, SAP_VO }
-
 var _loi := 0
+
 
 func ck(dung: bool, msg: String) -> void:
 	if not dung:
 		_loi += 1
 		print("FAIL  ", msg)
 
+
 static func kho(t: float) -> float:
 	return lerpf(1.0, KHO_CUOI, clampf(t / GIAY_KHO_HET, 0.0, 1.0))
 
+
 static func giay_moc_lai(t: float) -> float:
 	return GIAY_MOC_LAI * kho(t)
+
 
 static func toc_hu(n: int, t: float) -> float:
 	if n <= 0:
 		return 0.0
 	return (1.0 + THEM_MOI_NGUOI * float(n - 1)) * kho(t) / GIAY_VO_MOT_NGUOI
+
 
 static func trang_thai(hu: float) -> int:
 	if hu >= MOC_SAP_VO: return SAP_VO
@@ -48,16 +53,14 @@ static func trang_thai(hu: float) -> int:
 	if hu >= MOC_NHE: return NHE
 	return LANH
 
+
 static func giay_canh_bao(n: int, t: float) -> float:
 	var v := toc_hu(n, t)
 	if v <= 0.0: return INF
 	return maxf((1.0 - MOC_SAP_VO) / v, GIAY_BAO_TOI_THIEU)
 
 
-## Mo phong mot van thuc: nguoi choi BO CHAY khi o minh dung chuyen sang `nguong`.
-##
-## `nguong` = muc hu ma nguoi do bat dau tim o khac. Nguoi gioi chay som (0.5), nguoi cam
-## chay muon (0.95). Van dung khi con <= 1 nguoi, dung nhu `MiniGame3D._process`.
+## Mô phỏng một ván: người chơi bỏ chạy khi ô mình đứng vượt `nguong` hư.
 func mo_phong(so_nguoi: int, nguong: float, giong: int) -> Dictionary:
 	var tong := CANH * CANH
 	var hu := PackedFloat32Array(); hu.resize(tong)
@@ -107,23 +110,21 @@ func mo_phong(so_nguoi: int, nguong: float, giong: int) -> Dictionary:
 				con[i] = false; vo_luc[i] = t; hu[i] = 1.0; bao[i] = -1.0
 				so_vo += 1
 
-		# dung tren o vua vo thi roi
+		# đứng trên ô vừa vỡ thì rơi
 		for k in o_cua.size():
 			var i: int = o_cua[k]
 			if i >= 0 and not con[i]:
 				o_cua[k] = -1
 				roi += 1
 
-		# o minh dang dung da qua nguong -> nhay sang o KE lanh nhat
+		# ô đang đứng đã qua ngưỡng → nhảy sang ô kề lành nhất
 		for k in o_cua.size():
 			var i: int = o_cua[k]
 			if i < 0 or hu[i] < nguong:
 				continue
 			var r := i / CANH
 			var c := i % CANH
-			# Nguoi that TRANH NHAU: chung o la chet nhanh hon, nen uu tien o khong co ai.
-			# Thieu phep nay thi ca bon cung chon o lanh nhat, don vao mot cho, mot o vo la
-			# chet ca bon - va con so do la san pham cua mo phong, khong phai cua tro.
+			# Ưu tiên ô không có ai (người thật tránh chung ô).
 			var trong_o := {}
 			for m in o_cua.size():
 				if m != k and int(o_cua[m]) >= 0:
@@ -226,15 +227,12 @@ func _init() -> void:
 		roi_theo_kieu[ten] = a_roi
 		bao_cao.append("    %-20s %4.1f vo · san %4.1f/%d · %.1f roi · het %4.1f s · con %.1f"
 				% [ten, a_vo, a_it, tong, a_roi, a_het, a_song])
-		# Tro phai CO chuyen xay ra: it nhat mot nguoi phai bi loai
+		# Phải có chuyện xảy ra: ít nhất một người bị loại
 		ck(a_roi >= 1.0, "%s: chi %.1f nguoi roi ca van - san khong nguy hiem" % [ten, a_roi])
 		ck(a_vo >= 2.0, "%s: chi %.1f o vo - khong du nguy hiem" % [ten, a_vo])
-		# Nhung khong duoc bay het san
+		# Nhưng không được bay hết sân
 		ck(a_it > tong * 0.25, "%s: san tut con %.1f/%d - bay het san" % [ten, a_it, tong])
-	# Nguoi CAM TRU phai bi phat hon nguoi biet chay. Day la toan bo y do cua tro.
-	#
-	# Do bang SO NGUOI ROI, khong do bang luc het van: van het khi con mot nguoi, nen ca hai
-	# kieu deu het quanh 36 giay du ben nao chet nhieu hon. Lan dau do sai cho nay.
+	# Người cắm trụ phải chết nhiều hơn người biết chạy (đo bằng số người rơi).
 	var roi_gioi: float = roi_theo_kieu["gioi (chay som .50)"]
 	var roi_cam: float = roi_theo_kieu["cam (chay .95)"]
 	ck(roi_cam > roi_gioi, "cam %.1f roi, gioi %.1f roi - cam khong bi phat gi"

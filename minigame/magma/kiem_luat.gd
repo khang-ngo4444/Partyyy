@@ -1,19 +1,7 @@
 extends SceneTree
 
-## KIỂM LUẬT Magma & Mages — chạy ngoài game, không nạp project:
-##
-##     godot --headless --path minigame/magma --script kiem_luat.gd
-##
-## Hằng số CHÉP TAY từ `magma.gd`, `san_magma.tscn`, `san_tron.tscn`, `cau_lua.gd`, `player.gd`.
-## Chép chứ không `preload` vì `magma.gd` kéo theo `MiniGame3D` → `Fusion` → cả project.
-##
-## Thứ bộ này tồn tại để chặn: **vành cảnh báo mỏng tới mức không thấy**. Bản co đều cũ co
-## 0,147 m/s nên báo trước 4 giây chỉ cho một vành rộng 0,6 m — nhìn từ camera trên cao gần như
-## không có gì, và nó đọc như một vạch trôi chứ không như "khoanh này sắp mất". Kiểm #3 đo bề
-## rộng vành đó bằng mét và đòi nó đủ dày.
-##
-## Dùng `ck()` chứ không `assert()`: `assert` fail trong `--headless --script` làm Godot ĐỨNG chờ
-## debugger, 0% CPU, không in một chữ nào.
+## Kiểm luật Magma & Mages: godot --headless --path minigame/magma --script kiem_luat.gd
+## Chặn vành cảnh báo mỏng tới mức không thấy (#3). Hằng số chép tay; dùng `ck()` thay `assert`.
 
 # magma.gd
 const SO_CHANG := 5
@@ -92,8 +80,7 @@ func _init() -> void:
 	ck(is_equal_approx(ban_kinh(GIAY_VAN - 0.1), CO_CON * BAN_KINH_SAN), "cuoi van phai la %.2f m" \
 			% (CO_CON * BAN_KINH_SAN))
 
-	# ── 2. BON TRANG THAI: AN TOAN -> CANH BAO -> NHAM, moi lan co phai qua DU ──
-	# Truoc moi lan co, phai co dung GIAY_BAO giay dang bao.
+	# ── 2. AN TOÀN → CẢNH BÁO → NHAM: mỗi lần co có đủ GIAY_BAO giây báo trước ──
 	for k in SO_CHANG:
 		var luc_co: float = CHO_TRUOC_KHI_CO + float(k) * GIAY_MOI_CHANG
 		ck(not dang_bao(luc_co - GIAY_BAO - 0.1),
@@ -103,13 +90,13 @@ func _init() -> void:
 				"giay %.1f chua bao, dang ra phai bao tu %.1f s" \
 						% [luc_co - GIAY_BAO + 0.1, luc_co - GIAY_BAO])
 		ck(dang_bao(luc_co - 0.05), "ngay truoc lan co o %.1f s ma khong bao" % luc_co)
-		# Vanh duoc bao phai thanh nham dung luc co
+		# Vành được báo phải thành nham đúng lúc co
 		var r_bao: float = ti_le_bao(luc_co - 0.05) * BAN_KINH_SAN
 		var r_sau: float = ban_kinh(luc_co + 0.05)
 		ck(absf(r_bao - r_sau) < 0.01,
 				"vanh bao o %.1f s huu %.2f m nhung sau khi co lai la %.2f m - bao sai cho"
 				% [luc_co, r_bao, r_sau])
-	# Da co het thi khong bao nua
+	# Đã co hết thì không báo nữa
 	ck(not dang_bao(GIAY_VAN - 1.0), "da co het ma van bao")
 
 	# ── 3. VANH CANH BAO PHAI DU DAY DE THAY ──
@@ -128,7 +115,7 @@ func _init() -> void:
 	ck(mong_nhat >= 1.0,
 			"vanh canh bao chi rong %.2f m (giay %.1f) - nhin tu cam tren cao khong thay"
 			% [mong_nhat, mong_tai])
-	# So sanh voi ban co dan: co deu 1.0 -> CO_CON trong (CO_HET - CHO) giay
+	# So với bản co dần: co đều 1.0 → CO_CON trong (CO_HET - CHO) giây
 	var co_deu: float = BAN_KINH_SAN * (1.0 - 0.45) / (55.0 - 12.0) * GIAY_BAO
 	ck(mong_nhat > co_deu * 1.5,
 			"vanh %.2f m khong hon han ban co deu (%.2f m) - doi sang chang de lam gi"
@@ -156,7 +143,7 @@ func _init() -> void:
 			% (dt_giua / dt_dau * 100.0))
 	ck(dt_cuoi < dt_giua * 0.75, "cuoi van con %.0f%% so voi giua - chua that chat" \
 			% (dt_cuoi / dt_giua * 100.0))
-	# 8 nguoi cuoi van: moi nguoi bao nhieu m2
+	# 8 người cuối ván: mỗi người bao nhiêu m²
 	var moi_nguoi: float = dt_cuoi / 8.0
 	ck(moi_nguoi >= 4.0, "cuoi van chi %.1f m2 moi nguoi (8 nguoi) - chen nhau khong the dung" \
 			% moi_nguoi)
@@ -166,7 +153,7 @@ func _init() -> void:
 	var giay_chet: float = MAU_TOI_DA / MAT_MAU_MOI_GIAY
 	ck(giay_chet >= 3.0, "chay %.1f s la chet - bi hat vao nham mot cai la xong" % giay_chet)
 	ck(giay_chet <= 8.0, "chay %.1f s moi chet - khong du dau de phai bo ra" % giay_chet)
-	# Bo ra khoi nham mat bao lau: xa nhat la tu mep san vao mep vung an toan cuoi van
+	# Thoát khỏi nham mất bao lâu: xa nhất là từ mép sân vào mép vùng an toàn cuối ván
 	var sau_nhat: float = BAN_KINH_SAN - CO_CON * BAN_KINH_SAN
 	var giay_bo_ra: float = sau_nhat / SPEED
 	ck(giay_bo_ra < giay_chet,
@@ -178,18 +165,17 @@ func _init() -> void:
 	ck(tam_cau >= BAN_KINH_SAN * 2.0 * 0.9,
 			"cau lua bay %.1f m nhung san rong %.1f m - khong ban toi nua san ben kia"
 			% [tam_cau, BAN_KINH_SAN * 2.0])
-	# Nguoi phai thay cau lua kip: cau 16 m/s, nguoi phan ung ~0.3 s -> can thay tu >= 5 m
+	# Phải thấy cầu lửa kịp: cầu 16 m/s, phản ứng ~0.3 s → cần thấy từ ≥ 5 m
 	ck(TOC_CAU * 0.3 < BAN_KINH_SAN, "cau di %.1f m trong 0.3 s - gan nhu khong ne duoc" \
 			% (TOC_CAU * 0.3))
 	ck(TOC_CAU > SPEED, "cau %.1f m/s khong nhanh hon nguoi %.1f m/s - di bo cung ne duoc" \
 			% [TOC_CAU, SPEED])
-	# Nhip ban: khong duoc thanh voi lua lien mach
+	# Nhịp bắn: không được thành vòi lửa liền mạch
 	ck(NGHI_BAN >= 0.4, "nghi ban %.2f s - giu phim la mot voi lua" % NGHI_BAN)
 	var cau_moi_van: float = GIAY_VAN / NGHI_BAN
 	ck(cau_moi_van <= 150.0, "moi nguoi ban toi %.0f qua mot van - qua nhieu goi tin" % cau_moi_van)
 
-	# ── 8. DON PHAI DAY DUOC AI DO VAO NHAM (combat phuc vu co-vung) ──
-	# Cuoi van, vung an toan ban kinh 4.6 m. Mot cu hat 11 m/s phai du de day tu tam ra khoi vung.
+	# ── 8. ĐÒN PHẢI ĐẨY ĐƯỢC NGƯỜI VÀO NHAM (cuối ván, từ tâm ra khỏi vùng an toàn) ──
 	ck(DAY_NGANG > CO_CON * BAN_KINH_SAN,
 			"hat %.1f (m/s) yeu hon ban kinh vung cuoi %.2f m - khong hat ai vao nham duoc"
 			% [DAY_NGANG, CO_CON * BAN_KINH_SAN])

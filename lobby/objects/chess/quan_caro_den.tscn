@@ -1,0 +1,17 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_02y35"]
+cull_mode = 2
+albedo_color = Color(0.101960786, 0.101960786, 0.11764706, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ng4a6"]
+top_radius = 0.085
+bottom_radius = 0.085
+height = 0.09
+
+[node name="QuanCaro" type="Node3D" unique_id=504119523]
+
+[node name="Than" type="MeshInstance3D" parent="." unique_id=1523246972]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.045, 0)
+material_override = SubResource("StandardMaterial3D_02y35")
+mesh = SubResource("CylinderMesh_ng4a6")

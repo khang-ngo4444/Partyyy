@@ -1,6 +1,13 @@
 [gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://ui/character_creator.gd" id="1_creator"]
+[ext_resource type="PackedScene" path="res://ui/nut_chon.tscn" id="r_nut_chon_scene"]
+[ext_resource type="PackedScene" path="res://ui/o_mau.tscn" id="r_o_mau_scene"]
+[ext_resource type="PackedScene" path="res://player/characters/Knight.tscn" id="nv_0"]
+[ext_resource type="PackedScene" path="res://player/characters/Mage.tscn" id="nv_1"]
+[ext_resource type="PackedScene" path="res://player/characters/Ranger.tscn" id="nv_2"]
+[ext_resource type="PackedScene" path="res://player/characters/Rogue_Hooded.tscn" id="nv_3"]
+[ext_resource type="PackedScene" path="res://player/characters/Skeleton_Warrior.tscn" id="nv_4"]
 
 [sub_resource type="StyleBoxFlat" id="CreatorPanel"]
 bg_color = Color(0.004, 0.022, 0.03, 0.97)
@@ -30,6 +37,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_creator")
+models = Array[PackedScene]([ExtResource("nv_0"), ExtResource("nv_1"), ExtResource("nv_2"), ExtResource("nv_3"), ExtResource("nv_4")])
+nut_chon_scene = ExtResource("r_nut_chon_scene")
+o_mau_scene = ExtResource("r_o_mau_scene")
 
 [node name="Dim" type="ColorRect" parent="."]
 mouse_filter = 2
@@ -100,8 +110,10 @@ render_target_update_mode = 4
 
 [node name="PreviewAnchor" type="Node3D" parent="Margin/Panel/Columns/PreviewColumn/PreviewFrame/ViewportContainer/PreviewViewport/PreviewWorld"]
 unique_name_in_owner = true
+unique_name_in_owner = true
 
-[node name="Camera" type="Camera3D" parent="Margin/Panel/Columns/PreviewColumn/PreviewFrame/ViewportContainer/PreviewViewport/PreviewWorld"]
+[node name="PreviewCamera" type="Camera3D" parent="Margin/Panel/Columns/PreviewColumn/PreviewFrame/ViewportContainer/PreviewViewport/PreviewWorld"]
+unique_name_in_owner = true
 unique_name_in_owner = true
 position = Vector3(0, 0.9, 4.2)
 fov = 31.0

@@ -1,38 +1,33 @@
 class_name Die
 extends Pickable
 
-## Vien xuc xac CAM DUOC. Nhat len, nem ra, no lan bang vat ly that roi nam mot mat.
-##
-## Mat ngua do VAT LY quyet, khong ai chon truoc. Chi master mo phong nen moi may thay dung mot
-## ket qua: vi tri va goc xoay deu tu master replicate sang. Master doc mat ngua luc vien nam yen
-## roi ghi vao `value` (replicate) cho ban xuc xac cong diem.
-##
-## Hinh 4 mau: node con cua `Visual` trong die.tscn, ten node = `tint`. Hinh va cham: `HinhVaCham`.
+## Viên xúc xắc cầm được: mặt ngửa do vật lý quyết, chỉ master mô phỏng rồi ghi `value`.
+## Màu: con của `Visual` trong die.tscn, tên node = `tint`.
 
-## Truc cua vien nao chi len troi thi mat do ngua. DO TU HINH HOC CHAM cua D6_A, khong doan:
-##     +X=2  -X=5  +Y=6  -Y=1  +Z=3  -Z=4
-## Tong 21 nhu xuc xac that, ba cap mat doi nhau deu cong bang 7.
+## Trục → mặt (đo từ model D6_A): +X=2 -X=5 +Y=6 -Y=1 +Z=3 -Z=4.
 const MAT_THEO_TRUC := [[Vector3.RIGHT, 2], [Vector3.LEFT, 5], [Vector3.UP, 6],
 		[Vector3.DOWN, 1], [Vector3.BACK, 3], [Vector3.FORWARD, 4]]
-## Nam yen chung nay giay thi chot mat.
+
+## Nằm yên chừng này giây thì chốt mặt.
 const GIAY_NAM_YEN := 0.3
-## Luc tha, master cho vien xoay ngau nhien trong khoang nay (rad/s) — moi lan gieo mot ket qua.
+
+## Tốc độ xoay ngẫu nhiên lúc thả (rad/s).
 const XOAY_TOI_THIEU := 8.0
 const XOAY_TOI_DA := 16.0
 
-## Mau vien. Co setter vi Fusion gui property ve SAU `_ready()`.
+## Màu viên; setter vì Fusion gửi property sau `_ready()`.
 @export var tint := "red":
 	set(value_):
 		tint = value_
 		if is_node_ready():
 			_build.call_deferred()
 
-## Mat dang ngua, 0 = dang lan. Master ghi; may khac nhan qua replication.
+## Mặt đang ngửa, 0 = đang lăn. Master ghi.
 @export var value: int = 1
 
-@onready var visual: Node3D = $Visual
-
 var _yen := 0.0
+
+@onready var visual: Node3D = $Visual
 
 
 func _init() -> void:
@@ -40,7 +35,7 @@ func _init() -> void:
 	nay = 0.3
 	ma_sat = 0.5
 	ham_mat_dat = 1.0
-	# Ham xoay du lon de vien khong lan mai.
+	# Hãm xoay để viên không lăn mãi.
 	ham_xoay = 1.5
 
 
@@ -68,7 +63,7 @@ func _khi_bay_vat_ly(delta: float) -> void:
 		_yen = 0.0
 
 
-## Mat dang ngua theo goc xoay hien tai: truc nao cua vien chi len cao nhat.
+## Mặt ngửa: trục nào chỉ lên cao nhất.
 func mat_ngua() -> int:
 	var cao_nhat := -2.0
 	var mat := 6

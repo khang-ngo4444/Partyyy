@@ -3,9 +3,13 @@
 [ext_resource type="Script" path="res://minigame/breaking_blocks/breaking_blocks.gd" id="1_bb"]
 [ext_resource type="PackedScene" path="res://minigame/breaking_blocks/san_vo.tscn" id="2_san"]
 [ext_resource type="PackedScene" path="res://minigame/breaking_blocks/o_vo.tscn" id="3_o"]
+[ext_resource type="Material" path="res://materials/mat_san_thuong.tres" id="x0_mat_lanh"]
+[ext_resource type="Material" path="res://materials/mat_san_canh_bao.tres" id="x1_mat_bao"]
 
 [node name="BreakingBlocks" type="Node"]
 script = ExtResource("1_bb")
+mat_lanh = ExtResource("x0_mat_lanh")
+mat_bao = ExtResource("x1_mat_bao")
 san_scene = ExtResource("2_san")
 o_scene = ExtResource("3_o")
 giay_van = 60.0

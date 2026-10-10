@@ -8,6 +8,10 @@
 [ext_resource type="PackedScene" path="res://player/characters/Ranger.tscn" id="4_m15"]
 [ext_resource type="PackedScene" path="res://player/characters/Rogue_Hooded.tscn" id="4_m17"]
 [ext_resource type="PackedScene" path="res://player/characters/Skeleton_Warrior.tscn" id="4_m21"]
+[ext_resource type="Script" path="res://player/vat_cam.gd" id="9_vatcam"]
+[ext_resource type="PackedScene" path="res://player/speech_bubble.tscn" id="11_bong"]
+[ext_resource type="Resource" path="res://board/danh_muc_vat_pham.tres" id="10_dmvp"]
+[ext_resource type="PackedScene" path="res://board/vong_tam.tscn" id="12_vt"]
 
 [sub_resource type="CapsuleShape3D" id="shape_body"]
 radius = 0.4
@@ -29,6 +33,16 @@ pixel_size = 0.0035
 billboard = 1
 font_size = 64
 outline_size = 10
+
+[node name="VatCam" type="Node3D" parent="."]
+transform = Transform3D(4.2, 0, 0, 0, 4.2, 0, 0, 0, 4.2, 0, 3.5, 0)
+script = ExtResource("9_vatcam")
+danh_muc = ExtResource("10_dmvp")
+
+[node name="VongTam" parent="." instance=ExtResource("12_vt")]
+visible = false
+
+[node name="SpeechBubble" parent="." instance=ExtResource("11_bong")]
 
 [node name="CameraRig" parent="." unique_id=580525174 instance=ExtResource("2_rig")]
 

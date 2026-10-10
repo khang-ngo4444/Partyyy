@@ -38,9 +38,14 @@ Màu xe **lấy từ màu nhân vật** (`NetManager.color_for`) — không có 
 |---|---|---|
 | `ClockTower/*` | 🔴 `BoxMesh` xếp chồng | Model tháp đồng hồ |
 | `WallStation/Panel` + `Trim` | 🔴 `BoxMesh` | Bảng gắn tường |
-| `ChessBoard` (ô, đường kẻ, cung) | 🔴 dựng trong `chess_board.gd` | Mặt bàn có texture |
+| `ChessBoard` / `CaroBoard` (ô, đường kẻ, cung) | 🔴 `BoxMesh` đặt sẵn trong `ban_co.tscn` / `ban_caro.tscn` | Mặt bàn có texture |
+| Khung nhà, sườn vòm, song kính, số giờ — `lobby/khung_nha.tscn` | 🟡 primitive + MultiMesh | Model vòm kính nếu cần |
+| Mặt đồng hồ — `lobby/dong_ho.tscn` | 🔴 đĩa + 2 hộp làm kim | Model mặt đồng hồ |
+| Đĩa Hà Nội — `lobby/objects/dia_hanoi.tscn` | 🟡 `TorusMesh` ép dẹt | Đủ dùng |
+| Quân cờ tướng / caro — `lobby/objects/chess/quan_tuong.tscn`, `quan_caro_*.tscn` | 🟡 trụ dẹt + `TextMesh` chữ Hán | Model quân cờ tướng |
+| Lá bài Liar Bar — `lobby/objects/la_bai_liar.tscn` | ✅ hộp mỏng + ảnh Kenney | — |
 | `Pressable` (mọi nút) | 🟡 `CylinderMesh` | Nút phát sáng đủ đọc rồi, không gấp |
-| `SpeechBubble` | 🟡 `ArrayMesh` + `QuadMesh` | Cố ý: hình phải co theo độ dài chữ, asset cố định không làm được |
+| `SpeechBubble` — `player/speech_bubble.tscn` | 🟡 node `Vien`/`Nen`/`Chu` đặt sẵn; mesh khung ghép bằng `SurfaceTool` theo cỡ chữ | Cố ý: hình phải co theo độ dài chữ, asset cố định không làm được |
 | Quân cờ | ✅ `asset/chess_set/` | — |
 | Nhân vật | ✅ Kenney mini + KayKit | — |
 | Bàn bài, ghế, cây, sofa | ✅ Kenney / Quaternius | — |
@@ -73,6 +78,11 @@ Lý do hợp lệ chỉ có hai: **hình dạng phụ thuộc trạng thái lúc
 | `minigame/tank/ban_do_tank.gd` | **không sinh gì** | Chỉ đọc các node `OTuong` + `Marker2D` con vào một lưới | ✅ |
 | `minigame/tank/tank_battle.gd` → `bat_dau()` | `xe_tang.tscn` | **`instantiate()` scene có sẵn.** Số xe bằng số người trong phòng, chỉ biết lúc chạy | ✅ |
 | `minigame/tank/tank_battle.gd` → `_net_ban()` | `dan.tscn` | **`instantiate()` scene có sẵn.** Đạn sinh ra khi có người bóp cò | ✅ |
+| `lobby/objects/hanoi_tower.gd` → `_dung_dia()` | `dia_hanoi.tscn` | **`instantiate()`**; số đĩa (6–8) và bán kính đổi theo ván | ✅ |
+| `lobby/objects/liar_bar.gd` → `_mot_la()` | `la_bai_liar.tscn` / `nut_bai_liar.tscn` | **`instantiate()`**; bài trên tay đổi theo trạng thái ván | ✅ |
+| `basketball_hoop.gd`, `hanoi_tower.gd` | `chu_bay.tscn` | **`instantiate()`**; chữ nổi khi ghi điểm / thắng, tự xoá | ✅ |
+| `lobby/objects/chess_piece.gd` → `_build()` | `quan_tuong.tscn`, `quan_caro_*.tscn`, quân cờ vua | **`instantiate()`**; loại quân là property replicate | ✅ |
+| `chicken_race.gd` → `_to_mau_ga()`, `lobby.gd` → `_retint_decor()` | chỉ gán vật liệu | Model glb dùng chung, tô màu lúc chạy | 🟡 |
 
 > **Đã sửa:** `ban_duong.gd` trước đây dựng 24 ô bằng code (`Node3D.new()`, `BoxMesh`,
 > `StandardMaterial3D`, `StaticBody3D`, `Label3D` — khoảng 6 node mỗi ô). Giờ 24 ô là instance
@@ -116,8 +126,16 @@ KHÔNG nạp autoload, file nào chạm `NetManager` là không biên dịch n�
 | Node | Hiện tại | Cần |
 |---|---|---|
 | `O_*` (mặt ô, 8 loại) | 🔴 `BoxMesh` phẳng + `Label3D` chữ THƯỜNG | Model ô thật: Trống, Chìa, Sát thương, Bí ẩn, Rương, Nghĩa địa, Cửa hàng, Nguy hiểm. Biểu tượng nổi trên mặt ô thay cho chữ |
-| Rương + cốc | 🔴 chỉ là ô vàng | Model rương mở được + model cốc. Cốc là thứ để THẮNG nên phải nhìn ra ngay |
-| Vụ nổ bom | 🔴 chưa có gì, chỉ có dòng chữ trên HUD | Hiệu ứng nổ trên các ô trúng: `GPUParticles3D` đặt sẵn trong `ban_party.tscn` rồi bật theo ô, **không sinh bằng code**. Âm thanh có sẵn ở `asset/kenney_impact-sounds/` |
+| `RuongBau` — `board/ruong_bau.tscn` | 🔴 3 `BoxMesh` (hộp gỗ, nắp + khoá vàng) + `Label3D` + đèn | Model Rương báu có nắp mở được (animation mở khi +1 Cúp). Thay các mesh trong `Than`, giữ node `Than` vì script xoay nó |
+| Icon Cúp — `ui/icons/cup.svg` | 🟡 SVG vẽ tay, cùng kiểu `coin.svg` | Đủ dùng cho HUD; model Cúp 3D khi làm bảng thắng |
+| `ChoNgao` — `board/cho_ngao.tscn` | 🔴 `CapsuleMesh` + `SphereMesh` nâu + `Label3D` | Model chó ngao chạy tuần. Thay mesh trong `Than`, giữ node `Than` (script `VatTrenO` xoay nó) |
+| Bẫy / Rào / Neo trên ô | 🔴 chỉ là dòng chữ `BAY · tên`, `RAO · tên`, `NEO · tên` trên `Label3D` của ô | Model vỏ sầu riêng, rào tre, cọc neo + dây thun đặt trên mặt ô |
+| Model vật phẩm — `board/mo_hinh/<id>.tscn` (20 món) | 🟡 ghép khối cơ bản (Box/Cylinder/Sphere/Torus), sinh bằng script | Đủ đọc ra món gì. Model thật thì thay nội dung từng scene, giữ tên file — icon, đồ nổi trên đầu (`VatCam`) và Chó ngao trên bàn tự đổi theo |
+| Icon túi đồ — `ui/icons/vat_pham/<id>.png` | 🟡 render từ chính model ở trên (256 px, nền trong) | Có model mới thì render lại icon (scene tạm dựng SubViewport, chụp từng model) |
+| Mũi tên ngã rẽ — `board/mui_ten.tscn` | 🟡 Box + Prism phát sáng | Đủ dùng |
+| Thú Đếm thú — `minigame/dem_thu/con_*.tscn` | 🟡 gà, chim cánh cụt (`asset/polypizza`), heo = model Ống heo | Model heo thật; animation chạy cho cả ba (hiện chỉ nhún bằng code) |
+| VFX / âm thanh vật phẩm | 🟡 đã có hiệu ứng thế giới bằng hình tạm (xem "Hiệu ứng dùng đồ trong thế giới" cuối file); 🔴 chưa có âm thanh | Âm thanh từng món; hạt/particle thật thay các khối tạm |
+| Vụ nổ bom | 🟡 `board/hieu_ung/no_bung.tscn` (Pháo dây, Xe pháo) nổ trên từng ô trúng | Texture khói lửa, âm thanh nổ — `asset/kenney_impact-sounds/` |
 | Thanh máu trên đầu nhân vật | 🔴 chưa có, máu chỉ hiện ở bảng góc phải | Bảng máu 3D gắn vào nhân vật — nhìn bàn là biết ai sắp chết, không phải đọc bảng |
 | Biểu tượng vật phẩm | 🔴 hiện là chữ "Bom / Khiên / Bom lớn" | 3 icon 2D cho HUD |
 | Nghĩa địa | 🔴 chỉ là ô xám | Bia mộ — `asset/kenney_graveyard-kit/` **đã có sẵn** nhưng đang bị loại khỏi build |
@@ -248,46 +266,9 @@ Dung nham **không phải `StaticBody3D`** như guide ghi: rơi khỏi sàn đã
 - **Temporal Trails hỏi `intersect_shape()` một lần** thay vì gọi `overlaps_body()` lên từng
   đoạn vệt. Cuối ván có ~250 đoạn; để engine lo phần chia lưới là việc của engine.
 
-## Minigame pha 3 — khuôn T4 (Sidestep Slope · Slippery Sprint — Nhặt quà đã xoá)
+## Minigame pha 3 — khuôn T4: ĐÃ XOÁ
 
-Khuôn thứ hai của pha 3, nằm ở `minigame/chung/mini_game_lan.gd`. Khác T1–T3 đúng hai điểm:
-**không có camera chung** (mỗi người nhìn làn của mình từ sau lưng, dùng lại `CameraRig` sẵn có
-của phòng chờ) và **làn tách rời** cách nhau 40 m.
-
-> **T4 KHÔNG bật `Player.che_do_san`.** Bật là hỏng: WASD sẽ theo trục thế giới trong khi
-> camera lại gắn vào thân, mà thân thì tự xoay theo hướng chạy — camera quay vòng mỗi lần né
-> sang bên. T4 giữ nguyên điều khiển kiểu phòng chờ.
-
-> **Sàn băng của Slippery Sprint dùng `Player.truot`**, không viết
-> thêm gì. Về đích dùng lại nguyên đường ống `xin_chet()` của lớp cha — cùng một sự kiện
-> "người chơi rời cuộc tại giây thứ N, do chính máy của họ tuyên", chỉ khác chiều xếp hạng.
-
-| Node | Hiện tại | Cần |
-|---|---|---|
-| `lan.tscn` → `MatSan` | 🟡 `BoxMesh` 10 × 400 m, vật liệu sáng | Texture đường/tuyết; Sidestep Slope nên có độ dốc thật |
-| `lan.tscn` → `MatTuongTrai/Phai` | 🟡 `BoxMesh` 0,6 × 3 × 400 m | Vách đá/lan can — `kenney_nature-kit` (329 model, **không** bị loại khỏi build) |
-| `lan.tscn` → `Vach` | 🟡 `BoxMesh` đỏ, ẩn sẵn, chỉ Slippery bật | Cổng đích có cờ |
-| `xe_doc.tscn` → `Toa` (Sidestep, xe lao xuống dốc) | 🟡 toa goòng `train-carriage-container-red.glb` (train-kit) ×1,8 + 2 đèn pha phát sáng | **Model ô tô/xe tải thật** — repo chưa có bộ xe nào; vài màu xe khác nhau; tiếng động cơ |
-| `xe_doc.tscn` → `Hinh` | ✅ `BoxShape3D` 1,8 × 2,45 × 4,86 m đúng bằng toa | — |
-| Cảnh hai bên làn | 🔴 trống trơn | Cây/đá `kenney_nature-kit` — làn 400 m không có gì thì không cảm được tốc độ |
-| UI cho cả 3 trò | 🔴 chưa có | Cùng món nợ `CanvasLayer` với T1–T3 |
-
-### Vật thể sinh bằng code ở T4 — và lý do
-
-| Sinh bằng code | Vì sao không đặt sẵn trong `.tscn` |
-|---|---|
-| `xe_doc.tscn` (Sidestep) | Lịch xe sinh từ hạt giống, số xe trên đường đổi theo giây — `XeDoc.lich` |
-
-### Lệch guide ở T4 — có lý do
-
-- **Đá không phải `RigidBody3D`.** Cùng lý do với khối chữ của Word Wars: vật lý không tất định
-  giữa hai máy, mà ở đây nó quyết định ai chết. Đá lăn thẳng đều theo hàm của `(hạt giống,
-  gio())` → mọi máy chiếu đúng một cuốn phim, 0 gói tin.
-- **Đá sinh theo ĐỒNG HỒ, không theo vị trí người chơi.** Vị trí người chơi trên máy người khác
-  luôn trễ vài chục ms; sinh theo nó thì hai máy đặt cùng một tảng đá ở hai chỗ. Điểm sinh bám
-  `TOC_CHAY_MAU` nên đá vẫn luôn ló ra trong tầm nhìn.
-- **Mọi làn bày đúng MỘT bố cục** (Nhặt quà) và **một đợt đá rải cho mọi làn cùng lúc**
-  (Sidestep). Khác bố cục thì người thắng chỉ là người bốc được làn dễ.
+Sidestep Slope và Slippery Sprint đã bị xoá (2026-10-05) cùng khuôn `mini_game_lan.gd`. Không còn asset nào cần cho khuôn này.
 
 ## minigame/quan_tro_minigame.tscn — màn hướng dẫn
 
@@ -301,3 +282,71 @@ của phòng chờ) và **làn tách rời** cách nhau 40 m.
 | Node | Hiện tại | Cần |
 |---|---|---|
 | `ODiem` (một ô mỗi người, dải `QuanTroMiniGame/Lop/BangDiem` ở đáy màn hình) | 🟡 `PanelContainer` + 2 `Label`, viền dưới màu nhân vật | Avatar nhỏ của nhân vật (xem mục "12 avatar 2D") |
+
+## Đã chuyển từ code sang scene (2026-10-05)
+
+Trước đây dựng hoàn toàn bằng code; đã lưu thành scene bằng `PackedScene.pack()` một lần, script
+chỉ còn logic. Sửa hình thì mở scene trong editor.
+
+| Scene | Ghi chú |
+|---|---|
+| `board/ban_party_map.tscn` (quần đảo Rumble Reef, ~1370 node) | Vật chuyển động thuộc group `ban_do_xoay` / `ban_do_nhap_nho` / `ban_do_bay_vong` / `ban_do_troi`, thông số ở metadata. Lối gỗ `Boardwalk_*` và chân ô `TilePedestal_*` đặt theo vị trí ô lúc lưu — dời ô trong `ban_party.tscn` thì kéo chúng theo |
+| `board/xuc_xac_3d.tscn` | Thân ngà, 12 cạnh vàng, 21 chấm, vòng sáng, chữ |
+| `player/characters/*.tscn` + `hoat_anh_rig_medium.res` | `AnimationPlayer` đặt sẵn, dùng chung một `AnimationLibrary` (đã đặt loop) |
+| `ui/character_picker.tscn` → `AnhViewport` | SubViewport + camera + 2 đèn chụp ảnh nhân vật |
+| `ui/music_picker.tscn` → `HopThuMuc` | FileDialog chọn thư mục, nối tín hiệu bằng `[connection]` |
+| `ui/nut_chon`, `nut_model`, `nut_dong`, `dong_chu`, `o_mau` `.tscn` | Dòng/nút danh sách dùng chung cho các màn UI |
+| `ui/huong_dan/*.tres` | Nội dung màn hướng dẫn, mỗi trang một `TrangHuongDan` |
+| `lobby/objects/ban_poker.tscn`, `ban_xi_dach.tscn` (thay `card_table.tscn`) | Bàn, ghế, ô bài (`O*`, `OCai`), bảng cược, đồng hồ. Số ghế = số ghế trong scene |
+| `lobby/objects/ban_co.tscn`, `ban_caro.tscn` (thay `chess_board.tscn`) | Lưới + hình va chạm của từng mặt; lật bàn chỉ bật/tắt `Luoi*` / `Hinh*` |
+| `lobby/objects/*` còn lại (hanoi, liar_bar, whack, chicken, penguin, dartboard, rổ, sân, dice_table, community_board, dart, hammer) | Bàn, bảng, nút (`Pressable` instance + `[connection]`), pháo hoa đặt sẵn. Số đo export còn lại phải khớp scene |
+| `lobby/objects/pressable.tscn`, `card_seat.tscn`, `ghe_ngoi.tscn` | `VungNgam` (Area3D ngắm) + vật liệu `local_to_scene` nằm trong scene |
+| `lobby/khung_nha.tscn`, `dong_ho.tscn` ×4, `canopy_line.tscn` | Tường vô hình, vòm, số giờ; đồng hồ tự chạy kim; tàu lượn có curve + tà vẹt (MultiMesh) — sửa curve thì dựng lại tà vẹt |
+
+## Vật phẩm 3D và hiệu ứng dùng đồ trên bàn
+
+Mô hình + animation của 20 món là `.glb` dựng bằng `3d/tao_vat_pham.py` từ `3d/vat_pham/nguon.json`
+(`py -3.10 3d/tao_vat_pham.py`, cần numpy). `board/mo_hinh/<món>.tscn` chỉ là instance của `.glb`;
+khi có model thật thì thay file `.glb` (giữ tên node "Goc" và animation "dung"/"hien").
+
+| Node | Hiện tại | Cần thêm |
+|---|---|---|
+| `3d/vat_pham/*.glb` → "dung" | 🟡 **không còn dùng trong game** (hiệu ứng dùng đồ giờ là scene thế giới ở `board/hieu_ung/`, xem dưới). Clip vẫn nằm trong .glb | Có thể bỏ clip "dung" khỏi `tao_vat_pham.py` khi có model thật |
+| `rao_tre/vo_sau_rieng/day_thun.glb` → "hien" | 🟡 rơi xuống nảy, dùng trong `board/{rao,bay,neo}_tren_o.tscn` (×4) | Model riêng khổ ô; màu theo chủ |
+| `board/vong_tam.tscn` (con của Player, vòng tầm) | 🟡 `TorusMesh` phẳng xanh ngọc, 1 ô ≈ 5 m | Vòng có vạch/mờ dần ở mép |
+
+### Hiệu ứng dùng đồ trong thế giới — `board/hieu_ung/` (2026-10-10)
+
+Mỗi món là **một scene** (`board/hieu_ung/<id>.tscn`, gốc là `HieuUng` — `hieu_ung.gd`), nối với món qua
+`VatPhamHinh.hieu_ung` trong `board/danh_muc_vat_pham.tres` (món không có scene thì không có hiệu ứng:
+rào tre / vỏ sầu riêng / dây thun đã có hình đặt trên ô). Master gửi mô tả (`tu`, `den`, `o`, `cac_o`,
+`duong`, `trung`, `chan`) trong gói `tt["hieu_ung"]`; **mọi máy** dựng cùng scene, diễn cùng clip "chay"
+(hoặc "truot" khi trượt). Quân cờ chỉ bị giật về ô khi scene gọi `bao_cham` (track Call Method).
+Mô hình sinh bằng `py -3.10 3d/tao_vat_pham.py` (phần cuối file) → `3d/hieu_ung/*.glb`.
+
+| Node / scene | Hiện tại | Cần asset thật |
+|---|---|---|
+| `3d/hieu_ung/dua_hieu_ung.glb` + `dua_roi.tscn` | 🔴 quả cầu nâu + 3 chấm "mắt", 6 mảnh hộp văng ra, nước = cầu dẹt trắng | Model dừa thật (vỏ xơ, mắt) + animation vỡ đôi; tiếng "cốp" + vỡ |
+| `3d/hieu_ung/trau_hieu_ung.glb` + `trau_dien.tscn` | 🔴 trâu ghép hộp/trụ, chân đảo nhịp bằng clip "chay" (6 chu kỳ) | Model trâu rigged + clip phi nước đại; bụi dưới móng; tiếng rống |
+| `3d/hieu_ung/no_bung.glb` + `no_bung.tscn` (Pháo dây, Xe pháo) | 🟡 loé sáng + 4 cầu khói + 6 hạt hộp + `GPUParticles3D` tia lửa + `OmniLight3D` | Sprite/texture khói lửa; tiếng nổ (`asset/kenney_impact-sounds/`) |
+| `3d/hieu_ung/dong_xu.glb` (Ống heo) + `ong_heo.tscn` | 🟡 trụ dẹt vàng quay | Model đồng xu + tiếng xu; heo đất vỡ |
+| `bui.tscn` (bụi va chạm) | 🟡 4 cầu be mờ dần | Texture/particle bụi |
+| `can_cau.tscn` | 🟡 dây = trụ mảnh căng bằng `Day`, móc = xuyến, phao = cầu đỏ | Model cần câu cầm tay vung; dây có độ võng; tiếng vút |
+| `sung_1_phat.tscn`, `dep_to_ong.tscn`, `vot_luoi.tscn` | 🟡 đạn = cầu xám / model món phóng to ×6 bay vồng | Vệt đạn (trail), model đạn riêng; tiếng bắn/bốp |
+| `kinh_lup.tscn` | 🟡 tia = trụ vàng trong suốt, điểm cháy = cầu cam | Shader tia sáng; khói cháy |
+| `xe_phao.tscn` | 🟡 xe = model món ×7 chạy trên mặt ô | Animation bánh xe; tiếng xe |
+| `mam_tom.tscn` | 🟡 nồi bay vồng, mây = 4 cầu xanh vàng trong suốt, ruồi = 3 cầu đen quay | Particle mùi + ruồi bay; tiếng "ọc" |
+| `bua_hoan_doi.tscn` | 🟡 cột sáng tím + xuyến bay lên + tia nối hai người | Particle lấp lánh; tiếng ting |
+| `chao_hanh.tscn`, `hai_hot.tscn`, `coi_trong_tai.tscn`, `cho_ngao.tscn`, `khien.tscn`, `phao_day.tscn` | 🟡 model món phóng to + cầu/xuyến mờ | Hiệu ứng riêng từng món; chó ngao: animation chạy/sủa; khiên: vòm bảo vệ có họa tiết; âm thanh |
+
+`HieuUng` quy ước node con (đều tuỳ chọn): `Tu` (chân người dùng), `Dich` (chân mục tiêu), `Bay` (vật bay
+từ tay tới mục tiêu hoặc dọc `duong`), `Day` (trụ dài 1 m dọc −Z, tự căng từ tay tới `Bay`). Thêm món mới =
+làm `board/hieu_ung/<id>.tscn` + gắn vào `danh_muc_vat_pham.tres`, **không sửa code**.
+
+### Chọn mục tiêu & cầm vật phẩm (2026-10-10)
+
+| Node | Hiện tại | Cần asset thật |
+|---|---|---|
+| `board/vong_muc_tieu.tscn` (con của `BanParty`, vòng đánh dấu mục tiêu) | 🟡 `Decal` (ảnh vành = `GradientTexture2D` radial, có texture phát sáng) + xuyến phát sáng + `OmniLight3D` + `AnimationPlayer "xung"` lặp | Texture vành/hoạ tiết vẽ tay cho `Decal`, mesh/ánh sáng riêng — **đổi thẳng trong scene này**, code chỉ đặt vị trí + `scale` (`BanDuong.dat_muc_tieu`) |
+| `board/hai_xuc_xac.tscn` (hai `XucXac3D` + nhãn tổng) | 🟡 dùng lại xúc xắc cũ (hộp + chấm cầu) | Model xúc xắc thật; animation tung bằng AnimationPlayer thay Tween trong `xuc_xac_3d.gd` (hiện vẫn Tween) |
+| `VatCam` (món cầm trên đầu, `player.tscn`) | 🟡 `scale` 4.2 đặt ngay node, cao 3.5 m | Model món thật (xem bảng trên) — kích thước chỉnh bằng `scale` node `VatCam` |

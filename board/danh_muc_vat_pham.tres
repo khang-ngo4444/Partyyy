@@ -1,0 +1,202 @@
+[gd_resource type="Resource" script_class="DanhMucVatPham" format=3 uid="uid://dohx5p7pdqtuo"]
+
+[ext_resource type="Script" uid="uid://cr0s84omo4rea" path="res://board/danh_muc_vat_pham.gd" id="1_dm"]
+[ext_resource type="Script" uid="uid://beekcdwwtc85e" path="res://board/vat_pham_hinh.gd" id="2_h"]
+[ext_resource type="Texture2D" uid="uid://y0otwgd1new" path="res://ui/icons/vat_pham/bua_hoan_doi.png" id="i_bua_hoan_doi"]
+[ext_resource type="Texture2D" uid="uid://ckurxr7rdvrb5" path="res://ui/icons/vat_pham/can_cau.png" id="i_can_cau"]
+[ext_resource type="Texture2D" uid="uid://b5ek2qreokwcu" path="res://ui/icons/vat_pham/chao_hanh.png" id="i_chao_hanh"]
+[ext_resource type="Texture2D" uid="uid://cmolp5b7higm7" path="res://ui/icons/vat_pham/cho_ngao.png" id="i_cho_ngao"]
+[ext_resource type="Texture2D" uid="uid://bh86r04ge7d5s" path="res://ui/icons/vat_pham/coi_trong_tai.png" id="i_coi_trong_tai"]
+[ext_resource type="Texture2D" uid="uid://b6edhsbq0kgi5" path="res://ui/icons/vat_pham/day_thun.png" id="i_day_thun"]
+[ext_resource type="Texture2D" uid="uid://k31pi17nvly2" path="res://ui/icons/vat_pham/dep_to_ong.png" id="i_dep_to_ong"]
+[ext_resource type="Texture2D" uid="uid://cumq0o8lokp6o" path="res://ui/icons/vat_pham/dua_roi.png" id="i_dua_roi"]
+[ext_resource type="Texture2D" uid="uid://bsamqoxktatdg" path="res://ui/icons/vat_pham/hai_hot.png" id="i_hai_hot"]
+[ext_resource type="Texture2D" uid="uid://bkj0rxufye8r6" path="res://ui/icons/vat_pham/khien.png" id="i_khien"]
+[ext_resource type="Texture2D" uid="uid://bdac3sy1syebt" path="res://ui/icons/vat_pham/kinh_lup.png" id="i_kinh_lup"]
+[ext_resource type="Texture2D" uid="uid://vjbyx2osbt8a" path="res://ui/icons/vat_pham/mam_tom.png" id="i_mam_tom"]
+[ext_resource type="Texture2D" uid="uid://dqtk7avgq2rac" path="res://ui/icons/vat_pham/ong_heo.png" id="i_ong_heo"]
+[ext_resource type="Texture2D" uid="uid://d3ldvvdmm16ic" path="res://ui/icons/vat_pham/phao_day.png" id="i_phao_day"]
+[ext_resource type="Texture2D" uid="uid://c88hhr2q3f85w" path="res://ui/icons/vat_pham/rao_tre.png" id="i_rao_tre"]
+[ext_resource type="Texture2D" uid="uid://bx5p670r68k84" path="res://ui/icons/vat_pham/sung_1_phat.png" id="i_sung_1_phat"]
+[ext_resource type="Texture2D" uid="uid://cmod2dojbd8rk" path="res://ui/icons/vat_pham/trau_dien.png" id="i_trau_dien"]
+[ext_resource type="Texture2D" uid="uid://dldf65j8gglbc" path="res://ui/icons/vat_pham/vot_luoi.png" id="i_vot_luoi"]
+[ext_resource type="Texture2D" uid="uid://bwtbxwm6jstqg" path="res://ui/icons/vat_pham/vo_sau_rieng.png" id="i_vo_sau_rieng"]
+[ext_resource type="Texture2D" uid="uid://d3kifqt4e6g4d" path="res://ui/icons/vat_pham/xe_phao.png" id="i_xe_phao"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/bua_hoan_doi.tscn" id="m_bua_hoan_doi"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/can_cau.tscn" id="m_can_cau"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/chao_hanh.tscn" id="m_chao_hanh"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/cho_ngao.tscn" id="m_cho_ngao"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/coi_trong_tai.tscn" id="m_coi_trong_tai"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/day_thun.tscn" id="m_day_thun"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/dep_to_ong.tscn" id="m_dep_to_ong"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/dua_roi.tscn" id="m_dua_roi"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/hai_hot.tscn" id="m_hai_hot"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/khien.tscn" id="m_khien"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/kinh_lup.tscn" id="m_kinh_lup"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/mam_tom.tscn" id="m_mam_tom"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/ong_heo.tscn" id="m_ong_heo"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/phao_day.tscn" id="m_phao_day"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/rao_tre.tscn" id="m_rao_tre"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/sung_1_phat.tscn" id="m_sung_1_phat"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/trau_dien.tscn" id="m_trau_dien"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/vot_luoi.tscn" id="m_vot_luoi"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/vo_sau_rieng.tscn" id="m_vo_sau_rieng"]
+[ext_resource type="PackedScene" path="res://board/mo_hinh/xe_phao.tscn" id="m_xe_phao"]
+[ext_resource type="PackedScene" path="res://board/hieu_ung/bua_hoan_doi.tscn" id="x_bua_hoan_doi"]
+[ext_resource type="PackedScene" path="res://board/hieu_ung/can_cau.tscn" id="x_can_cau"]
+[ext_resource type="PackedScene" path="res://board/hieu_ung/chao_hanh.tscn" id="x_chao_hanh"]
+[ext_resource type="PackedScene" path="res://board/hieu_ung/cho_ngao.tscn" id="x_cho_ngao"]
+[ext_resource type="PackedScene" path="res://board/hieu_ung/coi_trong_tai.tscn" id="x_coi_trong_tai"]
+[ext_resource type="PackedScene" path="res://board/hieu_ung/dep_to_ong.tscn" id="x_dep_to_ong"]
+[ext_resource type="PackedScene" path="res://board/hieu_ung/dua_roi.tscn" id="x_dua_roi"]
+[ext_resource type="PackedScene" path="res://board/hieu_ung/hai_hot.tscn" id="x_hai_hot"]
+[ext_resource type="PackedScene" path="res://board/hieu_ung/khien.tscn" id="x_khien"]
+[ext_resource type="PackedScene" path="res://board/hieu_ung/kinh_lup.tscn" id="x_kinh_lup"]
+[ext_resource type="PackedScene" path="res://board/hieu_ung/mam_tom.tscn" id="x_mam_tom"]
+[ext_resource type="PackedScene" path="res://board/hieu_ung/ong_heo.tscn" id="x_ong_heo"]
+[ext_resource type="PackedScene" path="res://board/hieu_ung/phao_day.tscn" id="x_phao_day"]
+[ext_resource type="PackedScene" path="res://board/hieu_ung/sung_1_phat.tscn" id="x_sung_1_phat"]
+[ext_resource type="PackedScene" path="res://board/hieu_ung/trau_dien.tscn" id="x_trau_dien"]
+[ext_resource type="PackedScene" path="res://board/hieu_ung/vot_luoi.tscn" id="x_vot_luoi"]
+[ext_resource type="PackedScene" path="res://board/hieu_ung/xe_phao.tscn" id="x_xe_phao"]
+
+[sub_resource type="Resource" id="h_sung_1_phat"]
+script = ExtResource("2_h")
+id = "sung_1_phat"
+mo_hinh = ExtResource("m_sung_1_phat")
+icon = ExtResource("i_sung_1_phat")
+hieu_ung = ExtResource("x_sung_1_phat")
+
+[sub_resource type="Resource" id="h_khien"]
+script = ExtResource("2_h")
+id = "khien"
+mo_hinh = ExtResource("m_khien")
+icon = ExtResource("i_khien")
+hieu_ung = ExtResource("x_khien")
+
+[sub_resource type="Resource" id="h_chao_hanh"]
+script = ExtResource("2_h")
+id = "chao_hanh"
+mo_hinh = ExtResource("m_chao_hanh")
+icon = ExtResource("i_chao_hanh")
+hieu_ung = ExtResource("x_chao_hanh")
+
+[sub_resource type="Resource" id="h_vo_sau_rieng"]
+script = ExtResource("2_h")
+id = "vo_sau_rieng"
+mo_hinh = ExtResource("m_vo_sau_rieng")
+icon = ExtResource("i_vo_sau_rieng")
+
+[sub_resource type="Resource" id="h_phao_day"]
+script = ExtResource("2_h")
+id = "phao_day"
+mo_hinh = ExtResource("m_phao_day")
+icon = ExtResource("i_phao_day")
+hieu_ung = ExtResource("x_phao_day")
+
+[sub_resource type="Resource" id="h_rao_tre"]
+script = ExtResource("2_h")
+id = "rao_tre"
+mo_hinh = ExtResource("m_rao_tre")
+icon = ExtResource("i_rao_tre")
+
+[sub_resource type="Resource" id="h_hai_hot"]
+script = ExtResource("2_h")
+id = "hai_hot"
+mo_hinh = ExtResource("m_hai_hot")
+icon = ExtResource("i_hai_hot")
+hieu_ung = ExtResource("x_hai_hot")
+
+[sub_resource type="Resource" id="h_can_cau"]
+script = ExtResource("2_h")
+id = "can_cau"
+mo_hinh = ExtResource("m_can_cau")
+icon = ExtResource("i_can_cau")
+hieu_ung = ExtResource("x_can_cau")
+
+[sub_resource type="Resource" id="h_vot_luoi"]
+script = ExtResource("2_h")
+id = "vot_luoi"
+mo_hinh = ExtResource("m_vot_luoi")
+icon = ExtResource("i_vot_luoi")
+hieu_ung = ExtResource("x_vot_luoi")
+
+[sub_resource type="Resource" id="h_xe_phao"]
+script = ExtResource("2_h")
+id = "xe_phao"
+mo_hinh = ExtResource("m_xe_phao")
+icon = ExtResource("i_xe_phao")
+hieu_ung = ExtResource("x_xe_phao")
+
+[sub_resource type="Resource" id="h_dua_roi"]
+script = ExtResource("2_h")
+id = "dua_roi"
+mo_hinh = ExtResource("m_dua_roi")
+icon = ExtResource("i_dua_roi")
+hieu_ung = ExtResource("x_dua_roi")
+
+[sub_resource type="Resource" id="h_bua_hoan_doi"]
+script = ExtResource("2_h")
+id = "bua_hoan_doi"
+mo_hinh = ExtResource("m_bua_hoan_doi")
+icon = ExtResource("i_bua_hoan_doi")
+hieu_ung = ExtResource("x_bua_hoan_doi")
+
+[sub_resource type="Resource" id="h_trau_dien"]
+script = ExtResource("2_h")
+id = "trau_dien"
+mo_hinh = ExtResource("m_trau_dien")
+icon = ExtResource("i_trau_dien")
+hieu_ung = ExtResource("x_trau_dien")
+
+[sub_resource type="Resource" id="h_ong_heo"]
+script = ExtResource("2_h")
+id = "ong_heo"
+mo_hinh = ExtResource("m_ong_heo")
+icon = ExtResource("i_ong_heo")
+hieu_ung = ExtResource("x_ong_heo")
+
+[sub_resource type="Resource" id="h_coi_trong_tai"]
+script = ExtResource("2_h")
+id = "coi_trong_tai"
+mo_hinh = ExtResource("m_coi_trong_tai")
+icon = ExtResource("i_coi_trong_tai")
+hieu_ung = ExtResource("x_coi_trong_tai")
+
+[sub_resource type="Resource" id="h_day_thun"]
+script = ExtResource("2_h")
+id = "day_thun"
+mo_hinh = ExtResource("m_day_thun")
+icon = ExtResource("i_day_thun")
+
+[sub_resource type="Resource" id="h_dep_to_ong"]
+script = ExtResource("2_h")
+id = "dep_to_ong"
+mo_hinh = ExtResource("m_dep_to_ong")
+icon = ExtResource("i_dep_to_ong")
+hieu_ung = ExtResource("x_dep_to_ong")
+
+[sub_resource type="Resource" id="h_mam_tom"]
+script = ExtResource("2_h")
+id = "mam_tom"
+mo_hinh = ExtResource("m_mam_tom")
+icon = ExtResource("i_mam_tom")
+hieu_ung = ExtResource("x_mam_tom")
+
+[sub_resource type="Resource" id="h_kinh_lup"]
+script = ExtResource("2_h")
+id = "kinh_lup"
+mo_hinh = ExtResource("m_kinh_lup")
+icon = ExtResource("i_kinh_lup")
+hieu_ung = ExtResource("x_kinh_lup")
+
+[sub_resource type="Resource" id="h_cho_ngao"]
+script = ExtResource("2_h")
+id = "cho_ngao"
+mo_hinh = ExtResource("m_cho_ngao")
+icon = ExtResource("i_cho_ngao")
+hieu_ung = ExtResource("x_cho_ngao")
+
+[resource]
+script = ExtResource("1_dm")
+ds = Array[ExtResource("2_h")]([SubResource("h_sung_1_phat"), SubResource("h_khien"), SubResource("h_chao_hanh"), SubResource("h_vo_sau_rieng"), SubResource("h_phao_day"), SubResource("h_rao_tre"), SubResource("h_hai_hot"), SubResource("h_can_cau"), SubResource("h_vot_luoi"), SubResource("h_xe_phao"), SubResource("h_dua_roi"), SubResource("h_bua_hoan_doi"), SubResource("h_trau_dien"), SubResource("h_ong_heo"), SubResource("h_coi_trong_tai"), SubResource("h_day_thun"), SubResource("h_dep_to_ong"), SubResource("h_mam_tom"), SubResource("h_kinh_lup"), SubResource("h_cho_ngao")])

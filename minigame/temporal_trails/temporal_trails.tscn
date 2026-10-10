@@ -3,9 +3,11 @@
 [ext_resource type="Script" path="res://minigame/temporal_trails/temporal_trails.gd" id="1_tt"]
 [ext_resource type="PackedScene" path="res://minigame/temporal_trails/san_vet.tscn" id="2_san"]
 [ext_resource type="PackedScene" path="res://minigame/temporal_trails/vet.tscn" id="3_vet"]
+[ext_resource type="Material" path="res://materials/mat_vet_loi.tres" id="x0_mat_vet"]
 
 [node name="TemporalTrails" type="Node"]
 script = ExtResource("1_tt")
+mat_vet = ExtResource("x0_mat_vet")
 san_scene = ExtResource("2_san")
 vet_scene = ExtResource("3_vet")
 

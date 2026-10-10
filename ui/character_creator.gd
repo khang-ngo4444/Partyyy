@@ -4,16 +4,11 @@ extends Control
 signal confirmed
 signal cancelled
 
-@onready var preview_anchor: Node3D = $Margin/Panel/Columns/PreviewColumn/PreviewFrame/ViewportContainer/PreviewViewport/PreviewWorld/PreviewAnchor
-@onready var preview_camera: Camera3D = $Margin/Panel/Columns/PreviewColumn/PreviewFrame/ViewportContainer/PreviewViewport/PreviewWorld/Camera
-@onready var class_grid: GridContainer = %ClassGrid
-@onready var primary_grid: GridContainer = %PrimaryGrid
-@onready var accent_grid: GridContainer = %AccentGrid
-@onready var accessory_check: CheckButton = %AccessoryCheck
-@onready var archetype_name: Label = %ArchetypeName
-@onready var animation_name: Label = %AnimationName
-@onready var back_btn: Button = %CreatorBackBtn
-@onready var confirm_btn: Button = %CreatorConfirmBtn
+@export var nut_chon_scene: PackedScene = null
+
+## Cùng thứ tự với `Player.models` và `CharacterVisual.ARCHETYPE_NAMES`.
+@export var models: Array[PackedScene] = []
+@export var o_mau_scene: PackedScene = null
 
 var _model_index := 0
 var _primary_index := 0
@@ -22,6 +17,17 @@ var _accessory_enabled := true
 var _preview: Node3D
 var _animation: AnimationPlayer
 var _playing := "idle"
+
+@onready var preview_anchor: Node3D = %PreviewAnchor
+@onready var preview_camera: Camera3D = %PreviewCamera
+@onready var class_grid: GridContainer = %ClassGrid
+@onready var primary_grid: GridContainer = %PrimaryGrid
+@onready var accent_grid: GridContainer = %AccentGrid
+@onready var accessory_check: CheckButton = %AccessoryCheck
+@onready var archetype_name: Label = %ArchetypeName
+@onready var animation_name: Label = %AnimationName
+@onready var back_btn: Button = %CreatorBackBtn
+@onready var confirm_btn: Button = %CreatorConfirmBtn
 
 
 func _ready() -> void:
@@ -41,7 +47,7 @@ func _ready() -> void:
 
 
 func open() -> void:
-	_model_index = clampi(NetManager.model_index, 0, CharacterVisual.archetype_count() - 1)
+	_model_index = clampi(NetManager.model_index, 0, models.size() - 1)
 	_primary_index = posmod(NetManager.color_index, NetManager.PLAYER_COLORS.size())
 	_accent_index = posmod(NetManager.accent_index, NetManager.PLAYER_COLORS.size())
 	_accessory_enabled = NetManager.accessory_enabled
@@ -76,12 +82,9 @@ func _process(delta: float) -> void:
 
 
 func _build_class_buttons() -> void:
-	for index in CharacterVisual.archetype_count():
-		var button := Button.new()
-		button.custom_minimum_size = Vector2(0, 34)
-		button.toggle_mode = true
+	for index in models.size():
+		var button := nut_chon_scene.instantiate() as Button
 		button.text = "%02d  %s" % [index + 1, CharacterVisual.ARCHETYPE_NAMES[index]]
-		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		var picked := index
 		button.pressed.connect(func(): _select_model(picked))
 		class_grid.add_child(button)
@@ -89,17 +92,9 @@ func _build_class_buttons() -> void:
 
 func _build_color_buttons(grid: GridContainer, callback: Callable) -> void:
 	for index in NetManager.PLAYER_COLORS.size():
-		var button := Button.new()
-		button.custom_minimum_size = Vector2(44, 28)
-		button.toggle_mode = true
+		var button := o_mau_scene.instantiate() as OMau
 		button.tooltip_text = "Màu %d" % (index + 1)
-		var style := StyleBoxFlat.new()
-		style.bg_color = NetManager.PLAYER_COLORS[index]
-		style.set_corner_radius_all(3)
-		style.set_border_width_all(1)
-		style.border_color = Color(1, 1, 1, 0.32)
-		for state in ["normal", "hover", "pressed", "focus"]:
-			button.add_theme_stylebox_override(state, style)
+		button.dat(NetManager.PLAYER_COLORS[index])
 		var picked := index
 		button.pressed.connect(func(): callback.call(picked))
 		grid.add_child(button)
@@ -132,9 +127,9 @@ func _toggle_accessory(enabled: bool) -> void:
 func _rebuild_preview() -> void:
 	if _preview != null:
 		_preview.queue_free()
-	_preview = CharacterVisual.instantiate_archetype(_model_index)
+	_preview = models[posmod(_model_index, models.size())].instantiate() as Node3D
 	preview_anchor.add_child(_preview)
-	_animation = CharacterVisual.attach_animations(_preview)
+	_animation = CharacterVisual.hoat_anh_cua(_preview)
 	_apply_preview_customization()
 	archetype_name.text = CharacterVisual.ARCHETYPE_NAMES[_model_index]
 	_play_preview("idle", "ĐỨNG")

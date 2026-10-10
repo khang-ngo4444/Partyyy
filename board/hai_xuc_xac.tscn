@@ -1,0 +1,29 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://board/hai_xuc_xac.gd" id="1_hai"]
+[ext_resource type="PackedScene" path="res://board/xuc_xac_3d.tscn" id="2_xx"]
+
+[node name="HaiXucXac" type="Node3D"]
+script = ExtResource("1_hai")
+
+[node name="ViTriTrai" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25, 0, 0)
+
+[node name="XucXac3D" parent="ViTriTrai" instance=ExtResource("2_xx")]
+hien_nhan = false
+
+[node name="ViTriPhai" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25, 0, 0)
+
+[node name="XucXac3D" parent="ViTriPhai" instance=ExtResource("2_xx")]
+hien_nhan = false
+
+[node name="Tong" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -5.8)
+visible = false
+pixel_size = 0.008
+billboard = 1
+no_depth_test = true
+modulate = Color(1, 0.9490196, 0.7411765, 1)
+font_size = 64
+outline_size = 16

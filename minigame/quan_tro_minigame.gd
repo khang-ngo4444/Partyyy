@@ -1,53 +1,31 @@
 class_name QuanTroMiniGame
 extends Node
 
-## Quản trò: nạp minigame, đếm ngược, chạy, thu bảng xếp hạng, trả lại phòng chờ.
-##
-## Đây là ĐƯỜNG NỐI mà phần bàn cờ sẽ dùng sau này. Bàn cờ chỉ cần gọi `chay()` rồi nghe
-## `ket_thuc(xep_hang)` — không biết minigame nào đang chạy, không biết luật của nó.
-##
-## ## Vì sao master gieo hạt giống
-##
-## Minigame chạy trên MỌI máy cùng lúc, không có server riêng. Bản đồ tường gạch của Tank sinh
-## ngẫu nhiên — mỗi máy gọi `randi()` riêng thì mỗi người thấy một bản đồ khác nhau và cả ván
-## thành vô nghĩa. Master gieo một hạt, phát qua RPC, mọi máy dựng ra y hệt.
-##
-## ## Vì sao dùng CanvasLayer chứ không đổi scene
-##
-## Fusion đang giữ cây scene (`Fusion.set_scene_parent`), và người chơi là object mạng sống
-## trong đó. Gỡ cả cây ra để nạp minigame là gỡ luôn họ. Nên minigame nằm trên một lớp phủ
-## RIÊNG, che kín màn hình — phòng chờ vẫn nguyên vẹn bên dưới, xong ván là hiện lại.
+## Quản trò: nạp minigame, đếm ngược, chạy, thu bảng xếp hạng. Master gieo hạt giống cho mọi máy.
+## Minigame nằm trên lớp phủ (CanvasLayer) để không gỡ cây scene của Fusion.
 
 signal ket_thuc(xep_hang: Array)
-## Man hinh minigame vua phu len. Phat tren MOI may, ngay truoc dem nguoc.
-##
-## Phan ban party phai biet de ngung nhan phim: minigame la mot LOP PHU, khong phai mot
-## scene khac — `PhaBanCo` van song nguyen ven ben duoi va van an `_unhandled_input`.
-## Khong co tin hieu nay thi bam Space giua van Tank la vua ban vua tung xuc xac.
+
+## Minigame vừa phủ lên (mọi máy) — bàn party phải ngưng nhận phím.
 signal bat_dau()
 
-## Đếm ngược trước khi bắt đầu, giây.
+## Đếm ngược trước khi bắt đầu (giây).
 const DEM_NGUOC := 3.0
-## Hiện bảng kết quả bao lâu rồi tự về phòng chờ.
+
+## Hiện kết quả bao lâu.
 const XEM_KET_QUA := 5.0
-## Sắp lại dải điểm chừng này giây một lần. Mỗi khung hình là thừa, và thứ hạng nhảy liên tục
-## mỗi khung hình thì không ai đọc kịp.
+
+## Sắp lại dải điểm mỗi chừng này giây.
 const NHIP_DIEM := 0.25
 
-const DANH_SACH := {
-	"tank": "res://minigame/tank/tank_battle.tscn",
-	"breaking_blocks": "res://minigame/breaking_blocks/breaking_blocks.tscn",
-	"laser_leap": "res://minigame/laser_leap/laser_leap.tscn",
-	"spotlights": "res://minigame/spotlights/spotlights.tscn",
-	"magma": "res://minigame/magma/magma.tscn",
-	"explosive": "res://minigame/explosive/explosive.tscn",
-	"crown": "res://minigame/crown/crown.tscn",
-	"temporal_trails": "res://minigame/temporal_trails/temporal_trails.tscn",
-	"word_wars": "res://minigame/word_wars/word_wars.tscn",
-	"sidestep": "res://minigame/sidestep/sidestep.tscn",
-	"slippery": "res://minigame/slippery/slippery.tscn",
-}
+## Các minigame (kéo scene vào Inspector). Mã của trò = tên file scene.
+@export var tro_choi: Array[PackedScene] = []
+@export var o_diem_scene: PackedScene = null
 
+var _game: MiniGame = null
+var _dang_chay := false
+var _ids: Array = []
+var _cho_diem := 0.0
 
 @onready var _lop: CanvasLayer = $Lop
 @onready var _nen: ColorRect = $Lop/Nen
@@ -57,16 +35,9 @@ const DANH_SACH := {
 @onready var _luat: Label = $Lop/HuongDan/Giua/Luat
 @onready var _dem: Label = $Lop/HuongDan/Giua/Dem
 @onready var _ket_qua: Label = $Lop/Bang/KetQua
-## Dải điểm ở đáy màn hình — DÙNG CHUNG cho mọi minigame. Minigame chỉ trả lời `diem_cua()` /
-## `chu_diem()`; vẽ, sắp hạng, tô màu là việc ở đây.
+
+## Dải điểm dùng chung ở đáy màn hình.
 @onready var _bang_diem: HBoxContainer = $Lop/BangDiem
-
-@export var o_diem_scene: PackedScene = null
-
-var _game: MiniGame = null
-var _dang_chay := false
-var _ids: Array = []
-var _cho_diem := 0.0
 
 
 func _ready() -> void:
@@ -78,7 +49,30 @@ func dang_chay() -> bool:
 	return _dang_chay
 
 
-## Ai cũng gọi được; master mới thật sự phát lệnh. Gieo hạt ở ĐÂY chứ không ở trong minigame.
+func danh_sach() -> PackedStringArray:
+	var ra := PackedStringArray()
+	for sc in tro_choi:
+		if sc != null:
+			ra.append(_ma(sc))
+	return ra
+
+
+func co_tro(ma: String) -> bool:
+	return _tim(ma) != null
+
+
+func _tim(ma: String) -> PackedScene:
+	for sc in tro_choi:
+		if sc != null and _ma(sc) == ma:
+			return sc
+	return null
+
+
+static func _ma(sc: PackedScene) -> String:
+	return sc.resource_path.get_file().get_basename()
+
+
+## Ai cũng gọi được; chỉ master phát lệnh và gieo hạt.
 func xin_chay(ma: String) -> void:
 	if _dang_chay:
 		return
@@ -91,23 +85,22 @@ func xin_chay(ma: String) -> void:
 
 @rpc("any_peer", "call_local")
 func _net_chay(ma: String, hat_giong: int, ids: Array) -> void:
-	if _dang_chay or not DANH_SACH.has(ma):
+	var scene := _tim(ma)
+	if _dang_chay or scene == null:
 		return
 	_dang_chay = true
 	bat_dau.emit()
 	_lop.visible = true
 	_ket_qua.text = ""
-	# Chuột thả ra: minigame 2D không xoay camera, và người chơi cần thấy con trỏ nếu bấm UI.
+	# Thả chuột để bấm được UI.
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
-	var scene := load(DANH_SACH[ma]) as PackedScene
 	_game = scene.instantiate() as MiniGame
 	_khung.add_child(_game)
 	_game.xong.connect(_khi_xong, CONNECT_ONE_SHOT)
-	# Tro 3D dung san that trong the gioi; nen duc se che mat dung cai no vua dung.
+	# Trò 3D dựng sân thật — không che nền.
 	_nen.visible = _game.che_nen
 
-	# Màn hướng dẫn RIÊNG, đục kín: không còn chữ chạy đè lên cảnh bàn cờ.
 	_tieu.text = _game.ten
 	_luat.text = "• " + _game.luat.replace(" · ", "\n• ")
 	_huong_dan.visible = true
@@ -122,7 +115,7 @@ func _net_chay(ma: String, hat_giong: int, ids: Array) -> void:
 	_dung_bang_diem()
 
 
-## Mỗi người một ô. Trò không có điểm (`diem_cua` trả NAN, như Tank) thì không hiện dải.
+## Mỗi người một ô; trò không có điểm thì không hiện.
 func _dung_bang_diem() -> void:
 	for c in _bang_diem.get_children():
 		c.queue_free()
@@ -155,7 +148,7 @@ func _ve_bang_diem() -> void:
 				id == NetManager.local_id())
 
 
-## Thứ tự hiện trong dải: điểm cao đứng trước. Chỉ để HIỂN THỊ — hạng chốt vẫn là bảng `xong()`.
+## Điểm cao đứng trước (chỉ để hiển thị).
 func _xep_theo_diem() -> Array:
 	var xep := _ids.duplicate()
 	xep.sort_custom(func(a, b) -> bool: return _game.diem_cua(int(a)) > _game.diem_cua(int(b)))
@@ -201,5 +194,5 @@ func _don() -> void:
 	_bang_diem.visible = false
 	_ids.clear()
 	_ket_qua.text = ""
-	# Trả chuột về cho game 3D. Không trả thì người chơi ra khỏi minigame mà không xoay được.
+	# Trả chuột về cho game 3D.
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED

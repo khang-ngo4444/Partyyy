@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "01 · Mục tiêu ván chơi"
+noi_dung = "[color=#8fe7d4][b]MỤC TIÊU[/b][/color]
+Gom vàng, mở [b]Rương báu[/b] để lấy [b]Cúp[/b]. Hết số vòng của ván, ai nhiều Cúp nhất thắng; bằng Cúp thì so vàng.
+
+[b]Một vòng chơi[/b]
+1. Tất cả người chơi bắt đầu trên cùng một ô.
+2. Thứ tự lượt đầu tiên được xáo ngẫu nhiên.
+3. Mỗi người dùng đồ (nếu muốn), tung xúc xắc rồi đi.
+4. Khi mọi người đã đi một lượt, cả phòng chơi một minigame.
+5. Xếp hạng minigame quyết định vàng, đồ thưởng và thứ tự lượt của vòng sau.
+
+Số vòng tự tính theo số người (2 người: 14 vòng · 4 người: 11 · 10 người: 7). Chủ phòng có thể tự đặt số vòng, giá rương, vàng, máu và thuế trước khi vào sảnh."

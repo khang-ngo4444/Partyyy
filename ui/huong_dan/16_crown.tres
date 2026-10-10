@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "16 · Crown Capture"
+noi_dung = "[color=#8fe7d4][b]PHÍM[/b][/color]
+[b]W A S D[/b] chạy · [b]F[/b] đánh.
+
+[color=#8fe7d4][b]LUẬT[/b][/color]
+Chạy vào vòng của vương miện để nhặt. Đánh trúng người đang đội miện làm miện rơi đúng tại chỗ bị đánh; sau một khoảng nghỉ ngắn mới nhặt lại được.
+
+Không ai bị loại trong trò này. Ván kéo dài 60 giây. [b]Xếp hạng:[/b] tổng số giây đã đội vương miện."

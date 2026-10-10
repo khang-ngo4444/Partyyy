@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/dartboard.gd" id="1_board"]
 [ext_resource type="PackedScene" uid="uid://b4sfnjx8u5o7u" path="res://asset/Dartboard by Jarlan Perez - drNqt_5ReeP.glb" id="2_model"]
@@ -16,41 +16,97 @@ size = Vector3(0.52, 0.52, 0.03)
 height = 0.04
 radius = 0.225
 
-[node name="Dartboard" type="Node3D"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xqkxl"]
+albedo_color = Color(0.41960785, 0.2901961, 0.18431373, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="BoxMesh_qlxjl"]
+size = Vector3(0.6, 0.04, 0.45)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bw4gv"]
+size = Vector3(0.08, 1.75, 0.08)
+
+[sub_resource type="BoxMesh" id="BoxMesh_uv6pm"]
+size = Vector3(0.52, 0.52, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qdd4h"]
+albedo_color = Color(0.9490196, 0.9372549, 0.9019608, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rfuv4"]
+size = Vector3(0.9, 0.006, 0.05)
+
+[node name="Dartboard" type="Node3D" unique_id=77710071]
 script = ExtResource("1_board")
 
-[node name="Model" parent="." instance=ExtResource("2_model")]
+[node name="Model" parent="." unique_id=1152892045 instance=ExtResource("2_model")]
 transform = Transform3D(-1.1370013e-08, 0, -0.2601156, 0, 0.2601156, 0, 0.2601156, 0, -1.1370013e-08, -0.0009926952, 1.7016054, -0.0065084565)
 
-[node name="StaticSurface_Stand" type="StaticBody3D" parent="."]
+[node name="StaticSurface_Stand" type="StaticBody3D" parent="." unique_id=1788567257]
 
-[node name="Base" type="CollisionShape3D" parent="StaticSurface_Stand"]
+[node name="Base" type="CollisionShape3D" parent="StaticSurface_Stand" unique_id=144936120]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, -0.1)
 shape = SubResource("Shape_Base")
 
-[node name="Pole" type="CollisionShape3D" parent="StaticSurface_Stand"]
+[node name="Pole" type="CollisionShape3D" parent="StaticSurface_Stand" unique_id=364366348]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, -0.08)
 shape = SubResource("Shape_Pole")
 
-[node name="Back" type="CollisionShape3D" parent="StaticSurface_Stand"]
+[node name="Back" type="CollisionShape3D" parent="StaticSurface_Stand" unique_id=871705760]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -0.035)
 shape = SubResource("Shape_Back")
 
-[node name="StaticSurface_Target" type="StaticBody3D" parent="."]
+[node name="StaticSurface_Target" type="StaticBody3D" parent="." unique_id=660368129]
 collision_layer = 4
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Target"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Target" unique_id=1935871760]
 transform = Transform3D(1, 0, 0, 0, -4e-08, -1, 0, 1, -4e-08, 0, 1.5, 0)
 shape = SubResource("Shape_Target")
 
-[node name="SpawnPlaceholders" type="Node3D" parent="."]
+[node name="SpawnPlaceholders" type="Node3D" parent="." unique_id=435960602]
 
-[node name="Placeholder_Dart_0" type="Node3D" parent="SpawnPlaceholders"]
+[node name="Placeholder_Dart_0" type="Node3D" parent="SpawnPlaceholders" unique_id=1200677533]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.5, 2.67)
 
-[node name="Placeholder_Dart_1" type="Node3D" parent="SpawnPlaceholders"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0.5, 2.67)
+[node name="Placeholder_Dart_1" type="Node3D" parent="SpawnPlaceholders" unique_id=1163538541]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 2.67)
 
-[node name="Placeholder_Dart_2" type="Node3D" parent="SpawnPlaceholders"]
+[node name="Placeholder_Dart_2" type="Node3D" parent="SpawnPlaceholders" unique_id=1031118071]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 0.5, 2.67)
+
+[node name="DeGia" type="MeshInstance3D" parent="." unique_id=1733392330]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, -0.1)
+material_override = SubResource("StandardMaterial3D_xqkxl")
+mesh = SubResource("BoxMesh_qlxjl")
+
+[node name="TruGia" type="MeshInstance3D" parent="." unique_id=288897137]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, -0.08)
+material_override = SubResource("StandardMaterial3D_xqkxl")
+mesh = SubResource("BoxMesh_bw4gv")
+
+[node name="LungBia" type="MeshInstance3D" parent="." unique_id=2095264026]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -0.035)
+material_override = SubResource("StandardMaterial3D_xqkxl")
+mesh = SubResource("BoxMesh_uv6pm")
+
+[node name="VachNem" type="MeshInstance3D" parent="." unique_id=775838705]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.003, 2.37)
+material_override = SubResource("StandardMaterial3D_qdd4h")
+mesh = SubResource("BoxMesh_rfuv4")
+
+[node name="ChuVachNem" type="Label3D" parent="." unique_id=704828659]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 2.37)
+pixel_size = 0.002
+billboard = 1
+text = "VACH NEM"
+font_size = 28
+outline_size = 8
+
+[node name="Bang" type="Label3D" parent="." unique_id=1826583922]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.15, 0)
+pixel_size = 0.0028
+billboard = 1
+text = "PHI TIEU
+đứng sau vạch, giữ E rồi thả để ném"
+font_size = 36
+outline_size = 10

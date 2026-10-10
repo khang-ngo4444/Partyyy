@@ -1,21 +1,14 @@
 class_name WhackAMole
 extends Node3D
 
-## Dap chuot chui. Choi TREN CHINH MODEL MAY ARCADE "Whack em All": chuot nho len tu nam cai lo
-## co san tren mat may, khong dung ban tu dung nua.
-##
-## Mat may la mat BAC THANG nen khong the doan cho lo. Nam vi tri trong `LO_MAY` do bang tia
-## quet trong Godot: ban tia tu tren xuong khap mat may, gom cac diem lom 2-20 cm so voi xung
-## quanh, roi gom cum. Ket qua: hai lo o bac thap, ba lo o bac cao.
-##
-## Master gieo lo nao nho len va cham diem; moi may nhan NGUYEN trang thai (JSON) nen vao muon
-## hay doi master deu khong lech. Chuot chi la hinh ve: khong vat ly, khong replicator.
+## Đập chuột chũi trên model máy arcade "Whack em All": chuột nhô lên từ 5 lỗ có sẵn trên mặt máy.
+## Master gieo lỗ và chấm điểm, phát nguyên trạng thái JSON. Chuột chỉ là hình, không vật lý.
 
 enum Pha { CHO, DEM_NGUOC, CHOI, XONG }
 enum Lenh { BAT_DAU, LAM_LAI }
 
 
-## Cho nam cai lo tren mat may, do luc may cao CAO_DO met. Doi model la phai do lai.
+## Vị trí 5 lỗ (đo bằng tia quét khi máy cao CAO_DO). Đổi model thì đo lại.
 const LO_MAY := [
 	Vector3(-0.125, 0.534, -0.968),
 	Vector3(-0.125, 0.534, -0.693),
@@ -25,60 +18,56 @@ const LO_MAY := [
 ]
 const SO_LO := 5
 const CAO_DO := 1.6
-## Ban kinh mieng lo do duoc o CAO_DO.
+## Bán kính miệng lỗ ở CAO_DO.
 const BAN_KINH_LO := 0.045
-## Doan trong clip goc: dung yen ngo nghieng / bi dap (giay, clip dai 9.42 s).
+## Đoạn đứng yên / bị đập trong clip gốc (giây, clip dài 9.42 s).
 const DOAN_DUNG := [0.9, 3.4]
 const DOAN_DAP := [8.3, 8.8]
 
-## May cao bao nhieu met. Moi thu khac (lo, chuot, nut, bang diem) deu tinh theo so nay.
-## Scale lai node `May` trong scene thi sua ca so nay — lo, nut, bang deu do theo no.
+## Chiều cao máy (m); lỗ, chuột, nút, bảng tính theo số này. Scale node `May` thì sửa theo.
 @export var may_cao := 2.0
-## Hiep dai bao lau.
+## Độ dài hiệp, giây.
 @export var giay_hiep := 45.0
 @export var giay_dem_nguoc := 3.0
-## Chuot nam tren mat may bao lau roi tu thut xuong. De lau cho de dap.
+## Thời gian chuột ở trên trước khi thụt xuống.
 @export var chuot_len_min := 1.8
 @export var chuot_len_max := 3.2
-## Khoang cach giua hai lan nho len cua CUNG mot lo.
+## Nghỉ giữa hai lần nhô của cùng một lỗ.
 @export var nghi_min := 0.7
 @export var nghi_max := 1.8
-## Vung bua khi dang NGAM vao chuot thi trung: tia nhin di qua dinh chuot trong ban kinh nay.
-##
-## Khong do khoang cach tu dau bua toi chuot: tay nguoi choi chi voi toi ~0.6 m, ma cac lo chi
-## cach nhau khoang 0.3 m — ban kinh du lon de bat duoc se dap trung ca lo ben canh.
+## Trúng khi tia nhìn đi qua đỉnh chuột trong bán kính này (không đo từ đầu búa vì lỗ quá gần nhau).
 @export var ban_kinh_ngam := 0.3
-## Xa hon chung nay thi khong voi toi.
+## Xa hơn chừng này thì không với tới.
 @export var tam_voi := 3.0
 
 var _pha := Pha.CHO
-## Bit thu i = lo i dang co chuot.
+## Bit i = lỗ i đang có chuột.
 var _len := 0
 var _diem: Dictionary = {}
 var _moc := 0.0
-## "id,id:diem" cua nguoi thang, rong = chua ai dap trung.
+## "id,id:diem" của người thắng, rỗng = chưa ai đập trúng.
 var _thang := ""
 
-## Master: giay (dong ho may master) toi luc lo i doi trang thai.
+## Master: giờ (đồng hồ master) lỗ i đổi trạng thái.
 var _han: Array[float] = []
 var _than: Array[Node3D] = []
 var _anim: Array[AnimationPlayer] = []
-var _bang: Label3D
-var _dem: Label3D
-var _no: CPUParticles3D
 var _giay_dem := -1
-## Xoay va dich cua model may — de doi toa do lo do duoc sang toa do node nay.
+## Xoay và dịch của model máy, để đổi toạ độ lỗ sang node này.
 var _goc_may := Basis.IDENTITY
 var _dich_may := Vector3.ZERO
+
+## Bảng, đếm ngược, pháo hoa, nút dựng sẵn trong whack_a_mole.tscn.
+@onready var _bang: Label3D = $Bang
+@onready var _dem: Label3D = $Dem
+@onready var _no: CPUParticles3D = $No
 
 
 func _ready() -> void:
 	add_to_group("whack_a_mole")
 	Fusion.register_broadcast_receiver(self)
-	_dung_may()        # phai chay truoc: cho dat chuot, nut, bang deu bam theo may
+	_dung_may()  # chạy trước: chuột, nút, bảng bám theo máy
 	_dung_chuot()
-	_dung_bang()
-	_dung_nut()
 	for i in SO_LO:
 		_han.append(0.0)
 	if not NetManager.is_master():
@@ -89,33 +78,32 @@ func _gio() -> float:
 	return Time.get_ticks_msec() / 1000.0
 
 
-## Ti le giua may that va luc do toa do lo.
+## Tỉ lệ giữa máy thật và lúc đo lỗ.
 func _ti() -> float:
 	return may_cao / CAO_DO
 
 
-## Do cao mat choi (mieng lo thap nhat).
+## Độ cao mặt chơi (miệng lỗ thấp nhất).
 func _mat_choi() -> float:
 	return LO_MAY[0].y * _ti()
 
 
-## Con chuot cao bao nhieu: vua long mieng lo.
+## Chiều cao con chuột, vừa lòng miệng lỗ.
 func _cao_chuot() -> float:
 	return BAN_KINH_LO * 3.6 * _ti()
 
 
-## Chuot nho len cao hon MIENG LO chung nay. Toa do lo do duoc la DAY hom lom, khong phai mat
-## may: dat chuot ngang do thi no dung thut trong hom, chi tho mot mau long len.
+## Chuột nhô cao hơn đáy lỗ chừng này.
 func _len_cao() -> float:
 	return _cao_chuot() * 0.6
 
 
-## Cho cua lo thu i trong toa do node nay (da tinh ca xoay va dich cua may).
+## Vị trí lỗ i trong toạ độ node này.
 func _cho_lo(i: int) -> Vector3:
 	return _goc_may * (LO_MAY[i] * _ti()) + _dich_may
 
 
-# ---------------------------------------------------------------- mang
+# ─── mạng ───
 
 func _xin(lenh: int) -> void:
 	Fusion.rpc(_net_xin, lenh, NetManager.local_id())
@@ -153,7 +141,7 @@ func _net_xin(lenh: int, _nguoi: int) -> void:
 				_phat("lam_lai")
 
 
-## May cua nguoi vung bua goi: tia nhin cua ho co di qua con chuot nao dang len khong.
+## Máy người vung búa gọi: tia nhìn có đi qua con chuột nào đang lên không.
 func thu_dap(goc: Vector3, huong: Vector3, nguoi: int) -> void:
 	if _pha != Pha.CHOI:
 		return
@@ -218,7 +206,7 @@ func _net_trang_thai(json: String) -> void:
 	_hieu_ung(str(g.get("su_kien", "")))
 
 
-# ---------------------------------------------------------------- luat (master)
+# ─── luật (master) ───
 
 func _process(_delta: float) -> void:
 	_ve_bang()
@@ -259,9 +247,7 @@ func _process(_delta: float) -> void:
 		_phat("chuot")
 
 
-## Tra ve "id,id:diem" chu KHONG phai cau tieng Viet: ten nguoi do MAY NHAN doi ra, khong phai
-## master. Master gui cau san thi may khac in ra ten cua thoi diem master tinh (da gap: bang
-## bao "#1 THANG" vi luc do master chua kip co ten nguoi do).
+## Trả "id,id:diem"; máy nhận tự đổi ra tên (master có thể chưa có tên người đó).
 func _ai_thang() -> String:
 	var cao := 0
 	var ids: PackedStringArray = []
@@ -277,7 +263,7 @@ func _ai_thang() -> String:
 	return "%s:%d" % [",".join(ids), cao]
 
 
-## Doi "id,id:diem" ra cau de hien len bang.
+## Đổi "id,id:diem" ra câu hiện lên bảng.
 func _cau_thang() -> String:
 	if _thang == "":
 		return "KHONG AI DAP TRUNG CON NAO"
@@ -290,7 +276,7 @@ func _cau_thang() -> String:
 	return "%s THANG - %s CHUOT" % [" & ".join(ten), doi[1]]
 
 
-# ---------------------------------------------------------------- hien thi
+# ─── hiển thị ───
 
 func _dinh_chuot(i: int) -> Vector3:
 	return to_global(_cho_lo(i) + Vector3.UP * (_len_cao() + _cao_chuot() * 0.5))
@@ -311,12 +297,11 @@ func _cap_nhat_chuot(truoc: int) -> void:
 			than.visible = true
 			_dien(i, DOAN_DUNG, true)
 		else:
-			# Lo tren may chi lom vai xang-ti-met, dung tren cao van nhin thay — an han cho chac.
+			# Lỗ chỉ lõm vài cm, nhìn từ trên vẫn thấy — ẩn hẳn.
 			tw.tween_callback(func(): than.visible = false)
 
 
-## Chay mot doan cua clip goc. File chi co MOT animation 9.42 s gom ca nho len, ngo nghieng va
-## bi dap — cat doan bang play_section chu khong sua file.
+## Chạy một đoạn của clip gốc bằng `play_section`.
 func _dien(i: int, doan: Array, lap: bool) -> void:
 	if i >= _anim.size():
 		return
@@ -384,26 +369,24 @@ func _hieu_ung(su_kien: String) -> void:
 			_no.restart()
 
 
-## Tiếng sự kiện: node `Tieng/<ten>` (AudioStreamPlayer3D) trong scene — đổi âm thanh trong Inspector,
-## không sửa code. Bộ nhiều biến thể dùng AudioStreamRandomizer.
+## Phát `Tieng/<ten>` (AudioStreamPlayer3D trong scene).
 func _keu(ten: String) -> void:
 	var loa := get_node_or_null("Tieng/" + ten) as AudioStreamPlayer3D
 	if loa != null:
 		loa.play()
 
 
-# ---------------------------------------------------------------- dung hinh
+# ─── dựng hình ───
 
 
-## May arcade: node `May` trong whack_a_mole.tscn, mat choi huong ve +Z. Lo, chuot, nut, bang
-## deu bam theo xoay/dich cua node do. Va cham may: StaticSurface_Machine (826 tam giac bake tu model).
+## Máy arcade: node `May`, mặt chơi hướng +Z; va chạm StaticSurface_Machine.
 func _dung_may() -> void:
 	var may := $May as Node3D
 	_goc_may = Basis(Vector3.UP, may.rotation.y)
 	_dich_may = may.position
 
 
-## Chuot: `Lo0`..`Lo4` / `Than` / `Chuot` trong whack_a_mole.tscn. `Than` an san, truot len xuong khi choi.
+## Chuột: `Lo0`..`Lo4` / `Than` / `Chuot`; `Than` ẩn sẵn, trượt lên xuống khi chơi.
 func _dung_chuot() -> void:
 	for i in SO_LO:
 		var than := get_node("Lo%d/Than" % i) as Node3D
@@ -412,83 +395,3 @@ func _dung_chuot() -> void:
 		_anim.append(ap)
 		if ap != null:
 			_dien(i, DOAN_DUNG, true)
-
-
-func _dung_bang() -> void:
-	_bang = Label3D.new()
-	_bang.font_size = 40
-	_bang.pixel_size = 0.003
-	_bang.outline_size = 10
-	_bang.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	_bang.position = Vector3(0.0, may_cao + 0.35, 0.4)
-	add_child(_bang)
-
-	_dem = Label3D.new()
-	_dem.font_size = 120
-	_dem.pixel_size = 0.004
-	_dem.outline_size = 20
-	_dem.modulate = Color("f5d90a")
-	_dem.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	_dem.position = Vector3(0.0, may_cao * 0.6, 0.8)
-	_dem.visible = false
-	add_child(_dem)
-
-	_no = CPUParticles3D.new()
-	_no.emitting = false
-	_no.one_shot = true
-	_no.amount = 30
-	_no.lifetime = 0.7
-	_no.explosiveness = 0.9
-	_no.direction = Vector3.UP
-	_no.spread = 60.0
-	_no.initial_velocity_min = 1.2
-	_no.initial_velocity_max = 2.5
-	_no.top_level = true
-	var hat := SphereMesh.new()
-	hat.radius = 0.018
-	hat.height = 0.036
-	var hm := StandardMaterial3D.new()
-	hm.albedo_color = Color("f5d90a")
-	hm.emission_enabled = true
-	hm.emission = Color("f5d90a")
-	hm.emission_energy_multiplier = 2.0
-	hat.material = hm
-	_no.mesh = hat
-	add_child(_no)
-
-
-func _dung_nut() -> void:
-	var packed := load("res://lobby/objects/pressable.tscn") as PackedScene
-	var x := 0.85
-	for cap in [["WhackBatDau", "BAT DAU", Color("46a758"), Lenh.BAT_DAU, 0.22],
-			["WhackLamLai", "LAM LAI", Color("f76b15"), Lenh.LAM_LAI, -0.22]]:
-		var b: Pressable = packed.instantiate()
-		b.name = cap[0]
-		b.label = cap[1]
-		b.color = cap[2]
-		b.compact = true
-		b.button_scale = 0.6
-		b.label_size = 30
-		b.press_range = 2.6
-		b.position = Vector3(x, _mat_choi(), cap[4])
-		b.pressed.connect(_xin.bind(cap[3]))
-		add_child(b)
-	_hop(Vector3(x, (_mat_choi() - 0.05) * 0.5, 0.0),
-			Vector3(0.45, _mat_choi() - 0.05, 0.8), _mat(Color("3d4150")))
-	# Va cham bang nut: StaticSurface_ButtonStand trong whack_a_mole.tscn.
-
-
-func _hop(vt: Vector3, kt: Vector3, mat: Material) -> void:
-	var mi := MeshInstance3D.new()
-	var bm := BoxMesh.new()
-	bm.size = kt
-	mi.mesh = bm
-	mi.material_override = mat
-	mi.position = vt
-	add_child(mi)
-
-
-func _mat(c: Color) -> StandardMaterial3D:
-	var m := StandardMaterial3D.new()
-	m.albedo_color = c
-	return m

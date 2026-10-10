@@ -1,46 +1,12 @@
 extends MiniGame
 
-## Tank 1990 — đấu trường 2D, ai sống sót lâu nhất thắng.
-##
-## ## Script này KHÔNG dựng hình gì
-##
-## Bản đồ là `ban_do_tank.tscn`, xe là `xe_tang.tscn`, đạn là `dan.tscn` — kéo được trong
-## editor. Ở đây chỉ còn ba việc: đọc phím, phát gói mạng, và phán ai trúng đạn. Đổi bản đồ
-## thì trỏ node `BanDo` sang một scene khác, không sửa file này.
-##
-## ## Đồng bộ: chỉ gửi SỰ KIỆN, không gửi vị trí
-##
-## Xe tăng chạy TỐC ĐỘ ĐỀU theo đúng 4 hướng, và chỉ đổi khi người chơi bấm phím. Nghĩa là
-## giữa hai lần bấm, mọi máy tính ra CÙNG một vị trí mà không cần ai nói cho ai.
-##
-## Nên chỉ phát RPC khi có chuyện thật sự xảy ra: đổi hướng, bắn, trúng đạn, phá gạch. Một ván
-## 75 giây là vài chục gói tin, không phải vài nghìn.
-##
-## Gửi vị trí 15 lần/giây cho 8 xe là 120 gói/giây — một phần tư ngân sách 500 gói/giây của cả
-## phòng, cho MỘT minigame. Đoán trước được thì đừng gửi.
-##
-## Gói `_net_lai` có kèm toạ độ lúc đổi hướng để nắn lại sai lệch tích luỹ — máy nhận đặt xe
-## về đúng chỗ đó rồi chạy tiếp, không để trôi dần.
-##
-## ## Ai quyết ai chết
-##
-## NGƯỜI BỊ BẮN tự nhận. Mỗi máy chỉ kiểm đạn với xe CỦA CHÍNH MÌNH rồi phát `_net_trung`.
-## Không có trọng tài trung tâm, không tranh chấp — đúng nguyên tắc đang dùng cho nút lật bàn
-## cờ: "thứ gì đẩy người chơi đều rẻ, miễn là họ tự áp lên mình".
-##
-## ## Hạt giống còn dùng vào việc gì
-##
-## Bản đồ không còn sinh ngẫu nhiên nữa (xem `ban_do_tank.gd`), nên hạt giống chỉ còn XOAY
-## danh sách chỗ sinh: ván nào cũng khác góc xuất phát mà mọi máy vẫn chia y hệt nhau.
+## Tank 1990 — đấu trường 2D, sống lâu nhất thắng; trúng một phát là ra.
+## Chỉ gửi sự kiện (đổi hướng kèm toạ độ, bắn, trúng, phá gạch); người bị bắn tự nhận.
 
 const GIAY_VAN := 75.0
 const CO_DAN := 8.0
-#
-# MOT PHAT CHET — khong co mau, khong hoi sinh. Trung la ra, hang tinh theo thu tu chet.
-# Luat nay ep nguoi choi phai nap sau tuong gach thay vi lao vao nhau, va giu van ngan du
-# de chay giua hai luot ban co.
 
-## Kéo trong `tank_battle.tscn`. Xe và đạn sinh ra giữa ván nên chỉ có cách giữ PackedScene.
+## Xe và đạn sinh giữa ván.
 @export var xe_scene: PackedScene
 @export var dan_scene: PackedScene
 
@@ -62,11 +28,9 @@ func _ready() -> void:
 	ten = "TANK 1990"
 	luat = "WASD di chuyển · J hoặc Space bắn · sống sót lâu nhất thắng"
 	Fusion.register_broadcast_receiver(self)
-	# BAT BUOC go dang ky khi ra khoi cay. Minigame duoc tao moi va xoa di sau MOI van;
-	# khong go thi moi van de lai mot receiver da chet ma Fusion van goi RPC vao.
+	# Phải gỡ đăng ký RPC khi rời cây (mỗi ván tạo mới).
 	tree_exiting.connect(func(): Fusion.unregister_broadcast_receiver(self))
-	# Canh giữa màn hình. Tính theo kích thước bản đồ chứ không nướng sẵn số, để bản đồ khác
-	# kích thước vẫn nằm giữa.
+	# Canh giữa màn hình theo kích thước bản đồ.
 	_san.position = (get_viewport().get_visible_rect().size - _ban_do.kich_thuoc()) * 0.5
 	set_process(false)
 
@@ -82,8 +46,7 @@ func bat_dau(nguoi_choi: Array, hat_giong: int) -> void:
 		var xe: XeTang = xe_scene.instantiate()
 		_lop_xe.add_child(xe)
 		xe.khoi_tao(NetManager.color_for(_chi_so_mau(id)), id == NetManager.local_id())
-		# Chỗ sinh cố định nhưng XOAY theo hạt giống: ván nào cũng khác góc xuất phát, mà
-		# mọi máy vẫn chia y hệt nhau vì cùng một hạt.
+		# Chỗ sinh xoay theo hạt giống.
 		xe.lai(Vector2i.ZERO, cho[posmod(i + hat_giong, cho.size())])
 		_xe[id] = xe
 	_het_luc = _gio() + GIAY_VAN
@@ -97,7 +60,7 @@ func dung_som() -> void:
 	_don_sach()
 
 
-# ───────────────────────────── vòng chơi ─────────────────────────────
+# ─── vòng chơi ───
 
 func _process(delta: float) -> void:
 	if not _chay:
@@ -117,7 +80,7 @@ func _doc_phim() -> void:
 	if xe == null or not xe.song:
 		return
 	var h := Vector2i.ZERO
-	# Một hướng tại một thời điểm — Tank 1990 không đi chéo.
+	# Một hướng tại một thời điểm (không đi chéo).
 	if Input.is_key_pressed(KEY_W):
 		h = Vector2i(0, -1)
 	elif Input.is_key_pressed(KEY_S):
@@ -128,12 +91,11 @@ func _doc_phim() -> void:
 		h = Vector2i(1, 0)
 	if h != _huong_cu:
 		_huong_cu = h
-		# Kèm toạ độ để máy nhận nắn lại sai lệch đã trôi, thay vì chỉ đổi hướng.
+		# Kèm toạ độ để máy nhận nắn lại.
 		Fusion.rpc(_net_lai, toi, h, xe.position)
 	if Input.is_key_pressed(KEY_J) or Input.is_key_pressed(KEY_SPACE):
 		if xe.san_sang_ban(_gio()):
-			# Ghi giờ NGAY ở đây chứ không đợi gói quay về: gói đi một vòng mạng mất cả trăm
-			# mili-giây, đủ để khung hình sau bắn thêm một phát nữa.
+			# Ghi giờ ngay, không đợi gói quay về.
 			xe.ghi_ban(_gio())
 			Fusion.rpc(_net_ban, toi, xe.position, xe.huong)
 
@@ -147,13 +109,12 @@ func _cham_dan() -> void:
 			d.queue_free()                             # đạn tan, tường thép không vỡ
 			continue
 		if l == OTuong.Loai.GACH:
-			# AI CŨNG tính ra cùng ô gạch, nhưng chỉ CHỦ VIÊN ĐẠN phát lệnh phá — mười máy
-			# cùng phát là mười gói tin cho một viên gạch.
+			# Chỉ chủ viên đạn phát lệnh phá gạch.
 			if d.chu == toi:
 				Fusion.rpc(_net_pha, _ban_do.chi_so_tai(d.position))
 			d.queue_free()
 			continue
-		# Trúng xe: chỉ kiểm XE CỦA MÌNH. Người bị bắn tự nhận, không cần trọng tài.
+		# Chỉ kiểm xe của mình.
 		if xe_toi != null and xe_toi.song and d.chu != toi:
 			if d.position.distance_to(xe_toi.position) < (XeTang.CO + CO_DAN) * 0.5:
 				Fusion.rpc(_net_trung, toi)
@@ -167,7 +128,7 @@ func _ket_thuc() -> void:
 	set_process(false)
 	for d in _lop_dan.get_children():
 		d.queue_free()                                 # đạn đang bay không được giết thêm ai
-	# Chết SAU = hạng CAO hơn. Ai còn sống lúc hết giờ đứng trên cùng.
+	# Chết sau = hạng cao hơn.
 	var hang := _con_lai.duplicate()
 	var nguoc := _chet_theo.duplicate()
 	nguoc.reverse()
@@ -181,7 +142,7 @@ func _don_sach() -> void:
 	_xe.clear()
 
 
-# ───────────────────────────── gói mạng ─────────────────────────────
+# ─── gói mạng ───
 
 @rpc("any_peer", "call_local")
 func _net_lai(id: int, h: Vector2i, vi: Vector2) -> void:

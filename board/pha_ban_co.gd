@@ -1,83 +1,78 @@
 class_name PhaBanCo
 extends Node
 
-## Pha BÀN PARTY: tới lượt thì tung xúc xắc, đi, ăn hiệu ứng của ô dừng chân. Hết một vòng
-## lượt thì sang minigame.
-##
-##   phòng chờ  →  BÀN PARTY (tung xúc xắc)  →  minigame  →  bàn party (thứ tự lượt mới)
-##
-## ## Việc của file này: MẠNG và CÂY SCENE. Luật chơi nằm ở `LuatBan`.
-##
-## ## Ai quyết — MASTER, và phát NGUYÊN trạng thái
-##
-## Đúng mẫu mục 8 của `GUIDE.md`. Người chơi chỉ XIN (tung xúc xắc, xin dùng đồ); master kiểm
-## luật, cập nhật, rồi phát TOÀN BỘ trạng thái bằng một gói JSON.
-##
-## Vì sao không để mỗi máy tự diễn lại luật: máu, chìa, cốc, vật phẩm là trạng thái TÍCH LUỸ.
-## Một gói rớt là lệch vĩnh viễn. Phát nguyên gói thì gói sau ghi đè gói trước, người vào muộn
-## chỉ cần đúng một gói, và đổi master giữa ván không mất gì.
-##
-## Tám người ra khoảng 800 byte một gói — GUIDE đã đo `String` RPC 3000 byte tới đủ. An toàn,
-## miễn là chỉ phát khi CÓ SỰ KIỆN, mỗi lượt vài gói, không phát mỗi frame.
-##
-## ## Bàn nằm ở đâu
-##
-## Trên trời, `CAO_BAN` mét phía trên phòng chờ. Phòng chờ là một cái đĩa 36 m đầy bàn ghế và
-## tường va chạm; nhét bàn party vào đó là phải đi dọn chỗ. Đặt lên cao thì hai nơi không bao
-## giờ đụng nhau, và đi lại giữa chúng chỉ là một phép gán toạ độ.
+## Pha 2 — bàn party: tung xúc xắc, đi, ăn hiệu ứng ô; hết vòng thì sang minigame.
+## Master giữ luật và phát NGUYÊN trạng thái (`tt`) cho cả phòng bằng một gói JSON.
+## Luật nằm ở các file `luat_*.gd`; file này lo mạng, lượt đi và cây scene.
 
 signal het_vong(thu_tu_cu: Array)
-## Trạng thái vừa đổi. HUD nghe tín hiệu này, không đọc thẳng vào đây.
+
+## Trạng thái vừa đổi (HUD nghe).
 signal trang_thai_doi(tt: Dictionary)
-## Nhắc riêng cho HUD cục bộ trong lúc người chơi chọn lộ trình sau khi tung xúc xắc.
+
+## Dòng nhắc cho HUD lúc chọn hướng.
 signal chon_huong_doi(noi_dung: String)
-## Có người mở đúng rương — HẾT VÁN. Phát trên MỌI máy, vì gói trạng thái mang cờ
-## `thang`. Người điều phối (`main.gd`) lo phần đóng bàn và trả cả phòng về phòng chờ.
+
+## Gói mang theo một hiệu ứng dùng đồ; `DungDo` dựng scene hiệu ứng và gán `hieu_ung_dang_dien`.
+## Chỉ phát một lần mỗi gói.
+signal hieu_ung(fx: Dictionary)
+
+## Hết ván (cờ `thang` trong gói); `main.gd` đóng bàn.
 signal van_thang(id: int)
 
 const CAO_BAN := 100.0
-## Đi một ô mất bao lâu, giây.
 const GIAY_MOI_O := 0.22
-## Nghỉ sau khi một người đi xong, trước khi tới lượt kế.
 const NGHI_GIUA_LUOT := 0.8
-## Gốc Player nằm ngay dưới chân. Mặt cao nhất của ô (vành Torus) ở khoảng +0.31 m so với
-## gốc OBan, nên đặt chân ở +0.32 m; giá trị 0.9 cũ làm nhân vật lơ lửng hơn nửa mét.
+
+## Chân nhân vật cao hơn gốc ô chừng này (mặt ô ~0.31 m).
 const CAO_DUNG := 0.32
-## Nhiều người cùng một ô thì đứng cách tâm ô chừng này. Ô rộng 1.4 m nên 0.45 là vừa trong mép.
+
+## Nhiều người chung ô thì đứng cách tâm chừng này.
 const BAN_KINH_DUNG := 0.45
-## Tầm tính từ người bắn tới mục tiêu. Tia ngắm bắt đầu ở camera để khớp đúng tâm màn hình.
-const TAM_SUNG := 35.0
-const XUC_XAC_SCENE: PackedScene = preload("res://board/xuc_xac_3d.tscn")
 
-## Bàn party là một SCENE RIÊNG, nạp vào khi cần. Đổi bản đồ = trỏ export này sang scene khác.
-@export var ban_scene: PackedScene = preload("res://board/ban_party.tscn")
+## Phóng to hình quân cờ (chỉ hình, không đổi va chạm).
+const TO_BAN := 1.35
 
-## Chủ phòng khóa cấu hình này trước khi mọi người vào sảnh.
+@export var ban_scene: PackedScene = null
+@export var xuc_xac_scene: PackedScene = null
+@export var hai_xuc_xac_scene: PackedScene = null
+
 var settings: Dictionary = GameplaySettings.defaults()
 
-## Toàn bộ trạng thái bàn. Master giữ bản gốc, máy khác nhận nguyên gói.
+## Trạng thái bàn: master giữ bản gốc, máy khác nhận nguyên gói.
 var tt: Dictionary = {}
 var ban: BanDuong = null
-## Tạm ngưng nhận phím và ngưng chốt lượt. Người điều phối (`main.gd`) bật cờ này khi có lớp
-## khác đang phủ lên trên — bàn không cần biết lớp đó là cái gì, chỉ cần biết mình đang bị che.
+
+## Scene hiệu ứng vừa được dựng cho gói này (do `DungDo` gán lúc phát `hieu_ung`). Quân cờ chỉ
+## bị giật về ô khi hiệu ứng báo `cham`, để người bị kéo/hoán đổi không dịch chuyển trước hình.
+var hieu_ung_dang_dien: HieuUng = null
+
+## Có lớp khác (minigame, bảng thắng) đang phủ lên bàn.
 var tam_dung := false
 var _dang_di := false
 var _dang_chon := false
 var _dice_ready := false
 var _id_dang_tung := -1
 var _so_dang_tung := 0
-var _cac_duong: Array[PackedInt32Array] = []
+
+## Các hướng ở ngã rẽ đang chờ chọn.
+var _cac_huong := PackedInt32Array()
 var _lua_chon := 0
+
+## Đang diễn một đoạn đi; đoạn sau phải chờ.
+var _dang_dien := false
 var _thue_token := 0
-## Góc ngắm là trạng thái CỤC BỘ, không thể suy ra đơn giản bằng "còn súng trong túi": nếu
-## có hai khẩu thì bắn một khẩu xong vẫn còn đồ, nhưng camera vẫn phải trở về góc thứ ba.
-var _dang_ngam_sung_cuc_bo := false
-var _so_sung_truoc := 0
-## Xúc xắc là vật thể trình diễn cục bộ, gắn vào camera hiện hành. Kết quả vẫn tới từ cùng
-## RPC `_net_tung`, vì vậy mọi máy hiển thị đúng một con số và không thêm trạng thái mạng.
+
+## CHỈ master: phần còn lại của lượt đang đi.
+var _buoc_con := 0
+var _duong_luot: Array = []
+var _su_duong := ""
+var _o_cuoi := -1
+var _cho_master := PackedInt32Array()
 var _xuc_xac: Node3D = null
-## Hạt giống riêng của master cho ô Bí ẩn. KHÔNG replicate: chỉ master gieo, và kết quả đi
-## trong gói trạng thái nên mọi máy vẫn thấy y hệt.
+var _hai_xuc_xac: Node3D = null
+
+## RNG của master; kết quả đi trong gói nên mọi máy thấy giống nhau.
 var _rng := RandomNumberGenerator.new()
 
 
@@ -97,8 +92,8 @@ func dat_cai_dat(value: Dictionary) -> void:
 
 # ───────────────────────────── mở / đóng bàn ─────────────────────────────
 
-## Mở bàn. CHỈ master — hàm này tự phát RPC cho cả phòng, mười máy cùng gọi là mười lệnh mở.
-## `thu_tu_moi` rỗng = lần đầu, gom người chơi rồi trộn thứ tự.
+
+## CHỈ master. `thu_tu_moi` rỗng = lần đầu, trộn thứ tự ngẫu nhiên.
 func xin_mo(thu_tu_moi: Array) -> void:
 	if dang_chay() or not NetManager.is_master():
 		return
@@ -112,27 +107,27 @@ func xin_mo(thu_tu_moi: Array) -> void:
 		return
 	_bao_dam_co_ban()
 	var moi := LuatBan.trang_thai_moi(ds, {}, settings)
+	moi["so_vong"] = KinhTe.so_vong(ds.size(), settings)
 	_tao_mat_ban(moi)
 	_phat(moi, "Bắt đầu — thứ tự lượt đã được chọn ngẫu nhiên")
 
 
-## Thứ tự lượt vòng sau = bảng xếp hạng minigame. CHỈ master.
-##
-## ⚠️ Phải kiểm `dang_chay()`: minigame có thể chạy từ PHÒNG CHỜ chứ không chỉ từ bàn. Thiếu
-## dòng đó thì hết ván minigame là bàn party tự mở ra từ hư không và nhấc cả phòng lên trời —
-## đã đo được: người chơi kết thúc ở y = 100.9 m (`CAO_BAN + CAO_DUNG`) thay vì về phòng chờ.
+## CHỈ master: hết minigame → thưởng, sang vòng mới (hoặc hết ván).
 func xin_thu_tu_moi(xep_hang: Array) -> void:
 	if not NetManager.is_master() or xep_hang.is_empty() or not dang_chay():
 		return
-	var thuong := LuatBan.thuong_minigame(tt, xep_hang, settings)
-	_phat(LuatBan.trang_thai_moi(xep_hang, tt, settings), "Vòng mới · %s" % thuong)
+	var quai := LuatHieuUng.het_vong(tt, settings, ban, ten)
+	var thuong := _noi_su_kien(quai, KinhTe.thuong_minigame(tt, xep_hang, settings, _rng))
+	if int(tt.get("vong", 1)) >= int(tt.get("so_vong", 1)):
+		tt["thang"] = LuatRuong.nguoi_thang(tt)
+		_phat(tt, "Hết vòng · %s" % thuong)
+		return
+	var moi := LuatBan.trang_thai_moi(xep_hang, tt, settings)
+	moi["vong"] = int(moi["vong"]) + 1
+	_phat(moi, "Vòng %d/%d · %s" % [int(moi["vong"]), int(moi["so_vong"]), thuong])
 
 
-## Đóng bàn, xoá sạch trạng thái. Chạy trên MỌI máy khi hết ván.
-##
-## Phải xoá HẲN `tt` chứ không chỉ đặt `luot = -1`: `LuatBan.trang_thai_moi()` giữ lại giá trị
-## cũ của ai đã có, nên còn giữ `tt` là ván sau mở ra ai cũng đã sẵn 3 cốc và thắng ngay lập
-## tức. Ván mới là ván mới.
+## Đóng bàn, xoá sạch trạng thái (mọi máy).
 func dong() -> void:
 	tt = {}
 	_dang_di = false
@@ -140,11 +135,12 @@ func dong() -> void:
 	_dice_ready = false
 	_id_dang_tung = -1
 	_so_dang_tung = 0
-	_cac_duong.clear()
-	_dang_ngam_sung_cuc_bo = false
-	_so_sung_truoc = 0
+	_cac_huong = PackedInt32Array()
+	_cho_master = PackedInt32Array()
+	_dang_dien = false
 	chon_huong_doi.emit("")
-	tam_dung = false                    # đóng rồi thì không còn lớp nào che nữa
+	tam_dung = false
+	_camera_cua_toi()
 	_che_do_ban_co(false)
 	if ban != null and is_instance_valid(ban):
 		ban.queue_free()
@@ -152,13 +148,16 @@ func dong() -> void:
 	if _xuc_xac != null and is_instance_valid(_xuc_xac):
 		_xuc_xac.queue_free()
 	_xuc_xac = null
+	if _hai_xuc_xac != null and is_instance_valid(_hai_xuc_xac):
+		_hai_xuc_xac.queue_free()
+	_hai_xuc_xac = null
 	trang_thai_doi.emit(tt)
 
 
 # ───────────────────────────── mạng ─────────────────────────────
 
-## CHỈ master gọi. Gói đi tới mọi máy KỂ CẢ master (`call_local`) — một đường xử lý duy nhất,
-## không phải viết hai nhánh.
+
+## CHỈ master. Gói tới mọi máy, kể cả master (`call_local`).
 func _phat(moi: Dictionary, su_kien: String) -> void:
 	moi["su_kien"] = su_kien
 	moi["max_health"] = int(settings.get("max_health", 10))
@@ -172,44 +171,50 @@ func _net_trang_thai(json: String) -> void:
 	if not (g is Dictionary):
 		return
 	tt = g
-	_cap_nhat_trang_thai_ngam_sung()
 	if not dang_chay():
 		return
 	_bao_dam_co_ban()
 	_ap_mat_ban()
-	# Minigame đang phủ lên (`tam_dung`): chỉ nhận số liệu, KHÔNG kéo người về ô và KHÔNG khoá
-	# WASD. Có người rời phòng giữa minigame là master phát lại bàn (`_bo_khoi_vong`) — trước
-	# đây gói đó khoá cứng mọi nhân vật và nhấc họ từ sân về bàn. Hết minigame thì
-	# `xin_thu_tu_moi` phát gói mới, lúc đó mới đặt lại.
-	# Đang chạy animation đi thì đừng giật người về — gói này là bản chốt, animation sẽ tới
-	# đúng đó trong chớp mắt nữa.
+	# Hiệu ứng diễn trước khi quân cờ bị dời (Cần câu: móc bay tới, kéo về rồi mới chốt ô).
+	var fx = tt.get("hieu_ung")
+	tt.erase("hieu_ung")
+	hieu_ung_dang_dien = null
+	if fx is Dictionary:
+		hieu_ung.emit(fx)
+	var cho := hieu_ung_dang_dien
+	hieu_ung_dang_dien = null
+	# Minigame đang phủ: chỉ nhận số liệu. Đang diễn đoạn đi thì không giật người về ô.
 	if not tam_dung:
-		if not _dang_di:
-			for id in _thu_tu():
-				_dat_len_o(int(id), int(_bang("o").get(LuatBan.khoa(id), 0)))
 		_che_do_ban_co(true)
+		_sau_hieu_ung(cho)
 	trang_thai_doi.emit(tt)
 	if tt.has("thang"):
 		var id := int(tt["thang"])
 		van_thang.emit(id)
-		return                          # hết ván thì không còn vòng nào để chốt
+		return
 	if str(tt.get("su_kien", "")) == "het_vong":
 		het_vong.emit(_thu_tu())
 
 
-## Súng phải đọc ở `_input`: tâm ngắm là các Control nằm đúng giữa màn hình, nên chuột trái
-## có thể bị GUI đánh dấu đã xử lý trước khi tới `_unhandled_input`. Chỉ nhận lúc chuột đang
-## bị khoá vào game để không bắn xuyên qua menu Esc / menu thuế.
-func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT \
-			and event.pressed and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED \
-			and _co_the_ban_sung(NetManager.local_id()):
-		get_viewport().set_input_as_handled()
-		_xin_ban_sung()
+## Có hiệu ứng thì chờ nó báo `cham`, rồi giật mọi người về ô theo gói và chuyển camera.
+func _sau_hieu_ung(cho: HieuUng) -> void:
+	if cho != null and not cho.da_cham:
+		await cho.cham
+	_dat_moi_nguoi_len_o()
+	# Camera ở lại chỗ hiệu ứng cho tới khi nó diễn xong.
+	if cho != null and not cho.da_xong:
+		await cho.xong
+	_cap_nhat_camera()
 
 
-## Người tới lượt bấm phím: tự gieo số rồi phát cho cả phòng để mọi máy diễn lại cùng một
-## đoạn đi. Master áp luật ở cuối, xem `_ket_luot`.
+## Giật mọi người về ô theo gói (đang diễn đoạn đi thì thôi).
+func _dat_moi_nguoi_len_o() -> void:
+	if _dang_di or tam_dung or not dang_chay():
+		return
+	for id in _thu_tu():
+		_dat_len_o(int(id), int(_bang("o").get(LuatBan.khoa(id), 0)))
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	var thue: Dictionary = tt.get("thue", {}) as Dictionary
 	if not thue.is_empty() and int(thue.get("chu", -1)) == NetManager.local_id():
@@ -222,25 +227,26 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _dang_chon and _id_dang_tung == NetManager.local_id():
 		if event.is_action_pressed("move_left"):
 			get_viewport().set_input_as_handled()
-			_lua_chon = posmod(_lua_chon - 1, _cac_duong.size())
+			_lua_chon = posmod(_lua_chon - 1, _cac_huong.size())
 			_cap_nhat_lua_chon()
 			return
 		if event.is_action_pressed("move_right"):
 			get_viewport().set_input_as_handled()
-			_lua_chon = posmod(_lua_chon + 1, _cac_duong.size())
+			_lua_chon = posmod(_lua_chon + 1, _cac_huong.size())
 			_cap_nhat_lua_chon()
 			return
 		if event.is_action_pressed("jump") or event.is_action_pressed("interact"):
 			get_viewport().set_input_as_handled()
 			_dang_chon = false
-			chon_huong_doi.emit("Đã chọn — đang chờ xác nhận từ chủ phòng...")
-			Fusion.rpc(_net_xin_chon_duong, NetManager.local_id(), _lua_chon)
+			chon_huong_doi.emit("")
+			Fusion.rpc(_net_xin_huong, NetManager.local_id(), int(_cac_huong[_lua_chon]))
 			return
 	if not _den_luot_minh():
 		return
 	if event.is_action_pressed("jump") or event.is_action_pressed("interact"):
 		get_viewport().set_input_as_handled()
-		Fusion.rpc(_net_tung, NetManager.local_id(), randi() % 6 + 1)
+		# Luôn gieo hai hột; hột thứ hai chỉ dùng khi có Hai hột xí ngầu.
+		Fusion.rpc(_net_tung, NetManager.local_id(), randi() % 6 + 1, randi() % 6 + 1)
 
 
 func _den_luot_minh() -> bool:
@@ -249,110 +255,38 @@ func _den_luot_minh() -> bool:
 	return int(_thu_tu()[int(tt["luot"])]) == NetManager.local_id()
 
 
-func _co_the_ban_sung(id: int) -> bool:
+## Được dùng đồ: tới lượt, chưa tung, không bị che, ván chưa xong.
+func den_luot_dung_do(id: int) -> bool:
 	if not dang_chay() or tam_dung or _dang_di or _dang_chon or tt.has("thang"):
 		return false
 	if not (tt.get("thue", {}) as Dictionary).is_empty():
 		return false
-	return _co_sung_trong_tui(id)
+	var ds := _thu_tu()
+	var luot := int(tt.get("luot", -1))
+	return luot >= 0 and luot < ds.size() and int(ds[luot]) == id
 
 
-func _co_sung_trong_tui(id: int) -> bool:
-	return (_bang("do").get(LuatBan.khoa(id), []) as Array).has("sung_1_phat")
+## Tên người theo khoá chuỗi (Callable cho file luật).
+func ten(k: String) -> String:
+	return Player.ten_theo_id(get_tree(), int(k))
 
 
-func _xin_ban_sung() -> void:
-	var camera := get_viewport().get_camera_3d()
-	if camera == null:
-		return
-	var goc := camera.global_position
-	var huong := -camera.global_transform.basis.z.normalized()
-	var du_lieu := JSON.stringify({
-		"goc": [goc.x, goc.y, goc.z],
-		"huong": [huong.x, huong.y, huong.z],
-	})
-	# Phát súng một lần là kết thúc ngắm ngay trên máy người bắn. Không đợi một vòng RPC,
-	# và cũng không bật lại nếu trong túi còn khẩu thứ hai.
-	_dat_ngam_sung_cuc_bo(false)
-	Fusion.rpc(_net_xin_ban_sung, NetManager.local_id(), du_lieu)
-
-
-func _cap_nhat_trang_thai_ngam_sung() -> void:
-	var tui: Array = _bang("do").get(LuatBan.khoa(NetManager.local_id()), []) as Array
-	var so_sung := tui.count("sung_1_phat")
-	if so_sung > _so_sung_truoc:
-		_dang_ngam_sung_cuc_bo = true
-	elif so_sung < _so_sung_truoc or so_sung == 0:
-		_dang_ngam_sung_cuc_bo = false
-	_so_sung_truoc = so_sung
-	_ap_ngam_sung_cuc_bo()
-
-
-func _dat_ngam_sung_cuc_bo(bat: bool) -> void:
-	_dang_ngam_sung_cuc_bo = bat
-	_ap_ngam_sung_cuc_bo()
-
-
-func _ap_ngam_sung_cuc_bo() -> void:
-	for p: Player in get_tree().get_nodes_in_group("players"):
-		if p.is_mine and p.rig != null and is_instance_valid(p.rig):
-			p.rig.set_ngam_sung(dang_chay() and not tam_dung and _dang_ngam_sung_cuc_bo)
+## CHỈ master, sau khi dùng một món.
+func sau_khi_dung(id: int, su: String, ra: Dictionary) -> void:
+	var duong: Array = ra.get("duong", []) as Array
+	if not duong.is_empty():
+		LuatHieuUng.ghi_duong(tt, LuatBan.khoa(id), duong)
+		su = _noi_su_kien(su, _ruong_tren_duong(LuatBan.khoa(id), PackedInt32Array(duong)))
+	if ra.has("hieu_ung"):
+		tt["hieu_ung"] = ra["hieu_ung"]
+	if bool(ra.get("het_luot", false)):
+		_sang_luot(id, su)
+	else:
+		_phat(tt, su)
 
 
 @rpc("any_peer", "call_local")
-func _net_xin_ban_sung(id: int, json_du_lieu: String) -> void:
-	if not NetManager.is_master() or not _co_the_ban_sung(id):
-		return
-	var raw = JSON.parse_string(json_du_lieu)
-	if not (raw is Dictionary):
-		return
-	var goc_raw: Array = raw.get("goc", []) as Array
-	var huong_raw: Array = raw.get("huong", []) as Array
-	if goc_raw.size() != 3 or huong_raw.size() != 3:
-		return
-	var goc := Vector3(float(goc_raw[0]), float(goc_raw[1]), float(goc_raw[2]))
-	var huong := Vector3(float(huong_raw[0]), float(huong_raw[1]), float(huong_raw[2]))
-	var nguoi_ban := _nguoi(id)
-	if nguoi_ban == null or not goc.is_finite() or not huong.is_finite():
-		return
-	if goc.distance_to(nguoi_ban.global_position) > 22.0 or huong.length_squared() < 0.9:
-		return
-	huong = huong.normalized()
-	# Không so hướng này với `nhin_doc` replicate: ngay sau minigame, camera cục bộ đã trở về
-	# bàn nhưng góc nhìn trên máy master có thể còn chậm một gói mạng. Vị trí bắt đầu vẫn bị
-	# giới hạn quanh người bắn; master vẫn tự raycast, kiểm tầm và trừ đúng một khẩu trong túi.
-	var muc_tieu := _muc_tieu_sung(nguoi_ban, goc, huong)
-	var k_muc_tieu := "" if muc_tieu == null else LuatBan.khoa(muc_tieu.player_id())
-	var ket_qua := LuatBan.ban_sung(tt, LuatBan.khoa(id), k_muc_tieu,
-			int(settings.get("weapon_damage", 3)))
-	if not bool(ket_qua.get("da_ban", false)):
-		return
-	var su_kien := str(ket_qua.get("su_kien", ""))
-	if muc_tieu != null:
-		su_kien += " %s" % Player.ten_theo_id(get_tree(), muc_tieu.player_id())
-		if bool(ket_qua.get("chet", false)):
-			LuatBan.chet(tt, k_muc_tieu, settings)
-			su_kien += " · hồi sinh"
-	_phat(tt, "%s: %s" % [Player.ten_theo_id(get_tree(), id), su_kien])
-
-
-func _muc_tieu_sung(nguoi_ban: Player, goc: Vector3, huong: Vector3) -> Player:
-	var q := PhysicsRayQueryParameters3D.create(goc, goc + huong * 60.0,
-			Pickable.LOP_THE_GIOI | Player.LOP_NGUOI)
-	q.exclude = [nguoi_ban.get_rid()]
-	var trung := nguoi_ban.get_world_3d().direct_space_state.intersect_ray(q)
-	if trung.is_empty():
-		return null
-	var muc_tieu := trung.get("collider") as Player
-	if muc_tieu == null or muc_tieu.player_id() == nguoi_ban.player_id():
-		return null
-	if muc_tieu.global_position.distance_to(nguoi_ban.global_position) > TAM_SUNG:
-		return null
-	return muc_tieu
-
-
-@rpc("any_peer", "call_local")
-func _net_tung(id: int, so: int) -> void:
+func _net_tung(id: int, so: int, so_2: int) -> void:
 	if not dang_chay() or _dang_di or tam_dung:
 		return
 	if int(_thu_tu()[int(tt["luot"])]) != id:
@@ -360,118 +294,201 @@ func _net_tung(id: int, so: int) -> void:
 	_dang_di = true
 	_dice_ready = false
 	_id_dang_tung = id
-	_so_dang_tung = clampi(so, 1, 6)
-	await _hien_xuc_xac(id, so)
-	_dice_ready = true
-	_bat_dau_chon_duong(id, _so_dang_tung)
-
-
-func _bat_dau_chon_duong(id: int, so: int) -> void:
-	var k := LuatBan.khoa(id)
-	var bat_dau := int(_bang("o").get(k, 0))
-	_cac_duong = ban.cac_duong(bat_dau, so)
-	_lua_chon = 0
-	if _cac_duong.is_empty():
-		push_error("BanDuong: khong co lo trinh %d buoc tu o %d" % [so, bat_dau])
-		_dang_di = false
-		return
-	if _cac_duong.size() == 1:
-		if NetManager.is_master():
-			_phat_duong_di(id, _cac_duong[0])
-		return
-	_dang_chon = true
-	if id == NetManager.local_id():
-		_cap_nhat_lua_chon()
+	so = clampi(so, 1, 6)
+	_so_dang_tung = so
+	if str(tt.get("hai_hot", "")) == LuatBan.khoa(id):
+		so_2 = clampi(so_2, 1, 6)
+		_so_dang_tung += so_2
+		await _hien_hai_xuc_xac(id, so, so_2)
 	else:
-		chon_huong_doi.emit("%s đang chọn hướng đi..." % Player.ten_theo_id(get_tree(), id))
+		await _hien_xuc_xac(id, so)
+	_dice_ready = true
+	if NetManager.is_master():
+		_buoc_con = _so_dang_tung
+		_duong_luot = [int(_bang("o").get(LuatBan.khoa(id), 0))]
+		_su_duong = ""
+		_o_cuoi = -1
+		_di_tiep(id, -1)
 
 
-func _cap_nhat_lua_chon() -> void:
-	if ban == null or _cac_duong.is_empty():
-		return
-	ban.noi_bat_duong(_cac_duong, _lua_chon)
-	var d := _cac_duong[_lua_chon]
-	chon_huong_doi.emit("CHỌN LỘ TRÌNH  %d/%d  → ô %d    [A/D] đổi    [SPACE/E] xác nhận" % [
-			_lua_chon + 1, _cac_duong.size(), int(d[d.size() - 1])])
+## CHỈ master. Đi từng ô tới khi hết bước, vướng rào/bẫy, hoặc gặp ngã rẽ cần chọn.
+## Chiều đi (`tt.chieu`) chốt ở bước đầu ván — không bao giờ đi lùi.
+func _di_tiep(id: int, chon: int) -> void:
+	var k := LuatBan.khoa(id)
+	var o := int(_duong_luot[_duong_luot.size() - 1])
+	var doan := [o]
+	_cho_master = PackedInt32Array()
+	while _buoc_con > 0:
+		var chieu := int(_bang("chieu").get(k, 0))
+		var huong := ban.huong_di(o, chieu)
+		if huong.is_empty():
+			_buoc_con = 0
+			break
+		var toi := int(huong[0])
+		if huong.size() > 1:
+			if chon < 0 or not huong.has(chon):
+				_cho_master = huong
+				break
+			toi = chon
+			chon = -1
+		if chieu == 0:
+			_bang("chieu")[k] = ban.chieu_toi(o, toi)
+		var rao := LuatBay.vuong_rao(tt, k, toi, ten)
+		if not rao.is_empty():
+			_su_duong = _noi_su_kien(_su_duong, rao)
+			_buoc_con = 0
+			break
+		doan.append(toi)
+		o = toi
+		_buoc_con -= 1
+		var bay := LuatBay.giam_bay(tt, k, o, _buoc_con, settings, ten)
+		if not bay.is_empty():
+			_su_duong = _noi_su_kien(_su_duong, str(bay["su"]))
+			_buoc_con = int(bay["con"])
+			if int(bay["o_cuoi"]) >= 0:
+				_o_cuoi = int(bay["o_cuoi"])
+				_buoc_con = 0
+				break
+	_duong_luot.append_array(doan.slice(1))
+	Fusion.rpc(_net_di_doan, id, JSON.stringify({"doan": doan, "huong": Array(_cho_master)}))
 
 
+## Người tới lượt chọn hướng ở ngã rẽ.
 @rpc("any_peer", "call_local")
-func _net_xin_chon_duong(id: int, chi_so: int) -> void:
-	if not NetManager.is_master() or not dang_chay() or not _dang_di:
+func _net_xin_huong(id: int, o_chon: int) -> void:
+	if not NetManager.is_master() or id != _id_dang_tung or not _cho_master.has(o_chon):
 		return
-	if id != _id_dang_tung or int(_thu_tu()[int(tt["luot"])]) != id:
-		return
-	var bat_dau := int(_bang("o").get(LuatBan.khoa(id), 0))
-	var hop_le := ban.cac_duong(bat_dau, _so_dang_tung)
-	if chi_so < 0 or chi_so >= hop_le.size():
-		return
-	_phat_duong_di(id, hop_le[chi_so])
+	_di_tiep(id, o_chon)
 
 
-func _phat_duong_di(id: int, duong: PackedInt32Array) -> void:
-	Fusion.rpc(_net_di_theo_duong, id, JSON.stringify(Array(duong)))
-
-
+## Mọi máy diễn một đoạn đi; dừng ở ngã rẽ thì hiện mũi tên.
 @rpc("any_peer", "call_local")
-func _net_di_theo_duong(id: int, json_duong: String) -> void:
+func _net_di_doan(id: int, json: String) -> void:
 	if not dang_chay() or id != _id_dang_tung:
 		return
-	var raw = JSON.parse_string(json_duong)
-	if not (raw is Array):
+	var raw = JSON.parse_string(json)
+	if not (raw is Dictionary):
 		return
-	var duong := PackedInt32Array()
-	for o in raw:
-		duong.append(int(o))
-	var bat_dau := int(_bang("o").get(LuatBan.khoa(id), 0))
-	if not ban.duong_hop_le(bat_dau, duong, _so_dang_tung):
-		return
-	while not _dice_ready:
+	var doan := PackedInt32Array()
+	for o in raw.get("doan", []):
+		doan.append(int(o))
+	var huong := PackedInt32Array()
+	for o in raw.get("huong", []):
+		huong.append(int(o))
+	while not _dice_ready or _dang_dien:
 		await get_tree().process_frame
+	_dang_dien = true
 	_dang_chon = false
+	_cac_huong = PackedInt32Array()
 	chon_huong_doi.emit("")
-	ban.xoa_noi_bat()
-	await _di_theo_duong(id, duong)
-	var so_da_tung := _so_dang_tung
+	if ban != null:
+		ban.hien_mui_ten(0, _cac_huong, 0)
+	await _di_theo_duong(id, doan)
+	_dang_dien = false
+	if not huong.is_empty():
+		_cac_huong = huong
+		_lua_chon = 0
+		_dang_chon = true
+		_cap_nhat_lua_chon()
+		return
 	_dang_di = false
 	_id_dang_tung = -1
 	_so_dang_tung = 0
-	_cac_duong.clear()
 	if NetManager.is_master():
 		await get_tree().create_timer(NGHI_GIUA_LUOT).timeout
-		_ket_luot(id, so_da_tung)
+		_ket_luot(id, _duong_luot.size() - 1, PackedInt32Array(_duong_luot))
 
 
-## Hiển thị cùng một xúc xắc 3D trước camera từng máy. Nó nảy, xoay rồi dừng đúng mặt
-## `so`; chỉ sau khi người chơi đọc được kết quả quân cờ mới bắt đầu đi.
+func _cap_nhat_lua_chon() -> void:
+	if ban == null or _cac_huong.is_empty():
+		return
+	var o := int(_bang("o").get(LuatBan.khoa(_id_dang_tung), 0))
+	ban.hien_mui_ten(o, _cac_huong, _lua_chon)
+	if _id_dang_tung == NetManager.local_id():
+		chon_huong_doi.emit("NGÃ RẼ — chọn hướng  %d/%d    [A/D] đổi    [SPACE/E] đi" % [
+				_lua_chon + 1, _cac_huong.size()])
+	else:
+		chon_huong_doi.emit("%s đang chọn hướng..." % Player.ten_theo_id(get_tree(),
+				_id_dang_tung))
+
+
+## Lượt mình: camera của mình (để ngắm đồ). Lượt người khác: camera bàn bám họ.
+func _cap_nhat_camera() -> void:
+	if ban == null or tam_dung or tt.has("thang"):
+		return
+	var ds := _thu_tu()
+	var luot := int(tt.get("luot", -1))
+	if luot < 0 or luot >= ds.size():
+		return
+	var id := int(ds[luot])
+	if id == NetManager.local_id():
+		_camera_cua_toi()
+	else:
+		ban.camera_ban.theo(nguoi(id))
+
+
+## Camera về đúng chỗ theo lượt hiện tại (sau khi camera bàn bám mục tiêu / hiệu ứng).
+func dat_lai_camera() -> void:
+	_cap_nhat_camera()
+
+
+func _camera_cua_toi() -> void:
+	for p: Player in get_tree().get_nodes_in_group("players"):
+		if p.is_mine and p.rig != null and is_instance_valid(p.rig):
+			p.rig.make_current()
+
+
 func _hien_xuc_xac(id: int, so: int) -> void:
 	var camera := get_viewport().get_camera_3d()
 	if camera == null:
 		await get_tree().create_timer(0.6).timeout
 		return
-	if _xuc_xac == null or not is_instance_valid(_xuc_xac):
-		_xuc_xac = XUC_XAC_SCENE.instantiate() as Node3D
-		camera.add_child(_xuc_xac)
-	elif _xuc_xac.get_parent() != camera:
-		_xuc_xac.reparent(camera, false)
+	_xuc_xac = _gan_vao_camera(_xuc_xac, xuc_xac_scene, camera)
 	await _xuc_xac.tung(clampi(so, 1, 6), Player.ten_theo_id(get_tree(), id))
+
+
+## Hai hột xí ngầu: cả hai hột hiện cùng lúc, mỗi hột một mặt từ RPC của người tung.
+func _hien_hai_xuc_xac(id: int, so_1: int, so_2: int) -> void:
+	var camera := get_viewport().get_camera_3d()
+	if camera == null:
+		await get_tree().create_timer(0.6).timeout
+		return
+	_hai_xuc_xac = _gan_vao_camera(_hai_xuc_xac, hai_xuc_xac_scene, camera)
+	await _hai_xuc_xac.tung(so_1, so_2, Player.ten_theo_id(get_tree(), id))
+
+
+## Xúc xắc gắn vào camera đang dùng: dựng lần đầu, các lần sau chuyển theo camera.
+func _gan_vao_camera(cu: Node3D, scene: PackedScene, camera: Camera3D) -> Node3D:
+	if cu == null or not is_instance_valid(cu):
+		cu = scene.instantiate() as Node3D
+		camera.add_child(cu)
+	elif cu.get_parent() != camera:
+		cu.reparent(camera, false)
+	return cu
 
 
 # ───────────────────────────── luật cần tới bàn ─────────────────────────────
 
-## CHỈ master. Áp hiệu ứng ô vừa dừng chân, sang lượt kế, rồi phát nguyên trạng thái.
-func _ket_luot(id: int, so_buoc: int) -> void:
+
+## CHỈ master. Áp hiệu ứng ô vừa dừng rồi sang lượt kế.
+func _ket_luot(id: int, so_buoc: int, duong: PackedInt32Array) -> void:
 	var k := LuatBan.khoa(id)
 	var o_dung := int(_bang("o").get(k, 0))
 	var truoc := int(_bang("buoc").get(k, 0))
 	_bang("buoc")[k] = truoc + so_buoc
 	var checkpoint := _mo_checkpoint_neu_du(id, truoc, int(_bang("buoc")[k]), o_dung)
-
-	if (tt.get("ruong", []) as Array).has(o_dung):
-		var ket_qua_ruong := _mo_ruong(k, o_dung)
-		if tt.has("thang"):
-			_phat(tt, ket_qua_ruong)
-			return
-		_sang_luot(id, _noi_su_kien(ket_qua_ruong, checkpoint))
+	var bay := _su_duong
+	var o_cuoi := _o_cuoi
+	_su_duong = ""
+	_o_cuoi = -1
+	tt.erase("hai_hot")
+	LuatHieuUng.ghi_duong(tt, k, Array(duong))
+	checkpoint = _noi_su_kien(_ruong_tren_duong(k, duong), checkpoint)
+	checkpoint = _noi_su_kien(bay, checkpoint)
+	# Gục vì bẫy / bị Dây thun giật về: không ăn hiệu ứng ô.
+	if o_cuoi >= 0:
+		_bang("o")[k] = o_cuoi
+		_sang_luot(id, checkpoint)
 		return
 
 	var l := _loai_o(o_dung)
@@ -496,14 +513,15 @@ func _ket_luot(id: int, so_buoc: int) -> void:
 
 	var su := LuatBan.hieu_ung_o(tt, k, l, settings)
 	if l == BanDuong.Loai.TRANG_BI:
-		var mon := "khien" if _rng.randi() % 3 == 0 else "sung_1_phat"
-		LuatBan.them_do(tt, k, mon)
-		su = ("+Khiên · tự động chặn một đòn" if mon == "khien"
-				else "+Súng một phát · chuột trái để bắn")
+		var mon := VatPham.rut_o(_rng)
+		su = "+" + VatPham.ten(mon) + LuatBan.them_do(tt, k, mon)
 	_sang_luot(id, _noi_su_kien(su, checkpoint))
 
 
 func _sang_luot(id: int, su: String) -> void:
+	tt.erase("da_dung")
+	tt.erase("hai_hot")
+	su = _noi_su_kien(su, LuatHieuUng.cuoi_luot(tt, LuatBan.khoa(id), settings, ten))
 	var luot := int(tt["luot"]) + 1
 	if luot >= _thu_tu().size():
 		tt["luot"] = 0
@@ -513,19 +531,23 @@ func _sang_luot(id: int, su: String) -> void:
 	_phat(tt, "" if su.is_empty() else "%s: %s" % [Player.ten_theo_id(get_tree(), id), su])
 
 
-func _mo_ruong(k: String, o: int) -> String:
-	var gia := int(settings.get("chest_cost", 100))
-	var co := int(_bang("tien").get(k, 0))
-	if co < gia:
-		return "chưa đủ vàng mở rương (%d/%d)" % [co, gia]
-	_bang("tien")[k] = co - gia
-	var ruong: Array = tt.get("ruong", [])
-	ruong.erase(o)
-	tt["ruong"] = ruong
-	if o == int(tt.get("ruong_that", -1)):
-		tt["thang"] = int(k)
-		return "%s MỞ ĐÚNG RƯƠNG VÀ CHIẾN THẮNG" % Player.ten_theo_id(get_tree(), int(k))
-	return "mở rương giả (-%d vàng)" % gia
+## Đi qua Rương báu thì mở nếu đủ vàng, rồi dời rương.
+func _ruong_tren_duong(k: String, duong: PackedInt32Array) -> String:
+	var o := int(tt.get("ruong_o", -1))
+	if not Array(duong).slice(1).has(o):
+		return ""
+	var su := LuatRuong.mo(tt, k, settings)
+	if not su.is_empty():
+		tt["ruong_o"] = _o_ruong_moi(o)
+	return su
+
+
+func _o_ruong_moi(cu: int) -> int:
+	var gan := ban.o_trung_bom(cu, range(LuatRuong.CACH_TOI_THIEU))
+	var co_nguoi: Array = []
+	for k in _bang("o"):
+		co_nguoi.append(int(_bang("o")[k]))
+	return LuatRuong.cho_moi(ban.so_luong(), cu, gan, co_nguoi, _rng)
 
 
 func _bat_dau_chon_thue_dat(chu: int, o: int, checkpoint: String) -> void:
@@ -537,8 +559,7 @@ func _bat_dau_chon_thue_dat(chu: int, o: int, checkpoint: String) -> void:
 	_het_han_thue(_thue_token)
 
 
-## HUD gọi khi người chơi bấm một nút trong menu thuế. Phím 1–4 vẫn đi qua
-## `_unhandled_input()` để người chơi có thể chọn mà không cần nhả chuột khỏi camera.
+## HUD gọi khi bấm nút trong menu thuế.
 func xin_chon_thue(loai: int) -> void:
 	var thue: Dictionary = tt.get("thue", {}) as Dictionary
 	if loai < 0 or loai >= 4 or thue.is_empty():
@@ -596,11 +617,7 @@ func _noi_su_kien(a: String, b: String) -> String:
 	return a if b.is_empty() else "%s · %s" % [a, b]
 
 
-## Có người rời phòng GIỮA VÁN. Fusion xoá object player của họ trên mọi máy, nhưng vòng lượt
-## thì không tự biết — tới lượt một id không còn ai ngồi sau là **cả bàn đứng im vĩnh viễn**,
-## vì lượt chỉ sang khi có người bấm phím tung xúc xắc.
-##
-## CHỈ master sửa vòng lượt rồi phát lại, y như mọi thay đổi khác.
+## Có người rời phòng giữa ván: master gỡ họ khỏi vòng lượt.
 func _khi_mat_nguoi(n: Node) -> void:
 	var p := n as Player
 	if p == null or not dang_chay() or not NetManager.is_master():
@@ -608,19 +625,12 @@ func _khi_mat_nguoi(n: Node) -> void:
 	_bo_khoi_vong(p.player_id())
 
 
-## Gỡ một người khỏi vòng lượt và chỉnh lại con trỏ lượt.
-##
-## Hai trường hợp phải phân biệt, và cả hai đều sai nếu chỉ `erase` rồi thôi:
-##
-##   - Người rời đứng TRƯỚC người đang tới lượt → mọi người sau đó tụt một bậc, con trỏ phải
-##     tụt theo, không thì nhảy cóc qua một người.
-##   - Người rời CHÍNH LÀ người đang tới lượt → giữ nguyên chỉ số là trúng người kế tiếp.
-##     `posmod` lo nốt trường hợp họ đứng cuối vòng.
+## Gỡ người khỏi vòng lượt và chỉnh con trỏ lượt cho đúng người kế tiếp.
 func _bo_khoi_vong(id: int) -> void:
 	var ds := _thu_tu().duplicate()
 	var i := -1
 	for j in ds.size():
-		if int(ds[j]) == id:            # JSON trả số về float, phải ép kiểu mới so được
+		if int(ds[j]) == id:
 			i = j
 			break
 	if i < 0:
@@ -632,12 +642,11 @@ func _bo_khoi_vong(id: int) -> void:
 	var luot := int(tt["luot"])
 	tt["thu_tu"] = ds
 	tt["luot"] = posmod(luot - 1 if i < luot else luot, ds.size())
-	_dang_di = false                    # họ có thể đang giữa đoạn đi; không gỡ cờ là bàn khoá
+	_dang_di = false  # họ có thể đang giữa đoạn đi
 	_phat(tt, "%s rời phòng" % Player.ten_theo_id(get_tree(), id))
 
 
-## Rải đúng bốn loại ô theo tỷ lệ chủ phòng chọn, rồi đặt 4 rương lên các ô ngẫu nhiên.
-## Chỉ master gọi; kết quả cụ thể nằm trong gói trạng thái nên mọi máy nhìn cùng một bàn.
+## CHỈ master. Rải loại ô theo tỷ lệ, đặt Rương báu.
 func _tao_mat_ban(moi: Dictionary) -> void:
 	var n := ban.so_luong()
 	var loai: Array = []
@@ -656,7 +665,7 @@ func _tao_mat_ban(moi: Dictionary) -> void:
 			loai.append(int(cau_hinh[i][0]))
 		con_lai -= int(dem)
 	_tron(loai)
-	# Ô xuất phát luôn là đất để tất cả cùng đứng trên một mặt ổn định.
+	# Ô xuất phát luôn là đất.
 	if not loai.is_empty():
 		var vi_tri_dat := loai.find(BanDuong.Loai.DAT)
 		if vi_tri_dat > 0:
@@ -664,20 +673,18 @@ func _tao_mat_ban(moi: Dictionary) -> void:
 			loai[0] = loai[vi_tri_dat]
 			loai[vi_tri_dat] = tmp
 	moi["loai_o"] = loai
-	var ung_vien: Array = []
-	for i in range(1, n):
-		ung_vien.append(i)
-	_tron(ung_vien)
-	var so_ruong := mini(4, ung_vien.size())
-	moi["ruong"] = ung_vien.slice(0, so_ruong)
-	moi["ruong_that"] = int(moi["ruong"][_rng.randi_range(0, so_ruong - 1)]) if so_ruong > 0 else -1
+	moi["ruong_o"] = LuatRuong.cho_moi(n, 0, ban.o_trung_bom(0, range(LuatRuong.CACH_TOI_THIEU)),
+			[0], _rng)
 
 
 func _ap_mat_ban() -> void:
 	if ban == null:
 		return
 	var loai: Array = tt.get("loai_o", []) as Array
-	var ruong: Array = tt.get("ruong", []) as Array
+	var ruong := int(tt.get("ruong_o", -1))
+	ban.dat_ruong(ruong)
+	ban.dat_quai(int((tt.get("quai", {}) as Dictionary).get("o", -1)))
+	var ghi_chu := _ghi_chu_tren_o()
 	var dat: Dictionary = _bang("chu_dat")
 	var thue_dat: Dictionary = _bang("thue_dat")
 	var checkpoints: Dictionary = _bang("hoi_sinh")
@@ -695,7 +702,35 @@ func _ap_mat_ban() -> void:
 			if int(checkpoints[k]) == i:
 				ds_hoi_sinh.append(Player.ten_theo_id(get_tree(), int(k)))
 		ban.hien_o(i, int(loai[i]) if i < loai.size() else BanDuong.Loai.DAT,
-				ten_chu, ten_thue, ruong.has(i), ds_hoi_sinh)
+				ten_chu, ten_thue, i == ruong, ds_hoi_sinh,
+				PackedStringArray(ghi_chu.get(i, [])))
+	ban.hien_dau_hieu(_dau_hieu_tren_o())
+
+
+## {"rao:ô" / "bay:ô" / "neo:người": ô} — để dựng mô hình rào, bẫy, neo trên bàn.
+func _dau_hieu_tren_o() -> Dictionary:
+	var ra := {}
+	for loai in ["rao", "bay"]:
+		for o in _bang(loai):
+			ra["%s:%s" % [loai, o]] = int(o)
+	var neo: Dictionary = _bang("neo")
+	for k in neo:
+		ra["neo:%s" % k] = int((neo[k] as Dictionary).get("o", 0))
+	return ra
+
+
+## {ô: ["BAY · Tên", ...]} — bẫy, rào, neo đang nằm trên ô.
+func _ghi_chu_tren_o() -> Dictionary:
+	var ra := {}
+	for cap in [["bay", "BAY"], ["rao", "RAO"]]:
+		var bang: Dictionary = _bang(cap[0])
+		for o in bang:
+			ra[int(o)] = (ra.get(int(o), []) as Array) + ["%s · %s" % [cap[1], ten(str(bang[o]))]]
+	var neo: Dictionary = _bang("neo")
+	for k in neo:
+		var o := int((neo[k] as Dictionary).get("o", -1))
+		ra[o] = (ra.get(o, []) as Array) + ["NEO · %s" % ten(k)]
+	return ra
 
 
 func _loai_o(i: int) -> int:
@@ -713,6 +748,7 @@ func _tron(a: Array) -> void:
 
 # ───────────────────────────── cây scene ─────────────────────────────
 
+
 func _bao_dam_co_ban() -> void:
 	if ban != null and is_instance_valid(ban):
 		return
@@ -721,10 +757,9 @@ func _bao_dam_co_ban() -> void:
 	get_tree().current_scene.add_child(ban)
 
 
-## Đi từng ô một để nhìn thấy được, không nhảy thẳng tới đích.
 func _di_theo_duong(id: int, duong: PackedInt32Array) -> void:
 	var k := LuatBan.khoa(id)
-	var p := _nguoi(id)
+	var p := nguoi(id)
 	for i in range(1, duong.size()):
 		_bang("o")[k] = int(duong[i])
 		if p != null:
@@ -737,23 +772,18 @@ func _di_theo_duong(id: int, duong: PackedInt32Array) -> void:
 
 
 func _dat_len_o(id: int, o: int) -> void:
-	var p := _nguoi(id)
+	var p := nguoi(id)
 	if p != null:
 		p.global_position = _cho_dung(id, o)
 
 
-## Chỗ đứng của một người trên ô.
-##
-## Sáu người cùng xuất phát ở ô 0, nên đặt ai cũng vào đúng tâm ô là được một cục thịt không
-## ai nhận ra ai — đã thấy tận mắt ở lần chạy thử đầu tiên. Rải đều quanh tâm theo THỨ TỰ LƯỢT
-## thì chỗ đứng ổn định, mọi máy tính ra y hệt, và không tốn một byte mạng nào.
+## Chỗ đứng trên ô: rải quanh tâm theo thứ tự lượt để không chồng lên nhau.
 func _cho_dung(id: int, o: int) -> Vector3:
 	var goc := ban.vi_tri(o) + Vector3.UP * CAO_DUNG
 	var ds := _thu_tu()
 	if ds.size() <= 1:
 		return goc
-	# JSON trả số về dạng float, nên so sánh phải ép kiểu — `ds.find(id)` với id là int thì
-	# không bao giờ khớp.
+	# JSON trả số dạng float — phải ép kiểu khi so.
 	for i in ds.size():
 		if int(ds[i]) == id:
 			var a := TAU * i / float(ds.size())
@@ -761,7 +791,12 @@ func _cho_dung(id: int, o: int) -> Vector3:
 	return goc
 
 
-func _nguoi(id: int) -> Player:
+## Chỗ đứng của người `id` trên ô `o` (cho hiệu ứng biết quân cờ sẽ dời tới đâu).
+func vi_tri_dung(id: int, o: int) -> Vector3:
+	return _cho_dung(id, o)
+
+
+func nguoi(id: int) -> Player:
 	for p: Player in get_tree().get_nodes_in_group("players"):
 		if p.player_id() == id:
 			return p
@@ -776,18 +811,12 @@ func _bang(ten: String) -> Dictionary:
 	return tt.get(ten, {}) as Dictionary
 
 
-## Bật/tắt CHẾ ĐỘ QUÂN CỜ cho người chơi của máy này: khoá WASD (đi lại do xúc xắc quyết,
-## không do phím) và kéo camera ra góc nhìn bàn.
-##
-## Chỉ đụng tới `is_mine`. Camera của người khác không tồn tại trên máy này (`CameraRig` bị
-## `queue_free()` ở máy không sở hữu), mà khoá phím hộ họ cũng chẳng để làm gì.
+## Bật/tắt chế độ quân cờ: phóng to hình mọi người; người của máy này bị khoá WASD.
 func _che_do_ban_co(bat: bool) -> void:
 	for p: Player in get_tree().get_nodes_in_group("players"):
+		p.model_root.scale = Vector3.ONE * (TO_BAN if bat else 1.0)
 		if not p.is_mine:
 			continue
 		p.khoa_di_chuyen = bat
 		if p.rig != null and is_instance_valid(p.rig):
 			p.rig.set_ban_co(bat)
-			# Chỉ camera của người sở hữu đổi sang góc ngắm. Máy khác không có rig này,
-			# và trạng thái túi được tra bằng local_id nên không thể hiện góc ngắm của đối thủ.
-			p.rig.set_ngam_sung(bat and _dang_ngam_sung_cuc_bo)

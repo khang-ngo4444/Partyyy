@@ -1,6 +1,235 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://board/xuc_xac_3d.gd" id="1_dice"]
 
-[node name="XucXac3D" type="Node3D"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ryac0"]
+albedo_color = Color(1, 0.95686275, 0.8627451, 1)
+roughness = 0.28
+emission_enabled = true
+emission = Color(0.42745098, 0.49411765, 0.6, 1)
+emission_energy_multiplier = 0.12
+
+[sub_resource type="BoxMesh" id="BoxMesh_7vd7c"]
+size = Vector3(1.22, 1.22, 1.22)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rbkoi"]
+albedo_color = Color(1, 0.7176471, 0.1764706, 1)
+metallic = 0.65
+roughness = 0.25
+emission_enabled = true
+emission = Color(0.54509807, 0.22352941, 0.023529412, 1)
+emission_energy_multiplier = 0.7
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_mp06f"]
+top_radius = 0.025
+bottom_radius = 0.025
+height = 1.2
+radial_segments = 6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jldsf"]
+albedo_color = Color(0.07058824, 0.09803922, 0.15294118, 1)
+roughness = 0.4
+emission_enabled = true
+emission = Color(0.007843138, 0.011764706, 0.03137255, 1)
+emission_energy_multiplier = 0.2
+
+[sub_resource type="SphereMesh" id="SphereMesh_mrda2"]
+radius = 0.095
+height = 0.19
+radial_segments = 10
+rings = 6
+
+[sub_resource type="TorusMesh" id="TorusMesh_gmpxj"]
+inner_radius = 0.86
+outer_radius = 1.04
+rings = 36
+ring_segments = 8
+
+[node name="XucXac3D" type="Node3D" unique_id=1820081405]
+visible = false
 script = ExtResource("1_dice")
+
+[node name="DiceBody" type="Node3D" parent="." unique_id=1245233125]
+
+[node name="IvoryCube" type="MeshInstance3D" parent="DiceBody" unique_id=470493418]
+material_override = SubResource("StandardMaterial3D_ryac0")
+mesh = SubResource("BoxMesh_7vd7c")
+
+[node name="Canh_1" type="MeshInstance3D" parent="DiceBody" unique_id=1629818660]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -0.61, -0.61)
+material_override = SubResource("StandardMaterial3D_rbkoi")
+mesh = SubResource("CylinderMesh_mp06f")
+
+[node name="Canh_2" type="MeshInstance3D" parent="DiceBody" unique_id=1991984437]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -0.61, 0.61)
+material_override = SubResource("StandardMaterial3D_rbkoi")
+mesh = SubResource("CylinderMesh_mp06f")
+
+[node name="Canh_3" type="MeshInstance3D" parent="DiceBody" unique_id=565769873]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.61, -0.61)
+material_override = SubResource("StandardMaterial3D_rbkoi")
+mesh = SubResource("CylinderMesh_mp06f")
+
+[node name="Canh_4" type="MeshInstance3D" parent="DiceBody" unique_id=1509187250]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.61, 0.61)
+material_override = SubResource("StandardMaterial3D_rbkoi")
+mesh = SubResource("CylinderMesh_mp06f")
+
+[node name="Canh_5" type="MeshInstance3D" parent="DiceBody" unique_id=1352723453]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.61, 0, -0.61)
+material_override = SubResource("StandardMaterial3D_rbkoi")
+mesh = SubResource("CylinderMesh_mp06f")
+
+[node name="Canh_6" type="MeshInstance3D" parent="DiceBody" unique_id=160498878]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.61, 0, 0.61)
+material_override = SubResource("StandardMaterial3D_rbkoi")
+mesh = SubResource("CylinderMesh_mp06f")
+
+[node name="Canh_7" type="MeshInstance3D" parent="DiceBody" unique_id=1449448539]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.61, 0, -0.61)
+material_override = SubResource("StandardMaterial3D_rbkoi")
+mesh = SubResource("CylinderMesh_mp06f")
+
+[node name="Canh_8" type="MeshInstance3D" parent="DiceBody" unique_id=619758012]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.61, 0, 0.61)
+material_override = SubResource("StandardMaterial3D_rbkoi")
+mesh = SubResource("CylinderMesh_mp06f")
+
+[node name="Canh_9" type="MeshInstance3D" parent="DiceBody" unique_id=1685333379]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -0.61, -0.61, 0)
+material_override = SubResource("StandardMaterial3D_rbkoi")
+mesh = SubResource("CylinderMesh_mp06f")
+
+[node name="Canh_10" type="MeshInstance3D" parent="DiceBody" unique_id=957248449]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -0.61, 0.61, 0)
+material_override = SubResource("StandardMaterial3D_rbkoi")
+mesh = SubResource("CylinderMesh_mp06f")
+
+[node name="Canh_11" type="MeshInstance3D" parent="DiceBody" unique_id=708446744]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.61, -0.61, 0)
+material_override = SubResource("StandardMaterial3D_rbkoi")
+mesh = SubResource("CylinderMesh_mp06f")
+
+[node name="Canh_12" type="MeshInstance3D" parent="DiceBody" unique_id=265905353]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.61, 0.61, 0)
+material_override = SubResource("StandardMaterial3D_rbkoi")
+mesh = SubResource("CylinderMesh_mp06f")
+
+[node name="Cham_1" type="MeshInstance3D" parent="DiceBody" unique_id=311373137]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.625)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="Cham_2" type="MeshInstance3D" parent="DiceBody" unique_id=1001291386]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.31, 0.31, -0.625)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="Cham_3" type="MeshInstance3D" parent="DiceBody" unique_id=1038947446]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.31, 0.31, -0.625)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="Cham_4" type="MeshInstance3D" parent="DiceBody" unique_id=732663391]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.31, 0, -0.625)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="Cham_5" type="MeshInstance3D" parent="DiceBody" unique_id=1027639714]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.31, 0, -0.625)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="Cham_6" type="MeshInstance3D" parent="DiceBody" unique_id=795590656]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.31, -0.31, -0.625)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="Cham_7" type="MeshInstance3D" parent="DiceBody" unique_id=2119792369]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.31, -0.31, -0.625)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="Cham_8" type="MeshInstance3D" parent="DiceBody" unique_id=1852133934]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.625, 0.31, 0.31)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="Cham_9" type="MeshInstance3D" parent="DiceBody" unique_id=917123469]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.625, -0.31, -0.31)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="Cham_10" type="MeshInstance3D" parent="DiceBody" unique_id=161440681]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.625, 0.31, -0.31)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="Cham_11" type="MeshInstance3D" parent="DiceBody" unique_id=457292801]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.625, 0.31, 0.31)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="Cham_12" type="MeshInstance3D" parent="DiceBody" unique_id=319149508]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.625, 0, 0)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="Cham_13" type="MeshInstance3D" parent="DiceBody" unique_id=629761957]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.625, -0.31, -0.31)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="Cham_14" type="MeshInstance3D" parent="DiceBody" unique_id=1744048926]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.625, -0.31, 0.31)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="Cham_15" type="MeshInstance3D" parent="DiceBody" unique_id=367815785]
+transform = Transform3D(1, 0, 0, 0, 0.58, 0, 0, 0, 1, -0.31, 0.625, -0.31)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="Cham_16" type="MeshInstance3D" parent="DiceBody" unique_id=1450466977]
+transform = Transform3D(1, 0, 0, 0, 0.58, 0, 0, 0, 1, 0, 0.625, 0)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="Cham_17" type="MeshInstance3D" parent="DiceBody" unique_id=136914918]
+transform = Transform3D(1, 0, 0, 0, 0.58, 0, 0, 0, 1, 0.31, 0.625, 0.31)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="Cham_18" type="MeshInstance3D" parent="DiceBody" unique_id=1356990973]
+transform = Transform3D(1, 0, 0, 0, 0.58, 0, 0, 0, 1, -0.31, -0.625, 0.31)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="Cham_19" type="MeshInstance3D" parent="DiceBody" unique_id=1376729993]
+transform = Transform3D(1, 0, 0, 0, 0.58, 0, 0, 0, 1, 0.31, -0.625, 0.31)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="Cham_20" type="MeshInstance3D" parent="DiceBody" unique_id=779930037]
+transform = Transform3D(1, 0, 0, 0, 0.58, 0, 0, 0, 1, -0.31, -0.625, -0.31)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="Cham_21" type="MeshInstance3D" parent="DiceBody" unique_id=861310969]
+transform = Transform3D(1, 0, 0, 0, 0.58, 0, 0, 0, 1, 0.31, -0.625, -0.31)
+material_override = SubResource("StandardMaterial3D_jldsf")
+mesh = SubResource("SphereMesh_mrda2")
+
+[node name="ResultRing" type="MeshInstance3D" parent="." unique_id=416075479]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -0.78)
+material_override = SubResource("StandardMaterial3D_rbkoi")
+mesh = SubResource("TorusMesh_gmpxj")
+
+[node name="ActionLabel" type="Label3D" parent="." unique_id=1711780583]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
+pixel_size = 0.008
+billboard = 1
+no_depth_test = true
+modulate = Color(1, 0.9490196, 0.7411765, 1)
+font_size = 64
+outline_size = 16

@@ -1,0 +1,19 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="Vong"]
+transparency = 1
+shading_mode = 0
+no_depth_test = true
+albedo_color = Color(0.3, 1, 0.95, 0.55)
+
+[sub_resource type="TorusMesh" id="VongMesh"]
+material = SubResource("Vong")
+inner_radius = 0.985
+outer_radius = 1.0
+rings = 64
+ring_segments = 4
+
+[node name="VongTam" type="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+mesh = SubResource("VongMesh")
+cast_shadow = 0

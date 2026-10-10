@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "09 · Minigame và phần thưởng"
+noi_dung = "[color=#8fe7d4][b]KHI NÀO MINIGAME BẮT ĐẦU?[/b][/color]
+Sau khi toàn bộ người chơi đã tung xúc xắc xong một vòng, game chọn ngẫu nhiên một trong 10 minigame (Còi trọng tài cho người dùng tự chọn).
+
+[b]Phần thưởng sau mỗi minigame[/b]
+• Ai cũng có vàng; hạng nhất chỉ hơn mức trung bình 30%, hạng chót kém 30%.
+• Hạng 1 nhận một món Hiếm hoặc Huyền thoại; vài hạng đầu và hạng chót nhận một món Thường.
+• Hai vòng cuối vàng minigame ×1,5.
+• Thứ tự xếp hạng trở thành thứ tự lượt của vòng bàn tiếp theo.
+
+Mỗi trò có màn đếm ngược 3 giây. Luật và phím chi tiết nằm ở từng trang minigame bên dưới."

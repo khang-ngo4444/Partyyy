@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/hammer.gd" id="1_hammer"]
 [ext_resource type="FusionReplicationConfig" path="res://lobby/objects/pickable_replication.tres" id="2_cfg"]
@@ -6,16 +6,65 @@
 [sub_resource type="BoxShape3D" id="Shape_hinh"]
 size = Vector3(0.14, 0.14, 0.5)
 
-[node name="Hammer" type="RigidBody3D"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d0ceb"]
+albedo_color = Color(0.5411765, 0.3529412, 0.23137255, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_kow6b"]
+top_radius = 0.022
+bottom_radius = 0.026
+height = 0.39
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_868td"]
+albedo_color = Color(0.8980392, 0.28235295, 0.3019608, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_hbdn1"]
+top_radius = 0.075
+bottom_radius = 0.075
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e73km"]
+albedo_color = Color(0.9490196, 0.9372549, 0.9019608, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_4iboa"]
+top_radius = 0.078
+bottom_radius = 0.078
+height = 0.02
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_6775h"]
+top_radius = 0.078
+bottom_radius = 0.078
+height = 0.02
+
+[node name="Hammer" type="RigidBody3D" unique_id=153903554]
 script = ExtResource("1_hammer")
 
-[node name="HinhVaCham" type="CollisionShape3D" parent="."]
+[node name="HinhVaCham" type="CollisionShape3D" parent="." unique_id=285079396]
 shape = SubResource("Shape_hinh")
 
-[node name="Replicator" type="FusionSharedReplicator" parent="."]
+[node name="Replicator" type="FusionSharedReplicator" parent="." unique_id=313935725]
 root_path = NodePath("..")
 replication_config = ExtResource("2_cfg")
 owner_mode = 0
 root_replication_mode = 1
 root_interpolation_mode = 2
 root_forecast_gravity = false
+
+[node name="Can" type="MeshInstance3D" parent="." unique_id=932050505]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0.055000007)
+material_override = SubResource("StandardMaterial3D_d0ceb")
+mesh = SubResource("CylinderMesh_kow6b")
+
+[node name="Dau" type="MeshInstance3D" parent="." unique_id=864314455]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, -0.2)
+material_override = SubResource("StandardMaterial3D_868td")
+mesh = SubResource("CylinderMesh_hbdn1")
+
+[node name="NapTrai" type="MeshInstance3D" parent="." unique_id=209055038]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -0.1, 0, -0.2)
+material_override = SubResource("StandardMaterial3D_e73km")
+mesh = SubResource("CylinderMesh_4iboa")
+
+[node name="NapPhai" type="MeshInstance3D" parent="." unique_id=2114127409]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.1, 0, -0.2)
+material_override = SubResource("StandardMaterial3D_e73km")
+mesh = SubResource("CylinderMesh_6775h")

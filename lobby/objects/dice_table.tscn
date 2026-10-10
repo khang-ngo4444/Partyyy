@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/dice_table.gd" id="1_dice"]
 
@@ -6,28 +6,53 @@
 height = 0.75
 radius = 0.9
 
-[node name="DiceTable" type="Node3D"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vj61g"]
+albedo_color = Color(0.18431373, 0.3647059, 0.24705882, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_2g7l4"]
+top_radius = 0.9
+bottom_radius = 0.765
+height = 0.75
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vykyq"]
+albedo_color = Color(0.41960785, 0.2901961, 0.18431373, 1)
+
+[sub_resource type="TorusMesh" id="TorusMesh_h7apg"]
+inner_radius = 0.86
+outer_radius = 0.94
+
+[node name="DiceTable" type="Node3D" unique_id=253055573]
 script = ExtResource("1_dice")
 
-[node name="Result" type="Label3D" parent="."]
+[node name="Result" type="Label3D" parent="." unique_id=929237440]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85, 0)
 pixel_size = 0.008
 billboard = 1
+text = "NEM XUC XAC LEN BAN"
 font_size = 64
-outline_size = 12
 
-[node name="StaticSurface_Table" type="StaticBody3D" parent="."]
+[node name="StaticSurface_Table" type="StaticBody3D" parent="." unique_id=2107221280]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Table"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Table" unique_id=2088881786]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.375, 0)
 shape = SubResource("Shape_Table")
 
-[node name="SpawnPlaceholders" type="Node3D" parent="."]
+[node name="SpawnPlaceholders" type="Node3D" parent="." unique_id=1822547207]
 
-[node name="Placeholder_Die_0" type="Node3D" parent="SpawnPlaceholders"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0.83, 0.36)
+[node name="Placeholder_Die_0" type="Node3D" parent="SpawnPlaceholders" unique_id=473950839]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.83, 0.36)
 metadata/tint = "red"
 
-[node name="Placeholder_Die_1" type="Node3D" parent="SpawnPlaceholders"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0.83, -0.36)
+[node name="Placeholder_Die_1" type="Node3D" parent="SpawnPlaceholders" unique_id=644352231]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.83, -0.36)
 metadata/tint = "yellow"
+
+[node name="MatBan" type="MeshInstance3D" parent="." unique_id=1082606646]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.375, 0)
+material_override = SubResource("StandardMaterial3D_vj61g")
+mesh = SubResource("CylinderMesh_2g7l4")
+
+[node name="VienBan" type="MeshInstance3D" parent="." unique_id=752537998]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+material_override = SubResource("StandardMaterial3D_vykyq")
+mesh = SubResource("TorusMesh_h7apg")

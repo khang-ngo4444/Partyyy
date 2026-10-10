@@ -1,77 +1,475 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://lobby/objects/chicken_race.gd" id="1_race"]
 [ext_resource type="PackedScene" uid="uid://dusnydw127vnc" path="res://asset/polypizza/chicken.glb" id="2_model"]
+[ext_resource type="PackedScene" path="res://lobby/objects/pressable.tscn" id="3_tpnb7"]
 
 [sub_resource type="BoxShape3D" id="Shape_StaticSurface_Table"]
 size = Vector3(2.58, 1.4, 2.7)
 
-[node name="ChickenRace" type="Node3D"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u2nhk"]
+albedo_color = Color(0.41960785, 0.1764706, 0.22745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ll4na"]
+size = Vector3(2.58, 0.95, 2.7)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d8c32"]
+albedo_color = Color(0.49392158, 0.15529414, 0.16607845, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ejf2u"]
+size = Vector3(0.2392, 0.05, 2.245551)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8rhpk"]
+albedo_color = Color(0.1337255, 0.21352942, 0.4766667, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qmiec"]
+size = Vector3(0.2392, 0.05, 2.245551)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4rima"]
+albedo_color = Color(0.1509804, 0.36019608, 0.18980393, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_sf45d"]
+size = Vector3(0.2392, 0.05, 2.245551)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_63124"]
+albedo_color = Color(0.52843136, 0.46803924, 0.021568628, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_v6doh"]
+size = Vector3(0.2392, 0.05, 2.245551)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_csvga"]
+albedo_color = Color(0.5327451, 0.23078433, 0.04529412, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xk4ub"]
+size = Vector3(0.2392, 0.05, 2.245551)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_slidq"]
+albedo_color = Color(0.30627453, 0.1682353, 0.42705885, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ky3y4"]
+size = Vector3(0.2392, 0.05, 2.245551)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_18prn"]
+albedo_color = Color(0, 0.39686278, 0.46803924, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0b5w8"]
+size = Vector3(0.2392, 0.05, 2.245551)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1yxo3"]
+albedo_color = Color(0.49392158, 0.49392158, 0.49392158, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ej2lm"]
+size = Vector3(0.2392, 0.05, 2.245551)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1f8aj"]
+albedo_color = Color(0.9490196, 0.9372549, 0.9019608, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_35vaq"]
+size = Vector3(2.08, 0.02, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vs6bq"]
+albedo_color = Color(0.9490196, 0.9372549, 0.9019608, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nxxsn"]
+size = Vector3(2.08, 0.02, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vagn4"]
+albedo_color = Color(0.41960785, 0.1764706, 0.22745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_74msx"]
+size = Vector3(2.58, 0.5, 0.16)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_27bjt"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ap1rs"]
+size = Vector3(0.13, 0.14, 0.04)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lx2jp"]
+albedo_color = Color(0.101960786, 0.101960786, 0.11764706, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_eoeir"]
+size = Vector3(0.13, 0.14, 0.04)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7vnpf"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_fmp2u"]
+size = Vector3(0.13, 0.14, 0.04)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_275yv"]
+albedo_color = Color(0.101960786, 0.101960786, 0.11764706, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fujqk"]
+size = Vector3(0.13, 0.14, 0.04)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vvwyr"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_7jiiw"]
+size = Vector3(0.13, 0.14, 0.04)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ejyqk"]
+albedo_color = Color(0.101960786, 0.101960786, 0.11764706, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6lyg4"]
+size = Vector3(0.13, 0.14, 0.04)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w5qmn"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_t53h6"]
+size = Vector3(0.13, 0.14, 0.04)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qiyt0"]
+albedo_color = Color(0.101960786, 0.101960786, 0.11764706, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_p7epq"]
+size = Vector3(0.13, 0.14, 0.04)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r2nm0"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_b8a7c"]
+size = Vector3(0.13, 0.14, 0.04)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_46c7a"]
+albedo_color = Color(0.101960786, 0.101960786, 0.11764706, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1soxh"]
+size = Vector3(0.13, 0.14, 0.04)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rq6xw"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_t11st"]
+size = Vector3(0.13, 0.14, 0.04)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_igf4u"]
+albedo_color = Color(0.101960786, 0.101960786, 0.11764706, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_to1sy"]
+size = Vector3(0.13, 0.14, 0.04)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vmexe"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_3mj6a"]
+size = Vector3(0.13, 0.14, 0.04)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_agsld"]
+albedo_color = Color(0.101960786, 0.101960786, 0.11764706, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3mmfs"]
+size = Vector3(0.13, 0.14, 0.04)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cvg43"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_jvw8i"]
+size = Vector3(0.13, 0.14, 0.04)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1u4l1"]
+albedo_color = Color(0.101960786, 0.101960786, 0.11764706, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_mvi4q"]
+size = Vector3(0.13, 0.14, 0.04)
+
+[node name="ChickenRace" type="Node3D" unique_id=1944505128]
 script = ExtResource("1_race")
 
-[node name="Result" type="Label3D" parent="."]
+[node name="Result" type="Label3D" parent="." unique_id=1372321315]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.55, 0)
 pixel_size = 0.003
 billboard = 1
 modulate = Color(0.9608, 0.851, 0.0392, 1)
 outline_modulate = Color(0.1608, 0.0745, 0.098, 1)
+text = "TRAO NIEM TIN - NHAN TAI LOC"
 font_size = 44
 outline_size = 26
 autowrap_mode = 3
 width = 760.0
 
-[node name="Chickens" type="Node3D" parent="."]
+[node name="Chickens" type="Node3D" parent="." unique_id=1727944359]
 
-[node name="Ga0" type="Node3D" parent="Chickens"]
+[node name="Ga0" type="Node3D" parent="Chickens" unique_id=1068662252]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.91, 0.95, -1.1)
 
-[node name="Model" parent="Chickens/Ga0" instance=ExtResource("2_model")]
+[node name="Model" parent="Chickens/Ga0" unique_id=2123237884 instance=ExtResource("2_model")]
 transform = Transform3D(-3.931296e-11, 0, 0.0008993757, 0, 0.0008993757, 0, -0.0008993757, 0, -3.931296e-11, 0, 0, 0)
 
-[node name="Ga1" type="Node3D" parent="Chickens"]
+[node name="Ga1" type="Node3D" parent="Chickens" unique_id=1965270416]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.65, 0.95, -1.1)
 
-[node name="Model" parent="Chickens/Ga1" instance=ExtResource("2_model")]
+[node name="Model" parent="Chickens/Ga1" unique_id=1671810058 instance=ExtResource("2_model")]
 transform = Transform3D(-3.931296e-11, 0, 0.0008993757, 0, 0.0008993757, 0, -0.0008993757, 0, -3.931296e-11, 0, 0, 0)
 
-[node name="Ga2" type="Node3D" parent="Chickens"]
+[node name="Ga2" type="Node3D" parent="Chickens" unique_id=222143217]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.39, 0.95, -1.1)
 
-[node name="Model" parent="Chickens/Ga2" instance=ExtResource("2_model")]
+[node name="Model" parent="Chickens/Ga2" unique_id=172826415 instance=ExtResource("2_model")]
 transform = Transform3D(-3.931296e-11, 0, 0.0008993757, 0, 0.0008993757, 0, -0.0008993757, 0, -3.931296e-11, 0, 0, 0)
 
-[node name="Ga3" type="Node3D" parent="Chickens"]
+[node name="Ga3" type="Node3D" parent="Chickens" unique_id=2136490404]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.13, 0.95, -1.1)
 
-[node name="Model" parent="Chickens/Ga3" instance=ExtResource("2_model")]
+[node name="Model" parent="Chickens/Ga3" unique_id=161179127 instance=ExtResource("2_model")]
 transform = Transform3D(-3.931296e-11, 0, 0.0008993757, 0, 0.0008993757, 0, -0.0008993757, 0, -3.931296e-11, 0, 0, 0)
 
-[node name="Ga4" type="Node3D" parent="Chickens"]
+[node name="Ga4" type="Node3D" parent="Chickens" unique_id=996603858]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.13, 0.95, -1.1)
 
-[node name="Model" parent="Chickens/Ga4" instance=ExtResource("2_model")]
+[node name="Model" parent="Chickens/Ga4" unique_id=1115301700 instance=ExtResource("2_model")]
 transform = Transform3D(-3.931296e-11, 0, 0.0008993757, 0, 0.0008993757, 0, -0.0008993757, 0, -3.931296e-11, 0, 0, 0)
 
-[node name="Ga5" type="Node3D" parent="Chickens"]
+[node name="Ga5" type="Node3D" parent="Chickens" unique_id=1389703741]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.39, 0.95, -1.1)
 
-[node name="Model" parent="Chickens/Ga5" instance=ExtResource("2_model")]
+[node name="Model" parent="Chickens/Ga5" unique_id=884736221 instance=ExtResource("2_model")]
 transform = Transform3D(-3.931296e-11, 0, 0.0008993757, 0, 0.0008993757, 0, -0.0008993757, 0, -3.931296e-11, 0, 0, 0)
 
-[node name="Ga6" type="Node3D" parent="Chickens"]
+[node name="Ga6" type="Node3D" parent="Chickens" unique_id=1853509022]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.65, 0.95, -1.1)
 
-[node name="Model" parent="Chickens/Ga6" instance=ExtResource("2_model")]
+[node name="Model" parent="Chickens/Ga6" unique_id=1081644065 instance=ExtResource("2_model")]
 transform = Transform3D(-3.931296e-11, 0, 0.0008993757, 0, 0.0008993757, 0, -0.0008993757, 0, -3.931296e-11, 0, 0, 0)
 
-[node name="Ga7" type="Node3D" parent="Chickens"]
+[node name="Ga7" type="Node3D" parent="Chickens" unique_id=857492618]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.91, 0.95, -1.1)
 
-[node name="Model" parent="Chickens/Ga7" instance=ExtResource("2_model")]
+[node name="Model" parent="Chickens/Ga7" unique_id=1110477619 instance=ExtResource("2_model")]
 transform = Transform3D(-3.931296e-11, 0, 0.0008993757, 0, 0.0008993757, 0, -0.0008993757, 0, -3.931296e-11, 0, 0, 0)
 
-[node name="StaticSurface_Table" type="StaticBody3D" parent="."]
+[node name="StaticSurface_Table" type="StaticBody3D" parent="." unique_id=501003645]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Table"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticSurface_Table" unique_id=1982424385]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 shape = SubResource("Shape_StaticSurface_Table")
+
+[node name="Than" type="MeshInstance3D" parent="." unique_id=1147236275]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.475, 0)
+material_override = SubResource("StandardMaterial3D_u2nhk")
+mesh = SubResource("BoxMesh_ll4na")
+
+[node name="Lan0" type="MeshInstance3D" parent="." unique_id=1466758730]
+transform = Transform3D(1, 0, 0, 0, 0.97971493, 0.20039624, 0, -0.20039624, 0.97971493, -0.91, 1.145, 0)
+material_override = SubResource("StandardMaterial3D_d8c32")
+mesh = SubResource("BoxMesh_ejf2u")
+
+[node name="Lan1" type="MeshInstance3D" parent="." unique_id=1930020984]
+transform = Transform3D(1, 0, 0, 0, 0.97971493, 0.20039624, 0, -0.20039624, 0.97971493, -0.65, 1.145, 0)
+material_override = SubResource("StandardMaterial3D_8rhpk")
+mesh = SubResource("BoxMesh_qmiec")
+
+[node name="Lan2" type="MeshInstance3D" parent="." unique_id=1556338104]
+transform = Transform3D(1, 0, 0, 0, 0.97971493, 0.20039624, 0, -0.20039624, 0.97971493, -0.39, 1.145, 0)
+material_override = SubResource("StandardMaterial3D_4rima")
+mesh = SubResource("BoxMesh_sf45d")
+
+[node name="Lan3" type="MeshInstance3D" parent="." unique_id=276903611]
+transform = Transform3D(1, 0, 0, 0, 0.97971493, 0.20039624, 0, -0.20039624, 0.97971493, -0.13, 1.145, 0)
+material_override = SubResource("StandardMaterial3D_63124")
+mesh = SubResource("BoxMesh_v6doh")
+
+[node name="Lan4" type="MeshInstance3D" parent="." unique_id=1161578749]
+transform = Transform3D(1, 0, 0, 0, 0.97971493, 0.20039624, 0, -0.20039624, 0.97971493, 0.13, 1.145, 0)
+material_override = SubResource("StandardMaterial3D_csvga")
+mesh = SubResource("BoxMesh_xk4ub")
+
+[node name="Lan5" type="MeshInstance3D" parent="." unique_id=1373022171]
+transform = Transform3D(1, 0, 0, 0, 0.97971493, 0.20039624, 0, -0.20039624, 0.97971493, 0.39, 1.145, 0)
+material_override = SubResource("StandardMaterial3D_slidq")
+mesh = SubResource("BoxMesh_ky3y4")
+
+[node name="Lan6" type="MeshInstance3D" parent="." unique_id=227417579]
+transform = Transform3D(1, 0, 0, 0, 0.97971493, 0.20039624, 0, -0.20039624, 0.97971493, 0.65, 1.145, 0)
+material_override = SubResource("StandardMaterial3D_18prn")
+mesh = SubResource("BoxMesh_0b5w8")
+
+[node name="Lan7" type="MeshInstance3D" parent="." unique_id=796379787]
+transform = Transform3D(1, 0, 0, 0, 0.97971493, 0.20039624, 0, -0.20039624, 0.97971493, 0.91, 1.145, 0)
+material_override = SubResource("StandardMaterial3D_1yxo3")
+mesh = SubResource("BoxMesh_ej2lm")
+
+[node name="VachXuatPhat" type="MeshInstance3D" parent="." unique_id=508374948]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.98, -1.1)
+material_override = SubResource("StandardMaterial3D_1f8aj")
+mesh = SubResource("BoxMesh_35vaq")
+
+[node name="VachDich" type="MeshInstance3D" parent="." unique_id=687627032]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.43, 1.1)
+material_override = SubResource("StandardMaterial3D_vs6bq")
+mesh = SubResource("BoxMesh_nxxsn")
+
+[node name="Vom" type="MeshInstance3D" parent="." unique_id=399767849]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.15, 1.1)
+material_override = SubResource("StandardMaterial3D_vagn4")
+mesh = SubResource("BoxMesh_74msx")
+
+[node name="BienHieu" type="Label3D" parent="." unique_id=1690663985]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 2.15, 1)
+pixel_size = 0.0035
+modulate = Color(0.9607843, 0.8509804, 0.039215688, 1)
+text = "DUA GA"
+font_size = 64
+
+[node name="Caro0" type="MeshInstance3D" parent="." unique_id=456384647]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.975, 1.82, 1.04)
+material_override = SubResource("StandardMaterial3D_27bjt")
+mesh = SubResource("BoxMesh_ap1rs")
+
+[node name="Caro1" type="MeshInstance3D" parent="." unique_id=1238147985]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.845, 1.82, 1.04)
+material_override = SubResource("StandardMaterial3D_lx2jp")
+mesh = SubResource("BoxMesh_eoeir")
+
+[node name="Caro2" type="MeshInstance3D" parent="." unique_id=2105685388]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.715, 1.82, 1.04)
+material_override = SubResource("StandardMaterial3D_7vnpf")
+mesh = SubResource("BoxMesh_fmp2u")
+
+[node name="Caro3" type="MeshInstance3D" parent="." unique_id=109935818]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.585, 1.82, 1.04)
+material_override = SubResource("StandardMaterial3D_275yv")
+mesh = SubResource("BoxMesh_fujqk")
+
+[node name="Caro4" type="MeshInstance3D" parent="." unique_id=623599267]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.455, 1.82, 1.04)
+material_override = SubResource("StandardMaterial3D_vvwyr")
+mesh = SubResource("BoxMesh_7jiiw")
+
+[node name="Caro5" type="MeshInstance3D" parent="." unique_id=1079911411]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.325, 1.82, 1.04)
+material_override = SubResource("StandardMaterial3D_ejyqk")
+mesh = SubResource("BoxMesh_6lyg4")
+
+[node name="Caro6" type="MeshInstance3D" parent="." unique_id=1156976947]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.195, 1.82, 1.04)
+material_override = SubResource("StandardMaterial3D_w5qmn")
+mesh = SubResource("BoxMesh_t53h6")
+
+[node name="Caro7" type="MeshInstance3D" parent="." unique_id=702145965]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.065, 1.82, 1.04)
+material_override = SubResource("StandardMaterial3D_qiyt0")
+mesh = SubResource("BoxMesh_p7epq")
+
+[node name="Caro8" type="MeshInstance3D" parent="." unique_id=1425415343]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.065, 1.82, 1.04)
+material_override = SubResource("StandardMaterial3D_r2nm0")
+mesh = SubResource("BoxMesh_b8a7c")
+
+[node name="Caro9" type="MeshInstance3D" parent="." unique_id=1576520614]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.195, 1.82, 1.04)
+material_override = SubResource("StandardMaterial3D_46c7a")
+mesh = SubResource("BoxMesh_1soxh")
+
+[node name="Caro10" type="MeshInstance3D" parent="." unique_id=1043834940]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.325, 1.82, 1.04)
+material_override = SubResource("StandardMaterial3D_rq6xw")
+mesh = SubResource("BoxMesh_t11st")
+
+[node name="Caro11" type="MeshInstance3D" parent="." unique_id=413970294]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.455, 1.82, 1.04)
+material_override = SubResource("StandardMaterial3D_igf4u")
+mesh = SubResource("BoxMesh_to1sy")
+
+[node name="Caro12" type="MeshInstance3D" parent="." unique_id=909594573]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.585, 1.82, 1.04)
+material_override = SubResource("StandardMaterial3D_vmexe")
+mesh = SubResource("BoxMesh_3mj6a")
+
+[node name="Caro13" type="MeshInstance3D" parent="." unique_id=371195037]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.715, 1.82, 1.04)
+material_override = SubResource("StandardMaterial3D_agsld")
+mesh = SubResource("BoxMesh_3mmfs")
+
+[node name="Caro14" type="MeshInstance3D" parent="." unique_id=767733057]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.845, 1.82, 1.04)
+material_override = SubResource("StandardMaterial3D_cvg43")
+mesh = SubResource("BoxMesh_jvw8i")
+
+[node name="Caro15" type="MeshInstance3D" parent="." unique_id=183563739]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.975, 1.82, 1.04)
+material_override = SubResource("StandardMaterial3D_1u4l1")
+mesh = SubResource("BoxMesh_mvi4q")
+
+[node name="Bet0" parent="." unique_id=1283193130 instance=ExtResource("3_tpnb7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.91, 0.73, -1.4)
+label = ""
+press_range = 2.2
+compact = true
+label_size = 40
+button_scale = 0.42
+
+[node name="Bet1" parent="." unique_id=1663901916 instance=ExtResource("3_tpnb7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.65, 0.73, -1.4)
+label = ""
+color = Color(0.24313726, 0.3882353, 0.8666667, 1)
+press_range = 2.2
+compact = true
+label_size = 40
+button_scale = 0.42
+
+[node name="Bet2" parent="." unique_id=1880094353 instance=ExtResource("3_tpnb7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.39, 0.73, -1.4)
+label = ""
+color = Color(0.27450982, 0.654902, 0.34509805, 1)
+press_range = 2.2
+compact = true
+label_size = 40
+button_scale = 0.42
+
+[node name="Bet3" parent="." unique_id=1323291360 instance=ExtResource("3_tpnb7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.13, 0.73, -1.4)
+label = ""
+color = Color(0.9607843, 0.8509804, 0.039215688, 1)
+press_range = 2.2
+compact = true
+label_size = 40
+button_scale = 0.42
+
+[node name="Bet4" parent="." unique_id=384846309 instance=ExtResource("3_tpnb7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.13, 0.73, -1.4)
+label = ""
+color = Color(0.96862745, 0.41960785, 0.08235294, 1)
+press_range = 2.2
+compact = true
+label_size = 40
+button_scale = 0.42
+
+[node name="Bet5" parent="." unique_id=1154232861 instance=ExtResource("3_tpnb7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.39, 0.73, -1.4)
+label = ""
+color = Color(0.5568628, 0.30588236, 0.7764706, 1)
+press_range = 2.2
+compact = true
+label_size = 40
+button_scale = 0.42
+
+[node name="Bet6" parent="." unique_id=950846731 instance=ExtResource("3_tpnb7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.65, 0.73, -1.4)
+label = ""
+color = Color(0, 0.72156864, 0.8509804, 1)
+press_range = 2.2
+compact = true
+label_size = 40
+button_scale = 0.42
+
+[node name="Bet7" parent="." unique_id=191034614 instance=ExtResource("3_tpnb7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.91, 0.73, -1.4)
+label = ""
+color = Color(0.8980392, 0.8980392, 0.8980392, 1)
+press_range = 2.2
+compact = true
+label_size = 40
+button_scale = 0.42
+
+[node name="Nhac" type="Label3D" parent="." unique_id=1448933487]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.51, -1.42)
+pixel_size = 0.0022
+modulate = Color(0.9607843, 0.8509804, 0.039215688, 1)
+text = "BAM MAU DE TIN"
+font_size = 34
+outline_size = 8
+
+[node name="RaceButton" parent="." unique_id=1226855129 instance=ExtResource("3_tpnb7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.49, 0.9, -1.3)
+label = "DUA!"
+color = Color(0.27450982, 0.654902, 0.34509805, 1)
+press_range = 2.6
+cooldown = 1.5
+compact = true
+label_size = 36
+button_scale = 0.6

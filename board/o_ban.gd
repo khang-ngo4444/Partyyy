@@ -1,36 +1,28 @@
 class_name OBan
 extends Node3D
 
-## MỘT ô trên bàn party.
-##
-## Hình dạng, va chạm và nhãn nằm trong `o_ban.tscn`. Script này **không dựng node nào** —
-## nó chỉ đổi vật liệu và chữ theo loại ô, và đó là toàn bộ việc của nó.
-##
-## Loại ô và số thứ tự đặt trong Inspector của từng instance trong `ban_party.tscn`. Làm bản
-## đồ mới = mở scene lên kéo và sửa, không đụng tới một dòng code nào.
+## Một ô trên bàn: đổi vật liệu và chữ theo loại ô. Đặt `so`, `loai` trong Inspector.
 
-## Số thứ tự trên vòng, 0 trở đi. `BanDuong` sắp các ô theo số này chứ không theo tên node —
-## đổi tên node hay kéo lung tung trong cây cũng không làm sai thứ tự đi.
+## Thứ tự trên vòng (0 trở đi).
 @export var so := 0:
 	set(value):
 		so = value
 		if is_node_ready():
 			_ve()
-
 @export var loai: BanDuong.Loai = BanDuong.Loai.DAT:
 	set(value):
 		loai = value
 		if is_node_ready():
 			_ve()
 
-## Tám vật liệu theo đúng thứ tự enum `BanDuong.Loai`, kéo vào trong `o_ban.tscn`.
-## Mọi instance thừa hưởng mảng này, nên từng ô chỉ cần đặt `so` và `loai`.
+## Vật liệu theo thứ tự enum `BanDuong.Loai`.
 @export var vat_lieu: Array[StandardMaterial3D] = []
+
+var _rim_mat: StandardMaterial3D
 
 @onready var _mat: MeshInstance3D = $Mat
 @onready var _rim: MeshInstance3D = $Rim
 @onready var _chu: Label3D = $Chu
-var _rim_mat: StandardMaterial3D
 
 
 func _ready() -> void:
@@ -48,11 +40,11 @@ func _ve() -> void:
 
 
 func hien_trang_thai(loai_moi: int, chu_dat: String, thue_dat: String, co_ruong: bool,
-		diem_hoi_sinh: PackedStringArray) -> void:
+		diem_hoi_sinh: PackedStringArray, ghi_chu: PackedStringArray) -> void:
 	loai = loai_moi as BanDuong.Loai
 	var dong := PackedStringArray([str(so)])
 	if co_ruong:
-		dong.append("RUONG ?")
+		dong.append("RUONG BAU")
 	elif loai == BanDuong.Loai.DAT:
 		dong.append("DAT" if chu_dat.is_empty() else "DAT · %s" % chu_dat)
 		if not thue_dat.is_empty():
@@ -61,10 +53,11 @@ func hien_trang_thai(loai_moi: int, chu_dat: String, thue_dat: String, co_ruong:
 		dong.append(BanDuong.KY_HIEU[loai])
 	if not diem_hoi_sinh.is_empty():
 		dong.append("HOI SINH · %s" % ", ".join(diem_hoi_sinh))
+	dong.append_array(ghi_chu)
 	_chu.text = "\n".join(dong)
 
 
-## 0 = bình thường, 1 = điểm đến khác có thể chọn, 2 = lộ trình đang chọn.
+## 0 = thường, 1 = hướng có thể chọn, 2 = hướng đang chọn.
 func dat_noi_bat(muc: int) -> void:
 	if not is_node_ready() or _rim_mat == null:
 		return

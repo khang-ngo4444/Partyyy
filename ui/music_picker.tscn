@@ -1,6 +1,8 @@
 [gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://ui/music_picker.gd" id="1_mp"]
+[ext_resource type="PackedScene" path="res://ui/nut_dong.tscn" id="r_nut_dong_scene"]
+[ext_resource type="PackedScene" path="res://ui/dong_chu.tscn" id="r_dong_chu_scene"]
 
 [sub_resource type="StyleBoxFlat" id="panel_bg"]
 bg_color = Color(0.09, 0.09, 0.12, 0.97)
@@ -22,6 +24,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_mp")
+nut_dong_scene = ExtResource("r_nut_dong_scene")
+dong_chu_scene = ExtResource("r_dong_chu_scene")
 
 [node name="Dim" type="ColorRect" parent="."]
 layout_mode = 1
@@ -160,3 +164,11 @@ custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "ĐÓNG"
+
+[node name="HopThuMuc" type="FileDialog" parent="."]
+title = "Chọn thư mục nhạc"
+file_mode = 2
+access = 2
+use_native_dialog = true
+
+[connection signal="dir_selected" from="HopThuMuc" to="." method="_chon_thu_muc"]

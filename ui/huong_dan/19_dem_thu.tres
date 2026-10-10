@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "19 · Đếm thú"
+noi_dung = "[color=#8fe7d4][b]PHÍM[/b][/color]
+[b]W / S[/b] (hoặc A / D) chỉnh số · [b]Space / E[/b] chốt đáp án.
+
+[color=#8fe7d4][b]LUẬT[/b][/color]
+Gà, chim cánh cụt và heo chạy ngang đồng cỏ từ phải sang trái. Đầu mỗi vòng game hỏi đếm [b]một loại[/b]; khi đàn chạy hết, chỉnh con số rồi chốt trước khi hết giờ.
+
+Ván có 3 vòng, mỗi câu đúng +1. [b]Xếp hạng:[/b] nhiều câu đúng hơn đứng trên; bằng nhau thì ai chốt nhanh hơn (tổng thời gian) đứng trên."

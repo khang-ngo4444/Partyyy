@@ -1,0 +1,112 @@
+[gd_scene format=3]
+
+[sub_resource type="Gradient" id="s1"]
+offsets = PackedFloat32Array(0, 0.5, 0.58, 0.62, 0.80, 0.86, 0.92, 1)
+colors = PackedColorArray(1, 1, 1, 0.16, 1, 1, 1, 0.1, 1, 1, 1, 0.1, 1, 1, 1, 0.95, 1, 1, 1, 0.95, 1, 1, 1, 0.3, 1, 1, 1, 0, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="s2"]
+gradient = SubResource("s1")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="Gradient" id="s3"]
+offsets = PackedFloat32Array(0, 0.58, 0.62, 0.80, 0.86, 0.92, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.3, 0.3, 0.3, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="s4"]
+gradient = SubResource("s3")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="s5"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.35, 1, 0.95, 0.9)
+
+[sub_resource type="TorusMesh" id="s6"]
+inner_radius = 0.84
+outer_radius = 1
+rings = 48
+ring_segments = 6
+material = SubResource("s5")
+
+[sub_resource type="Animation" id="a_xung"]
+resource_name = "xung"
+length = 1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Vong:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(1, 1, 1), Vector3(1.12, 1, 1.12), Vector3(1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Decal:emission_energy")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [3, 5, 3]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Den:light_energy")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [1, 2.2, 1]
+}
+
+[sub_resource type="AnimationLibrary" id="lib"]
+_data = {
+&"xung": SubResource("a_xung")
+}
+
+[node name="VongMucTieu" type="Node3D"]
+visible = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("lib")
+}
+autoplay = "xung"
+
+[node name="Decal" type="Decal" parent="."]
+size = Vector3(3.2, 2.4, 3.2)
+texture_albedo = SubResource("s2")
+texture_emission = SubResource("s4")
+emission_energy = 2.5
+modulate = Color(0.3, 1, 0.95, 1)
+albedo_mix = 1.0
+
+[node name="Vong" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
+mesh = SubResource("s6")
+cast_shadow = 0
+
+[node name="Den" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+light_color = Color(0.4, 1, 0.95, 1)
+light_energy = 1.5
+omni_range = 4.0
+shadow_enabled = false
