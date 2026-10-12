@@ -4,92 +4,117 @@
 [ext_resource type="PackedScene" path="res://ui/dong_mau.tscn" id="2_dong"]
 [ext_resource type="PackedScene" path="res://ui/o_trang_bi.tscn" id="3_o"]
 
-[sub_resource type="StyleBoxFlat" id="Panel"]
-bg_color = Color(0.035, 0.045, 0.07, 0.88)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.25, 0.78, 0.91, 0.8)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-shadow_color = Color(0, 0, 0, 0.45)
-shadow_size = 8
-
-[node name="TrangThaiCaNhan" type="PanelContainer"]
-offset_left = 16.0
-offset_top = 16.0
-offset_right = 396.0
-offset_bottom = 60.0
+[node name="TrangThaiCaNhan" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/panel = SubResource("Panel")
 script = ExtResource("1_script")
 dong_mau_scene = ExtResource("2_dong")
 o_trang_bi_scene = ExtResource("3_o")
 
-[node name="Le" type="MarginContainer" parent="."]
-layout_mode = 2
+[node name="TheTren" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 14.0
+offset_top = 14.0
+offset_right = 404.0
+offset_bottom = 60.0
 mouse_filter = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 10
+theme_type_variation = &"TheNho"
 
-[node name="Cot" type="VBoxContainer" parent="Le"]
+[node name="Cot" type="VBoxContainer" parent="TheTren"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 6
 
-[node name="Vong" type="Label" parent="Le/Cot"]
+[node name="VongPill" type="PanelContainer" parent="TheTren/Cot"]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+theme_type_variation = &"ThePillMuc"
+
+[node name="Vong" type="Label" parent="TheTren/Cot/VongPill"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.86, 0.35, 1)
-theme_override_font_sizes/font_size = 15
+theme_type_variation = &"ChuDauMuc"
+theme_override_colors/font_color = Color(1, 0.835, 0.31, 1)
+theme_override_font_sizes/font_size = 17
 text = "VÒNG 1/1"
 
-[node name="TieuDeMau" type="Label" parent="Le/Cot"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.6, 0.85, 0.95, 1)
-theme_override_font_sizes/font_size = 13
-text = "MÁU"
-
-[node name="DsMau" type="VBoxContainer" parent="Le/Cot"]
+[node name="DsMau" type="VBoxContainer" parent="TheTren/Cot"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="Ngan" type="HSeparator" parent="Le/Cot"]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="TieuDeDo" type="Label" parent="Le/Cot"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.6, 0.85, 0.95, 1)
-theme_override_font_sizes/font_size = 13
-text = "TRANG BỊ"
-
-[node name="TrangBi" type="HFlowContainer" parent="Le/Cot"]
+[node name="SuKien" type="Label" parent="TheTren/Cot"]
 unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(360, 0)
 layout_mode = 2
-mouse_filter = 2
-theme_override_constants/h_separation = 6
-theme_override_constants/v_separation = 6
-
-[node name="TrongTui" type="Label" parent="Le/Cot"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.6, 0.62, 0.68, 1)
-theme_override_font_sizes/font_size = 13
-text = "Chưa có trang bị"
-
-[node name="GoiY" type="Label" parent="Le/Cot"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(356, 0)
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
-theme_override_font_sizes/font_size = 13
-text = ""
+theme_type_variation = &"ChuPhu"
+theme_override_font_sizes/font_size = 16
 autowrap_mode = 3
+max_lines_visible = 2
+
+[node name="ThanhDuoi" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -120.0
+offset_top = -108.0
+offset_right = 120.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_type_variation = &"TheNho"
+
+[node name="Hang" type="HBoxContainer" parent="ThanhDuoi"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="TrangBi" type="HBoxContainer" parent="ThanhDuoi/Hang"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="TrongTui" type="Label" parent="ThanhDuoi/Hang"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ChuNhan"
+theme_override_font_sizes/font_size = 16
+text = "Tab
+Kho (0)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ngan" type="VSeparator" parent="ThanhDuoi/Hang"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GoiYThe" type="PanelContainer" parent="ThanhDuoi/Hang"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+theme_type_variation = &"PillVang"
+
+[node name="GoiY" type="Label" parent="ThanhDuoi/Hang/GoiYThe"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 0)
+layout_mode = 2
+theme_type_variation = &"ChuDauMuc"
+theme_override_font_sizes/font_size = 19
+text = ""
+vertical_alignment = 1

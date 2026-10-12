@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_th")
 tieu_de = "01 · Mục tiêu ván chơi"
-noi_dung = "[color=#8fe7d4][b]MỤC TIÊU[/b][/color]
+noi_dung = "[color=#E0661A][b]MỤC TIÊU[/b][/color]
 Gom vàng, mở [b]Rương báu[/b] để lấy [b]Cúp[/b]. Hết số vòng của ván, ai nhiều Cúp nhất thắng; bằng Cúp thì so vàng.
 
 [b]Một vòng chơi[/b]

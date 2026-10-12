@@ -24,6 +24,7 @@ Bắt buộc theo đề mục 18 — mọi asset, code, tutorial và nội dung 
 | **Board Game Bits** | Kay Lousberg (KayKit) | CC0 | kaylousberg.com | Xúc xắc D4/D6/D8/D20, meeple, xu, domino, ô, cờ, đồng hồ cát |
 | Adventurers 2.0 | Kay Lousberg (KayKit) | CC0 | kaylousberg.com | Nhân vật chọn được |
 | Skeletons 1.1 | Kay Lousberg (KayKit) | CC0 | kaylousberg.com | Nhân vật chọn được |
+| Game Icons | Kenney | CC0 | kenney.nl/assets/game-icons | Icon HUD/menu (`ui/icons/kenney/`) |
 | Ghost chess set | MrEliptik (Victor Meunier) | CC0 | — | Bộ cờ vua |
 | **Chicken** | jeremy | **CC-BY 3.0** | poly.pizza/m/1YE8U35HXsI | 4 con gà đua |
 | **Penguin** | Poly by Google | **CC-BY 3.0** | poly.pizza/m/fBXvsC6pe_V | Penguin Cross (chưa dùng) |
@@ -79,3 +80,10 @@ không chơi được thì tệ hơn là không có gì.
 ## AI hỗ trợ
 - Claude (Anthropic) — hỗ trợ lập kế hoạch kiến trúc, viết script, và soạn tài liệu.
   *(ghi rõ file/phần nào có AI hỗ trợ khi nộp)*
+
+## Font
+
+| Font | Tác giả | License | Nguồn | Dùng cho |
+|---|---|---|---|---|
+| Baloo 2 | Ek Type | SIL OFL 1.1 | fonts.google.com/specimen/Baloo+2 | Tiêu đề, số, nút (`ui/theme/fonts/`) |
+| Nunito | Vernon Adams, Cyreal, Jacques Le Bailly | SIL OFL 1.1 | fonts.google.com/specimen/Nunito | Chữ thân |

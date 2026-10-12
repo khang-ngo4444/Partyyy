@@ -31,16 +31,19 @@ var _cho_diem := 0.0
 @onready var _nen: ColorRect = $Lop/Nen
 @onready var _khung: Control = $Lop/Khung
 @onready var _huong_dan: Control = $Lop/HuongDan
-@onready var _tieu: Label = $Lop/HuongDan/Giua/Tieu
-@onready var _luat: Label = $Lop/HuongDan/Giua/Luat
-@onready var _dem: Label = $Lop/HuongDan/Giua/Dem
-@onready var _ket_qua: Label = $Lop/Bang/KetQua
+@onready var _the_gioi_thieu: Control = %TheGioiThieu
+@onready var _tieu: Label = %Tieu
+@onready var _luat: Label = %Luat
+@onready var _dem: Label = %Dem
+@onready var _the_ket_qua: Control = %TheKetQua
+@onready var _ket_qua: Label = %KetQua
 
 ## Dải điểm dùng chung ở đáy màn hình.
 @onready var _bang_diem: HBoxContainer = $Lop/BangDiem
 
 
 func _ready() -> void:
+	add_to_group("quan_tro")
 	Fusion.register_broadcast_receiver(self)
 	_lop.visible = false
 
@@ -104,8 +107,12 @@ func _net_chay(ma: String, hat_giong: int, ids: Array) -> void:
 	_tieu.text = _game.ten
 	_luat.text = "• " + _game.luat.replace(" · ", "\n• ")
 	_huong_dan.visible = true
+	_the_ket_qua.visible = false
+	%Mo.visible = false
+	UINav.xuat_hien([_the_gioi_thieu], 0.0, 0.7)
 	for i in range(int(DEM_NGUOC), 0, -1):
 		_dem.text = str(i)
+		UINav.dap(_dem)
 		await get_tree().create_timer(1.0).timeout
 		if not _dang_chay:
 			return          # có người huỷ giữa chừng
@@ -165,16 +172,32 @@ func _nguoi(id: int) -> Player:
 func _khi_xong(xep_hang: Array) -> void:
 	if not _dang_chay:
 		return
-	var dong := PackedStringArray(["KẾT QUẢ"])
+	var dong := PackedStringArray()
 	for i in xep_hang.size():
 		var id := int(xep_hang[i])
 		var diem := _game.chu_diem(id) if _game != null and is_instance_valid(_game) else ""
 		dong.append("%d.  %s%s" % [i + 1, Player.ten_theo_id(get_tree(), id),
 				("   ·   " + diem) if diem != "" else ""])
 	_ket_qua.text = "\n".join(dong)
+	# Phủ tối toàn màn để thẻ kết quả không chồng lên UI của trò / dải điểm.
+	%Mo.visible = true
+	_bang_diem.visible = false
+	_an_ui_tro()
+	_the_ket_qua.visible = true
+	UINav.dap(_the_ket_qua)
 	await get_tree().create_timer(XEM_KET_QUA).timeout
 	_don()
 	ket_thuc.emit(xep_hang)
+
+
+## Ẩn lớp UI riêng của trò (CanvasLayer không ăn theo `visible` của node cha).
+func _an_ui_tro() -> void:
+	if _game == null or not is_instance_valid(_game):
+		return
+	for n in _game.find_children("*", "CanvasLayer", true, false):
+		(n as CanvasLayer).visible = false
+	for c in _game.find_children("*", "Control", true, false):
+		(c as Control).visible = false
 
 
 func huy() -> void:
@@ -194,5 +217,7 @@ func _don() -> void:
 	_bang_diem.visible = false
 	_ids.clear()
 	_ket_qua.text = ""
+	_the_ket_qua.visible = false
+	%Mo.visible = false
 	# Trả chuột về cho game 3D.
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED

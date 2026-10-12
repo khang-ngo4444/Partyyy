@@ -6,38 +6,55 @@
 [ext_resource type="Texture2D" path="res://ui/icons/cup.svg" id="4_cup"]
 
 [sub_resource type="StyleBoxFlat" id="HealthBg"]
-bg_color = Color(0.12, 0.13, 0.18, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+bg_color = Color(0.953, 0.89, 0.737, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.169, 0.106, 0.239, 1)
+corner_radius_top_left = 99
+corner_radius_top_right = 99
+corner_radius_bottom_right = 99
+corner_radius_bottom_left = 99
 
 [sub_resource type="StyleBoxFlat" id="HealthFill"]
-bg_color = Color(0.91, 0.22, 0.3, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+bg_color = Color(0.937, 0.294, 0.294, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.169, 0.106, 0.239, 1)
+corner_radius_top_left = 99
+corner_radius_top_right = 99
+corner_radius_bottom_right = 99
+corner_radius_bottom_left = 99
 
-[node name="DongMau" type="HBoxContainer"]
+[node name="DongMau" type="PanelContainer"]
 mouse_filter = 2
-theme_override_constants/separation = 8
 script = ExtResource("1_dm")
 
-[node name="MauNhanVat" type="ColorRect" parent="."]
-custom_minimum_size = Vector2(5, 20)
+[node name="Hang" type="HBoxContainer" parent="."]
 layout_mode = 2
 mouse_filter = 2
+theme_override_constants/separation = 8
 
-[node name="Ten" type="Label" parent="."]
-custom_minimum_size = Vector2(110, 0)
+[node name="MauNhanVat" type="Panel" parent="Hang"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="Ten" type="Label" parent="Hang"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(118, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
 text = "ten"
 clip_text = true
 
-[node name="Tim" type="TextureRect" parent="."]
-custom_minimum_size = Vector2(16, 16)
+[node name="Tim" type="TextureRect" parent="Hang"]
+custom_minimum_size = Vector2(22, 22)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
@@ -45,8 +62,9 @@ texture = ExtResource("2_heart")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Thanh" type="ProgressBar" parent="."]
-custom_minimum_size = Vector2(110, 14)
+[node name="Thanh" type="ProgressBar" parent="Hang"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(84, 20)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
@@ -56,14 +74,20 @@ max_value = 10.0
 value = 10.0
 show_percentage = false
 
-[node name="So" type="Label" parent="."]
-custom_minimum_size = Vector2(42, 0)
+[node name="So" type="Label" parent="Hang"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 17
 text = "10/10"
 
-[node name="Xu" type="TextureRect" parent="."]
-custom_minimum_size = Vector2(16, 16)
+[node name="XuPill" type="HBoxContainer" parent="Hang"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 3
+
+[node name="Xu" type="TextureRect" parent="Hang/XuPill"]
+custom_minimum_size = Vector2(22, 22)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
@@ -71,14 +95,21 @@ texture = ExtResource("3_coin")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Vang" type="Label" parent="."]
+[node name="Vang" type="Label" parent="Hang/XuPill"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(34, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.86, 0.35, 1)
-theme_override_font_sizes/font_size = 14
+theme_type_variation = &"ChuDauMuc"
+theme_override_font_sizes/font_size = 20
 text = "0"
 
-[node name="Coc" type="TextureRect" parent="."]
-custom_minimum_size = Vector2(16, 16)
+[node name="CocPill" type="HBoxContainer" parent="Hang"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 3
+
+[node name="Coc" type="TextureRect" parent="Hang/CocPill"]
+custom_minimum_size = Vector2(22, 22)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
@@ -86,8 +117,10 @@ texture = ExtResource("4_cup")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="SoCoc" type="Label" parent="."]
+[node name="SoCoc" type="Label" parent="Hang/CocPill"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.86, 0.35, 1)
-theme_override_font_sizes/font_size = 14
+theme_type_variation = &"ChuDauMuc"
+theme_override_font_sizes/font_size = 20
 text = "0"

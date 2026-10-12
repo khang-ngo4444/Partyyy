@@ -9,7 +9,10 @@ enum Hiem { THUONG, HIEM, HUYEN_THOAI }
 ## TU_DONG = không bấm dùng (Úp thúng tự đỡ đòn).
 enum Nham { TAI_CHO, TIA, NON, CHON_NGUOI, CHON_O, CHON_MINIGAME, TU_DONG }
 
-const TUI_TOI_DA := 3
+## Túi = mảng ô cố định ("" = ô trống): 0..4 dùng nhanh (phím 1–5), còn lại là kho 4×4.
+const SO_O_NHANH := 5
+const SO_O_KHO := 16
+const TUI_TOI_DA := SO_O_NHANH + SO_O_KHO
 const TY_LE_HUYEN_THOAI := 0.15
 ## Một ô ≈ 5 m.
 const MET_MOI_O := 5.0
@@ -63,6 +66,10 @@ const BANG := {
 
 static func ten(mon: String) -> String:
 	return str(TEN.get(mon, mon))
+
+
+static func hiem(mon: String) -> int:
+	return int((BANG.get(mon, [Hiem.THUONG]) as Array)[0])
 
 
 static func nham(mon: String) -> int:

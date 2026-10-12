@@ -5,6 +5,8 @@ extends Control
 ## Chuyển tiếp lệnh chat cho `main.gd`.
 signal lenh(id_nguoi_gui: int, doi_so: PackedStringArray)
 signal thue_da_chon(loai: int)
+## Kho đồ xin đổi chỗ hai ô túi.
+signal doi_cho_do(a: int, b: int)
 
 ## Dòng được chọn trong bảng chọn mục tiêu; -1 = huỷ.
 signal muc_tieu_da_chon(i: int)
@@ -17,13 +19,22 @@ const TEN_HD := {0: "[1] CHECK", 1: "[2] THEO", 2: "[3] TỐ", 3: "[4] BỎ", 4:
 var _peer_count := 0
 var _status_acc := STATUS_REFRESH
 var _local_player: Player = null
+var _tren_ban := false
+var _dem_cu := -1
+var _ready_cu := ""
+var _hien_ping := false
 
 @onready var room_label: Label = %RoomLabel
+@onready var role_pill: Control = %RolePill
 @onready var peers_label: Label = %PeersLabel
 @onready var ping_label: Label = %PingLabel
 @onready var ready_label: Label = %ReadyLabel
+@onready var ready_card: Control = %ReadyCard
+@onready var countdown: Label = %Countdown
+@onready var lobby_info: Control = %LobbyInfo
+@onready var hint_row: HBoxContainer = %HintRow
 @onready var card_prompt: Label = %CardPrompt
-@onready var poker_bar: VBoxContainer = %PokerBar
+@onready var poker_bar: Control = %PokerBar
 @onready var raise_row: HBoxContainer = %RaiseRow
 @onready var raise_label: Label = %RaiseLabel
 @onready var raise_slider: HSlider = %RaiseSlider
@@ -31,11 +42,12 @@ var _local_player: Player = null
 @onready var crosshair: Control = %Crosshair
 @onready var luc_nen: ColorRect = %LucNem
 @onready var luc_muc: ColorRect = %LucNemMuc
-@onready var bang_ban: VBoxContainer = $BangBan
-@onready var trang_thai_ca_nhan: PanelContainer = $TrangThaiCaNhan
+@onready var bang_ban: Control = $BangBan
+@onready var trang_thai_ca_nhan: TrangThaiCaNhan = $TrangThaiCaNhan
 @onready var chat := $Chat
 @onready var bang_thang: Control = $BangThang
 @onready var bang_chon: BangChon = $BangChon
+@onready var kho_do: KhoDo = $KhoDo
 @onready var performance_manager: Node = get_node("/root/PerformanceManager")
 
 
@@ -43,10 +55,14 @@ func _ready() -> void:
 	chat.lenh.connect(func(id: int, ds: PackedStringArray): lenh.emit(id, ds))
 	bang_ban.thue_da_chon.connect(func(loai: int): thue_da_chon.emit(loai))
 	bang_chon.da_chon.connect(func(i: int): muc_tieu_da_chon.emit(i))
+	kho_do.doi_cho.connect(func(a: int, b: int): doi_cho_do.emit(a, b))
 	NetManager.room_joined.connect(_on_room_joined)
 	NetManager.peer_joined.connect(func(_id, _uid): _refresh_peers())
 	NetManager.peer_left.connect(func(_id, _inactive): _refresh_peers())
 	NetManager.master_changed.connect(func(_new_id, _old): _on_room_joined())
+	for g in [["M", "Nhân vật"], ["E", "Tương tác"], ["Enter", "Chat"], ["Esc", "Menu"],
+			["F3", "Ping/FPS"]]:
+		hint_row.add_child(UIKit.chip_phim(g[0], g[1]))
 
 
 func _process(delta: float) -> void:
@@ -55,6 +71,7 @@ func _process(delta: float) -> void:
 	# Tâm ngắm chỉ hiện khi chuột đang khoá vào game.
 	crosshair.visible = Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
 	_ve_luc_nem()
+	_cap_nhat_hien_thi()
 	_status_acc += delta
 	if _status_acc < STATUS_REFRESH:
 		return
@@ -73,16 +90,52 @@ func _refresh_status() -> void:
 	_nhac_poker()
 
 	var ms: MatchState = get_tree().get_first_node_in_group("match_state")
-	if ms == null:
-		ready_label.text = ""
-		return
-	match ms.phase:
-		ms.PHASE_COUNTDOWN:
-			ready_label.text = "BẮT ĐẦU SAU %.0f" % ceilf(ms.countdown)
-		ms.PHASE_PLAYING:
-			ready_label.text = "VÒNG %d" % ms.round_index
-		_:
-			ready_label.text = "%d/%d sẵn sàng — đứng lên ô giữa sàn" % [ms.ready_count(), ms.player_count()]
+	var chu := ""
+	var dem := -1
+	if ms != null:
+		match ms.phase:
+			ms.PHASE_COUNTDOWN:
+				dem = int(ceilf(ms.countdown))
+				chu = "BẮT ĐẦU NÀO!"
+			ms.PHASE_PLAYING:
+				chu = "VÒNG %d" % ms.round_index
+			_:
+				chu = "%d/%d SẴN SÀNG · đứng lên ô giữa sàn" % [ms.ready_count(), ms.player_count()]
+	ready_label.text = chu
+	ready_card.visible = chu != "" and not _tren_ban
+	if chu != _ready_cu and ready_card.visible:
+		UINav.nay(ready_card, 1.1)
+	_ready_cu = chu
+	# Đếm ngược: số to đập giữa màn.
+	countdown.visible = dem > 0
+	if dem > 0 and dem != _dem_cu:
+		countdown.text = str(dem)
+		UINav.dap(countdown)
+	_dem_cu = dem
+
+
+## Ẩn thông tin sảnh khi đang ở bàn party hoặc minigame (tránh chữ rò sang màn khác).
+func _cap_nhat_hien_thi() -> void:
+	var qt = get_tree().get_first_node_in_group("quan_tro")
+	var minigame: bool = qt != null and qt.dang_chay()
+	kho_do.duoc_mo = _tren_ban and not minigame
+	if not kho_do.duoc_mo:
+		kho_do.dong()
+	lobby_info.visible = not _tren_ban and not minigame
+	hint_row.visible = not _tren_ban and not minigame
+	ping_label.visible = _hien_ping
+	if minigame:
+		ready_card.visible = false
+		countdown.visible = false
+	# Bảng bàn tự bật/tắt theo trạng thái; chỉ che tạm lúc minigame.
+	bang_ban.modulate.a = 0.0 if minigame else 1.0
+	trang_thai_ca_nhan.modulate.a = 0.0 if minigame else 1.0
+
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F3:
+		_hien_ping = not _hien_ping
+		get_viewport().set_input_as_handled()
 
 
 ## Thanh lực ném dưới tâm ngắm (chỉ hiện khi giữ E).
@@ -93,16 +146,16 @@ func _ve_luc_nem() -> void:
 	luc_nen.visible = muc >= 0.0
 	if muc < 0.0:
 		return
-	luc_muc.size = Vector2(luc_nen.size.x * muc, luc_nen.size.y)
+	luc_muc.size = Vector2((luc_nen.size.x - 6.0) * muc, luc_nen.size.y - 6.0)
 	luc_muc.color = (Color("46a758").lerp(Color("f5d90a"), muc * 2.0) if muc < 0.5
 			else Color("f5d90a").lerp(Color("e5484d"), (muc - 0.5) * 2.0))
 
 
 ## Hiện tên phòng để biết hai người có cùng phòng không.
 func _on_room_joined() -> void:
-	room_label.text = "PHÒNG %s  ·  bạn là #%d%s" % [
-		NetManager.room_name, NetManager.local_id(),
-		"  ·  CHỦ PHÒNG" if NetManager.is_master() else ""]
+	room_label.text = "PHÒNG %s" % NetManager.room_name
+	role_pill.visible = NetManager.is_master()
+	room_label.tooltip_text = "Bạn là #%d" % NetManager.local_id()
 	_refresh_peers()
 
 
@@ -117,10 +170,9 @@ func _refresh_peers() -> void:
 				break
 	var nhan_vat := players.size()
 	if nhan_vat == _peer_count:
-		peers_label.text = "%d người trong phòng" % _peer_count
+		peers_label.text = "%d người" % _peer_count
 	else:
-		peers_label.text = "%d người trong phòng — mới thấy %d nhân vật" % [
-				_peer_count, nhan_vat]
+		peers_label.text = "%d người · mới thấy %d" % [_peer_count, nhan_vat]
 
 
 ## Nhắc phím cho người đang ngồi bàn bài.
@@ -194,16 +246,17 @@ func _nhac_poker() -> void:
 func cap_nhat_ban(tt: Dictionary) -> void:
 	bang_ban.cap_nhat(tt)
 	trang_thai_ca_nhan.cap_nhat(tt)
+	kho_do.cap_nhat(tt)
 
 
 ## Bảng máu/trang bị chỉ hiện ở bàn party; lúc đó ẩn dòng thông tin phòng chờ.
 func cap_nhat_giao_dien_ban(hien: bool, chon: int, duoc_dung: bool) -> void:
-	(trang_thai_ca_nhan as TrangThaiCaNhan).dat_giao_dien(hien, chon, duoc_dung)
-	$VBox.visible = not hien
+	trang_thai_ca_nhan.dat_giao_dien(hien, chon, duoc_dung)
+	_tren_ban = hien
 
 
-func cap_nhat_chon_huong(noi_dung: String, tieu_de := "ĐÃ TUNG XÚC XẮC — CHỌN HƯỚNG") -> void:
-	bang_ban.cap_nhat_chon_huong(noi_dung, tieu_de)
+func cap_nhat_chon_huong(noi_dung: String, tieu_de := "") -> void:
+	trang_thai_ca_nhan.dat_chon_huong(noi_dung, tieu_de)
 
 
 ## `nhan` rỗng = đóng bảng.

@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://ui/character_creator.gd" id="1_creator"]
 [ext_resource type="PackedScene" path="res://ui/nut_chon.tscn" id="r_nut_chon_scene"]
@@ -8,26 +8,27 @@
 [ext_resource type="PackedScene" path="res://player/characters/Ranger.tscn" id="nv_2"]
 [ext_resource type="PackedScene" path="res://player/characters/Rogue_Hooded.tscn" id="nv_3"]
 [ext_resource type="PackedScene" path="res://player/characters/Skeleton_Warrior.tscn" id="nv_4"]
+[ext_resource type="Script" path="res://ui/kit/trang_tri.gd" id="5_tt"]
+[ext_resource type="Texture2D" path="res://ui/icons/kenney/arrowLeft.png" id="6_l"]
+[ext_resource type="Texture2D" path="res://ui/icons/kenney/arrowRight.png" id="7_r"]
 
-[sub_resource type="StyleBoxFlat" id="CreatorPanel"]
-bg_color = Color(0.004, 0.022, 0.03, 0.97)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.72, 0.94, 0.9, 0.55)
-content_margin_left = 28.0
-content_margin_top = 24.0
-content_margin_right = 28.0
-content_margin_bottom = 24.0
+[sub_resource type="CylinderMesh" id="Be"]
+top_radius = 1.0
+bottom_radius = 1.08
+height = 0.18
+radial_segments = 48
 
-[sub_resource type="StyleBoxFlat" id="PreviewPanel"]
-bg_color = Color(0.01, 0.055, 0.07, 0.72)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.63, 0.9, 0.84, 0.28)
+[sub_resource type="StandardMaterial3D" id="BeMat"]
+albedo_color = Color(0.961, 0.541, 0.173, 1)
+
+[sub_resource type="CylinderMesh" id="BeVien"]
+top_radius = 1.14
+bottom_radius = 1.14
+height = 0.12
+radial_segments = 48
+
+[sub_resource type="StandardMaterial3D" id="BeVienMat"]
+albedo_color = Color(0.169, 0.106, 0.239, 1)
 
 [node name="CharacterCreator" type="Control"]
 layout_mode = 3
@@ -37,218 +38,291 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_creator")
-models = Array[PackedScene]([ExtResource("nv_0"), ExtResource("nv_1"), ExtResource("nv_2"), ExtResource("nv_3"), ExtResource("nv_4")])
 nut_chon_scene = ExtResource("r_nut_chon_scene")
+models = Array[PackedScene]([ExtResource("nv_0"), ExtResource("nv_1"), ExtResource("nv_2"), ExtResource("nv_3"), ExtResource("nv_4")])
 o_mau_scene = ExtResource("r_o_mau_scene")
 
-[node name="Dim" type="ColorRect" parent="."]
-mouse_filter = 2
+[node name="Bg" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.002, 0.012, 0.017, 0.9)
+color = Color(0.31, 0.765, 0.969, 0.96)
+
+[node name="TrangTri" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("5_tt")
 
 [node name="Margin" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 42.0
-offset_top = 24.0
-offset_right = -42.0
-offset_bottom = -24.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 30
 
-[node name="Panel" type="PanelContainer" parent="Margin"]
+[node name="Columns" type="HBoxContainer" parent="Margin"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("CreatorPanel")
+theme_override_constants/separation = 28
 
-[node name="Columns" type="HBoxContainer" parent="Margin/Panel"]
-layout_mode = 2
-theme_override_constants/separation = 32
-
-[node name="PreviewColumn" type="VBoxContainer" parent="Margin/Panel/Columns"]
-custom_minimum_size = Vector2(500, 0)
+[node name="Stage" type="PanelContainer" parent="Margin/Columns"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 10
+theme_type_variation = &"KhungVang"
 
-[node name="Kicker" type="Label" parent="Margin/Panel/Columns/PreviewColumn"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.63, 0.88, 0.83, 0.8)
-theme_override_font_sizes/font_size = 11
-text = "HỒ SƠ NGƯỜI CHƠI  /  NHÂN VẬT 3D"
-
-[node name="ArchetypeName" type="Label" parent="Margin/Panel/Columns/PreviewColumn"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 30
-text = "VỆ BINH"
-
-[node name="PreviewFrame" type="PanelContainer" parent="Margin/Panel/Columns/PreviewColumn"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_styles/panel = SubResource("PreviewPanel")
-
-[node name="ViewportContainer" type="SubViewportContainer" parent="Margin/Panel/Columns/PreviewColumn/PreviewFrame"]
-layout_mode = 2
-stretch = true
-
-[node name="PreviewViewport" type="SubViewport" parent="Margin/Panel/Columns/PreviewColumn/PreviewFrame/ViewportContainer"]
-unique_name_in_owner = true
-transparent_bg = true
-own_world_3d = true
-handle_input_locally = false
-size = Vector2i(600, 640)
-render_target_update_mode = 4
-
-[node name="PreviewWorld" type="Node3D" parent="Margin/Panel/Columns/PreviewColumn/PreviewFrame/ViewportContainer/PreviewViewport"]
-
-[node name="PreviewAnchor" type="Node3D" parent="Margin/Panel/Columns/PreviewColumn/PreviewFrame/ViewportContainer/PreviewViewport/PreviewWorld"]
-unique_name_in_owner = true
-unique_name_in_owner = true
-
-[node name="PreviewCamera" type="Camera3D" parent="Margin/Panel/Columns/PreviewColumn/PreviewFrame/ViewportContainer/PreviewViewport/PreviewWorld"]
-unique_name_in_owner = true
-unique_name_in_owner = true
-position = Vector3(0, 0.9, 4.2)
-fov = 31.0
-
-[node name="KeyLight" type="DirectionalLight3D" parent="Margin/Panel/Columns/PreviewColumn/PreviewFrame/ViewportContainer/PreviewViewport/PreviewWorld"]
-rotation_degrees = Vector3(-28, -34, 0)
-light_color = Color(0.72, 0.98, 0.94, 1)
-light_energy = 2.0
-
-[node name="RimLight" type="DirectionalLight3D" parent="Margin/Panel/Columns/PreviewColumn/PreviewFrame/ViewportContainer/PreviewViewport/PreviewWorld"]
-rotation_degrees = Vector3(-18, 145, 0)
-light_color = Color(0.32, 0.58, 1, 1)
-light_energy = 1.1
-
-[node name="AnimationName" type="Label" parent="Margin/Panel/Columns/PreviewColumn"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.68, 0.88, 0.84, 0.74)
-theme_override_font_sizes/font_size = 10
-text = "XEM ANIMATION  /  ĐỨNG"
-
-[node name="AnimationButtons" type="HBoxContainer" parent="Margin/Panel/Columns/PreviewColumn"]
+[node name="VBox" type="VBoxContainer" parent="Margin/Columns/Stage"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="IdleBtn" type="Button" parent="Margin/Panel/Columns/PreviewColumn/AnimationButtons"]
+[node name="Head" type="HBoxContainer" parent="Margin/Columns/Stage/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="PrevBtn" type="Button" parent="Margin/Columns/Stage/VBox/Head"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+theme_type_variation = &"NutTrang"
+icon = ExtResource("6_l")
+icon_alignment = 1
+
+[node name="Names" type="VBoxContainer" parent="Margin/Columns/Stage/VBox/Head"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = -6
+
+[node name="PlayerName" type="Label" parent="Margin/Columns/Stage/VBox/Head/Names"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ChuNhan"
+theme_override_font_sizes/font_size = 20
+text = "Bạn"
+horizontal_alignment = 1
+
+[node name="ArchetypeName" type="Label" parent="Margin/Columns/Stage/VBox/Head/Names"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ChuTieuDe"
+theme_override_font_sizes/font_size = 46
+text = "VỆ BINH"
+horizontal_alignment = 1
+
+[node name="NextBtn" type="Button" parent="Margin/Columns/Stage/VBox/Head"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+theme_type_variation = &"NutTrang"
+icon = ExtResource("7_r")
+icon_alignment = 1
+
+[node name="ViewportContainer" type="SubViewportContainer" parent="Margin/Columns/Stage/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+mouse_default_cursor_shape = 6
+stretch = true
+
+[node name="PreviewViewport" type="SubViewport" parent="Margin/Columns/Stage/VBox/ViewportContainer"]
+transparent_bg = true
+own_world_3d = true
+handle_input_locally = false
+size = Vector2i(600, 460)
+render_target_update_mode = 4
+
+[node name="PreviewWorld" type="Node3D" parent="Margin/Columns/Stage/VBox/ViewportContainer/PreviewViewport"]
+
+[node name="PreviewAnchor" type="Node3D" parent="Margin/Columns/Stage/VBox/ViewportContainer/PreviewViewport/PreviewWorld"]
+unique_name_in_owner = true
+
+[node name="Be" type="MeshInstance3D" parent="Margin/Columns/Stage/VBox/ViewportContainer/PreviewViewport/PreviewWorld"]
+transform = Transform3D(0.85, 0, 0, 0, 1, 0, 0, 0, 0.85, 0, -0.09, 0)
+mesh = SubResource("Be")
+surface_material_override/0 = SubResource("BeMat")
+
+[node name="BeVien" type="MeshInstance3D" parent="Margin/Columns/Stage/VBox/ViewportContainer/PreviewViewport/PreviewWorld"]
+transform = Transform3D(0.85, 0, 0, 0, 1, 0, 0, 0, 0.85, 0, -0.17, 0)
+mesh = SubResource("BeVien")
+surface_material_override/0 = SubResource("BeVienMat")
+
+[node name="PreviewCamera" type="Camera3D" parent="Margin/Columns/Stage/VBox/ViewportContainer/PreviewViewport/PreviewWorld"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, 4.4)
+fov = 31.0
+
+[node name="KeyLight" type="DirectionalLight3D" parent="Margin/Columns/Stage/VBox/ViewportContainer/PreviewViewport/PreviewWorld"]
+transform = Transform3D(0.829, -0.262, 0.494, 0, 0.883, 0.469, -0.559, -0.389, 0.732, 0, 0, 0)
+light_color = Color(1, 0.97, 0.9, 1)
+light_energy = 1.8
+
+[node name="RimLight" type="DirectionalLight3D" parent="Margin/Columns/Stage/VBox/ViewportContainer/PreviewViewport/PreviewWorld"]
+transform = Transform3D(-0.819, -0.176, -0.546, 0, 0.951, -0.309, 0.574, -0.251, -0.779, 0, 0, 0)
+light_color = Color(1, 0.75, 0.85, 1)
+light_energy = 0.9
+
+[node name="AnimationButtons" type="HBoxContainer" parent="Margin/Columns/Stage/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="IdleBtn" type="Button" parent="Margin/Columns/Stage/VBox/AnimationButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"NutTrang"
+theme_override_font_sizes/font_size = 20
 text = "ĐỨNG"
 
-[node name="WalkBtn" type="Button" parent="Margin/Panel/Columns/PreviewColumn/AnimationButtons"]
+[node name="WalkBtn" type="Button" parent="Margin/Columns/Stage/VBox/AnimationButtons"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = &"NutTrang"
+theme_override_font_sizes/font_size = 20
 text = "ĐI"
 
-[node name="JumpBtn" type="Button" parent="Margin/Panel/Columns/PreviewColumn/AnimationButtons"]
+[node name="JumpBtn" type="Button" parent="Margin/Columns/Stage/VBox/AnimationButtons"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = &"NutTrang"
+theme_override_font_sizes/font_size = 20
 text = "NHẢY"
 
-[node name="SitBtn" type="Button" parent="Margin/Panel/Columns/PreviewColumn/AnimationButtons"]
+[node name="SitBtn" type="Button" parent="Margin/Columns/Stage/VBox/AnimationButtons"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = &"NutTrang"
+theme_override_font_sizes/font_size = 20
 text = "NGỒI"
 
-[node name="Options" type="VBoxContainer" parent="Margin/Panel/Columns"]
-custom_minimum_size = Vector2(430, 0)
+[node name="Options" type="PanelContainer" parent="Margin/Columns"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(580, 0)
 layout_mode = 2
-theme_override_constants/separation = 6
 
-[node name="Title" type="Label" parent="Margin/Panel/Columns/Options"]
+[node name="VBox" type="VBoxContainer" parent="Margin/Columns/Options"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
-text = "TÙY BIẾN NGOẠI HÌNH"
+theme_override_constants/separation = 10
 
-[node name="Description" type="Label" parent="Margin/Panel/Columns/Options"]
+[node name="Title" type="Label" parent="Margin/Columns/Options/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.73, 0.82, 0.81, 0.7)
-theme_override_font_sizes/font_size = 12
-text = "Lựa chọn này được lưu và đồng bộ cho mọi người trong phòng."
-autowrap_mode = 3
+theme_type_variation = &"ChuDauMuc"
+theme_override_font_sizes/font_size = 36
+text = "TUỲ BIẾN NHÂN VẬT"
 
-[node name="ClassLabel" type="Label" parent="Margin/Panel/Columns/Options"]
+[node name="ClassLabel" type="Label" parent="Margin/Columns/Options/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.67, 0.9, 0.85, 0.84)
-theme_override_font_sizes/font_size = 10
-text = "KIỂU NHÂN VẬT"
+theme_type_variation = &"ChuNhan"
+text = "CHỌN NHÂN VẬT"
 
-[node name="ClassGrid" type="GridContainer" parent="Margin/Panel/Columns/Options"]
+[node name="ClassGrid" type="HBoxContainer" parent="Margin/Columns/Options/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/v_separation = 6
-columns = 1
+theme_override_constants/separation = 12
 
-[node name="PrimaryLabel" type="Label" parent="Margin/Panel/Columns/Options"]
+[node name="PrimaryLabel" type="Label" parent="Margin/Columns/Options/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.67, 0.9, 0.85, 0.84)
-theme_override_font_sizes/font_size = 10
+theme_type_variation = &"ChuNhan"
 text = "MÀU CHÍNH"
 
-[node name="PrimaryGrid" type="GridContainer" parent="Margin/Panel/Columns/Options"]
+[node name="PrimaryGrid" type="GridContainer" parent="Margin/Columns/Options/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/h_separation = 7
-theme_override_constants/v_separation = 7
-columns = 5
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 10
 
-[node name="AccentLabel" type="Label" parent="Margin/Panel/Columns/Options"]
+[node name="AccentLabel" type="Label" parent="Margin/Columns/Options/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.67, 0.9, 0.85, 0.84)
-theme_override_font_sizes/font_size = 10
+theme_type_variation = &"ChuNhan"
 text = "MÀU ĐIỂM NHẤN"
 
-[node name="AccentGrid" type="GridContainer" parent="Margin/Panel/Columns/Options"]
+[node name="AccentGrid" type="GridContainer" parent="Margin/Columns/Options/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/h_separation = 7
-theme_override_constants/v_separation = 7
-columns = 5
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 10
 
-[node name="AccessoryCheck" type="CheckButton" parent="Margin/Panel/Columns/Options"]
+[node name="AccessoryCheck" type="CheckButton" parent="Margin/Columns/Options/VBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 36)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
-text = "Hiện phụ kiện đặc trưng"
 button_pressed = true
+text = "Phụ kiện đặc trưng"
 
-[node name="Spacer" type="Control" parent="Margin/Panel/Columns/Options"]
+[node name="BubbleBox" type="VBoxContainer" parent="Margin/Columns/Options/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BubbleLabel" type="Label" parent="Margin/Columns/Options/VBox/BubbleBox"]
+layout_mode = 2
+theme_type_variation = &"ChuNhan"
+text = "BONG BÓNG CHAT"
+
+[node name="BubbleGrid" type="HBoxContainer" parent="Margin/Columns/Options/VBox/BubbleBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Spacer" type="Control" parent="Margin/Columns/Options/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="Hint" type="Label" parent="Margin/Panel/Columns/Options"]
+[node name="Actions" type="HBoxContainer" parent="Margin/Columns/Options/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.66, 0.75, 0.74, 0.62)
-theme_override_font_sizes/font_size = 11
-text = "Bạn vẫn có thể đổi nhân vật trong lobby bằng phím M."
+theme_override_constants/separation = 14
 
-[node name="Actions" type="HBoxContainer" parent="Margin/Panel/Columns/Options"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="CreatorBackBtn" type="Button" parent="Margin/Panel/Columns/Options/Actions"]
+[node name="CreatorBackBtn" type="Button" parent="Margin/Columns/Options/VBox/Actions"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 42)
+custom_minimum_size = Vector2(190, 70)
 layout_mode = 2
-text = "TRỞ LẠI"
+theme_type_variation = &"NutTrang"
+text = "QUAY LẠI"
 
-[node name="CreatorConfirmBtn" type="Button" parent="Margin/Panel/Columns/Options/Actions"]
+[node name="CreatorConfirmBtn" type="Button" parent="Margin/Columns/Options/VBox/Actions"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 42)
+custom_minimum_size = Vector2(0, 70)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "TIẾP TỤC ONLINE  →"
+theme_type_variation = &"NutVang"
+theme_override_font_sizes/font_size = 30
+text = "TIẾP TỤC  ▶"
+
+[node name="AnhViewport" type="SubViewport" parent="."]
+unique_name_in_owner = true
+own_world_3d = true
+transparent_bg = true
+size = Vector2i(128, 156)
+render_target_update_mode = 0
+
+[node name="Cam" type="Camera3D" parent="AnhViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 3.6)
+fov = 32.0
+
+[node name="DenChinh" type="DirectionalLight3D" parent="AnhViewport"]
+transform = Transform3D(0.788011, 0.29052, -0.542817, 0, 0.881699, 0.471904, 0.615661, -0.371852, 0.694776, 0, 0, 0)
+light_energy = 1.5
+
+[node name="DenVien" type="DirectionalLight3D" parent="AnhViewport"]
+transform = Transform3D(-0.866025, 0.0868241, 0.492404, 0, 0.984808, -0.173648, -0.5, -0.150384, -0.852869, 0, 0, 0)
+light_energy = 0.7

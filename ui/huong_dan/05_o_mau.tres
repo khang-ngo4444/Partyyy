@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_th")
 tieu_de = "05 · Ô Máu"
-noi_dung = "[color=#8fe7d4][b]HỒI MÁU[/b][/color]
+noi_dung = "[color=#E0661A][b]HỒI MÁU[/b][/color]
 Dừng trên ô Máu để hồi máu ngay lập tức, tối đa bằng giới hạn máu của phòng.
 
 Thiết lập mặc định: hồi [b]3 máu[/b], tối đa [b]10 máu[/b]. Chủ phòng có thể đổi cả hai con số trước khi mở sảnh.

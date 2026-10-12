@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_th")
 tieu_de = "09 · Minigame và phần thưởng"
-noi_dung = "[color=#8fe7d4][b]KHI NÀO MINIGAME BẮT ĐẦU?[/b][/color]
+noi_dung = "[color=#E0661A][b]KHI NÀO MINIGAME BẮT ĐẦU?[/b][/color]
 Sau khi toàn bộ người chơi đã tung xúc xắc xong một vòng, game chọn ngẫu nhiên một trong 10 minigame (Còi trọng tài cho người dùng tự chọn).
 
 [b]Phần thưởng sau mỗi minigame[/b]

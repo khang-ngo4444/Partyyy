@@ -1,0 +1,142 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ui/kho_do.gd" id="1_kd"]
+[ext_resource type="Texture2D" path="res://ui/icons/kenney/shoppingBasket.png" id="2_ic"]
+
+[node name="KhoDo" type="ColorRect"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.169, 0.106, 0.239, 0.55)
+script = ExtResource("1_kd")
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TheKho" type="PanelContainer" parent="Center"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Cot" type="VBoxContainer" parent="Center/TheKho"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Dau" type="HBoxContainer" parent="Center/TheKho/Cot"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Icon" type="TextureRect" parent="Center/TheKho/Cot/Dau"]
+self_modulate = Color(0.169, 0.106, 0.239, 1)
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+texture = ExtResource("2_ic")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="Center/TheKho/Cot/Dau"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"ChuTieuDe"
+theme_override_font_sizes/font_size = 36
+text = "TÚI ĐỒ"
+
+[node name="DongBtn" type="Button" parent="Center/TheKho/Cot/Dau"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(130, 50)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"NutVang"
+text = "ĐÓNG"
+
+[node name="Than" type="HBoxContainer" parent="Center/TheKho/Cot"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="TheTin" type="PanelContainer" parent="Center/TheKho/Cot/Than"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+theme_type_variation = &"KhungTroi"
+
+[node name="Cot" type="VBoxContainer" parent="Center/TheKho/Cot/Than/TheTin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="AnhMon" type="TextureRect" parent="Center/TheKho/Cot/Than/TheTin/Cot"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TenMon" type="Label" parent="Center/TheKho/Cot/Than/TheTin/Cot"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(210, 0)
+layout_mode = 2
+theme_type_variation = &"ChuNoi"
+theme_override_font_sizes/font_size = 26
+text = "Ô trống"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="HiemPill" type="PanelContainer" parent="Center/TheKho/Cot/Than/TheTin/Cot"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="HiemMon" type="Label" parent="Center/TheKho/Cot/Than/TheTin/Cot/HiemPill"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ChuNoi"
+theme_override_font_sizes/font_size = 16
+text = "THƯỜNG"
+
+[node name="CachDung" type="Label" parent="Center/TheKho/Cot/Than/TheTin/Cot"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(210, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+autowrap_mode = 3
+
+[node name="Phai" type="VBoxContainer" parent="Center/TheKho/Cot/Than"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="KhoLabel" type="Label" parent="Center/TheKho/Cot/Than/Phai"]
+layout_mode = 2
+theme_type_variation = &"ChuNhan"
+text = "KHO · 16 Ô"
+
+[node name="LuoiKho" type="GridContainer" parent="Center/TheKho/Cot/Than/Phai"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 4
+
+[node name="Ngan" type="HSeparator" parent="Center/TheKho/Cot/Than/Phai"]
+layout_mode = 2
+
+[node name="NhanhLabel" type="Label" parent="Center/TheKho/Cot/Than/Phai"]
+layout_mode = 2
+theme_type_variation = &"ChuNhan"
+text = "SẴN SÀNG DÙNG · phím 1–5 ngoài bàn"
+
+[node name="LuoiNhanh" type="HBoxContainer" parent="Center/TheKho/Cot/Than/Phai"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Hint" type="Label" parent="Center/TheKho/Cot"]
+layout_mode = 2
+theme_type_variation = &"ChuPhu"
+theme_override_font_sizes/font_size = 16
+text = "Kéo thả hoặc bấm 2 ô để đổi chỗ · Rê chuột lên ô rồi bấm 1–5 để đưa xuống ô nhanh · Tab/Esc đóng"
+horizontal_alignment = 1

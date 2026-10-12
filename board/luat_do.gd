@@ -8,8 +8,10 @@ extends RefCounted
 ## Lý do không dùng được; rỗng = dùng được.
 static func ly_do_khong_dung(tt: Dictionary, k: String, chi_so: int) -> String:
 	var tui: Array = (tt.get("do", {}) as Dictionary).get(k, [])
-	if chi_so < 0 or chi_so >= tui.size():
+	if chi_so < 0 or chi_so >= tui.size() or str(tui[chi_so]) == "":
 		return "không có món đó"
+	if chi_so >= VatPham.SO_O_NHANH:
+		return "món đang nằm trong kho"
 	if VatPham.nham(str(tui[chi_so])) == VatPham.Nham.TU_DONG:
 		return "món tự động"
 	if (tt.get("da_dung", {}) as Dictionary).has(k):

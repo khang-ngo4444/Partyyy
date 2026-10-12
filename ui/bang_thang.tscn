@@ -1,6 +1,11 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://ui/bang_thang.gd" id="1_bt"]
+[ext_resource type="Texture2D" path="res://ui/icons/cup.svg" id="2_cup"]
+
+[sub_resource type="Gradient" id="MauPhao"]
+offsets = PackedFloat32Array(0, 0.25, 0.5, 0.75, 1)
+colors = PackedColorArray(1, 0.835, 0.31, 1, 0.969, 0.561, 0.655, 1, 0.31, 0.765, 0.969, 1, 0.424, 0.753, 0.29, 1, 0.557, 0.361, 0.969, 1)
 
 [node name="BangThang" type="Control"]
 visible = false
@@ -21,25 +26,61 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.043, 0.043, 0.055, 0.72)
+color = Color(0.169, 0.106, 0.239, 0.55)
 
-[node name="Chu" type="Label" parent="."]
+[node name="PhaoGiay" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 160
+lifetime = 4.0
+one_shot = true
+explosiveness = 0.35
+emission_shape = 3
+emission_rect_extents = Vector2(640, 4)
+direction = Vector2(0, 1)
+spread = 30.0
+gravity = Vector2(0, 260)
+initial_velocity_min = 80.0
+initial_velocity_max = 260.0
+angular_velocity_min = -360.0
+angular_velocity_max = 360.0
+scale_amount_min = 8.0
+scale_amount_max = 14.0
+color_initial_ramp = SubResource("MauPhao")
+
+[node name="Center" type="CenterContainer" parent="."]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -420.0
-offset_top = -140.0
-offset_right = 420.0
-offset_bottom = 140.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 48
+
+[node name="The" type="PanelContainer" parent="Center"]
+custom_minimum_size = Vector2(640, 0)
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"KhungTroi"
+
+[node name="Cot" type="VBoxContainer" parent="Center/The"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="Cup" type="TextureRect" parent="Center/The/Cot"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+texture = ExtResource("2_cup")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Chu" type="Label" parent="Center/The/Cot"]
+layout_mode = 2
+theme_type_variation = &"ChuTieuDe"
+theme_override_font_sizes/font_size = 60
 text = ""
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 3

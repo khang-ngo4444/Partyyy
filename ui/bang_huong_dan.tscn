@@ -1,0 +1,138 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ui/how_to_guide.gd" id="1_howto"]
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="hd_script"]
+[ext_resource type="Texture2D" path="res://ui/icons/kenney/question.png" id="2_q"]
+[ext_resource type="Resource" path="res://ui/huong_dan/01_muc_tieu.tres" id="hd_01"]
+[ext_resource type="Resource" path="res://ui/huong_dan/02_phim_chung.tres" id="hd_02"]
+[ext_resource type="Resource" path="res://ui/huong_dan/03_ban_party.tres" id="hd_03"]
+[ext_resource type="Resource" path="res://ui/huong_dan/04_o_dat.tres" id="hd_04"]
+[ext_resource type="Resource" path="res://ui/huong_dan/05_o_mau.tres" id="hd_05"]
+[ext_resource type="Resource" path="res://ui/huong_dan/06_o_tien.tres" id="hd_06"]
+[ext_resource type="Resource" path="res://ui/huong_dan/07_vat_pham.tres" id="hd_07"]
+[ext_resource type="Resource" path="res://ui/huong_dan/08_ruong_hoi_sinh.tres" id="hd_08"]
+[ext_resource type="Resource" path="res://ui/huong_dan/09_minigame.tres" id="hd_09"]
+[ext_resource type="Resource" path="res://ui/huong_dan/10_tank.tres" id="hd_10"]
+[ext_resource type="Resource" path="res://ui/huong_dan/11_breaking_blocks.tres" id="hd_11"]
+[ext_resource type="Resource" path="res://ui/huong_dan/12_laser_leap.tres" id="hd_12"]
+[ext_resource type="Resource" path="res://ui/huong_dan/13_spotlights.tres" id="hd_13"]
+[ext_resource type="Resource" path="res://ui/huong_dan/14_magma.tres" id="hd_14"]
+[ext_resource type="Resource" path="res://ui/huong_dan/15_explosive.tres" id="hd_15"]
+[ext_resource type="Resource" path="res://ui/huong_dan/16_crown.tres" id="hd_16"]
+[ext_resource type="Resource" path="res://ui/huong_dan/17_temporal_trails.tres" id="hd_17"]
+[ext_resource type="Resource" path="res://ui/huong_dan/18_word_wars.tres" id="hd_18"]
+[ext_resource type="Resource" path="res://ui/huong_dan/19_dem_thu.tres" id="hd_19"]
+
+[node name="BangHuongDan" type="ColorRect"]
+process_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.169, 0.106, 0.239, 0.6)
+script = ExtResource("1_howto")
+trang = Array[ExtResource("hd_script")]([ExtResource("hd_01"), ExtResource("hd_02"), ExtResource("hd_03"), ExtResource("hd_04"), ExtResource("hd_05"), ExtResource("hd_06"), ExtResource("hd_07"), ExtResource("hd_08"), ExtResource("hd_09"), ExtResource("hd_10"), ExtResource("hd_11"), ExtResource("hd_12"), ExtResource("hd_13"), ExtResource("hd_14"), ExtResource("hd_15"), ExtResource("hd_16"), ExtResource("hd_17"), ExtResource("hd_18"), ExtResource("hd_19")])
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HowToPanel" type="PanelContainer" parent="Center"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(1160, 640)
+layout_mode = 2
+theme_type_variation = &"KhungTroi"
+
+[node name="VBox" type="VBoxContainer" parent="Center/HowToPanel"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Header" type="HBoxContainer" parent="Center/HowToPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Icon" type="TextureRect" parent="Center/HowToPanel/VBox/Header"]
+custom_minimum_size = Vector2(52, 52)
+layout_mode = 2
+texture = ExtResource("2_q")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="Center/HowToPanel/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"ChuTieuDe"
+theme_override_font_sizes/font_size = 48
+text = "CÁCH CHƠI"
+
+[node name="HowToCloseBtn" type="Button" parent="Center/HowToPanel/VBox/Header"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(210, 60)
+layout_mode = 2
+theme_type_variation = &"NutVang"
+text = "ĐÃ HIỂU"
+
+[node name="Pages" type="HBoxContainer" parent="Center/HowToPanel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 18
+
+[node name="HowToPageList" type="ItemList" parent="Center/HowToPanel/VBox/Pages"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(340, 0)
+layout_mode = 2
+fixed_icon_size = Vector2i(28, 28)
+
+[node name="PageCard" type="PanelContainer" parent="Center/HowToPanel/VBox/Pages"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Page" type="VBoxContainer" parent="Center/HowToPanel/VBox/Pages/PageCard"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="HowToPageTitle" type="Label" parent="Center/HowToPanel/VBox/Pages/PageCard/Page"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ChuDauMuc"
+theme_override_font_sizes/font_size = 34
+text = "Mục tiêu ván chơi"
+
+[node name="HowToPageBody" type="RichTextLabel" parent="Center/HowToPanel/VBox/Pages/PageCard/Page"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 2
+bbcode_enabled = true
+scroll_following = false
+
+[node name="Navigation" type="HBoxContainer" parent="Center/HowToPanel/VBox/Pages/PageCard/Page"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="HowToPrevBtn" type="Button" parent="Center/HowToPanel/VBox/Pages/PageCard/Page/Navigation"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 58)
+layout_mode = 2
+theme_type_variation = &"NutCam"
+text = "◀  TRƯỚC"
+
+[node name="HowToPageCounter" type="Label" parent="Center/HowToPanel/VBox/Pages/PageCard/Page/Navigation"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"ChuDauMuc"
+text = "1 / 19"
+horizontal_alignment = 1
+
+[node name="HowToNextBtn" type="Button" parent="Center/HowToPanel/VBox/Pages/PageCard/Page/Navigation"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 58)
+layout_mode = 2
+theme_type_variation = &"NutCam"
+text = "SAU  ▶"

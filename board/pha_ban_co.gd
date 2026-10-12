@@ -560,6 +560,23 @@ func _bat_dau_chon_thue_dat(chu: int, o: int, checkpoint: String) -> void:
 
 
 ## HUD gọi khi bấm nút trong menu thuế.
+## Kho đồ: đổi chỗ hai ô túi của mình (lúc nào cũng được, không tốn lượt).
+func xin_doi_cho_do(a: int, b: int) -> void:
+	if not dang_chay():
+		return
+	Fusion.rpc(_net_xin_doi_cho_do, NetManager.local_id(), a, b)
+
+
+@rpc("any_peer", "call_local")
+func _net_xin_doi_cho_do(id: int, a: int, b: int) -> void:
+	if not NetManager.is_master() or not dang_chay() or tt.has("thang"):
+		return
+	if LuatBan.doi_cho(tt, LuatBan.khoa(id), a, b):
+		# Phát lại sự kiện cũ; riêng cờ "het_vong" không được phát lại (sẽ kích hết vòng lần nữa).
+		var su := str(tt.get("su_kien", ""))
+		_phat(tt, "" if su == "het_vong" else su)
+
+
 func xin_chon_thue(loai: int) -> void:
 	var thue: Dictionary = tt.get("thue", {}) as Dictionary
 	if loai < 0 or loai >= 4 or thue.is_empty():

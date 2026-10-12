@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_th")
 tieu_de = "04 · Ô Đất"
-noi_dung = "[color=#8fe7d4][b]CHIẾM ĐẤT[/b][/color]
+noi_dung = "[color=#E0661A][b]CHIẾM ĐẤT[/b][/color]
 Ô đất chưa có chủ mang trạng thái unmarked. Người đầu tiên dừng trên ô sẽ đánh dấu ô bằng tên mình và chọn loại thuế.
 
 [b]1 — Thuế đất[/b]: lấy một ô đất của khách. Nếu khách không có đất, tự đổi thành thuế tiền.

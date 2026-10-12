@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_th")
 tieu_de = "02 · Toàn bộ phím chung"
-noi_dung = "[color=#8fe7d4][b]DI CHUYỂN VÀ TƯƠNG TÁC[/b][/color]
+noi_dung = "[color=#E0661A][b]DI CHUYỂN VÀ TƯƠNG TÁC[/b][/color]
 [b]W A S D[/b] — di chuyển
 [b]Chuột[/b] — xoay góc nhìn
 [b]Space[/b] — nhảy; nhân vật có thể nhảy hai lần
@@ -14,12 +14,12 @@ noi_dung = "[color=#8fe7d4][b]DI CHUYỂN VÀ TƯƠNG TÁC[/b][/color]
 [b]F[/b] — đánh tay không trong minigame có cho phép đánh
 [b]M[/b] — đổi mẫu nhân vật khi đang ở sảnh
 
-[color=#8fe7d4][b]GIAO DIỆN[/b][/color]
+[color=#E0661A][b]GIAO DIỆN[/b][/color]
 [b]Enter[/b] — mở chat; Enter lần nữa để gửi
 [b]Esc[/b] — huỷ chat hoặc mở/đóng menu tạm dừng
 
-[color=#8fe7d4][b]TRÊN BÀN PARTY[/b][/color]
-[b]1 – 9[/b] — chọn món trong túi · [b]Chuột trái[/b] — dùng món đang chọn
+[color=#E0661A][b]TRÊN BÀN PARTY[/b][/color]
+[b]1 – 5[/b] — chọn món ở ô dùng nhanh · [b]Tab[/b] — mở Kho đồ · [b]Chuột trái[/b] — dùng món đang chọn
 [b]Space / E[/b] — tung xúc xắc · [b]A / D[/b] — đổi hướng ở ngã rẽ
 
 Mỗi minigame có phím riêng được ghi ở trang của trò đó."

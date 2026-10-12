@@ -62,7 +62,7 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	var hien := ban_co.dang_chay() and not ban_co.tam_dung
 	var duoc := hien and ban_co.den_luot_dung_do(NetManager.local_id())
-	if _chon >= 0 and (not duoc or _chon >= _tui().size()):
+	if _chon >= 0 and (not duoc or _mon_o(_chon) == ""):
 		_chon_mon(-1)
 	var moi := "%s|%d|%s" % [hien, _chon, duoc]
 	if moi != _giao_dien_cu:
@@ -74,7 +74,7 @@ func _process(_delta: float) -> void:
 func _physics_process(_delta: float) -> void:
 	if _chon < 0 or ban_co.ban == null:
 		return
-	var mon := str(_tui()[_chon]) if _chon < _tui().size() else ""
+	var mon := _mon_o(_chon)
 	if not VatPham.la_ngam(mon):
 		return
 	var camera := get_viewport().get_camera_3d()
@@ -112,13 +112,13 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 			_xac_nhan()
 			return
-	# Phím 1..9 chọn món; bấm lại là bỏ chọn.
+	# Phím 1..5 chọn món ở ô dùng nhanh; bấm lại là bỏ chọn.
 	if not (event is InputEventKey and event.pressed and not event.echo):
 		return
 	if not _bam_duoc():
 		return
 	var o := int((event as InputEventKey).keycode) - KEY_1
-	if o >= 0 and o < mini(_tui().size(), TOI_DA_LUA_CHON):
+	if o >= 0 and o < VatPham.SO_O_NHANH and _mon_o(o) != "":
 		get_viewport().set_input_as_handled()
 		_chon_mon(-1 if o == _chon else o)
 
@@ -130,7 +130,7 @@ func _input(event: InputEvent) -> void:
 		return
 	if _chon < 0 or not _bam_duoc():
 		return
-	var mon := str(_tui()[_chon])
+	var mon := _mon_o(_chon)
 	if not _ung_vien.is_empty():
 		get_viewport().set_input_as_handled()
 		_xac_nhan()
@@ -171,10 +171,15 @@ func _tui() -> Array:
 			LuatBan.khoa(NetManager.local_id()), []) as Array
 
 
-func _chon_mon(o: int) -> void:
+## Món ở ô `o` của mình ("" = trống / ngoài túi).
+func _mon_o(o: int) -> String:
 	var tui := _tui()
-	_chon = o if o >= 0 and o < tui.size() else -1
-	var mon := "" if _chon < 0 else str(tui[_chon])
+	return str(tui[o]) if o >= 0 and o < tui.size() else ""
+
+
+func _chon_mon(o: int) -> void:
+	_chon = o if _mon_o(o) != "" and o < VatPham.SO_O_NHANH else -1
+	var mon := _mon_o(_chon)
 	_ap_ngam(not mon.is_empty() and VatPham.la_ngam(mon))
 	_hien_tam(mon)
 	if mon != _dang_cam:
