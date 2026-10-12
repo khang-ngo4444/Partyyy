@@ -20,11 +20,14 @@ config/features=PackedStringArray("4.7", "Forward Plus")
 NetManager="*res://autoload/net_manager.gd"
 PerformanceManager="*res://autoload/performance_manager.gd"
 _mcp_game_helper="*res://addons/godot_ai/runtime/game_helper.gd"
+UINavHook="*res://autoload/ui_dieu_huong.gd"
 
 [display]
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [dotnet]
 
@@ -48,6 +51,10 @@ import/blender/enabled=false
 
 connection/app_id="6fdcc40b-c835-4aa8-ab45-cecd78087fcc"
 connection/default_region="asia"
+
+[gui]
+
+theme/custom="res://ui/theme/cartoon_theme.tres"
 
 [input]
 

@@ -55,9 +55,8 @@ static func ban_tia(tt: Dictionary, k: String, mon: String, km: String, settings
 static func vot(tt: Dictionary, k: String, km: String, ten: Callable) -> String:
 	if km.is_empty() or km == k:
 		return "trượt"
-	var tui: Array = (tt["do"] as Dictionary).get(km, [])
-	if not tui.is_empty():
-		var mon := str(tui.pop_front())
+	var mon := LuatBan.lay_mon_dau(tt, km)
+	if mon != "":
 		LuatBan.them_do(tt, k, mon)
 		return "cướp %s của %s" % [VatPham.ten(mon), ten.call(km)]
 	var tien: Dictionary = tt["tien"]

@@ -147,7 +147,7 @@ func _ve_hang_doi() -> void:
 		var l := dong_chu_scene.instantiate() as Label
 		var dang := String(muc["key"]) == m.dang_phat
 		l.text = "%s %s" % ["▶" if dang else "  %d." % (i + 1), muc["ten"]]
-		l.modulate = Color("f5d90a") if dang else Color(1, 1, 1, 0.85)
+		l.modulate = Color("E0661A") if dang else Color(1, 1, 1, 0.85)
 		_ds_doi.add_child(l)
 
 

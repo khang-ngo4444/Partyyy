@@ -16,6 +16,9 @@ func _ready() -> void:
 	for i in _cac_nut.size():
 		_cac_nut[i].pressed.connect(_chon.bind(i))
 	%Huy.pressed.connect(_chon.bind(-1))
+	for i in _cac_nut.size():
+		UIKit.gan_phim(_cac_nut[i], str(i + 1))
+	UIKit.gan_phim(%Huy, "Esc")
 
 
 ## `nhan` rỗng = đóng bảng.
@@ -24,8 +27,12 @@ func mo(tieu_de: String, nhan: PackedStringArray) -> void:
 	for i in _cac_nut.size():
 		_cac_nut[i].visible = i < nhan.size()
 		if i < nhan.size():
-			_cac_nut[i].text = "%d. %s" % [i + 1, nhan[i]]
+			_cac_nut[i].text = nhan[i]
+			_cac_nut[i].tooltip_text = nhan[i]
+	var mo_moi := not visible and not tieu_de.is_empty()
 	visible = not tieu_de.is_empty()
+	if mo_moi:
+		UINav.xuat_hien([self], 0.0, 0.7)
 
 
 func _input(event: InputEvent) -> void:

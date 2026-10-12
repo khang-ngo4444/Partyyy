@@ -1,28 +1,40 @@
-extends VBoxContainer
+extends Control
 
-## Bảng góc phải ở bàn party: lượt của ai và chuyện vừa xảy ra. Chỉ vẽ.
+## Bàn party: banner "LƯỢT CỦA BẠN!" + bảng chọn thuế (giữa màn). Chỉ vẽ.
+## Thứ tự lượt / sự kiện / túi đồ / gợi ý nằm ở TrangThaiCaNhan.
 
 signal thue_da_chon(loai: int)
 
-var _dong_luot := "—"
+const THUE := [["ĐẤT", "dat", "home"], ["MÁU", "mau", "plus"],
+		["TIỀN", "tien", "star"], ["TRANG BỊ", "trang_bi", "shoppingBasket"]]
 
-@onready var _luot: Label = $Luot
-@onready var _chon_huong: Label = $ChonHuong
-@onready var _menu_thue: PanelContainer = $MenuThue
-@onready var _bang: RichTextLabel = $Bang
-@onready var _su_kien: Label = $SuKien
+var _id_luot_cu := -1
+
+@onready var _menu_thue: Control = %MenuThue
+@onready var _cac_thue: HBoxContainer = %CacThue
+@onready var _banner: Label = %Banner
 
 
 func _ready() -> void:
 	visible = false
-	var cac_nut: Array[Button] = [
-		$MenuThue/NoiDung/CacLuaChon/Dat,
-		$MenuThue/NoiDung/CacLuaChon/Mau,
-		$MenuThue/NoiDung/CacLuaChon/Tien,
-		$MenuThue/NoiDung/CacLuaChon/TrangBi,
-	]
-	for i in cac_nut.size():
-		cac_nut[i].pressed.connect(_chon_thue.bind(i))
+	_menu_thue.visible = false
+	_banner.visible = false
+	for i in THUE.size():
+		var b := Button.new()
+		var nen: Color = UIKit.MAU_O[THUE[i][1]]
+		UIKit.the_nut(b, THUE[i][0], THUE[i][2], &"NutTrang", Vector2(150, 150), 64, 24)
+		b.add_theme_stylebox_override("normal", UIKit.hop(nen, 22, 6, 4, 12))
+		b.add_theme_stylebox_override("hover", UIKit.hop(nen.lightened(0.2), 22, 8, 4, 12))
+		b.add_theme_stylebox_override("pressed", UIKit.hop(nen.darkened(0.1), 22, 2, 4, 12))
+		for k in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color",
+				"icon_normal_color", "icon_hover_color", "icon_pressed_color", "icon_focus_color"]:
+			b.add_theme_color_override(k, Color.WHITE)
+		b.add_theme_color_override("font_outline_color", UIKit.MUC)
+		b.add_theme_constant_override("outline_size", 8)
+		b.pressed.connect(_chon_thue.bind(i))
+		_cac_thue.add_child(b)
+		UIKit.gan_phim(b, str(i + 1))
+	UIKit.noi_hang(_cac_thue.get_children())
 
 
 ## ⚠️ Khoá các bảng theo người chơi là chuỗi (gói từ JSON).
@@ -34,23 +46,18 @@ func cap_nhat(tt: Dictionary) -> void:
 	visible = true
 
 	var id_luot := int(thu_tu[int(tt["luot"])])
-	var nhac := "   —  Space tung xúc xắc" if id_luot == NetManager.local_id() else ""
-	_dong_luot = "Lượt: %s%s" % [Player.ten_theo_id(get_tree(), id_luot), nhac]
-	_luot.text = _dong_luot
+	if id_luot != _id_luot_cu:
+		_id_luot_cu = id_luot
+		if id_luot == NetManager.local_id():
+			_bao("LƯỢT CỦA BẠN!")
 
-	var dong := PackedStringArray()
-	for id in thu_tu:
-		dong.append("%s %s" % ["▶" if int(id) == id_luot else "  ",
-				Player.ten_theo_id(get_tree(), int(id))])
-	_bang.text = "\n".join(dong)
-
-	# `het_vong` là cờ nội bộ, không hiện.
-	var su := str(tt.get("su_kien", ""))
-	_su_kien.text = "" if su == "het_vong" else su
 	var thue: Dictionary = tt.get("thue", {}) as Dictionary
-	if not thue.is_empty() and int(thue.get("chu", -1)) == NetManager.local_id():
+	var mo_thue := not thue.is_empty() and int(thue.get("chu", -1)) == NetManager.local_id()
+	if mo_thue and not _menu_thue.visible:
 		_menu_thue.visible = true
-	else:
+		UINav.xuat_hien([%TheThue] + _cac_thue.get_children(), 0.05)
+		(_cac_thue.get_child(2) as Control).grab_focus()
+	elif not mo_thue:
 		_menu_thue.visible = false
 
 
@@ -59,7 +66,11 @@ func _chon_thue(loai: int) -> void:
 	thue_da_chon.emit(loai)
 
 
-func cap_nhat_chon_huong(noi_dung: String, tieu_de := "ĐÃ TUNG XÚC XẮC — CHỌN HƯỚNG") -> void:
-	_chon_huong.text = noi_dung
-	_chon_huong.visible = not noi_dung.is_empty()
-	_luot.text = tieu_de if _chon_huong.visible else _dong_luot
+## Banner đập giữa màn rồi tự tắt.
+func _bao(chu: String) -> void:
+	_banner.text = chu
+	_banner.visible = true
+	UINav.dap(_banner)
+	get_tree().create_timer(1.4).timeout.connect(func():
+		if _banner.text == chu:
+			_banner.visible = false)

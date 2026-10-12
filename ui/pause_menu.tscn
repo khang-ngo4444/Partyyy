@@ -1,20 +1,9 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://ui/pause_menu.gd" id="1_pause"]
-
-[sub_resource type="StyleBoxFlat" id="panel"]
-bg_color = Color(0.08, 0.09, 0.13, 0.92)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-content_margin_left = 28.0
-content_margin_top = 24.0
-content_margin_right = 28.0
-content_margin_bottom = 24.0
+[ext_resource type="Script" path="res://ui/kit/trang_tri.gd" id="2_tt"]
 
 [node name="PauseMenu" type="Control"]
-script = ExtResource("1_pause")
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -22,6 +11,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_pause")
 
 [node name="Dim" type="ColorRect" parent="."]
 layout_mode = 1
@@ -30,68 +20,172 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.55)
+color = Color(0.169, 0.106, 0.239, 0.6)
 
-[node name="Panel" type="PanelContainer" parent="."]
+[node name="TrangTri" type="Control" parent="."]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -150.0
-offset_top = -110.0
-offset_right = 150.0
-offset_bottom = 110.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("panel")
+mouse_filter = 2
+script = ExtResource("2_tt")
+so_sao = 10
+so_gach = 5
 
-[node name="VBox" type="VBoxContainer" parent="Panel"]
-layout_mode = 2
-theme_override_constants/separation = 10
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Title" type="Label" parent="Panel/VBox"]
+[node name="The" type="PanelContainer" parent="Center"]
+unique_name_in_owner = true
 layout_mode = 2
+theme_type_variation = &"KhungTroi"
+
+[node name="Cot" type="VBoxContainer" parent="Center/The"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Dau" type="HBoxContainer" parent="Center/The/Cot"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="Center/The/Cot/Dau"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"ChuTieuDe"
+theme_override_font_sizes/font_size = 56
 text = "TẠM DỪNG"
+
+[node name="RoomPill" type="PanelContainer" parent="Center/The/Cot/Dau"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"ThePill"
+
+[node name="RoomCode" type="Label" parent="Center/The/Cot/Dau/RoomPill"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ChuDauMuc"
+theme_override_font_sizes/font_size = 22
+text = "—"
+
+[node name="CopyBtn" type="Button" parent="Center/The/Cot/Dau"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"NutTrang"
+theme_override_font_sizes/font_size = 20
+text = "CHÉP MÃ"
+
+[node name="Hang" type="HBoxContainer" parent="Center/The/Cot"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="ResumeButton" type="Button" parent="Center/The/Cot/Hang"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Luoi" type="GridContainer" parent="Center/The/Cot/Hang"]
+layout_mode = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 18
+columns = 3
+
+[node name="CharacterButton" type="Button" parent="Center/The/Cot/Hang/Luoi"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SettingsButton" type="Button" parent="Center/The/Cot/Hang/Luoi"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HowToButton" type="Button" parent="Center/The/Cot/Hang/Luoi"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LeaveButton" type="Button" parent="Center/The/Cot/Hang/Luoi"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="QuitButton" type="Button" parent="Center/The/Cot/Hang/Luoi"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Hint" type="Label" parent="Center/The/Cot"]
+layout_mode = 2
+theme_type_variation = &"ChuNoi"
+theme_override_font_sizes/font_size = 18
+text = "Mũi tên chọn · Enter mở · 1–6 mở nhanh · Esc quay lại game"
 horizontal_alignment = 1
 
-[node name="Gap" type="Control" parent="Panel/VBox"]
-custom_minimum_size = Vector2(0, 8)
-layout_mode = 2
-
-[node name="ResumeButton" type="Button" parent="Panel/VBox"]
+[node name="XacNhan" type="ColorRect" parent="."]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-text = "TIẾP TỤC"
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.169, 0.106, 0.239, 0.5)
 
-[node name="LeaveButton" type="Button" parent="Panel/VBox"]
+[node name="Center" type="CenterContainer" parent="XacNhan"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="XacNhanThe" type="PanelContainer" parent="XacNhan/Center"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(540, 0)
 layout_mode = 2
-text = "RỜI PHÒNG"
+theme_type_variation = &"KhungHong"
 
-[node name="QuitButton" type="Button" parent="Panel/VBox"]
+[node name="Cot" type="VBoxContainer" parent="XacNhan/Center/XacNhanThe"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="XacNhanTieuDe" type="Label" parent="XacNhan/Center/XacNhanThe/Cot"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
-text = "THOÁT GAME"
-
-[node name="Hint" type="Label" parent="Panel/VBox"]
-modulate = Color(1, 1, 1, 0.55)
-layout_mode = 2
-text = "Esc để đóng"
+theme_type_variation = &"ChuTieuDe"
+theme_override_font_sizes/font_size = 48
+text = "CHẮC CHƯA?"
 horizontal_alignment = 1
 
-[node name="LeaveConfirm" type="ConfirmationDialog" parent="."]
+[node name="XacNhanLoi" type="Label" parent="XacNhan/Center/XacNhanThe/Cot"]
 unique_name_in_owner = true
-title = "Rời phòng?"
-dialog_text = "Bạn sẽ rời phòng hiện tại và quay về menu chính."
-ok_button_text = "RỜI PHÒNG"
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = ""
+horizontal_alignment = 1
+autowrap_mode = 3
 
-[node name="QuitConfirm" type="ConfirmationDialog" parent="."]
+[node name="Hang" type="HBoxContainer" parent="XacNhan/Center/XacNhanThe/Cot"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="XacNhanKhong" type="Button" parent="XacNhan/Center/XacNhanThe/Cot/Hang"]
 unique_name_in_owner = true
-title = "Thoát game?"
-dialog_text = "Bạn có chắc muốn đóng PartyBash?"
-ok_button_text = "THOÁT"
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"NutVang"
+text = "Ở LẠI"
+
+[node name="XacNhanCo" type="Button" parent="XacNhan/Center/XacNhanThe/Cot/Hang"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"NutDo"
+text = "ĐỒNG Ý"

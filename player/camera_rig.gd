@@ -132,6 +132,9 @@ func _chuyen_camera_ban() -> void:
 
 ## Nhìn quanh bằng `_input` để không Control nào chặn. Không đụng `mouse_mode` (menu Esc giữ).
 func _input(event: InputEvent) -> void:
+	# Camera khác (camera bay ở bàn party, camera theo dõi) đang dùng thì không xoay nhân vật.
+	if not camera.current:
+		return
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		if _body != null:
 			_body.rotate_y(-event.relative.x * sensitivity)

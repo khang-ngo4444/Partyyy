@@ -76,12 +76,17 @@ func _ready() -> void:
 	ban_co.van_thang.connect(_khi_thang)
 	ban_co.trang_thai_doi.connect(hud.cap_nhat_ban)
 	ban_co.chon_huong_doi.connect(hud.cap_nhat_chon_huong)
+	ban_co.camera_doi.connect(hud.cap_nhat_camera)
 	dung_do.giao_dien_doi.connect(hud.cap_nhat_giao_dien_ban)
 	dung_do.can_chon.connect(hud.mo_bang_chon)
 	dung_do.goi_y_doi.connect(func(noi_dung: String) -> void:
 		hud.cap_nhat_chon_huong(noi_dung, "CHỌN MỤC TIÊU"))
 	hud.muc_tieu_da_chon.connect(dung_do.chon)
 	hud.thue_da_chon.connect(ban_co.xin_chon_thue)
+	hud.doi_cho_do.connect(func(a: int, b: int):
+		# Đang cầm món nào thì bỏ chọn trước (ô có thể vừa đổi món).
+		dung_do.huy_bang_esc()
+		ban_co.xin_doi_cho_do(a, b))
 	hud.lenh.connect(_khi_lenh)
 
 	light_picker.mau_da_chon.connect(request_light)
@@ -92,7 +97,7 @@ func _ready() -> void:
 	menu.host_requested.connect(NetManager.host_room)
 	menu.join_requested.connect(NetManager.join_room)
 	menu.refresh_requested.connect(NetManager.refresh_room_list)
-	menu.camera_motion_changed.connect(menu_background.set_motion_enabled)
+	$UILayer/BangCaiDat.camera_motion_changed.connect(menu_background.set_motion_enabled)
 	menu.gameplay_confirmed.connect(_khi_xac_nhan_gameplay)
 	menu.setup_leave_requested.connect(NetManager.leave_room)
 
@@ -641,6 +646,11 @@ func _on_room_left() -> void:
 	if _lobby != null:
 		_lobby.queue_free()
 		_lobby = null
+
+
+## Đang ở sảnh chờ (được đổi nhân vật).
+func dang_o_sanh() -> bool:
+	return _lobby != null
 
 
 func _show_menu(show_menu: bool) -> void:

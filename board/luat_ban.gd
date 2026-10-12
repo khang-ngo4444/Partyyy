@@ -50,27 +50,76 @@ static func trang_thai_moi(ds: Array, cu: Dictionary, settings: Dictionary) -> D
 	return moi
 
 
-## Túi đầy thì bỏ món cũ nhất. Trả về lời báo mất món ("" = không mất gì).
+## Túi là mảng ô cố định ("" = trống; xem `VatPham.SO_O_NHANH`). Món mới vào ô trống đầu tiên
+## (ô dùng nhanh trước, rồi tới kho). Túi đầy thì món mới rơi mất. Trả về lời báo ("" = không mất gì).
 static func them_do(tt: Dictionary, k: String, mon: String) -> String:
 	if mon.is_empty():
 		return ""
 	var tui: Array = _bang(tt, "do").get(k, [])
-	tui.append(mon)
-	var roi := PackedStringArray()
-	while tui.size() > VatPham.TUI_TOI_DA:
-		roi.append(VatPham.ten(str(tui.pop_front())))
+	var trong := tui.find("")
+	if trong >= 0:
+		tui[trong] = mon
+	elif tui.size() < VatPham.TUI_TOI_DA:
+		tui.append(mon)
+	else:
+		return " (túi đầy, mất %s)" % VatPham.ten(mon)
 	_bang(tt, "do")[k] = tui
-	return "" if roi.is_empty() else " (túi đầy, mất %s)" % ", ".join(roi)
+	return ""
 
 
+## Lấy món ở ô `chi_so` ra khỏi túi (ô thành trống). "" = ô trống / sai chỉ số.
 static func rut_do(tt: Dictionary, k: String, chi_so: int) -> String:
 	var tui: Array = _bang(tt, "do").get(k, [])
 	if chi_so < 0 or chi_so >= tui.size():
 		return ""
 	var mon := str(tui[chi_so])
-	tui.remove_at(chi_so)
-	_bang(tt, "do")[k] = tui
+	tui[chi_so] = ""
+	_bang(tt, "do")[k] = _gon_duoi(tui)
 	return mon
+
+
+## Bỏ một món theo tên (ô đầu tiên có món đó). Không xô lệch các ô khác.
+static func xoa_mon(tt: Dictionary, k: String, mon: String) -> bool:
+	var tui: Array = _bang(tt, "do").get(k, [])
+	var i := tui.find(mon)
+	if i < 0:
+		return false
+	rut_do(tt, k, i)
+	return true
+
+
+## Lấy món đầu tiên có trong túi (thuế đồ, vợt cướp). "" = túi rỗng.
+static func lay_mon_dau(tt: Dictionary, k: String) -> String:
+	var tui: Array = _bang(tt, "do").get(k, [])
+	for i in tui.size():
+		if str(tui[i]) != "":
+			return rut_do(tt, k, i)
+	return ""
+
+
+static func so_mon(tui: Array) -> int:
+	return tui.reduce(func(n, mon) -> int: return n + (0 if str(mon) == "" else 1), 0)
+
+
+## Đổi chỗ hai ô (ô trống cũng được). Sai chỉ số thì bỏ qua.
+static func doi_cho(tt: Dictionary, k: String, a: int, b: int) -> bool:
+	if a == b or a < 0 or b < 0 or a >= VatPham.TUI_TOI_DA or b >= VatPham.TUI_TOI_DA:
+		return false
+	var tui: Array = _bang(tt, "do").get(k, [])
+	while tui.size() <= maxi(a, b):
+		tui.append("")
+	var tam = tui[a]
+	tui[a] = tui[b]
+	tui[b] = tam
+	_bang(tt, "do")[k] = _gon_duoi(tui)
+	return true
+
+
+## Cắt các ô trống ở cuối cho gói mạng gọn.
+static func _gon_duoi(tui: Array) -> Array:
+	while not tui.is_empty() and str(tui.back()) == "":
+		tui.pop_back()
+	return tui
 
 
 ## Hiệu ứng ô Máu và ô Tiền.
@@ -110,9 +159,7 @@ static func co_khien(tt: Dictionary, k: String) -> bool:
 
 
 static func tieu_khien(tt: Dictionary, k: String) -> void:
-	var tui: Array = _bang(tt, "do").get(k, [])
-	tui.erase("khien")
-	_bang(tt, "do")[k] = tui
+	xoa_mon(tt, k, "khien")
 
 
 ## Hồi đầy máu, về checkpoint (hoặc ô neo). Không mất vàng, không mất Cúp.
@@ -144,10 +191,8 @@ static func thu_thue(tt: Dictionary, chu: String, khach: String, loai: int,
 					int(settings.get("max_health", 10)))
 			return "thuế máu: -%d máu%s" % [da_mat, " (gục)" if chet_roi else ""]
 		Thue.TRANG_BI:
-			var tui_khach: Array = _bang(tt, "do").get(khach, [])
-			if not tui_khach.is_empty():
-				var mon := str(tui_khach.pop_front())
-				_bang(tt, "do")[khach] = tui_khach
+			var mon := lay_mon_dau(tt, khach)
+			if mon != "":
 				them_do(tt, chu, mon)
 				return "thuế trang bị: %s" % VatPham.ten(mon)
 			return thu_thue(tt, chu, khach, Thue.TIEN, settings)

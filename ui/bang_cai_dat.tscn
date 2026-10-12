@@ -1,0 +1,222 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ui/bang_cai_dat.gd" id="1_cd"]
+[ext_resource type="Texture2D" path="res://ui/icons/kenney/gear.png" id="2_gear"]
+
+[node name="BangCaiDat" type="ColorRect"]
+process_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.169, 0.106, 0.239, 0.6)
+script = ExtResource("1_cd")
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(860, 560)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Header" type="HBoxContainer" parent="Center/Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Icon" type="TextureRect" parent="Center/Panel/VBox/Header"]
+self_modulate = Color(0.169, 0.106, 0.239, 1)
+custom_minimum_size = Vector2(52, 52)
+layout_mode = 2
+texture = ExtResource("2_gear")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="Center/Panel/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"ChuTieuDe"
+theme_override_font_sizes/font_size = 48
+text = "CÀI ĐẶT"
+
+[node name="TabHint" type="Label" parent="Center/Panel/VBox/Header"]
+layout_mode = 2
+theme_type_variation = &"ChuPhu"
+text = "Q / E  đổi tab"
+
+[node name="Tabs" type="TabContainer" parent="Center/Panel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+current_tab = 0
+
+[node name="ÂM THANH" type="VBoxContainer" parent="Center/Panel/VBox/Tabs"]
+layout_mode = 2
+theme_override_constants/separation = 20
+metadata/_tab_index = 0
+
+[node name="Gap" type="Control" parent="Center/Panel/VBox/Tabs/ÂM THANH"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+
+[node name="VolumeTitle" type="Label" parent="Center/Panel/VBox/Tabs/ÂM THANH"]
+layout_mode = 2
+theme_type_variation = &"ChuDauMuc"
+text = "Âm lượng tổng"
+
+[node name="VolumeRow" type="HBoxContainer" parent="Center/Panel/VBox/Tabs/ÂM THANH"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="VolumeSlider" type="HSlider" parent="Center/Panel/VBox/Tabs/ÂM THANH/VolumeRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+step = 5.0
+value = 80.0
+
+[node name="VolumeValue" type="Label" parent="Center/Panel/VBox/Tabs/ÂM THANH/VolumeRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+theme_type_variation = &"ChuDauMuc"
+text = "80%"
+horizontal_alignment = 2
+
+[node name="Hint" type="Label" parent="Center/Panel/VBox/Tabs/ÂM THANH"]
+layout_mode = 2
+theme_type_variation = &"ChuPhu"
+text = "←/→ chỉnh khi đang chọn thanh trượt. Kéo về 0 để tắt tiếng."
+autowrap_mode = 3
+
+[node name="HÌNH ẢNH" type="VBoxContainer" parent="Center/Panel/VBox/Tabs"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 14
+metadata/_tab_index = 1
+
+[node name="Gap" type="Control" parent="Center/Panel/VBox/Tabs/HÌNH ẢNH"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="Toggles" type="HBoxContainer" parent="Center/Panel/VBox/Tabs/HÌNH ẢNH"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="FullscreenCheck" type="CheckButton" parent="Center/Panel/VBox/Tabs/HÌNH ẢNH/Toggles"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Toàn màn hình"
+
+[node name="CameraMotionCheck" type="CheckButton" parent="Center/Panel/VBox/Tabs/HÌNH ẢNH/Toggles"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+size_flags_horizontal = 3
+button_pressed = true
+text = "Camera nền bay"
+
+[node name="QualityTitle" type="Label" parent="Center/Panel/VBox/Tabs/HÌNH ẢNH"]
+layout_mode = 2
+theme_type_variation = &"ChuDauMuc"
+text = "Chất lượng đồ hoạ"
+
+[node name="ChatLuongHang" type="HBoxContainer" parent="Center/Panel/VBox/Tabs/HÌNH ẢNH"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="HỖ TRỢ" type="VBoxContainer" parent="Center/Panel/VBox/Tabs"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 18
+metadata/_tab_index = 2
+
+[node name="Gap" type="Control" parent="Center/Panel/VBox/Tabs/HỖ TRỢ"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="ReduceMotionCheck" type="CheckButton" parent="Center/Panel/VBox/Tabs/HỖ TRỢ"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+text = "Giảm chuyển động (tắt nảy, nghiêng, lấp lánh)"
+
+[node name="ScaleTitle" type="Label" parent="Center/Panel/VBox/Tabs/HỖ TRỢ"]
+layout_mode = 2
+theme_type_variation = &"ChuDauMuc"
+text = "Cỡ giao diện"
+
+[node name="ScaleRow" type="HBoxContainer" parent="Center/Panel/VBox/Tabs/HỖ TRỢ"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="UiScaleSlider" type="HSlider" parent="Center/Panel/VBox/Tabs/HỖ TRỢ/ScaleRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 80.0
+max_value = 130.0
+step = 5.0
+value = 100.0
+
+[node name="UiScaleValue" type="Label" parent="Center/Panel/VBox/Tabs/HỖ TRỢ/ScaleRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+theme_type_variation = &"ChuDauMuc"
+text = "100%"
+horizontal_alignment = 2
+
+[node name="PHÍM" type="ScrollContainer" parent="Center/Panel/VBox/Tabs"]
+visible = false
+layout_mode = 2
+horizontal_scroll_mode = 0
+metadata/_tab_index = 3
+
+[node name="BangPhim" type="GridContainer" parent="Center/Panel/VBox/Tabs/PHÍM"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 18
+theme_override_constants/v_separation = 10
+columns = 4
+
+[node name="Actions" type="HBoxContainer" parent="Center/Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="MacDinhBtn" type="Button" parent="Center/Panel/VBox/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 64)
+layout_mode = 2
+theme_type_variation = &"NutTrang"
+text = "MẶC ĐỊNH"
+
+[node name="Spacer" type="Control" parent="Center/Panel/VBox/Actions"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="XongBtn" type="Button" parent="Center/Panel/VBox/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 64)
+layout_mode = 2
+theme_type_variation = &"NutVang"
+text = "XONG"

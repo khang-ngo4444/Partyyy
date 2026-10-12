@@ -45,8 +45,7 @@ static func khi_trung_don(tt: Dictionary, k: String, sat_thuong: int) -> int:
 
 ## Gục: heo vỡ; đang neo thì hồi sinh ở ô neo. Trả về ô hồi sinh.
 static func khi_guc(tt: Dictionary, k: String, checkpoint: int) -> int:
-	var tui: Array = _bang(tt, "do").get(k, [])
-	tui.erase("ong_heo")
+	LuatBan.xoa_mon(tt, k, "ong_heo")
 	_bang(tt, "heo").erase(k)
 	var neo: Dictionary = _bang(tt, "neo").get(k, {})
 	if neo.is_empty():

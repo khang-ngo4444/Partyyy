@@ -1,92 +1,84 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://ui/bang_ban.gd" id="1_bb"]
 
-[node name="BangBan" type="VBoxContainer"]
-anchors_preset = 1
-anchor_left = 1.0
+[node name="BangBan" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
-offset_left = -360.0
-offset_top = 16.0
-offset_right = -20.0
-offset_bottom = 320.0
-grow_horizontal = 0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/separation = 4
 script = ExtResource("1_bb")
 
-[node name="Luot" type="Label" parent="."]
-layout_mode = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 20
-text = "—"
-
-[node name="ChonHuong" type="Label" parent="."]
+[node name="MenuThue" type="ColorRect" parent="."]
+unique_name_in_owner = true
 visible = false
-layout_mode = 2
-theme_override_colors/font_color = Color(0.45, 1, 0.94, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 7
-theme_override_font_sizes/font_size = 18
-autowrap_mode = 3
-text = "CHỌN LỘ TRÌNH"
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.169, 0.106, 0.239, 0.45)
 
-[node name="MenuThue" type="PanelContainer" parent="."]
-visible = false
-layout_mode = 2
-mouse_filter = 1
+[node name="Center" type="CenterContainer" parent="MenuThue"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
-[node name="NoiDung" type="VBoxContainer" parent="MenuThue"]
+[node name="TheThue" type="PanelContainer" parent="MenuThue/Center"]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_type_variation = &"KhungTroi"
 
-[node name="TieuDe" type="Label" parent="MenuThue/NoiDung"]
+[node name="VBox" type="VBoxContainer" parent="MenuThue/Center/TheThue"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.85, 0.35, 1)
-theme_override_font_sizes/font_size = 18
-text = "CHỌN THUẾ CHO Ô ĐẤT NÀY"
+theme_override_constants/separation = 14
+
+[node name="TieuDe" type="Label" parent="MenuThue/Center/TheThue/VBox"]
+layout_mode = 2
+theme_type_variation = &"ChuTieuDe"
+theme_override_font_sizes/font_size = 48
+text = "CHỌN THUẾ ĐẤT!"
 horizontal_alignment = 1
 
-[node name="GoiY" type="Label" parent="MenuThue/NoiDung"]
+[node name="GoiY" type="Label" parent="MenuThue/Center/TheThue/VBox"]
 layout_mode = 2
-text = "Bấm nút hoặc phím 1–4"
+theme_type_variation = &"ChuNoi"
+text = "Ai dừng ở ô của bạn sẽ phải nộp loại này · phím 1–4 hoặc bấm"
 horizontal_alignment = 1
 
-[node name="CacLuaChon" type="GridContainer" parent="MenuThue/NoiDung"]
+[node name="CacThue" type="HBoxContainer" parent="MenuThue/Center/TheThue/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
-columns = 2
+theme_override_constants/separation = 18
+alignment = 1
 
-[node name="Dat" type="Button" parent="MenuThue/NoiDung/CacLuaChon"]
-layout_mode = 2
-text = "[1] Đất"
-
-[node name="Mau" type="Button" parent="MenuThue/NoiDung/CacLuaChon"]
-layout_mode = 2
-text = "[2] Máu"
-
-[node name="Tien" type="Button" parent="MenuThue/NoiDung/CacLuaChon"]
-layout_mode = 2
-text = "[3] Tiền"
-
-[node name="TrangBi" type="Button" parent="MenuThue/NoiDung/CacLuaChon"]
-layout_mode = 2
-text = "[4] Trang bị"
-
-[node name="Bang" type="RichTextLabel" parent="."]
-layout_mode = 2
-theme_override_colors/default_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 6
-theme_override_font_sizes/normal_font_size = 16
-theme_override_font_sizes/bold_font_size = 16
-bbcode_enabled = true
-fit_content = true
-scroll_active = false
-
-[node name="SuKien" type="Label" parent="."]
-layout_mode = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 16
-autowrap_mode = 3
+[node name="Banner" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -420.0
+offset_top = -170.0
+offset_right = 420.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"ChuTieuDe"
+theme_override_colors/font_color = Color(1, 0.835, 0.31, 1)
+theme_override_font_sizes/font_size = 72
+text = "LƯỢT CỦA BẠN!"
+horizontal_alignment = 1
+vertical_alignment = 1

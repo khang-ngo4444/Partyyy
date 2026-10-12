@@ -136,8 +136,35 @@ func test_bag_limit_and_one_item_per_turn() -> void:
 	var state := LuatBan.trang_thai_moi([11, 22], {}, settings)
 	for mon in ["chao_hanh", "rao_tre", "hai_hot", "ong_heo"]:
 		LuatBan.them_do(state, "11", mon)
-	assert_eq(state["do"]["11"], ["rao_tre", "hai_hot", "ong_heo"])
+	assert_eq(state["do"]["11"], ["chao_hanh", "rao_tre", "hai_hot", "ong_heo"])
 	var ten := func(k: String) -> String: return k
-	LuatDo.dung(state, "11", 1, {}, null, settings, ten)
+	LuatDo.dung(state, "11", 2, {}, null, settings, ten)
 	assert_eq(str(state["hai_hot"]), "11")
+	# Dùng xong ô thành trống, các ô khác giữ nguyên chỗ.
+	assert_eq(state["do"]["11"], ["chao_hanh", "rao_tre", "", "ong_heo"])
 	assert_contains(LuatDo.ly_do_khong_dung(state, "11", 0), "đã dùng")
+	# Món mới lấp ô trống đầu tiên.
+	LuatBan.them_do(state, "11", "khien")
+	assert_eq(state["do"]["11"], ["chao_hanh", "rao_tre", "khien", "ong_heo"])
+
+
+func test_bag_slots_full_storage_and_swap() -> void:
+	var settings := GameplaySettings.defaults()
+	var state := LuatBan.trang_thai_moi([11, 22], {}, settings)
+	for i in VatPham.TUI_TOI_DA:
+		assert_eq(LuatBan.them_do(state, "11", "rao_tre"), "")
+	assert_contains(LuatBan.them_do(state, "11", "hai_hot"), "túi đầy")
+	assert_eq((state["do"]["11"] as Array).size(), VatPham.TUI_TOI_DA)
+	# Món trong kho không dùng trực tiếp được.
+	assert_contains(LuatDo.ly_do_khong_dung(state, "11", VatPham.SO_O_NHANH), "kho")
+	# Đổi chỗ kho <-> ô nhanh, kể cả ô trống.
+	var state2 := LuatBan.trang_thai_moi([11, 22], {}, settings)
+	LuatBan.them_do(state2, "11", "chao_hanh")
+	assert_true(LuatBan.doi_cho(state2, "11", 0, 7))
+	assert_eq(state2["do"]["11"], ["", "", "", "", "", "", "", "chao_hanh"])
+	assert_true(LuatBan.doi_cho(state2, "11", 7, 2))
+	assert_eq(state2["do"]["11"], ["", "", "chao_hanh"])
+	assert_false(LuatBan.doi_cho(state2, "11", 0, VatPham.TUI_TOI_DA))
+	# Thuế đồ lấy món đầu tiên có thật, bỏ qua ô trống.
+	assert_eq(LuatBan.lay_mon_dau(state2, "11"), "chao_hanh")
+	assert_eq(state2["do"]["11"], [])

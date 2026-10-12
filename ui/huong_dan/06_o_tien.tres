@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_th")
 tieu_de = "06 · Ô Tiền"
-noi_dung = "[color=#8fe7d4][b]NHẬN VÀNG[/b][/color]
+noi_dung = "[color=#E0661A][b]NHẬN VÀNG[/b][/color]
 Dừng trên ô Tiền để nhận vàng ngay lập tức.
 
 Thiết lập mặc định: [b]+15 vàng[/b]. Chủ phòng có thể đổi số vàng nhận được.

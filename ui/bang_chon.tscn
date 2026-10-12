@@ -2,127 +2,134 @@
 
 [ext_resource type="Script" path="res://ui/bang_chon.gd" id="1_bc"]
 
-[sub_resource type="StyleBoxFlat" id="Panel"]
-bg_color = Color(0.035, 0.045, 0.07, 0.92)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(1, 0.85, 0.3, 0.9)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-
 [node name="BangChon" type="PanelContainer"]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -200.0
-offset_top = -180.0
-offset_right = 200.0
-offset_bottom = 180.0
+offset_left = -380.0
+offset_top = -200.0
+offset_right = 380.0
+offset_bottom = 200.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("Panel")
+theme_type_variation = &"KhungTroi"
 script = ExtResource("1_bc")
 
-[node name="Le" type="MarginContainer" parent="."]
+[node name="Cot" type="VBoxContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 14
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 14
-theme_override_constants/margin_bottom = 12
+theme_override_constants/separation = 14
 
-[node name="Cot" type="VBoxContainer" parent="Le"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="TieuDe" type="Label" parent="Le/Cot"]
+[node name="TieuDe" type="Label" parent="Cot"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.86, 0.35, 1)
-theme_override_font_sizes/font_size = 17
+theme_type_variation = &"ChuTieuDe"
+theme_override_font_sizes/font_size = 38
 text = "Chọn"
+horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="Chon1" type="Button" parent="Le/Cot"]
-unique_name_in_owner = true
+[node name="Luoi" type="GridContainer" parent="Cot"]
 layout_mode = 2
-focus_mode = 0
-theme_override_font_sizes/font_size = 15
-text = "1."
-alignment = 0
+theme_override_constants/h_separation = 14
+theme_override_constants/v_separation = 16
+columns = 3
 
-[node name="Chon2" type="Button" parent="Le/Cot"]
+[node name="Chon1" type="Button" parent="Cot/Luoi"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(230, 66)
 layout_mode = 2
 focus_mode = 0
-theme_override_font_sizes/font_size = 15
-text = "2."
-alignment = 0
+theme_type_variation = &"NutTrang"
+theme_override_font_sizes/font_size = 20
+text = "1"
+text_overrun_behavior = 3
 
-[node name="Chon3" type="Button" parent="Le/Cot"]
+[node name="Chon2" type="Button" parent="Cot/Luoi"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(230, 66)
 layout_mode = 2
 focus_mode = 0
-theme_override_font_sizes/font_size = 15
-text = "3."
-alignment = 0
+theme_type_variation = &"NutTrang"
+theme_override_font_sizes/font_size = 20
+text = "2"
+text_overrun_behavior = 3
 
-[node name="Chon4" type="Button" parent="Le/Cot"]
+[node name="Chon3" type="Button" parent="Cot/Luoi"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(230, 66)
 layout_mode = 2
 focus_mode = 0
-theme_override_font_sizes/font_size = 15
-text = "4."
-alignment = 0
+theme_type_variation = &"NutTrang"
+theme_override_font_sizes/font_size = 20
+text = "3"
+text_overrun_behavior = 3
 
-[node name="Chon5" type="Button" parent="Le/Cot"]
+[node name="Chon4" type="Button" parent="Cot/Luoi"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(230, 66)
 layout_mode = 2
 focus_mode = 0
-theme_override_font_sizes/font_size = 15
-text = "5."
-alignment = 0
+theme_type_variation = &"NutTrang"
+theme_override_font_sizes/font_size = 20
+text = "4"
+text_overrun_behavior = 3
 
-[node name="Chon6" type="Button" parent="Le/Cot"]
+[node name="Chon5" type="Button" parent="Cot/Luoi"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(230, 66)
 layout_mode = 2
 focus_mode = 0
-theme_override_font_sizes/font_size = 15
-text = "6."
-alignment = 0
+theme_type_variation = &"NutTrang"
+theme_override_font_sizes/font_size = 20
+text = "5"
+text_overrun_behavior = 3
 
-[node name="Chon7" type="Button" parent="Le/Cot"]
+[node name="Chon6" type="Button" parent="Cot/Luoi"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(230, 66)
 layout_mode = 2
 focus_mode = 0
-theme_override_font_sizes/font_size = 15
-text = "7."
-alignment = 0
+theme_type_variation = &"NutTrang"
+theme_override_font_sizes/font_size = 20
+text = "6"
+text_overrun_behavior = 3
 
-[node name="Chon8" type="Button" parent="Le/Cot"]
+[node name="Chon7" type="Button" parent="Cot/Luoi"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(230, 66)
 layout_mode = 2
 focus_mode = 0
-theme_override_font_sizes/font_size = 15
-text = "8."
-alignment = 0
+theme_type_variation = &"NutTrang"
+theme_override_font_sizes/font_size = 20
+text = "7"
+text_overrun_behavior = 3
 
-[node name="Chon9" type="Button" parent="Le/Cot"]
+[node name="Chon8" type="Button" parent="Cot/Luoi"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(230, 66)
 layout_mode = 2
 focus_mode = 0
-theme_override_font_sizes/font_size = 15
-text = "9."
-alignment = 0
+theme_type_variation = &"NutTrang"
+theme_override_font_sizes/font_size = 20
+text = "8"
+text_overrun_behavior = 3
 
-[node name="Huy" type="Button" parent="Le/Cot"]
+[node name="Chon9" type="Button" parent="Cot/Luoi"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(230, 66)
 layout_mode = 2
 focus_mode = 0
-theme_override_font_sizes/font_size = 14
-text = "Esc. Huỷ"
+theme_type_variation = &"NutTrang"
+theme_override_font_sizes/font_size = 20
+text = "9"
+text_overrun_behavior = 3
+
+[node name="Huy" type="Button" parent="Cot"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"NutDo"
+text = "HUỶ"

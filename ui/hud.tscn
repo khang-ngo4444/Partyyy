@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://ui/hud.gd" id="1_hud"]
 [ext_resource type="Script" path="res://ui/chat.gd" id="2_chat"]
@@ -6,6 +6,9 @@
 [ext_resource type="PackedScene" path="res://ui/bang_thang.tscn" id="5_bt"]
 [ext_resource type="PackedScene" path="res://ui/trang_thai_ca_nhan.tscn" id="6_personal"]
 [ext_resource type="PackedScene" path="res://ui/bang_chon.tscn" id="7_chon"]
+[ext_resource type="PackedScene" path="res://ui/kho_do.tscn" id="10_kho"]
+[ext_resource type="Texture2D" path="res://ui/icons/kenney/home.png" id="8_home"]
+[ext_resource type="Texture2D" path="res://ui/icons/kenney/multiplayer.png" id="9_mp"]
 
 [node name="HUD" type="Control"]
 layout_mode = 3
@@ -17,42 +20,155 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_hud")
 
-[node name="VBox" type="VBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 0
+[node name="LobbyInfo" type="HBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
 offset_left = 20.0
-offset_top = 16.0
-offset_right = 420.0
-offset_bottom = 120.0
+offset_top = 18.0
+offset_right = 900.0
+offset_bottom = 66.0
 mouse_filter = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 12
 
-[node name="RoomLabel" type="Label" parent="VBox"]
+[node name="RoomPill" type="PanelContainer" parent="LobbyInfo"]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"ThePill"
+
+[node name="Row" type="HBoxContainer" parent="LobbyInfo/RoomPill"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Icon" type="TextureRect" parent="LobbyInfo/RoomPill/Row"]
+self_modulate = Color(0.169, 0.106, 0.239, 1)
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+texture = ExtResource("8_home")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RoomLabel" type="Label" parent="LobbyInfo/RoomPill/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ChuDauMuc"
+theme_override_font_sizes/font_size = 22
+text = "—"
+
+[node name="RolePill" type="PanelContainer" parent="LobbyInfo"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"ThePill"
+
+[node name="RoleLabel" type="Label" parent="LobbyInfo/RolePill"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ChuDauMuc"
+theme_override_font_sizes/font_size = 20
+text = "CHỦ PHÒNG"
+
+[node name="PeersPill" type="PanelContainer" parent="LobbyInfo"]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"ThePill"
+
+[node name="Row" type="HBoxContainer" parent="LobbyInfo/PeersPill"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Icon" type="TextureRect" parent="LobbyInfo/PeersPill/Row"]
+self_modulate = Color(0.169, 0.106, 0.239, 1)
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+texture = ExtResource("9_mp")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PeersLabel" type="Label" parent="LobbyInfo/PeersPill/Row"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "—"
 
-[node name="PeersLabel" type="Label" parent="VBox"]
+[node name="ReadyCard" type="PanelContainer" parent="."]
 unique_name_in_owner = true
-layout_mode = 2
-text = "—"
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -260.0
+offset_top = 84.0
+offset_right = 260.0
+offset_bottom = 140.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_type_variation = &"KhungVang"
 
-[node name="ReadyLabel" type="Label" parent="VBox"]
+[node name="ReadyLabel" type="Label" parent="ReadyCard"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_type_variation = &"ChuDauMuc"
+theme_override_font_sizes/font_size = 26
 text = "—"
+horizontal_alignment = 1
 
-[node name="PingLabel" type="Label" parent="VBox"]
+[node name="Countdown" type="Label" parent="."]
 unique_name_in_owner = true
-modulate = Color(1, 1, 1, 0.6)
-layout_mode = 2
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -160.0
+offset_right = 300.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"ChuTieuDe"
+theme_override_colors/font_color = Color(1, 0.835, 0.31, 1)
+theme_override_font_sizes/font_size = 110
+text = "3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PingLabel" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -420.0
+offset_top = 6.0
+offset_right = -12.0
+offset_bottom = 30.0
+grow_horizontal = 0
+mouse_filter = 2
+theme_type_variation = &"ChuNoi"
+theme_override_font_sizes/font_size = 16
 text = "—"
+horizontal_alignment = 2
 
-[node name="ChangeModelHint" type="Label" parent="VBox"]
+[node name="HintRow" type="HBoxContainer" parent="."]
 unique_name_in_owner = true
-modulate = Color(1, 1, 1, 0.6)
-layout_mode = 2
-text = "[M] chọn nhân vật  ·  đứng lên ô giữa sàn khi sẵn sàng"
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -420.0
+offset_top = -52.0
+offset_right = 420.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 22
+alignment = 1
 
 [node name="CardPrompt" type="Label" parent="."]
 unique_name_in_owner = true
@@ -62,19 +178,19 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -260.0
-offset_top = -96.0
-offset_right = 260.0
-offset_bottom = -56.0
+offset_left = -330.0
+offset_top = -116.0
+offset_right = 330.0
+offset_bottom = -66.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
-theme_override_font_sizes/font_size = 22
-text = ""
+theme_type_variation = &"ChuNoi"
+theme_override_font_sizes/font_size = 24
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PokerBar" type="VBoxContainer" parent="."]
+[node name="PokerBar" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 7
@@ -82,42 +198,50 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -300.0
-offset_top = -150.0
-offset_right = 300.0
-offset_bottom = -50.0
+offset_left = -340.0
+offset_top = -230.0
+offset_right = 340.0
+offset_bottom = -126.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
-theme_override_constants/separation = 6
 
-[node name="RaiseRow" type="HBoxContainer" parent="PokerBar"]
+[node name="VBox" type="VBoxContainer" parent="PokerBar"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="RaiseRow" type="HBoxContainer" parent="PokerBar/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 14
 
-[node name="RaiseLabel" type="Label" parent="PokerBar/RaiseRow"]
+[node name="RaiseLabel" type="Label" parent="PokerBar/VBox/RaiseRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 0)
+custom_minimum_size = Vector2(170, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_type_variation = &"ChuDauMuc"
+theme_override_font_sizes/font_size = 24
 text = "Tố 40"
 vertical_alignment = 1
 
-[node name="RaiseSlider" type="HSlider" parent="PokerBar/RaiseRow"]
+[node name="RaiseSlider" type="HSlider" parent="PokerBar/VBox/RaiseRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(360, 28)
+custom_minimum_size = Vector2(400, 40)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
 min_value = 20.0
 max_value = 1000.0
 step = 10.0
+value = 20.0
 
-[node name="Actions" type="Label" parent="PokerBar"]
+[node name="Actions" type="Label" parent="PokerBar/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
-text = ""
+theme_type_variation = &"ChuDauMuc"
+theme_override_font_sizes/font_size = 24
 horizontal_alignment = 1
 
 [node name="Crosshair" type="Control" parent="."]
@@ -136,37 +260,23 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Cham" type="ColorRect" parent="Crosshair"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -2.0
-offset_top = -2.0
-offset_right = 2.0
-offset_bottom = 2.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(1, 1, 1, 0.85)
-
 [node name="Vien" type="ColorRect" parent="Crosshair"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -4.0
-offset_top = -4.0
-offset_right = 4.0
-offset_bottom = 4.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 14.0
+offset_bottom = 14.0
 mouse_filter = 2
-color = Color(0, 0, 0, 0.45)
+color = Color(0.169, 0.106, 0.239, 0.85)
+
+[node name="Cham" type="ColorRect" parent="Crosshair"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 6.0
+offset_right = 12.0
+offset_bottom = 12.0
+mouse_filter = 2
+color = Color(1, 0.835, 0.31, 1)
 
 [node name="LucNem" type="ColorRect" parent="."]
 unique_name_in_owner = true
@@ -177,22 +287,24 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -70.0
-offset_top = 22.0
-offset_right = 70.0
-offset_bottom = 31.0
+offset_left = -80.0
+offset_top = 24.0
+offset_right = 80.0
+offset_bottom = 38.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0, 0, 0, 0.5)
+color = Color(0.169, 0.106, 0.239, 0.85)
 
 [node name="LucNemMuc" type="ColorRect" parent="LucNem"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_right = 0.0
-offset_bottom = 9.0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 3.0
+offset_bottom = 11.0
 mouse_filter = 2
-color = Color(0.27, 0.65, 0.35, 1)
+color = Color(0.424, 0.753, 0.29, 1)
 
 [node name="Chat" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -200,9 +312,9 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 20.0
-offset_top = -320.0
-offset_right = 470.0
-offset_bottom = -20.0
+offset_top = -340.0
+offset_right = 480.0
+offset_bottom = -64.0
 grow_vertical = 0
 mouse_filter = 2
 alignment = 2
@@ -212,13 +324,14 @@ script = ExtResource("2_chat")
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 2
 theme_override_colors/default_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 6
-theme_override_font_sizes/normal_font_size = 18
-theme_override_font_sizes/bold_font_size = 18
-theme_override_font_sizes/italics_font_size = 18
-theme_override_font_sizes/mono_font_size = 18
+theme_override_colors/font_outline_color = Color(0.169, 0.106, 0.239, 1)
+theme_override_constants/outline_size = 7
+theme_override_font_sizes/normal_font_size = 20
+theme_override_font_sizes/bold_font_size = 20
+theme_override_font_sizes/italics_font_size = 20
+theme_override_font_sizes/mono_font_size = 20
 bbcode_enabled = true
 fit_content = true
 scroll_active = false
@@ -226,17 +339,62 @@ scroll_active = false
 [node name="ChatInput" type="LineEdit" parent="Chat"]
 unique_name_in_owner = true
 visible = false
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 placeholder_text = "Nhập tin — Enter gửi, Esc huỷ"
 max_length = 120
 
-[node name="BangBan" parent="." instance=ExtResource("4_bb")]
-layout_mode = 1
-
 [node name="TrangThaiCaNhan" parent="." instance=ExtResource("6_personal")]
 layout_mode = 1
 
+[node name="BangBan" parent="." instance=ExtResource("4_bb")]
+layout_mode = 1
+
 [node name="BangChon" parent="." instance=ExtResource("7_chon")]
+layout_mode = 1
+
+[node name="CamPill" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -330.0
+offset_top = 14.0
+offset_right = -14.0
+offset_bottom = 60.0
+grow_horizontal = 0
+mouse_filter = 2
+theme_type_variation = &"TheNho"
+
+[node name="Cot" type="VBoxContainer" parent="CamPill"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="CamLabel" type="Label" parent="CamPill/Cot"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ChuDauMuc"
+theme_override_font_sizes/font_size = 20
+text = "CAM TỰ DO"
+
+[node name="CamHint" type="HBoxContainer" parent="CamPill/Cot"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="CamTuDoHint" type="Label" parent="CamPill/Cot"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ChuPhu"
+theme_override_font_sizes/font_size = 15
+text = "Chuột xoay · WASD/mũi tên bay · Lăn chuột tiến/lùi · Shift nhanh"
+autowrap_mode = 3
+
+[node name="KhoDo" parent="." instance=ExtResource("10_kho")]
 layout_mode = 1
 
 [node name="BangThang" parent="." instance=ExtResource("5_bt")]

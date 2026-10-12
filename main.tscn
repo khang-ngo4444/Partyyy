@@ -13,6 +13,8 @@
 [ext_resource type="Script" path="res://board/pha_ban_co.gd" id="11_bc"]
 [ext_resource type="Script" path="res://board/dung_do.gd" id="13_dd"]
 [ext_resource type="PackedScene" path="res://ui/menu_background.tscn" id="12_menu_bg"]
+[ext_resource type="PackedScene" path="res://ui/bang_cai_dat.tscn" id="40_cd"]
+[ext_resource type="PackedScene" path="res://ui/bang_huong_dan.tscn" id="41_hd"]
 [ext_resource type="PackedScene" path="res://player/player.tscn" id="20_player"]
 [ext_resource type="PackedScene" path="res://lobby/lobby.tscn" id="21_lobby"]
 [ext_resource type="PackedScene" path="res://net/match_state.tscn" id="22_ms"]
@@ -75,3 +77,7 @@ visible = false
 [node name="LightPicker" parent="UILayer" instance=ExtResource("7_light")]
 
 [node name="MusicPicker" parent="UILayer" instance=ExtResource("8_music")]
+
+[node name="BangHuongDan" parent="UILayer" instance=ExtResource("41_hd")]
+
+[node name="BangCaiDat" parent="UILayer" instance=ExtResource("40_cd")]
