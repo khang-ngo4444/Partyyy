@@ -6,7 +6,7 @@ const RUNNING := "RUNNING"
 const ENDED := "ENDED"
 const SUPPORTED: Array[String] = ["explosive", "laser_leap"]
 
-@export var countdown_seconds: float = 3.0
+@export var countdown_seconds: float = 5.0
 @export var result_seconds: float = 5.0
 @export var settlement_seconds: float = 0.8
 var state: Dictionary = {}

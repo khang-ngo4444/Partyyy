@@ -275,10 +275,9 @@ func _cap_nhat_vong() -> void:
 			else:
 				khoa = "o:%d" % int(du["o"])
 				ten_muc_tieu = "ô %d" % int(du["o"])
-			goi_y = "%s → %s  (%d/%d)    [Z/X] đổi · [SPACE/E/chuột trái] xác nhận · [Esc] huỷ" % [
-					VatPham.ten(mon), ten_muc_tieu, _con_tro + 1, _ung_vien.size()]
+			goi_y = "%s → %s · Z/X, Space" % [VatPham.ten(mon), ten_muc_tieu]
 		elif VatPham.nham(mon) == VatPham.Nham.CHON_NGUOI or VatPham.nham(mon) == VatPham.Nham.CHON_O:
-			goi_y = "%s — không có mục tiêu trong tầm    [Esc] huỷ" % VatPham.ten(mon)
+			goi_y = "%s · ngoài tầm" % VatPham.ten(mon)
 	if goi_y != _goi_y_cu:
 		_goi_y_cu = goi_y
 		goi_y_doi.emit(goi_y)

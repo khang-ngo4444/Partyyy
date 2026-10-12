@@ -6,9 +6,9 @@
 script = ExtResource("1_th")
 tieu_de = "17 · Temporal Trails"
 noi_dung = "[color=#E0661A][b]PHÍM[/b][/color]
-[b]W A S D[/b] chạy.
+[b]A / D[/b] rẽ. Nhân vật tự chạy về phía trước.
 
 [color=#E0661A][b]LUẬT[/b][/color]
-Mỗi vòng, hãy ghi nhớ hình của vệt sáng mang màu của bạn. Khi vệt tắt, đi lại đúng con đường đó từ đầu tới cuối. Đi lệch khỏi vệt sẽ mất máu.
+Sau lưng mỗi người xuất hiện tường sáng. Né tường của mình, tường của đối thủ và viền sân. Đầu ván có một khoảng nghỉ ngắn để nhận biết hướng chạy.
 
-Ván kết thúc sau vòng cuối hoặc khi người chơi hết máu/rơi khỏi sân. [b]Xếp hạng:[/b] tổng tỷ lệ các vệt đã hoàn thành; bằng nhau thì người sống lâu hơn đứng trên."
+Đâm tường hoặc viền sân sẽ bị loại. [b]Xếp hạng:[/b] sống sót lâu hơn đứng trên."

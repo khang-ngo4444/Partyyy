@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "Bắt đầu nhanh"
+noi_dung = "[b]SẢNH[/b] · WASD chạy, Space nhảy, E tương tác.
+Tới khu bắt đầu khi đã sẵn sàng.
+
+[b]BÀN PARTY[/b] · Đến lượt: Space tung xúc xắc.
+Thu vàng, giữ máu và dùng vật phẩm để tranh hạng.
+
+[b]MINIGAME[/b] · Thi đấu sau mỗi vòng bàn.
+Có 5 giây xem mục tiêu và phím trước ván.
+
+[b]Esc → Cách chơi[/b]: luật bàn, kho đồ, sảnh và trò đang chơi."

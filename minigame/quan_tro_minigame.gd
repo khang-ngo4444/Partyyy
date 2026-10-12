@@ -10,7 +10,7 @@ signal ket_thuc(xep_hang: Array)
 signal bat_dau()
 
 ## Đếm ngược trước khi bắt đầu (giây).
-const DEM_NGUOC := 3.0
+const DEM_NGUOC := 5.0
 
 ## Hiện kết quả bao lâu.
 const XEM_KET_QUA := 5.0
@@ -51,6 +51,10 @@ func _ready() -> void:
 
 func dang_chay() -> bool:
 	return _dang_chay
+
+
+func ma_dang_choi() -> String:
+	return _game.scene_file_path.get_file().get_basename() if is_instance_valid(_game) else ""
 
 
 func danh_sach() -> PackedStringArray:
@@ -130,7 +134,7 @@ func _net_chay(ma: String, hat_giong: int, ids: Array) -> void:
 	_nen.visible = _game.che_nen
 
 	_tieu.text = _game.ten
-	_luat.text = "• " + _game.luat.replace(" · ", "\n• ")
+	_luat.text = HuongDanNhanh.tom_tat(ma)
 	_huong_dan.visible = true
 	_the_ket_qua.visible = false
 	%Mo.visible = false
@@ -150,11 +154,12 @@ func _net_chay(ma: String, hat_giong: int, ids: Array) -> void:
 ## Mỗi người một ô; trò không có điểm thì không hiện.
 func _dung_bang_diem() -> void:
 	for c in _bang_diem.get_children():
+		_bang_diem.remove_child(c)
 		c.queue_free()
-	if o_diem_scene == null or _ids.is_empty() or is_nan(_game.diem_cua(int(_ids[0]))):
+	if o_diem_scene == null or _ids.is_empty() or not HuongDanNhanh.co_diem_rieng(ma_dang_choi()) or is_nan(_game.diem_cua(int(_ids[0]))):
 		_bang_diem.visible = false
 		return
-	for i in _ids.size():
+	for i in mini(_ids.size(), 3):
 		_bang_diem.add_child(o_diem_scene.instantiate())
 	_bang_diem.visible = true
 	_ve_bang_diem()
@@ -175,7 +180,7 @@ func _ve_dong_ho() -> void:
 	_dong_ho.visible = _dang_chay and not _huong_dan.visible and not _the_ket_qua.visible and seconds >= 0.0
 	if not _dong_ho.visible:
 		return
-	_dong_ho.text = "THỜI GIAN  " + dinh_dang_gio(seconds)
+	_dong_ho.text = dinh_dang_gio(seconds)
 	_dong_ho.modulate = Color(1, 0.3, 0.2) if seconds <= 10.0 else Color.WHITE
 
 
@@ -185,13 +190,16 @@ static func dinh_dang_gio(seconds: float) -> String:
 
 
 func _ve_bang_diem() -> void:
-	var xep := _xep_theo_diem()
+	var ranking := _xep_theo_diem()
+	var xep := HuongDanNhanh.hang_gon(ranking, NetManager.local_id())
 	var o := _bang_diem.get_children()
+	for i in o.size():
+		o[i].visible = i < xep.size()
 	for i in mini(xep.size(), o.size()):
 		var id := int(xep[i])
 		var p := _nguoi(id)
 		var mau := NetManager.color_for(p.color_index) if p != null else Color.GRAY
-		(o[i] as ODiem).dat(i + 1, Player.ten_theo_id(get_tree(), id), mau, _game.chu_diem(id),
+		(o[i] as ODiem).dat(ranking.find(id) + 1, Player.ten_theo_id(get_tree(), id), mau, _game.chu_diem(id),
 				id == NetManager.local_id())
 
 
@@ -293,7 +301,7 @@ func begin_shared_game(snapshot: Dictionary) -> void:
 func _setup_shared_presentation(snapshot: Dictionary) -> void:
 	_nen.visible = _game.che_nen
 	_tieu.text = _game.ten
-	_luat.text = "• " + _game.luat.replace(" · ", "\n• ")
+	_luat.text = HuongDanNhanh.tom_tat(str(snapshot["code"]))
 	_ids.clear()
 	for id: Variant in snapshot["ids"]:
 		_ids.append(int(id))

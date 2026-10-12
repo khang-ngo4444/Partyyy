@@ -447,7 +447,7 @@ func _cap_nhat_lua_chon() -> void:
 	var o := int(_bang("o").get(LuatBan.khoa(_id_dang_tung), 0))
 	ban.hien_mui_ten(o, _cac_huong, _lua_chon)
 	if _id_dang_tung == NetManager.local_id():
-		chon_huong_doi.emit("NGÃ RẼ — chọn hướng  %d/%d    [Z/X] đổi    [SPACE/E] đi" % [
+		chon_huong_doi.emit("Hướng %d/%d · Z/X, Space" % [
 				_lua_chon + 1, _cac_huong.size()])
 	else:
 		chon_huong_doi.emit("%s đang chọn hướng..." % Player.ten_theo_id(get_tree(),

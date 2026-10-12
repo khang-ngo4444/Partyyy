@@ -41,6 +41,7 @@ var _request_token := 0
 var _rooms: Array = []
 var _saved_player_name := ""
 var _chi_sua_nhan_vat := false
+var _da_xem_tong_quan := false
 var _thanh_ti_le := ThanhTiLe.new()
 
 @onready var main_screen: Control = %MainScreen
@@ -209,6 +210,13 @@ func _on_character_confirmed() -> void:
 		character_btn.grab_focus()
 	else:
 		_show_online(false)
+		if not _da_xem_tong_quan:
+			var bang := get_tree().get_first_node_in_group("bang_huong_dan") as HowToGuide
+			if bang != null:
+				_da_xem_tong_quan = true
+				if not bang.close_requested.is_connected(_on_how_to_closed):
+					bang.close_requested.connect(_on_how_to_closed)
+				bang.open_overview()
 
 
 func _on_character_cancelled() -> void:
@@ -243,6 +251,8 @@ func _open_how_to() -> void:
 
 
 func _on_how_to_closed() -> void:
+	if visible and online_screen.visible:
+		host_btn.grab_focus()
 	if visible and main_screen.visible:
 		_play_click()
 		how_to_btn.grab_focus()

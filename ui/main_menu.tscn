@@ -301,8 +301,7 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_type_variation = &"ChuPhu"
 theme_override_font_sizes/font_size = 24
-text = "Chưa có phòng nào đang mở…
-Tạo phòng đầu tiên đi!"
+text = "Chưa có phòng mở"
 horizontal_alignment = 1
 vertical_alignment = 1
 

@@ -143,7 +143,11 @@ func _mo_bang(nhom: String, nut: Button) -> void:
 	if bang is BangCaiDat:
 		bang.mo()
 	else:
-		bang.open()
+		var controller := get_tree().get_first_node_in_group("quan_tro")
+		if controller != null and controller.dang_chay():
+			bang.open_for_game(controller.ma_dang_choi())
+		else:
+			bang.open()
 
 
 func _khi_dong_bang() -> void:

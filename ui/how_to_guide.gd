@@ -44,10 +44,25 @@ func _ready() -> void:
 
 
 func open() -> void:
+	_close.text = "ĐÃ HIỂU"
 	visible = true
 	_set_page(0)
 	UINav.xuat_hien([_panel], 0.0, 0.8)
 	_page_list.grab_focus()
+
+
+func open_overview() -> void:
+	open()
+	_close.text = "TIẾP TỤC"
+
+
+func open_for_game(code: String) -> void:
+	open()
+	var page := HuongDanNhanh.trang_chi_tiet(code)
+	for i in trang.size():
+		if trang[i].resource_path.get_file().get_basename() == page:
+			_set_page(i)
+			return
 
 
 func close() -> void:
@@ -76,6 +91,8 @@ func _input(event: InputEvent) -> void:
 
 
 func _set_page(index: int) -> void:
+	if trang.is_empty():
+		return
 	var cu := _current
 	_current = clampi(index, 0, trang.size() - 1)
 	var t := trang[_current]

@@ -15,6 +15,7 @@ var _duoc_dung := false
 ## Đang chọn hướng / mục tiêu: nội dung ưu tiên hiện ở thanh đáy.
 var _huong := ""
 var _su_kien_cu := ""
+var _su_kien_toi := 0.0
 var _re_cach := RegEx.create_from_string(r"\s{2,}")
 
 @onready var _the_tren: Control = %TheTren
@@ -31,6 +32,11 @@ var _re_cach := RegEx.create_from_string(r"\s{2,}")
 
 func _ready() -> void:
 	visible = false
+
+
+func _process(_delta: float) -> void:
+	if _su_kien.visible and Time.get_ticks_msec() / 1000.0 >= _su_kien_toi:
+		_su_kien.visible = false
 
 
 func cap_nhat(tt: Dictionary) -> void:
@@ -89,9 +95,11 @@ func _ve_su_kien() -> void:
 	if su == "het_vong":
 		su = ""
 	_su_kien.text = su
-	_su_kien.visible = su != ""
+	_su_kien.tooltip_text = su
 	if su != _su_kien_cu and su != "":
+		_su_kien_toi = Time.get_ticks_msec() / 1000.0 + 4.0
 		UINav.nay(_su_kien, 1.06)
+	_su_kien.visible = su != "" and Time.get_ticks_msec() / 1000.0 < _su_kien_toi
 	_su_kien_cu = su
 
 
@@ -108,6 +116,9 @@ func _ve_thanh_duoi() -> void:
 		if str(tui[i]) != "":
 			trong_kho += 1
 	_trong_tui.text = "Tab\nKho (%d)" % trong_kho
+	var co_do := tui.any(func(mon) -> bool: return str(mon) != "")
+	_trang_bi.visible = tui.slice(0, VatPham.SO_O_NHANH).any(func(mon) -> bool: return str(mon) != "")
+	_trong_tui.visible = co_do
 
 	var dang_chon_huong := _huong != ""
 	var goi_y := _huong if dang_chon_huong else _goi_y_dung_do(tui)
@@ -116,9 +127,9 @@ func _ve_thanh_duoi() -> void:
 	_goi_y.text = goi_y
 	_goi_y_the.visible = goi_y != ""
 	_goi_y_the.theme_type_variation = &"PillCam" if dang_chon_huong else &"PillVang"
-	_ngan.visible = _goi_y_the.visible
+	_ngan.visible = co_do and _goi_y_the.visible
 	# Không có đồ và không có việc gì: ẩn hẳn thanh đáy cho thoáng.
-	_thanh_duoi.visible = true
+	_thanh_duoi.visible = co_do or goi_y != ""
 
 
 ## Giữ đúng `n` node con dựng từ `scene`.
@@ -147,19 +158,19 @@ func _goi_y_dung_do(tui: Array) -> String:
 		var mon := str(tui[_chon])
 		var ten := VatPham.ten(mon)
 		if VatPham.la_ngam(mon):
-			goi_y = "Ngắm %s · chuột trái dùng · %d cất" % [ten, _chon + 1]
+			goi_y = "%s · Click" % ten
 		elif VatPham.la_chon(mon):
 			if VatPham.nham(mon) == VatPham.Nham.CHON_MINIGAME:
-				goi_y = "%s · chọn trò trong bảng (1–9, Esc huỷ)" % ten
+				goi_y = "%s · chọn trò" % ten
 			else:
-				goi_y = "%s · Z/X đổi mục tiêu · Space dùng · Esc huỷ" % ten
+				goi_y = "%s · Z/X, Space" % ten
 		else:
-			goi_y = "%s · chuột trái dùng · %d cất" % [ten, _chon + 1]
+			goi_y = "%s · Click" % ten
 	elif LuatHieuUng.bi_khoa_do(_tt, k):
-		goi_y = "Dính mắm tôm: khoá đồ · Space tung xúc xắc"
+		goi_y = "Khoá đồ · Space"
 	elif (_tt.get("da_dung", {}) as Dictionary).has(k):
-		goi_y = "Đã dùng đồ · Space tung xúc xắc"
+		goi_y = "Space · Tung xúc xắc"
 	elif tui.slice(0, VatPham.SO_O_NHANH).any(func(mon) -> bool:
 			return str(mon) != "" and VatPham.nham(str(mon)) != VatPham.Nham.TU_DONG):
-		goi_y = "Bấm số dùng đồ · Space tung xúc xắc"
+		goi_y = "1–5 Dùng đồ · Space Tung"
 	return goi_y

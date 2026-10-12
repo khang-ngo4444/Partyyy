@@ -46,7 +46,7 @@ func _check_runtime() -> bool:
 	controller._dang_chay = true
 	controller._ve_dong_ho()
 	var clock: Label = controller.get_node("Lop/Clock")
-	var timer_visible := clock.visible and clock.text == "THỜI GIAN  01:15"
+	var timer_visible := clock.visible and clock.text == "01:15"
 	game._bat_dau_luc -= 70.0
 	controller._ve_dong_ho()
 	var urgent := clock.modulate.r > clock.modulate.g

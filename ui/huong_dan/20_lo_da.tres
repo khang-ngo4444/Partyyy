@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "20 · Lở đá"
+noi_dung = "[b]WASD[/b] di chuyển · [b]Space[/b] nhảy, có thể nhảy hai lần.
+
+Leo lên đỉnh càng sớm càng tốt. Tránh vòng đỏ báo đá rơi và đá đang lăn xuống dốc. Đá nhỏ có thể nhảy qua; đá to phải né sang bên.
+
+Thiên thạch tiến từ chân dốc: đừng đứng lại quá lâu. Chạm đá hoặc bị thiên thạch đuổi kịp sẽ bị loại. Người về đích trước đứng trên; chưa về đích thì tính quãng đường leo."

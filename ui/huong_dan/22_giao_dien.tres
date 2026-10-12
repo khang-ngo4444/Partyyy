@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "22 · Kho đồ và giao diện"
+noi_dung = "[b]Kho đồ[/b]
+Tab mở/đóng kho. Kéo thả hoặc chọn hai ô để đổi chỗ. Rê chuột lên một món rồi bấm 1–5 để đưa vào ô nhanh. Trên bàn: 1–5 chọn món, chuột trái dùng; Z/X đổi mục tiêu, Space xác nhận khi được hỏi.
+
+[b]Camera trên bàn[/b]
+C đổi camera tự do / theo nhân vật. V đổi người theo dõi. Camera tự do: chuột xoay, WASD di chuyển, lăn chuột tiến/lùi, Shift tăng tốc.
+
+[b]Chat và cài đặt[/b]
+Enter mở chat và gửi; Esc huỷ nhập hoặc mở menu. Trong Cài đặt, Q/E đổi tab, kéo thanh trượt để chỉnh âm lượng.
+
+Thông báo trong ván chỉ hiện ngắn. Luật đầy đủ luôn có trong Esc → Cách chơi."

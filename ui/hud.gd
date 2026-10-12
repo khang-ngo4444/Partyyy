@@ -59,16 +59,12 @@ func _ready() -> void:
 	bang_ban.thue_da_chon.connect(func(loai: int): thue_da_chon.emit(loai))
 	bang_chon.da_chon.connect(func(i: int): muc_tieu_da_chon.emit(i))
 	kho_do.doi_cho.connect(func(a: int, b: int): doi_cho_do.emit(a, b))
-	var cam_hint: HBoxContainer = %CamHint
-	cam_hint.add_child(UIKit.chip_phim("C", "Đổi cam", false))
-	cam_hint.add_child(UIKit.chip_phim("V", "Theo dõi", false))
+	%CamHint.visible = false
 	NetManager.room_joined.connect(_on_room_joined)
 	NetManager.peer_joined.connect(func(_id, _uid): _refresh_peers())
 	NetManager.peer_left.connect(func(_id, _inactive): _refresh_peers())
 	NetManager.master_changed.connect(func(_new_id, _old): _on_room_joined())
-	for g in [["M", "Nhân vật"], ["E", "Tương tác"], ["Enter", "Chat"], ["Esc", "Menu"],
-			["F3", "Ping/FPS"]]:
-		hint_row.add_child(UIKit.chip_phim(g[0], g[1]))
+	hint_row.visible = false
 
 
 func _process(delta: float) -> void:
@@ -109,14 +105,14 @@ func _refresh_status() -> void:
 			ms.PHASE_PLAYING:
 				chu = "VÒNG %d" % ms.round_index
 			_:
-				chu = "%d/%d SẴN SÀNG · đứng lên ô giữa sàn" % [ms.ready_count(), ms.player_count()]
+				chu = "%d/%d SẴN SÀNG" % [ms.ready_count(), ms.player_count()]
 	ready_label.text = chu
-	ready_card.visible = chu != "" and not _tren_ban
+	ready_card.visible = chu != "" and _hien_hoat_dong_sanh()
 	if chu != _ready_cu and ready_card.visible:
 		UINav.nay(ready_card, 1.1)
 	_ready_cu = chu
 	# Đếm ngược: số to đập giữa màn.
-	countdown.visible = dem > 0
+	countdown.visible = dem > 0 and _hien_hoat_dong_sanh()
 	if dem > 0 and dem != _dem_cu:
 		countdown.text = str(dem)
 		UINav.dap(countdown)
@@ -132,7 +128,8 @@ func _cap_nhat_hien_thi() -> void:
 	if not kho_do.duoc_mo:
 		kho_do.dong()
 	lobby_info.visible = not _tren_ban and not minigame
-	hint_row.visible = not _tren_ban and not minigame
+	hint_row.visible = false
+	cam_tu_do_hint.visible = false
 	ping_label.visible = _hien_ping
 	if minigame:
 		ready_card.visible = false
@@ -187,6 +184,9 @@ func _refresh_peers() -> void:
 
 ## Nhắc phím cho người đang ngồi bàn bài.
 func _nhac_bai() -> void:
+	if not _hien_hoat_dong_sanh():
+		card_prompt.text = ""
+		return
 	# Ghế ngoài bàn bài (`deck = -1`: sofa, ghế lái tàu) tự nói cách dùng.
 	for s: CardSeat in get_tree().get_nodes_in_group("card_seat"):
 		if s.toi_dang_ngoi and s.deck < 0:
@@ -207,13 +207,15 @@ func _nhac_bai() -> void:
 			poker = t.poker
 	var ten_ban := "POKER" if poker else "XÌ DÁCH"
 	if int(dealer.pha_ban.get(deck, 0)) != CardDealer.PHA_CHOI:
-		card_prompt.text = "Đang ngồi tại bàn %s — [Q] đứng dậy  ·  [ESC] menu" % ten_ban
+		card_prompt.text = "%s · Q đứng dậy" % ten_ban
 		return
-	card_prompt.text = ("Đang trong ván %s — chờ hết ván mới đứng dậy được" % ten_ban if poker
-			else "[1] RÚT THÊM      [2] DỪNG      ·  chờ hết ván mới đứng dậy được")
+	card_prompt.text = ("POKER" if poker else "1 Rút thêm · 2 Dừng")
 
 
 func _nhac_poker() -> void:
+	if not _hien_hoat_dong_sanh():
+		poker_bar.visible = false
+		return
 	var d = get_tree().get_first_node_in_group("card_dealer")
 	if d == null:
 		poker_bar.visible = false
@@ -230,7 +232,7 @@ func _nhac_poker() -> void:
 	var hop_le: Array = d.hanh_dong_hop_le(deck)
 	poker_bar.visible = true
 	if hop_le.is_empty():
-		actions_label.text = "Đang chờ người khác..."
+		actions_label.text = "Chờ lượt"
 		raise_row.visible = false
 		return
 
@@ -279,7 +281,12 @@ func cap_nhat_camera(nhan: String) -> void:
 	if nhan != cam_label.text and nhan != "":
 		UINav.nay(cam_pill, 1.08)
 	cam_label.text = nhan
-	cam_tu_do_hint.visible = nhan == "CAM TỰ DO"
+	cam_tu_do_hint.visible = false
+
+
+func _hien_hoat_dong_sanh() -> bool:
+	var controller := get_tree().get_first_node_in_group("quan_tro")
+	return not _tren_ban and (controller == null or not controller.dang_chay())
 
 
 func bao_thang(chu: String) -> void:

@@ -6,11 +6,11 @@ extends VBoxContainer
 ## Dòng bắt đầu bằng `/` — `main.gd` thi hành (quyền ở `LenhChat`).
 signal lenh(id_nguoi_gui: int, doi_so: PackedStringArray)
 
-const SO_DONG := 8
+const SO_DONG := 5
 const DAI_TOI_DA := 120
 
 ## Không có tin mới bấy nhiêu giây thì khung chat mờ đi.
-const GIU := 8.0
+const GIU := 5.0
 
 ## Danh sách trắng thẻ HTML -> BBCode. Cố tình không có `<img>`, `<a>` (tải ảnh lạ, rải link).
 const THE_HTML := {

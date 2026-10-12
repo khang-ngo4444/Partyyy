@@ -121,7 +121,7 @@ func _chu_trang_thai() -> String:
 	if not _dang_lai:
 		return "SẴN SÀNG..."
 	if not con_song(NetManager.local_id()):
-		return "BẠN ĐÃ ĐÂM VÀO TƯỜNG · còn %d người" % so_con_song()
+		return "Đã loại · %d còn lại" % so_con_song()
 	return "Còn %d người" % so_con_song()
 
 
