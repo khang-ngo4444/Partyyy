@@ -59,6 +59,7 @@ enum { PHASE_LOBBY, PHASE_COUNTDOWN, PHASE_PLAYING }
 		changed.emit()
 
 @export var minigame_json: String = ""
+@export var minigame_pool_json: String = ""
 
 @onready var sync: FusionSharedReplicator = $Replicator
 
@@ -106,6 +107,7 @@ func _process(delta: float) -> void:
 			else:
 				countdown = maxf(0.0, countdown - delta)
 				if countdown <= 0.0:
+					minigame_pool_json = ""
 					phase = PHASE_PLAYING
 					round_index += 1
 		PHASE_PLAYING:

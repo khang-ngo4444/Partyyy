@@ -9,3 +9,4 @@ script = ExtResource("1_ww")
 san_scene = ExtResource("2_san")
 chu_tren_dau_scene = ExtResource("3_nhan")
 co_danh = true
+ket_thuc_khi_con_mot = false

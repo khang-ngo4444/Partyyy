@@ -1,0 +1,124 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://asset/cartoon_props/crown_band.obj" id="1_mesh"]
+
+[sub_resource type="StandardMaterial3D" id="Gold"]
+albedo_color = Color(1, 0.67, 0.08, 1)
+roughness = 0.65
+metallic = 0.25
+
+[sub_resource type="StandardMaterial3D" id="Trim"]
+albedo_color = Color(1, 0.87, 0.24, 1)
+roughness = 0.65
+
+[sub_resource type="StandardMaterial3D" id="Ruby"]
+albedo_color = Color(1, 0.16, 0.36, 1)
+roughness = 0.65
+emission_enabled = true
+emission = Color(0.3, 0.02, 0.05, 1)
+
+[sub_resource type="StandardMaterial3D" id="Teal"]
+albedo_color = Color(0.08, 0.87, 0.82, 1)
+roughness = 0.65
+
+[sub_resource type="TorusMesh" id="Rim"]
+inner_radius = 0.43
+outer_radius = 0.60
+rings = 12
+ring_segments = 4
+
+[sub_resource type="SphereMesh" id="Gem"]
+radius = 0.12
+height = 0.3
+radial_segments = 4
+rings = 1
+
+[sub_resource type="SphereMesh" id="Tip"]
+radius = 0.08
+height = 0.16
+radial_segments = 6
+rings = 2
+
+[node name="CartoonCrown" type="Node3D"]
+
+
+[node name="Band" type="MeshInstance3D" parent="."]
+mesh = ExtResource("1_mesh")
+material_override = SubResource("Gold")
+
+[node name="Rim" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.10, 0)
+mesh = SubResource("Rim")
+material_override = SubResource("Trim")
+
+[node name="Gem0" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.08, 0.59)
+rotation = Vector3(0, 0, 0)
+scale = Vector3(1, 1, 0.5)
+mesh = SubResource("Gem")
+material_override = SubResource("Ruby")
+
+[node name="Tip0" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.60, 0.62)
+mesh = SubResource("Tip")
+material_override = SubResource("Trim")
+
+[node name="Gem1" type="MeshInstance3D" parent="."]
+position = Vector3(0.5109549882328187, 0.08, 0.29500000000000004)
+rotation = Vector3(0, 1.0471975511965976, 0)
+scale = Vector3(1, 1, 0.5)
+mesh = SubResource("Gem")
+material_override = SubResource("Teal")
+
+[node name="Tip1" type="MeshInstance3D" parent="."]
+position = Vector3(0.5369357503463519, 0.60, 0.31000000000000005)
+mesh = SubResource("Tip")
+material_override = SubResource("Trim")
+
+[node name="Gem2" type="MeshInstance3D" parent="."]
+position = Vector3(0.5109549882328188, 0.08, -0.2949999999999999)
+rotation = Vector3(0, 2.0943951023931953, 0)
+scale = Vector3(1, 1, 0.5)
+mesh = SubResource("Gem")
+material_override = SubResource("Ruby")
+
+[node name="Tip2" type="MeshInstance3D" parent="."]
+position = Vector3(0.536935750346352, 0.60, -0.3099999999999999)
+mesh = SubResource("Tip")
+material_override = SubResource("Trim")
+
+[node name="Gem3" type="MeshInstance3D" parent="."]
+position = Vector3(7.225416114969384e-17, 0.08, -0.59)
+rotation = Vector3(0, 3.141592653589793, 0)
+scale = Vector3(1, 1, 0.5)
+mesh = SubResource("Gem")
+material_override = SubResource("Teal")
+
+[node name="Tip3" type="MeshInstance3D" parent="."]
+position = Vector3(7.59281015471359e-17, 0.60, -0.62)
+mesh = SubResource("Tip")
+material_override = SubResource("Trim")
+
+[node name="Gem4" type="MeshInstance3D" parent="."]
+position = Vector3(-0.5109549882328186, 0.08, -0.29500000000000026)
+rotation = Vector3(0, 4.1887902047863905, 0)
+scale = Vector3(1, 1, 0.5)
+mesh = SubResource("Gem")
+material_override = SubResource("Ruby")
+
+[node name="Tip4" type="MeshInstance3D" parent="."]
+position = Vector3(-0.5369357503463518, 0.60, -0.3100000000000003)
+mesh = SubResource("Tip")
+material_override = SubResource("Trim")
+
+[node name="Gem5" type="MeshInstance3D" parent="."]
+position = Vector3(-0.5109549882328187, 0.08, 0.29500000000000004)
+rotation = Vector3(0, 5.235987755982989, 0)
+scale = Vector3(1, 1, 0.5)
+mesh = SubResource("Gem")
+material_override = SubResource("Teal")
+
+[node name="Tip5" type="MeshInstance3D" parent="."]
+position = Vector3(-0.5369357503463519, 0.60, 0.31000000000000005)
+mesh = SubResource("Tip")
+material_override = SubResource("Trim")

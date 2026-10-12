@@ -41,6 +41,7 @@ const THUONG_SONG_CUOI := 10.0
 ## 0 = không giới hạn, chạy tới khi còn một người.
 @export var giay_van := 60.0
 @export var co_danh := false
+@export var ket_thuc_khi_con_mot := true
 
 var shared_snapshot: Dictionary = {}
 var shared_session: Node = null
@@ -156,7 +157,7 @@ func _process(_delta: float) -> void:
 		xin_chet()
 	if not NetManager.is_master():
 		return
-	if so_con_song() <= 1 or (giay_van > 0.0 and gio() >= giay_van):
+	if (ket_thuc_khi_con_mot and so_con_song() <= 1) or (giay_van > 0.0 and gio() >= giay_van):
 		_chot_ket_qua()
 
 

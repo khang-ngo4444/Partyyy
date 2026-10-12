@@ -64,6 +64,26 @@ func co_tro(ma: String) -> bool:
 	return _tim(ma) != null
 
 
+func _pool_state() -> Dictionary:
+	var ms := get_tree().get_first_node_in_group("match_state") as MatchState
+	if ms == null:
+		return {}
+	var decoded: Variant = JSON.parse_string(ms.minigame_pool_json)
+	return decoded if decoded is Dictionary else {}
+
+
+func chon_tro_ngau_nhien(uu_tien: String = "") -> String:
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	return PoolMiniGame.chon(_pool_state(), danh_sach(), rng, uu_tien)
+
+
+func _ghi_tro_da_choi(ma: String) -> void:
+	var ms := get_tree().get_first_node_in_group("match_state") as MatchState
+	if ms != null and ms.sync.has_authority():
+		ms.minigame_pool_json = JSON.stringify(PoolMiniGame.da_choi(_pool_state(), danh_sach(), ma))
+
+
 func _tim(ma: String) -> PackedScene:
 	for sc in tro_choi:
 		if sc != null and _ma(sc) == ma:
@@ -95,6 +115,7 @@ func _net_chay(ma: String, hat_giong: int, ids: Array) -> void:
 	if _dang_chay or scene == null:
 		return
 	_dang_chay = true
+	_ghi_tro_da_choi(ma)
 	bat_dau.emit()
 	_lop.visible = true
 	_ket_qua.text = ""
@@ -239,6 +260,7 @@ func begin_shared_game(snapshot: Dictionary) -> void:
 	if scene == null:
 		return
 	_dang_chay = true
+	_ghi_tro_da_choi(str(snapshot["code"]))
 	bat_dau.emit()
 	_lop.visible = true
 	_ket_qua.text = ""
