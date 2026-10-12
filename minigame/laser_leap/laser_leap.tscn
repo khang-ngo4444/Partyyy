@@ -1,10 +1,9 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://b4tqjtmiqi2yi"]
 
-[ext_resource type="Script" path="res://minigame/laser_leap/laser_leap.gd" id="1_ll"]
-[ext_resource type="PackedScene" path="res://minigame/laser_leap/san_laser.tscn" id="2_san"]
-[ext_resource type="Material" path="res://materials/mat_san_thuong.tres" id="x0_mat_bao"]
+[ext_resource type="Script" uid="uid://tvgpsfewmqsr" path="res://minigame/laser_leap/laser_leap.gd" id="1_ll"]
+[ext_resource type="PackedScene" uid="uid://jiv3tivu0fmt" path="res://minigame/laser_leap/san_laser.tscn" id="2_san"]
 
-[node name="LaserLeap" type="Node"]
+[node name="LaserLeap" type="Node" unique_id=400360223]
 script = ExtResource("1_ll")
-mat_bao = ExtResource("x0_mat_bao")
 san_scene = ExtResource("2_san")
+giay_van = 90.0

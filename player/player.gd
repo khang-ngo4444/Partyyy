@@ -85,6 +85,8 @@ const GAN_GAY := 1.0
 ## Kiểu bong bóng chat (`SpeechBubble.Kieu`), replicate để máy khác vẽ đúng.
 @export var bubble_shape: int = 0
 
+@export var minigame_life_json: String = ""
+
 var is_mine := false
 
 ## Bàn party khoá WASD (đi theo xúc xắc).
@@ -519,3 +521,22 @@ func _apply_name() -> void:
 	name_tag.text = player_name
 	# Không cần thấy tên của chính mình.
 	name_tag.visible = not is_mine
+
+func minigame_life() -> Dictionary:
+	if minigame_life_json.is_empty():
+		return {}
+	var value: Variant = JSON.parse_string(minigame_life_json)
+	return value if value is Dictionary else {}
+
+
+func enter_minigame(round_id: int) -> void:
+	if sync.has_authority():
+		minigame_life_json = JSON.stringify({"round": round_id, "death": -1.0})
+
+
+func eliminate_minigame(round_id: int, elapsed: float) -> void:
+	if not sync.has_authority():
+		return
+	var life := minigame_life()
+	if int(life.get("round", 0)) == round_id and float(life.get("death", -1.0)) < 0.0:
+		minigame_life_json = JSON.stringify({"round": round_id, "death": elapsed})

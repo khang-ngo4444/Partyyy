@@ -1,28 +1,29 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://biwac11w1y3if"]
 
-[ext_resource type="Script" path="res://minigame/quan_tro_minigame.gd" id="1_qt"]
+[ext_resource type="Script" uid="uid://ccichhw1211oe" path="res://minigame/quan_tro_minigame.gd" id="1_qt"]
 [ext_resource type="PackedScene" path="res://minigame/chung/o_diem.tscn" id="2_od"]
+[ext_resource type="Script" uid="uid://d33ix7d1kvht1" path="res://minigame/minigame_session.gd" id="13_q52n2"]
 [ext_resource type="PackedScene" path="res://minigame/tank/tank_battle.tscn" id="g0"]
 [ext_resource type="PackedScene" path="res://minigame/breaking_blocks/breaking_blocks.tscn" id="g1"]
 [ext_resource type="PackedScene" path="res://minigame/laser_leap/laser_leap.tscn" id="g2"]
 [ext_resource type="PackedScene" path="res://minigame/spotlights/spotlights.tscn" id="g3"]
+[ext_resource type="PackedScene" path="res://minigame/magma/magma.tscn" id="g4"]
 [ext_resource type="PackedScene" path="res://minigame/explosive/explosive.tscn" id="g5"]
 [ext_resource type="PackedScene" path="res://minigame/crown/crown.tscn" id="g6"]
-[ext_resource type="PackedScene" path="res://minigame/magma/magma.tscn" id="g4"]
 [ext_resource type="PackedScene" path="res://minigame/word_wars/word_wars.tscn" id="g8"]
 [ext_resource type="PackedScene" path="res://minigame/dem_thu/dem_thu.tscn" id="g9"]
 [ext_resource type="PackedScene" path="res://minigame/lo_da/lo_da.tscn" id="g10"]
 
-[node name="QuanTroMiniGame" type="Node"]
+[node name="QuanTroMiniGame" type="Node" unique_id=217395337]
 script = ExtResource("1_qt")
-o_diem_scene = ExtResource("2_od")
 tro_choi = Array[PackedScene]([ExtResource("g0"), ExtResource("g1"), ExtResource("g2"), ExtResource("g3"), ExtResource("g5"), ExtResource("g4"), ExtResource("g6"), ExtResource("g8"), ExtResource("g9"), ExtResource("g10")])
+o_diem_scene = ExtResource("2_od")
 
-[node name="Lop" type="CanvasLayer" parent="."]
-visible = false
+[node name="Lop" type="CanvasLayer" parent="." unique_id=697140078]
 layer = 5
+visible = false
 
-[node name="Nen" type="ColorRect" parent="Lop"]
+[node name="Nen" type="ColorRect" parent="Lop" unique_id=576538363]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -30,7 +31,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.043, 0.043, 0.055, 1)
 
-[node name="Khung" type="Control" parent="Lop"]
+[node name="Khung" type="Control" parent="Lop" unique_id=1269006407]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -39,7 +40,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Bang" type="Control" parent="Lop"]
+[node name="Bang" type="Control" parent="Lop" unique_id=424893997]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -48,68 +49,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="BangDiem" type="HBoxContainer" parent="Lop"]
-visible = false
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 16.0
-offset_top = -74.0
-offset_right = -16.0
-offset_bottom = -12.0
-grow_horizontal = 2
-grow_vertical = 0
-mouse_filter = 2
-theme_override_constants/separation = 10
-alignment = 1
-
-[node name="HuongDan" type="ColorRect" parent="Lop"]
-visible = false
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.07, 0.09, 0.14, 1)
-
-[node name="Giua" type="VBoxContainer" parent="Lop/HuongDan"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -460.0
-offset_top = -250.0
-offset_right = 460.0
-offset_bottom = 250.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 28
-
-[node name="Tieu" type="Label" parent="Lop/HuongDan/Giua"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
-theme_override_font_sizes/font_size = 64
-text = "MINIGAME"
-horizontal_alignment = 1
-
-[node name="Luat" type="Label" parent="Lop/HuongDan/Giua"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = ""
-horizontal_alignment = 1
-autowrap_mode = 3
-
-[node name="Dem" type="Label" parent="Lop/HuongDan/Giua"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.6, 0.9, 1, 1)
-theme_override_font_sizes/font_size = 96
-text = ""
-horizontal_alignment = 1
-
-[node name="KetQua" type="Label" parent="Lop/Bang"]
+[node name="KetQua" type="Label" parent="Lop/Bang" unique_id=381377048]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -125,6 +65,99 @@ grow_vertical = 2
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 32
-text = ""
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="BangDiem" type="HBoxContainer" parent="Lop" unique_id=1271040254]
+visible = false
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -74.0
+offset_right = -16.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="HuongDan" type="ColorRect" parent="Lop" unique_id=603840481]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.07, 0.09, 0.14, 1)
+
+[node name="Giua" type="VBoxContainer" parent="Lop/HuongDan" unique_id=445221538]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -460.0
+offset_top = -250.0
+offset_right = 460.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 28
+
+[node name="Tieu" type="Label" parent="Lop/HuongDan/Giua" unique_id=1153032405]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 64
+text = "MINIGAME"
+horizontal_alignment = 1
+
+[node name="Luat" type="Label" parent="Lop/HuongDan/Giua" unique_id=2027815073]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Dem" type="Label" parent="Lop/HuongDan/Giua" unique_id=1392261972]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 96
+horizontal_alignment = 1
+
+[node name="Clock" type="Label" parent="Lop" unique_id=409210790]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -180.0
+offset_top = 24.0
+offset_right = 180.0
+offset_bottom = 72.0
+theme_override_colors/font_outline_color = Color(0.0627451, 0.09411765, 0.1254902, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 30
+horizontal_alignment = 1
+
+[node name="Fuse" type="ProgressBar" parent="Lop" unique_id=1494743265]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -180.0
+offset_top = -108.0
+offset_right = 180.0
+offset_bottom = -86.0
+mouse_filter = 2
+show_percentage = false
+
+[node name="Session" type="Node" parent="." unique_id=1089530198]
+script = ExtResource("13_q52n2")
+
+[node name="Refresh" type="Timer" parent="Session" unique_id=378501332]
+wait_time = 0.1
+autostart = true

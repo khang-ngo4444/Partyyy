@@ -1,7 +1,7 @@
 [gd_resource type="FusionReplicationConfig" format=3 uid="uid://c63jp1rjxlfqi"]
 
 [resource]
-property_count = 9
+property_count = 10
 properties/0/path = NodePath(":player_name")
 properties/0/max_array_capacity = 0
 properties/0/interface_tag = ""
@@ -56,3 +56,10 @@ properties/8/interface_tag = ""
 properties/8/interpolate = 0
 properties/8/element_type = 0
 properties/8/element_class_name = ""
+
+properties/9/path = NodePath(":minigame_life_json")
+properties/9/max_array_capacity = 0
+properties/9/interface_tag = ""
+properties/9/interpolate = 0
+properties/9/element_type = 0
+properties/9/element_class_name = ""

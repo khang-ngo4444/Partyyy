@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene format=3 uid="uid://jiv3tivu0fmt"]
 
 [ext_resource type="PackedScene" path="res://minigame/chung/san_dau.tscn" id="1_st"]
 [ext_resource type="PackedScene" path="res://minigame/chung/san_tron.tscn" id="2_sr"]
 [ext_resource type="Material" path="res://materials/mat_san_canh_bao.tres" id="3_m"]
-[ext_resource type="Environment" path="res://materials/env_san_sang.tres" id="4_env"]
+[ext_resource type="Script" uid="uid://cv1ugbpyswsux" path="res://minigame/laser_leap/laser_beam.gd" id="3_o1njq"]
+[ext_resource type="Material" uid="uid://cun0ujq36gqec" path="res://materials/mat_laser_telegraph.tres" id="4_o1njq"]
 
 [sub_resource type="BoxMesh" id="Box_tia"]
 size = Vector3(30, 0.24, 0.7)
@@ -11,67 +12,56 @@ size = Vector3(30, 0.24, 0.7)
 [sub_resource type="BoxShape3D" id="Shape_tia"]
 size = Vector3(30, 0.24, 0.7)
 
-[node name="SanLaser" type="Node3D"]
+[node name="SanLaser" type="Node3D" unique_id=510327549]
 
-[node name="SanDau" parent="." instance=ExtResource("1_st")]
+[node name="SanDau" parent="." unique_id=755330167 instance=ExtResource("1_st")]
 
-[node name="Cam" parent="SanDau" index="0"]
-environment = ExtResource("4_env")
+[node name="SanTron" parent="." unique_id=1369067548 instance=ExtResource("2_sr")]
 
-[node name="SanTron" parent="." instance=ExtResource("2_sr")]
-
-[node name="Tia0" type="Node3D" parent="."]
+[node name="Tia0" type="Node3D" parent="." unique_id=660197470]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+script = ExtResource("3_o1njq")
+warning_material = ExtResource("4_o1njq")
 
-[node name="Mat" type="MeshInstance3D" parent="Tia0"]
-mesh = SubResource("Box_tia")
+[node name="Mat" type="MeshInstance3D" parent="Tia0" unique_id=1493077425]
 material_override = ExtResource("3_m")
+mesh = SubResource("Box_tia")
 
-[node name="Vung" type="Area3D" parent="Tia0"]
+[node name="Vung" type="Area3D" parent="Tia0" unique_id=430231615]
 collision_layer = 0
 collision_mask = 2
 
-[node name="Hinh" type="CollisionShape3D" parent="Tia0/Vung"]
+[node name="Hinh" type="CollisionShape3D" parent="Tia0/Vung" unique_id=882053383]
 shape = SubResource("Shape_tia")
 
-[node name="Tia1" type="Node3D" parent="."]
+[node name="Tia1" type="Node3D" parent="." unique_id=1754355294]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+script = ExtResource("3_o1njq")
+warning_material = ExtResource("4_o1njq")
 
-[node name="Mat" type="MeshInstance3D" parent="Tia1"]
-mesh = SubResource("Box_tia")
+[node name="Mat" type="MeshInstance3D" parent="Tia1" unique_id=1375471150]
 material_override = ExtResource("3_m")
+mesh = SubResource("Box_tia")
 
-[node name="Vung" type="Area3D" parent="Tia1"]
+[node name="Vung" type="Area3D" parent="Tia1" unique_id=1039092290]
 collision_layer = 0
 collision_mask = 2
 
-[node name="Hinh" type="CollisionShape3D" parent="Tia1/Vung"]
+[node name="Hinh" type="CollisionShape3D" parent="Tia1/Vung" unique_id=1284897646]
 shape = SubResource("Shape_tia")
 
-[node name="Tia2" type="Node3D" parent="."]
+[node name="Tia2" type="Node3D" parent="." unique_id=1334219036]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+script = ExtResource("3_o1njq")
+warning_material = ExtResource("4_o1njq")
 
-[node name="Mat" type="MeshInstance3D" parent="Tia2"]
-mesh = SubResource("Box_tia")
+[node name="Mat" type="MeshInstance3D" parent="Tia2" unique_id=1034100524]
 material_override = ExtResource("3_m")
+mesh = SubResource("Box_tia")
 
-[node name="Vung" type="Area3D" parent="Tia2"]
+[node name="Vung" type="Area3D" parent="Tia2" unique_id=2091280919]
 collision_layer = 0
 collision_mask = 2
 
-[node name="Hinh" type="CollisionShape3D" parent="Tia2/Vung"]
-shape = SubResource("Shape_tia")
-
-[node name="Tia3" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
-
-[node name="Mat" type="MeshInstance3D" parent="Tia3"]
-mesh = SubResource("Box_tia")
-material_override = ExtResource("3_m")
-
-[node name="Vung" type="Area3D" parent="Tia3"]
-collision_layer = 0
-collision_mask = 2
-
-[node name="Hinh" type="CollisionShape3D" parent="Tia3/Vung"]
+[node name="Hinh" type="CollisionShape3D" parent="Tia2/Vung" unique_id=1451352253]
 shape = SubResource("Shape_tia")

@@ -58,6 +58,8 @@ enum { PHASE_LOBBY, PHASE_COUNTDOWN, PHASE_PLAYING }
 		round_index = value
 		changed.emit()
 
+@export var minigame_json: String = ""
+
 @onready var sync: FusionSharedReplicator = $Replicator
 
 

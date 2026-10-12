@@ -74,6 +74,9 @@ static func _ma(sc: PackedScene) -> String:
 
 ## Ai cũng gọi được; chỉ master phát lệnh và gieo hạt.
 func xin_chay(ma: String) -> void:
+	if $Session.supports(ma):
+		$Session.start_match(ma)
+		return
 	if _dang_chay:
 		return
 	var ids: Array = []
@@ -172,9 +175,15 @@ func _khi_xong(xep_hang: Array) -> void:
 		dong.append("%d.  %s%s" % [i + 1, Player.ten_theo_id(get_tree(), id),
 				("   ·   " + diem) if diem != "" else ""])
 	_ket_qua.text = "\n".join(dong)
-	await get_tree().create_timer(XEM_KET_QUA).timeout
-	_don()
-	ket_thuc.emit(xep_hang)
+	var completed_game: MiniGame = _game
+	var seconds: float = XEM_KET_QUA
+	if _game is MiniGame3D and not (_game as MiniGame3D).shared_snapshot.is_empty():
+		var snapshot: Dictionary = (_game as MiniGame3D).shared_snapshot
+		seconds = maxf(float(snapshot["ended"]) + XEM_KET_QUA - Fusion.get_network_time(), 0.01)
+	await get_tree().create_timer(seconds).timeout
+	if _game == completed_game:
+		_don()
+		ket_thuc.emit(xep_hang)
 
 
 func huy() -> void:
@@ -196,3 +205,33 @@ func _don() -> void:
 	_ket_qua.text = ""
 	# Trả chuột về cho game 3D.
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+func begin_shared_game(snapshot: Dictionary) -> void:
+	if _dang_chay:
+		_don()
+	var scene: PackedScene = _tim(str(snapshot["code"]))
+	if scene == null:
+		return
+	_dang_chay = true
+	bat_dau.emit()
+	_lop.visible = true
+	_ket_qua.text = ""
+	_game = scene.instantiate() as MiniGame
+	_game.shared_snapshot = snapshot.duplicate(true)
+	_game.shared_session = $Session
+	_khung.add_child(_game)
+	_game.xong.connect(_khi_xong, CONNECT_ONE_SHOT)
+	_setup_shared_presentation(snapshot)
+
+
+func _setup_shared_presentation(snapshot: Dictionary) -> void:
+	_nen.visible = _game.che_nen
+	_tieu.text = _game.ten
+	_luat.text = "• " + _game.luat.replace(" · ", "\n• ")
+	_ids.clear()
+	for id: Variant in snapshot["ids"]:
+		_ids.append(int(id))
+	_game.bat_dau(_ids, int(snapshot["seed"]))
+	_dung_bang_diem()
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE

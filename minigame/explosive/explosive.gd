@@ -1,200 +1,127 @@
 extends MiniGame3D
 
-## EXPLOSIVE EXCHANGE — chuyền bom đếm ngược; ai đang ôm lúc nổ thì ra.
-## Master giữ `_ai_om` (client xin chuyền, master duyệt rồi phát). Nổ thì máy người ôm tự khai tử.
-## Người ôm bom chạy nhanh hơn `TOC_OM_THEM` (trả lại khi hết ôm). Chuyền bằng nút E.
+signal detonation(center: Vector3, radius: float)
 
-## E (trong sân không có gì để nhặt).
-const NUT_CHUYEN := "interact"
-## Thời gian bom đếm lần đầu.
-const GIAY_DAU := 16.0
-const GIAY_CUOI := 7.0
-## Ngắn hết cỡ sau chừng này lần nổ.
-const SO_LAN_NGAN := 4
-## Vừa nhận bom thì chừng này giây sau mới chuyền được.
-const NGHI_CHUYEN := 0.9
-const CAO_TREO := 2.3
-## Người ôm bom chạy nhanh thêm (m/s).
-const TOC_OM_THEM := 1.6
-## Dưới chừng này giây thì bom vào trạng thái gấp.
-const GIAY_GAP := 4.0
+@export var blast_radius: float = 3.0
+@export var fuse_first: float = 16.0
+@export var fuse_last: float = 7.0
+@export_range(1, 20) var shorten_rounds: int = 4
+@export var fuse_curve: Curve = null
+@export var pass_radius: float = 2.2
+@export var pass_delay: float = 0.9
+@export var holder_speed_bonus: float = 1.6
 
-
-var _bom: Node3D = null
-var _vung: Area3D = null
-var _dem: Label3D = null
-var _sang: OmniLight3D = null
-var _mat: Node3D = null
-var _vong: Node3D = null
-
-## 0 = chưa ai. Chỉ đổi qua `_net_trao`.
-var _ai_om := 0
-## `gio()` lúc bom nổ.
-var _no_luc := 0.0
-## `gio()` sớm nhất được chuyền tiếp.
-var _cho_toi := 0.0
-var _lan_no := 0
-## Master đã bốc người ôm đầu tiên chưa.
-var _da_thap := false
-## Tốc gốc của nhân vật máy này, để trả lại.
-var _toc_goc := -1.0
-## Đọc từ mesh sàn.
-var _ban_kinh := 11.5
+var _bomb: Node3D = null
+var _base_speed: float = -1.0
+var _seen_blasts: int = 0
+var _position_history: Array[Dictionary] = []
+const HISTORY_SECONDS: float = 3.0
+const BODY_CENTER_HEIGHT: float = 0.9
 
 
 func _ready() -> void:
 	super()
 	ten = "EXPLOSIVE EXCHANGE"
-	luat = "WASD chạy · E chuyền bom cho người trong vòng đỏ · đừng ôm lúc nó nổ"
-	giay_van = 0.0  # bom rút ngắn dần, ván tự kết thúc
+	luat = "WASD chạy · E chuyền bom · tránh bán kính nổ"
+
+
+func network_parameters() -> Dictionary:
+	return {"blast_radius": blast_radius, "fuse_first": fuse_first, "fuse_last": fuse_last,
+		"shorten_rounds": shorten_rounds, "fuse_seconds": _fuse_durations(),
+		"pass_radius": pass_radius, "pass_delay": pass_delay,
+		"holder_speed_bonus": holder_speed_bonus}
 
 
 func _dung_san() -> void:
-	_bom = san.get_node_or_null("Bom") as Node3D
-	if _bom == null:
-		push_error("Explosive: san thieu node Bom")
-		return
-	_vung = _bom.get_node("Vung") as Area3D
-	_dem = _bom.get_node("Dem") as Label3D
-	_sang = _bom.get_node("Sang") as OmniLight3D
-	_mat = _bom.get_node("Mat") as Node3D
-	_vong = _bom.get_node("VongTam") as Node3D
-	_bom.visible = false
-	# Không đặt lại `_ai_om`/`_no_luc`: gói `_net_trao` của master có thể tới trước lúc này.
-	_toc_goc = -1.0
-	var bon := san.get_node_or_null("SanTron") as Node3D
-	var m := bon.get_node_or_null("Mat") as MeshInstance3D if bon != null else null
-	var cyl := m.mesh as CylinderMesh if m != null else null
-	if cyl != null:
-		_ban_kinh = cyl.top_radius
-
-
-## Trả tốc gốc trước khi ra khỏi sân.
-func dung_som() -> void:
-	_dat_toc(false)
-	super()
+	_bomb = san.get_node("Bom")
+	detonation.connect(_bomb.detonate)
+	var parameters: Dictionary = shared_snapshot.get("parameters", network_parameters())
+	for key: Variant in parameters:
+		if str(key) != "fuse_seconds":
+			set(str(key), parameters[key])
 
 
 func _luat_moi_nhip() -> void:
-	if _bom == null:
+	var now: float = Fusion.get_network_time()
+	var player: Player = _nguoi(NetManager.local_id())
+	if player != null:
+		_position_history.append({"time": now, "position": player.global_position})
+	while not _position_history.is_empty() and now - float(_position_history[0]["time"]) > HISTORY_SECONDS:
+		_position_history.pop_front()
+	_consume_blasts(now)
+	var holder: int = int(shared_snapshot.get("holder", 0))
+	_bomb.present(_nguoi(holder), float(shared_snapshot.get("fuse_end", now)),
+		now >= float(shared_snapshot.get("pass_after", now)))
+	_set_holder_speed(holder == NetManager.local_id())
+	giu_trong_san(11.0)
+
+
+func _consume_blasts(now: float) -> void:
+	var blasts: Array = shared_snapshot.get("blasts", [])
+	while _seen_blasts < blasts.size():
+		var event: Dictionary = blasts[_seen_blasts]
+		_seen_blasts += 1
+		var coordinates: Array = event["position"]
+		var center := Vector3(float(coordinates[0]), float(coordinates[1]), float(coordinates[2]))
+		var time: float = float(event["time"])
+		if now - time <= HISTORY_SECONDS:
+			detonation.emit(center, blast_radius)
+			var position: Vector3 = _position_at(time) + Vector3.UP * BODY_CENTER_HEIGHT
+			if position.distance_squared_to(center) <= blast_radius * blast_radius:
+				_report_shared_death(time - float(shared_snapshot["start"]))
+
+
+func _position_at(time: float) -> Vector3:
+	var player: Player = _nguoi(NetManager.local_id())
+	var result: Vector3 = player.global_position if player != null else Vector3.INF
+	var nearest: float = INF
+	for sample: Dictionary in _position_history:
+		var distance: float = absf(float(sample["time"]) - time)
+		if distance < nearest:
+			nearest = distance
+			result = sample["position"]
+	return result
+
+
+func _set_holder_speed(holding: bool) -> void:
+	var player: Player = _nguoi(NetManager.local_id())
+	if player == null or not player.sync.has_authority():
 		return
-	# Bốc người ôm đầu tiên ở đây (lúc `gio()` đã đặt lại).
-	if NetManager.is_master() and not _da_thap:
-		_da_thap = true
-		_trao_cho_ai_do()
-	var om := _nguoi(_ai_om) if _ai_om != 0 else null
-	_bom.visible = om != null
-	var toi := _ai_om == NetManager.local_id()
-	_dat_toc(toi and om != null)
-	if om == null:
-		return
-	_bom.global_position = om.global_position + Vector3.UP * CAO_TREO
-	var con_lai := maxf(_no_luc - gio(), 0.0)
-	_ve_bom(con_lai)
-
-	# Người ôm quá giờ nổ mà máy họ không khai thì master khai hộ.
-	if NetManager.is_master() and not toi and gio() >= _no_luc + 1.5 and con_song(_ai_om):
-		Fusion.rpc(_net_chet, _ai_om, _no_luc)
-	if not toi:
-		return
-	giu_trong_san(_ban_kinh - 0.5)
-	# Chỉ máy người đang ôm tự khai tử.
-	if gio() >= _no_luc:
-		xin_chet()
+	if _base_speed < 0.0:
+		_base_speed = player.speed
+	player.speed = _base_speed + holder_speed_bonus if holding else _base_speed
 
 
-## Bom gấp dần: phồng, sáng, chữ đỏ; vòng tầm chuyền chỉ sáng khi chuyền được.
-func _ve_bom(con_lai: float) -> void:
-	_dem.text = "%.1f" % con_lai
-	var gap := 1.0 - clampf(con_lai / GIAY_GAP, 0.0, 1.0)
-	# Phồng nhanh dần.
-	var nhip := sin(gio() * TAU * lerpf(2.0, 9.0, gap))
-	_mat.scale = Vector3.ONE * (1.0 + gap * 0.35 + nhip * 0.06 * (0.3 + gap))
-	_sang.light_energy = lerpf(3.0, 9.0, gap)
-	_dem.modulate = Color(1.0, 0.85, 0.5).lerp(Color(1.0, 0.25, 0.15), gap)
-	_vong.visible = gio() >= _cho_toi
+func dung_som() -> void:
+	_set_holder_speed(false)
+	super()
 
 
-func _dat_toc(dang_om: bool) -> void:
-	var p := _nguoi(NetManager.local_id())
-	if p == null:
-		return
-	if _toc_goc < 0.0:
-		_toc_goc = p.speed
-	p.speed = _toc_goc + TOC_OM_THEM if dang_om else _toc_goc
-
-
-## E để chuyền.
 func _unhandled_input(event: InputEvent) -> void:
-	if not _chay or not event.is_action_pressed(NUT_CHUYEN):
+	if not _chay or not event.is_action_pressed("interact") or gio() < 0.0:
 		return
-	if _ai_om != NetManager.local_id() or gio() < _cho_toi:
+	if int(shared_snapshot.get("holder", 0)) != NetManager.local_id():
 		return
-	var nan_nhan := _ai_gan_bom()
-	if nan_nhan == 0:
-		return
-	get_viewport().set_input_as_handled()
-	Fusion.rpc(_xin_chuyen, NetManager.local_id(), nan_nhan)
-
-
-## Người gần nhất trong vòng `VongTam` (không phải người đang ôm); 0 = không ai.
-func _ai_gan_bom() -> int:
-	var gan := 0
-	var cach := INF
-	for b in _vung.get_overlapping_bodies():
-		var p := b as Player
-		if p == null or p.player_id() == _ai_om or not con_song(p.player_id()):
+	var holder: Player = _nguoi(NetManager.local_id())
+	var target: int = 0
+	var nearest: float = pass_radius * pass_radius
+	for player: Player in get_tree().get_nodes_in_group("players"):
+		if player == holder or not con_song(player.player_id()):
 			continue
-		var d := p.global_position.distance_squared_to(_bom.global_position)
-		if d < cach:
-			cach = d
-			gan = p.player_id()
-	return gan
+		var distance: float = player.global_position.distance_squared_to(holder.global_position)
+		if distance <= nearest:
+			target = player.player_id()
+			nearest = distance
+	if target != 0:
+		get_viewport().set_input_as_handled()
+		shared_session.request_pass(target)
 
-
-# ─── trọng tài: master duyệt rồi phát ───
-
-@rpc("any_peer", "call_local")
-func _xin_chuyen(tu: int, den: int) -> void:
-	if not NetManager.is_master():
-		return
-	# Chỉ người đang ôm chuyền được, cho người còn sống; gói tới trước thắng.
-	if tu != _ai_om or not con_song(den) or gio() < _cho_toi:
-		return
-	Fusion.rpc(_net_trao, den, _no_luc, gio() + NGHI_CHUYEN)
-
-
-## Master chọn người ôm mới và đặt đồng hồ.
-func _trao_cho_ai_do() -> void:
-	var song: Array = []
-	for id in _song:
-		if con_song(int(id)):
-			song.append(int(id))
-	if song.is_empty():
-		return
-	song.sort()  # cùng hạt giống thì cùng kết quả
-	var ai := int(song[_rng.randi() % song.size()])
-	Fusion.rpc(_net_trao, ai, gio() + giay_dem(_lan_no), gio() + NGHI_CHUYEN)
-
-
-## Mọi mốc giờ do master tính rồi gửi kèm.
-@rpc("any_peer", "call_local")
-func _net_trao(ai: int, no_luc: float, cho_toi: float) -> void:
-	_ai_om = ai
-	_no_luc = no_luc
-	_cho_toi = cho_toi
-
-
-## Người ôm vừa nổ: master thắp quả tiếp theo.
-func _khi_ai_do_chet(id: int) -> void:
-	if not NetManager.is_master() or id != _ai_om:
-		return
-	_lan_no += 1
-	_trao_cho_ai_do()
-
-
-# ─── luật: hàm thuần ───
-
-## Ngắn dần rồi dừng ở `GIAY_CUOI`.
-static func giay_dem(lan: int) -> float:
-	return lerpf(GIAY_DAU, GIAY_CUOI, clampf(float(lan) / float(SO_LAN_NGAN), 0.0, 1.0))
+func _fuse_durations() -> Array[float]:
+	var durations: Array[float] = []
+	for index: int in range(shorten_rounds + 1):
+		var fraction: float = float(index) / maxi(shorten_rounds, 1)
+		if fuse_curve != null:
+			fraction = clampf(fuse_curve.sample_baked(fraction), 0.0, 1.0)
+		var duration: float = lerpf(fuse_first, fuse_last, fraction)
+		durations.append(minf(duration, durations.back()) if not durations.is_empty() else duration)
+	return durations

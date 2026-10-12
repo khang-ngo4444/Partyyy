@@ -1,7 +1,10 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene format=3 uid="uid://bm83ynb866dc7"]
 
 [ext_resource type="Material" path="res://materials/mat_o_nguy_hiem.tres" id="1_m"]
+[ext_resource type="Script" uid="uid://oobm8mcfcu03" path="res://minigame/explosive/bomb_presentation.gd" id="1_xo5gp"]
 [ext_resource type="Material" path="res://materials/mat_san_canh_bao.tres" id="2_v"]
+[ext_resource type="AudioStream" uid="uid://c8ssh3wlf0lra" path="res://asset/kenney_impact-sounds/Audio/impactMetal_light_000.ogg" id="4_o0wdb"]
+[ext_resource type="AudioStream" uid="uid://b55m5ud28q7lx" path="res://asset/kenney_impact-sounds/Audio/impactMetal_heavy_000.ogg" id="5_2hxr0"]
 
 [sub_resource type="SphereMesh" id="Sph_bom"]
 radius = 0.55
@@ -12,40 +15,64 @@ inner_radius = 1.72
 outer_radius = 1.8
 
 [sub_resource type="CylinderShape3D" id="Shape_tam"]
-radius = 1.8
 height = 2.2
+radius = 1.8
 
-[node name="BomChuyen" type="Node3D"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m21d5"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.3, 0.05, 0.25)
 
-[node name="Mat" type="MeshInstance3D" parent="."]
-mesh = SubResource("Sph_bom")
+[sub_resource type="SphereMesh" id="SphereMesh_6lhut"]
+radius = 1.0
+height = 2.0
+
+[node name="BomChuyen" type="Node3D" unique_id=1847741154]
+script = ExtResource("1_xo5gp")
+
+[node name="Mat" type="MeshInstance3D" parent="." unique_id=1340892292]
 material_override = ExtResource("1_m")
+mesh = SubResource("Sph_bom")
 
-[node name="Sang" type="OmniLight3D" parent="."]
+[node name="Sang" type="OmniLight3D" parent="." unique_id=2041261372]
 light_color = Color(1, 0.45, 0.2, 1)
 light_energy = 3.0
 omni_range = 6.0
 
-[node name="Dem" type="Label3D" parent="."]
+[node name="Dem" type="Label3D" parent="." unique_id=160199673]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+pixel_size = 0.0018
 billboard = 1
 no_depth_test = true
 fixed_size = true
-pixel_size = 0.0018
-font_size = 96
-outline_size = 26
 modulate = Color(1, 0.85, 0.5, 1)
 text = "0"
+font_size = 96
+outline_size = 26
 
-[node name="VongTam" type="MeshInstance3D" parent="."]
+[node name="VongTam" type="MeshInstance3D" parent="." unique_id=1149539848]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.2, 0)
-mesh = SubResource("Torus_tam")
 material_override = ExtResource("2_v")
+mesh = SubResource("Torus_tam")
 
-[node name="Vung" type="Area3D" parent="."]
+[node name="Vung" type="Area3D" parent="." unique_id=1571267399]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2, 0)
 collision_layer = 0
 collision_mask = 2
 
-[node name="Hinh" type="CollisionShape3D" parent="Vung"]
+[node name="Hinh" type="CollisionShape3D" parent="Vung" unique_id=1034703722]
 shape = SubResource("Shape_tam")
+
+[node name="WarningPulse" type="Timer" parent="." unique_id=43139750]
+one_shot = true
+
+[node name="WarningAudio" type="AudioStreamPlayer3D" parent="." unique_id=1412954940]
+stream = ExtResource("4_o0wdb")
+
+[node name="BlastAudio" type="AudioStreamPlayer3D" parent="." unique_id=1733745696]
+stream = ExtResource("5_2hxr0")
+
+[node name="Blast" type="MeshInstance3D" parent="." unique_id=1397653340]
+visible = false
+material_override = SubResource("StandardMaterial3D_m21d5")
+mesh = SubResource("SphereMesh_6lhut")

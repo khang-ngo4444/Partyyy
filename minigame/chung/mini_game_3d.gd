@@ -42,6 +42,10 @@ const THUONG_SONG_CUOI := 10.0
 @export var giay_van := 60.0
 @export var co_danh := false
 
+var shared_snapshot: Dictionary = {}
+var shared_session: Node = null
+var _reported_dead: bool = false
+
 var san: Node3D = null
 var hat_giong := 0
 
@@ -91,7 +95,7 @@ func bat_dau(nguoi_choi: Array, giong: int) -> void:
 
 	# Chỉ nhấc nhân vật của máy này.
 	var toi := _nguoi(NetManager.local_id())
-	if toi != null:
+	if toi != null and toi.sync.has_authority():
 		_cho_cu = toi.global_transform
 		_co_cho_cu = true
 		var i := maxi(nguoi_choi.find(NetManager.local_id()), 0)
@@ -99,7 +103,9 @@ func bat_dau(nguoi_choi: Array, giong: int) -> void:
 		toi.velocity = Vector3.ZERO
 	_che_do_san(true)
 
-	_bat_dau_luc = _gio_may()
+	_bat_dau_luc = float(shared_snapshot["start"]) if not shared_snapshot.is_empty() else _gio_may()
+	if not shared_snapshot.is_empty() and toi != null and nguoi_choi.has(NetManager.local_id()):
+		toi.enter_minigame(int(shared_snapshot["round"]))
 	_chay = true
 	set_process(true)
 
@@ -108,6 +114,7 @@ func bat_dau(nguoi_choi: Array, giong: int) -> void:
 func dung_som() -> void:
 	_chay = false
 	set_process(false)
+	_restore_shared_players()
 	_che_do_san(false)
 	var toi := _nguoi(NetManager.local_id())
 	if toi != null and _co_cho_cu:
@@ -121,7 +128,7 @@ func dung_som() -> void:
 
 ## Giây từ lúc ván bắt đầu — chướng ngại là hàm của số này.
 func gio() -> float:
-	return _gio_may() - _bat_dau_luc
+	return Fusion.get_network_time() - _bat_dau_luc if not shared_snapshot.is_empty() else _gio_may() - _bat_dau_luc
 
 
 func con_song(id: int) -> bool:
@@ -137,6 +144,9 @@ func so_con_song() -> int:
 
 
 func _process(_delta: float) -> void:
+	if not shared_snapshot.is_empty():
+		_present_shared_players()
+		return
 	if not _chay:
 		return
 	if co_danh:
@@ -268,6 +278,9 @@ func giu_trong_san(r: float) -> void:
 
 ## Tự khai thua.
 func xin_chet() -> void:
+	if not shared_snapshot.is_empty():
+		_report_shared_death(gio())
+		return
 	if not con_song(NetManager.local_id()):
 		return
 	Fusion.rpc(_net_chet, NetManager.local_id(), gio())
@@ -398,3 +411,83 @@ static func goc_quay(pha: float, t: float, toc_dau: float, toc_cuoi: float,
 	if t > tang_het:
 		quet += toc_cuoi * (t - tang_het)
 	return pha + quet
+
+
+func network_parameters() -> Dictionary:
+	return {}
+
+
+func apply_shared_state(snapshot: Dictionary) -> void:
+	shared_snapshot = snapshot.duplicate(true)
+	_song.clear()
+	var alive: Dictionary = snapshot["alive"]
+	for key: Variant in alive:
+		_song[int(key)] = float(alive[key])
+	if snapshot["phase"] == "ENDED" and not _da_chot:
+		_het_luc = float(snapshot["ended"]) - float(snapshot["start"])
+		_da_chot = true
+		_chay = false
+		xong.emit(snapshot["ranking"])
+
+
+func _physics_process(_delta: float) -> void:
+	if shared_snapshot.is_empty() or not _chay:
+		return
+	if gio() < 0.0:
+		return
+	if gio() >= float(shared_snapshot["duration"]):
+		return
+	_luat_moi_nhip()
+	if con_song(NetManager.local_id()) and _toi_thua():
+		xin_chet()
+
+
+func _report_shared_death(elapsed: float) -> void:
+	var player: Player = _nguoi(NetManager.local_id())
+	if _reported_dead or player == null or not con_song(player.player_id()):
+		return
+	if not player.sync.has_authority():
+		return
+	_reported_dead = true
+	player.eliminate_minigame(int(shared_snapshot["round"]), elapsed)
+	_song[player.player_id()] = elapsed
+
+
+func _present_shared_players() -> void:
+	for player: Player in get_tree().get_nodes_in_group("players"):
+		_prepare_shared_owner(player)
+		var life: Dictionary = player.minigame_life()
+		var id: int = player.player_id()
+		var eliminated: bool = not con_song(id)
+		if int(life.get("round", 0)) == int(shared_snapshot["round"]):
+			eliminated = eliminated or float(life.get("death", -1.0)) >= 0.0
+		player.model_root.visible = not eliminated
+		if player.sync.has_authority():
+			player.khoa_di_chuyen = eliminated or gio() < 0.0 or _da_chot or gio() >= float(shared_snapshot["duration"])
+			player.collision_layer = 0 if eliminated else Player.LOP_NGUOI
+
+
+func _restore_shared_players() -> void:
+	if shared_snapshot.is_empty():
+		return
+	for player: Player in get_tree().get_nodes_in_group("players"):
+		player.model_root.visible = true
+		if player.sync.has_authority():
+			player.collision_layer = Player.LOP_NGUOI
+			player.minigame_life_json = ""
+
+func _prepare_shared_owner(player: Player) -> void:
+	if not player.sync.has_authority():
+		return
+	var camera: Camera3D = _cam_san()
+	if camera != null and not camera.current:
+		camera.make_current()
+	if player.che_do_san:
+		return
+	_cho_cu = player.global_transform
+	_co_cho_cu = true
+	_khoa_cu = player.khoa_di_chuyen
+	player.che_do_san = true
+	player.global_position = san.global_position + Vector3(7.0, 1.0, 0.0)
+	if con_song(player.player_id()):
+		player.enter_minigame(int(shared_snapshot["round"]))

@@ -1,8 +1,14 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://nomb1ffimlmf"]
 
-[ext_resource type="Script" path="res://minigame/explosive/explosive.gd" id="1_ex"]
+[ext_resource type="Script" uid="uid://dmgky7kelitol" path="res://minigame/explosive/explosive.gd" id="1_ex"]
 [ext_resource type="PackedScene" path="res://minigame/explosive/san_no.tscn" id="2_san"]
 
-[node name="Explosive" type="Node"]
+[sub_resource type="Curve" id="Curve_s6n8q"]
+_data = [Vector2(0, 0), 1.0, 1.0, 0, 0, Vector2(1, 1), 1.0, 1.0, 0, 0]
+point_count = 2
+
+[node name="Explosive" type="Node" unique_id=1847953484]
 script = ExtResource("1_ex")
+fuse_curve = SubResource("Curve_s6n8q")
 san_scene = ExtResource("2_san")
+giay_van = 75.0
