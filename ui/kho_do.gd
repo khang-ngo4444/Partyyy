@@ -212,7 +212,7 @@ static func _cach_nham(mon: String) -> String:
 		VatPham.Nham.NON:
 			return "Ngắm hình nón" + tam_chu
 		VatPham.Nham.CHON_NGUOI:
-			return "Chọn một người chơi (A/D)"
+			return "Chọn một người chơi (Z/X)"
 		VatPham.Nham.CHON_O:
 			return "Chọn ô trên bàn" + tam_chu
 		VatPham.Nham.CHON_MINIGAME:

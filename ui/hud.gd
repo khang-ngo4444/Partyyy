@@ -48,6 +48,9 @@ var _hien_ping := false
 @onready var bang_thang: Control = $BangThang
 @onready var bang_chon: BangChon = $BangChon
 @onready var kho_do: KhoDo = $KhoDo
+@onready var cam_pill: Control = %CamPill
+@onready var cam_label: Label = %CamLabel
+@onready var cam_tu_do_hint: Label = %CamTuDoHint
 @onready var performance_manager: Node = get_node("/root/PerformanceManager")
 
 
@@ -56,6 +59,9 @@ func _ready() -> void:
 	bang_ban.thue_da_chon.connect(func(loai: int): thue_da_chon.emit(loai))
 	bang_chon.da_chon.connect(func(i: int): muc_tieu_da_chon.emit(i))
 	kho_do.doi_cho.connect(func(a: int, b: int): doi_cho_do.emit(a, b))
+	var cam_hint: HBoxContainer = %CamHint
+	cam_hint.add_child(UIKit.chip_phim("C", "Đổi cam", false))
+	cam_hint.add_child(UIKit.chip_phim("V", "Theo dõi", false))
 	NetManager.room_joined.connect(_on_room_joined)
 	NetManager.peer_joined.connect(func(_id, _uid): _refresh_peers())
 	NetManager.peer_left.connect(func(_id, _inactive): _refresh_peers())
@@ -69,7 +75,10 @@ func _process(delta: float) -> void:
 	if not visible:
 		return
 	# Tâm ngắm chỉ hiện khi chuột đang khoá vào game.
-	crosshair.visible = Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
+	# Camera bay / camera theo dõi người khác: không có gì để ngắm.
+	var cam := get_viewport().get_camera_3d()
+	crosshair.visible = Input.mouse_mode == Input.MOUSE_MODE_CAPTURED \
+			and not (cam is CameraTuDo or cam is CameraBan)
 	_ve_luc_nem()
 	_cap_nhat_hien_thi()
 	_status_acc += delta
@@ -118,6 +127,7 @@ func _refresh_status() -> void:
 func _cap_nhat_hien_thi() -> void:
 	var qt = get_tree().get_first_node_in_group("quan_tro")
 	var minigame: bool = qt != null and qt.dang_chay()
+	cam_pill.visible = _tren_ban and not minigame and cam_label.text != ""
 	kho_do.duoc_mo = _tren_ban and not minigame
 	if not kho_do.duoc_mo:
 		kho_do.dong()
@@ -262,6 +272,14 @@ func cap_nhat_chon_huong(noi_dung: String, tieu_de := "") -> void:
 ## `nhan` rỗng = đóng bảng.
 func mo_bang_chon(tieu_de: String, nhan: PackedStringArray) -> void:
 	bang_chon.mo(tieu_de, nhan)
+
+
+## Nhãn chế độ camera bàn ("" = ẩn).
+func cap_nhat_camera(nhan: String) -> void:
+	if nhan != cam_label.text and nhan != "":
+		UINav.nay(cam_pill, 1.08)
+	cam_label.text = nhan
+	cam_tu_do_hint.visible = nhan == "CAM TỰ DO"
 
 
 func bao_thang(chu: String) -> void:

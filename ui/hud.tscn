@@ -353,6 +353,47 @@ layout_mode = 1
 [node name="BangChon" parent="." instance=ExtResource("7_chon")]
 layout_mode = 1
 
+[node name="CamPill" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -330.0
+offset_top = 14.0
+offset_right = -14.0
+offset_bottom = 60.0
+grow_horizontal = 0
+mouse_filter = 2
+theme_type_variation = &"TheNho"
+
+[node name="Cot" type="VBoxContainer" parent="CamPill"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="CamLabel" type="Label" parent="CamPill/Cot"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ChuDauMuc"
+theme_override_font_sizes/font_size = 20
+text = "CAM TỰ DO"
+
+[node name="CamHint" type="HBoxContainer" parent="CamPill/Cot"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="CamTuDoHint" type="Label" parent="CamPill/Cot"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ChuPhu"
+theme_override_font_sizes/font_size = 15
+text = "Chuột xoay · WASD/mũi tên bay · Lăn chuột tiến/lùi · Shift nhanh"
+autowrap_mode = 3
+
 [node name="KhoDo" parent="." instance=ExtResource("10_kho")]
 layout_mode = 1
 

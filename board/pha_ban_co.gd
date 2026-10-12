@@ -20,6 +20,29 @@ signal hieu_ung(fx: Dictionary)
 ## Hết ván (cờ `thang` trong gói); `main.gd` đóng bàn.
 signal van_thang(id: int)
 
+## Chế độ camera của máy này vừa đổi (HUD vẽ nhãn).
+signal camera_doi(nhan: String)
+
+## Camera bàn — riêng từng máy, không replicate.
+## TU_DO: bay tự do (mặc định khi vào bàn). GAN: gắn nhân vật — mình hoặc người đang theo dõi.
+enum CheDoCam { TU_DO, GAN }
+
+## Phím chọn trên bàn (ngã rẽ, mục tiêu vật phẩm). Không dùng A/D vì WASD là của camera bay.
+const PHIM_TRAI := KEY_Z
+const PHIM_PHAI := KEY_X
+
+
+## Bấm phím chọn trái (-1) / phải (+1); 0 = không phải.
+static func huong_phim(event: InputEvent) -> int:
+	var k := event as InputEventKey
+	if k == null or not k.pressed or k.echo:
+		return 0
+	if k.physical_keycode == PHIM_TRAI or k.keycode == PHIM_TRAI:
+		return -1
+	if k.physical_keycode == PHIM_PHAI or k.keycode == PHIM_PHAI:
+		return 1
+	return 0
+
 const CAO_BAN := 100.0
 const GIAY_MOI_O := 0.22
 const NGHI_GIUA_LUOT := 0.8
@@ -71,6 +94,13 @@ var _o_cuoi := -1
 var _cho_master := PackedInt32Array()
 var _xuc_xac: Node3D = null
 var _hai_xuc_xac: Node3D = null
+
+var che_do_cam := CheDoCam.TU_DO
+## Ở chế độ GAN: 0 = tự động (người đang tới lượt), còn lại = id người đang theo dõi.
+var muc_theo := 0
+var cam_tu_do: CameraTuDo = null
+## Đang ngắm vật phẩm: bắt buộc dùng camera nhân vật mình (tâm màn hình = tia bắn).
+var _ep_cam_toi := false
 
 ## RNG của master; kết quả đi trong gói nên mọi máy thấy giống nhau.
 var _rng := RandomNumberGenerator.new()
@@ -138,6 +168,11 @@ func dong() -> void:
 	_cac_huong = PackedInt32Array()
 	_cho_master = PackedInt32Array()
 	_dang_dien = false
+	che_do_cam = CheDoCam.TU_DO
+	muc_theo = 0
+	_ep_cam_toi = false
+	cam_tu_do = null
+	camera_doi.emit("")
 	chon_huong_doi.emit("")
 	tam_dung = false
 	_camera_cua_toi()
@@ -216,6 +251,17 @@ func _dat_moi_nguoi_len_o() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	# C: camera tự do <-> gắn nhân vật · V: đổi người theo dõi. Mỗi máy tự quyết, không gửi mạng.
+	if event is InputEventKey and event.pressed and not event.echo and ban != null \
+			and dang_chay() and not tam_dung and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		if event.keycode == KEY_C:
+			get_viewport().set_input_as_handled()
+			doi_che_do_camera()
+			return
+		if event.keycode == KEY_V:
+			get_viewport().set_input_as_handled()
+			doi_nguoi_theo_doi()
+			return
 	var thue: Dictionary = tt.get("thue", {}) as Dictionary
 	if not thue.is_empty() and int(thue.get("chu", -1)) == NetManager.local_id():
 		if event is InputEventKey and event.pressed and not event.echo:
@@ -225,14 +271,10 @@ func _unhandled_input(event: InputEvent) -> void:
 				Fusion.rpc(_net_xin_thu_thue, NetManager.local_id(), lua_chon_thue)
 		return
 	if _dang_chon and _id_dang_tung == NetManager.local_id():
-		if event.is_action_pressed("move_left"):
+		var buoc := huong_phim(event)
+		if buoc != 0:
 			get_viewport().set_input_as_handled()
-			_lua_chon = posmod(_lua_chon - 1, _cac_huong.size())
-			_cap_nhat_lua_chon()
-			return
-		if event.is_action_pressed("move_right"):
-			get_viewport().set_input_as_handled()
-			_lua_chon = posmod(_lua_chon + 1, _cac_huong.size())
+			_lua_chon = posmod(_lua_chon + buoc, _cac_huong.size())
 			_cap_nhat_lua_chon()
 			return
 		if event.is_action_pressed("jump") or event.is_action_pressed("interact"):
@@ -405,26 +447,112 @@ func _cap_nhat_lua_chon() -> void:
 	var o := int(_bang("o").get(LuatBan.khoa(_id_dang_tung), 0))
 	ban.hien_mui_ten(o, _cac_huong, _lua_chon)
 	if _id_dang_tung == NetManager.local_id():
-		chon_huong_doi.emit("NGÃ RẼ — chọn hướng  %d/%d    [A/D] đổi    [SPACE/E] đi" % [
+		chon_huong_doi.emit("NGÃ RẼ — chọn hướng  %d/%d    [Z/X] đổi    [SPACE/E] đi" % [
 				_lua_chon + 1, _cac_huong.size()])
 	else:
 		chon_huong_doi.emit("%s đang chọn hướng..." % Player.ten_theo_id(get_tree(),
 				_id_dang_tung))
 
 
-## Lượt mình: camera của mình (để ngắm đồ). Lượt người khác: camera bàn bám họ.
+## TU_DO: camera bay của máy này. GAN: bám người được theo dõi (tự động = người đang tới lượt;
+## tới mình thì dùng camera nhân vật để ngắm đồ). Đang ngắm đồ thì luôn về camera mình.
 func _cap_nhat_camera() -> void:
 	if ban == null or tam_dung or tt.has("thang"):
 		return
+	_bao_dam_cam_tu_do()
+	if _ep_cam_toi:
+		_camera_cua_toi()
+	elif che_do_cam == CheDoCam.TU_DO:
+		cam_tu_do.make_current()
+	else:
+		var id := _id_theo_doi()
+		if id == NetManager.local_id():
+			_camera_cua_toi()
+		elif nguoi(id) != null:
+			ban.camera_ban.theo(nguoi(id))
+	_bao_camera()
+
+
+## Id người camera GAN đang bám (-1 = chưa có lượt).
+func _id_theo_doi() -> int:
+	if muc_theo != 0 and nguoi(muc_theo) != null:
+		return muc_theo
 	var ds := _thu_tu()
 	var luot := int(tt.get("luot", -1))
 	if luot < 0 or luot >= ds.size():
+		return NetManager.local_id()
+	return int(ds[luot])
+
+
+## Camera bàn nhìn vào `n` một lúc (hiệu ứng, xem trước mục tiêu). Ở camera tự do thì không giật
+## camera, trừ khi `ca_khi_tu_do` (chính mình đang chọn mục tiêu bằng Z/X).
+func cam_xem(n: Node3D, ca_khi_tu_do := false) -> void:
+	if ban == null or n == null:
 		return
-	var id := int(ds[luot])
-	if id == NetManager.local_id():
-		_camera_cua_toi()
-	else:
-		ban.camera_ban.theo(nguoi(id))
+	if che_do_cam == CheDoCam.TU_DO and not ca_khi_tu_do:
+		return
+	if che_do_cam == CheDoCam.GAN and muc_theo != 0 and not ca_khi_tu_do:
+		return
+	ban.camera_ban.theo(n)
+
+
+## DungDo bật khi đang ngắm vật phẩm.
+func ep_camera_toi(bat: bool) -> void:
+	if _ep_cam_toi == bat:
+		return
+	_ep_cam_toi = bat
+	_cap_nhat_camera()
+
+
+func _bao_dam_cam_tu_do() -> void:
+	if cam_tu_do != null and is_instance_valid(cam_tu_do):
+		return
+	cam_tu_do = CameraTuDo.new()
+	cam_tu_do.name = "CameraTuDo"
+	ban.add_child(cam_tu_do)
+	cam_tu_do.tam = Vector3(ban.global_position.x, CAO_BAN, ban.global_position.z)
+	# Bắt đầu chếch phía sau-trên quân của mình, nhìn xuống ô đang đứng.
+	var toi := nguoi(NetManager.local_id())
+	var dich := toi.global_position if toi != null else cam_tu_do.tam
+	cam_tu_do.dat_nhin(dich + Vector3(0.0, 14.0, 12.0), dich)
+
+
+## Đổi qua lại camera tự do / gắn nhân vật.
+func doi_che_do_camera() -> void:
+	if ban == null or not dang_chay():
+		return
+	che_do_cam = CheDoCam.GAN if che_do_cam == CheDoCam.TU_DO else CheDoCam.TU_DO
+	if che_do_cam == CheDoCam.TU_DO:
+		# Bay tiếp từ đúng chỗ camera đang nhìn cho khỏi giật.
+		_bao_dam_cam_tu_do()
+		var cu := get_viewport().get_camera_3d()
+		if cu != null and cu != cam_tu_do:
+			var nhin := cu.global_position - cu.global_basis.z * 10.0
+			cam_tu_do.dat_nhin(cu.global_position, nhin)
+	_cap_nhat_camera()
+
+
+## Chế độ GAN: lần lượt theo dõi tự động → mình → từng người khác.
+func doi_nguoi_theo_doi() -> void:
+	if ban == null or not dang_chay():
+		return
+	if che_do_cam != CheDoCam.GAN:
+		che_do_cam = CheDoCam.GAN
+	var ds: Array = [0]
+	for id in _thu_tu():
+		ds.append(int(id))
+	var i := ds.find(muc_theo)
+	muc_theo = int(ds[(i + 1) % ds.size()])
+	_cap_nhat_camera()
+
+
+func _bao_camera() -> void:
+	if che_do_cam == CheDoCam.TU_DO and not _ep_cam_toi:
+		camera_doi.emit("CAM TỰ DO")
+		return
+	var id := _id_theo_doi()
+	var ten_nguoi := "BẠN" if id == NetManager.local_id() else Player.ten_theo_id(get_tree(), id)
+	camera_doi.emit(("THEO LƯỢT · %s" if muc_theo == 0 else "THEO · %s") % ten_nguoi)
 
 
 ## Camera về đúng chỗ theo lượt hiện tại (sau khi camera bàn bám mục tiêu / hiệu ứng).

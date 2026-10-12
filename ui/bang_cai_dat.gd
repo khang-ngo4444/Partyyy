@@ -17,8 +17,8 @@ const CHAT_LUONG := [
 ]
 const PHIM := [
 	["W A S D", "Di chuyển"], ["Space", "Nhảy / tung xúc xắc"], ["E", "Tương tác / dùng đồ"],
-	["Chuột trái", "Đánh / bắn trong minigame"], ["A / D", "Đổi hướng, đổi mục tiêu"],
-	["1 – 5", "Dùng đồ ô nhanh / chọn nhanh"], ["Tab", "Kho đồ (bàn party)"], ["M", "Đổi nhân vật (sảnh)"], ["Enter", "Chat"],
+	["Chuột trái", "Đánh / bắn trong minigame"], ["Z / X", "Đổi hướng, đổi mục tiêu (bàn)"],
+	["1 – 5", "Dùng đồ ô nhanh / chọn nhanh"], ["Tab", "Kho đồ (bàn party)"], ["C", "Cam tự do / gắn nhân vật"], ["V", "Đổi người theo dõi"], ["M", "Đổi nhân vật (sảnh)"], ["Enter", "Chat"],
 	["Esc", "Menu / quay lại"], ["Tab / Q · E", "Đổi tab"],
 ]
 

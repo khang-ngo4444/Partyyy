@@ -152,7 +152,7 @@ func _goi_y_dung_do(tui: Array) -> String:
 			if VatPham.nham(mon) == VatPham.Nham.CHON_MINIGAME:
 				goi_y = "%s · chọn trò trong bảng (1–9, Esc huỷ)" % ten
 			else:
-				goi_y = "%s · A/D đổi mục tiêu · Space dùng · Esc huỷ" % ten
+				goi_y = "%s · Z/X đổi mục tiêu · Space dùng · Esc huỷ" % ten
 		else:
 			goi_y = "%s · chuột trái dùng · %d cất" % [ten, _chon + 1]
 	elif LuatHieuUng.bi_khoa_do(_tt, k):

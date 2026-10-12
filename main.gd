@@ -76,6 +76,7 @@ func _ready() -> void:
 	ban_co.van_thang.connect(_khi_thang)
 	ban_co.trang_thai_doi.connect(hud.cap_nhat_ban)
 	ban_co.chon_huong_doi.connect(hud.cap_nhat_chon_huong)
+	ban_co.camera_doi.connect(hud.cap_nhat_camera)
 	dung_do.giao_dien_doi.connect(hud.cap_nhat_giao_dien_ban)
 	dung_do.can_chon.connect(hud.mo_bang_chon)
 	dung_do.goi_y_doi.connect(func(noi_dung: String) -> void:

@@ -39,7 +39,7 @@ var _gia_tri_chon: Array = []
 ## Món đang giơ trên đầu (chỉ báo lại khi đổi).
 var _dang_cam := ""
 
-## Mục tiêu hợp lệ của món chọn-trong-thế-giới (người / ô) và mục đang trỏ tới (A/D đổi).
+## Mục tiêu hợp lệ của món chọn-trong-thế-giới (người / ô) và mục đang trỏ tới (Z/X đổi).
 var _ung_vien: Array = []
 var _con_tro := 0
 
@@ -95,14 +95,10 @@ func _physics_process(_delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	# Đang chọn mục tiêu trong thế giới: A/D đổi mục tiêu, Space/E xác nhận. (DungDo đứng sau
+	# Đang chọn mục tiêu trong thế giới: Z/X đổi mục tiêu, Space/E xác nhận. (DungDo đứng sau
 	# PhaBanCo trong cây nên nhận sự kiện trước — Space ở đây không tung xúc xắc nữa.)
 	if _chon >= 0 and not _ung_vien.is_empty() and _bam_duoc():
-		var buoc := 0
-		if event.is_action_pressed("move_left"):
-			buoc = -1
-		elif event.is_action_pressed("move_right"):
-			buoc = 1
+		var buoc := PhaBanCo.huong_phim(event)
 		if buoc != 0:
 			get_viewport().set_input_as_handled()
 			_con_tro = posmod(_con_tro + buoc, _ung_vien.size())
@@ -214,9 +210,13 @@ func _hien_tam(mon: String) -> void:
 
 
 func _ap_ngam(bat: bool) -> void:
+	var ngam := bat and ban_co.dang_chay() and not ban_co.tam_dung
 	for p: Player in get_tree().get_nodes_in_group("players"):
 		if p.is_mine and p.rig != null and is_instance_valid(p.rig):
-			p.rig.set_ngam_sung(bat and ban_co.dang_chay() and not ban_co.tam_dung)
+			p.rig.set_ngam_sung(ngam)
+	# Ngắm phải nhìn qua camera nhân vật (tâm màn hình = tia), kể cả đang ở camera tự do.
+	ban_co.ep_camera_toi(ngam)
+
 
 
 # ───────────────────────────── chọn mục tiêu trong thế giới ─────────────────────────────
@@ -275,7 +275,7 @@ func _cap_nhat_vong() -> void:
 			else:
 				khoa = "o:%d" % int(du["o"])
 				ten_muc_tieu = "ô %d" % int(du["o"])
-			goi_y = "%s → %s  (%d/%d)    [A/D] đổi · [SPACE/E/chuột trái] xác nhận · [Esc] huỷ" % [
+			goi_y = "%s → %s  (%d/%d)    [Z/X] đổi · [SPACE/E/chuột trái] xác nhận · [Esc] huỷ" % [
 					VatPham.ten(mon), ten_muc_tieu, _con_tro + 1, _ung_vien.size()]
 		elif VatPham.nham(mon) == VatPham.Nham.CHON_NGUOI or VatPham.nham(mon) == VatPham.Nham.CHON_O:
 			goi_y = "%s — không có mục tiêu trong tầm    [Esc] huỷ" % VatPham.ten(mon)
@@ -297,7 +297,7 @@ func _camera_theo_muc_tieu() -> void:
 		var muc_tieu: Node3D = (ban_co.nguoi(int(str(du["muc_tieu"]))) if du.has("muc_tieu")
 				else ban_co.ban.nut_o(int(du["o"])))
 		if muc_tieu != null:
-			ban_co.ban.camera_ban.theo(muc_tieu)
+			ban_co.cam_xem(muc_tieu, true)
 	elif not _dang_gui:
 		ban_co.dat_lai_camera()
 
@@ -418,9 +418,9 @@ func _chieu_hieu_ung(fx: Dictionary) -> void:
 	_dang_gui = false
 	# Mọi máy: camera bàn nhìn vào chỗ đòn tới (hết hiệu ứng thì bàn trả camera theo lượt).
 	if nguoi_den != null:
-		ban_co.ban.camera_ban.theo(nguoi_den)
+		ban_co.cam_xem(nguoi_den)
 	elif int(fx.get("o", -1)) >= 0:
-		ban_co.ban.camera_ban.theo(ban_co.ban.nut_o(int(fx["o"])))
+		ban_co.cam_xem(ban_co.ban.nut_o(int(fx["o"])))
 	# Mục tiêu có Úp thúng đỡ đòn: hiện cái chắn đúng lúc đòn chạm.
 	if bool(fx.get("chan", false)) and nguoi_den != null:
 		hieu_ung_moi.cham.connect(_hien_khien.bind(den))
