@@ -24,6 +24,11 @@ func dung_som() -> void:
 	pass
 
 
+## -1 = không có đồng hồ giới hạn; quản trò dùng chung cho mọi loại minigame.
+func giay_con_lai() -> float:
+	return -1.0
+
+
 # ─── ô điểm chung (QuanTroMiniGame vẽ ở đáy màn hình) ───
 
 ## Điểm để sắp ô điểm; `NAN` = trò không có ô điểm.

@@ -132,6 +132,13 @@ func gio() -> float:
 	return Fusion.get_network_time() - _bat_dau_luc if not shared_snapshot.is_empty() else _gio_may() - _bat_dau_luc
 
 
+func giay_con_lai() -> float:
+	if not _chay:
+		return -1.0
+	var duration := giay_van if shared_snapshot.is_empty() else float(shared_snapshot["duration"])
+	return maxf(duration - maxf(gio(), 0.0), 0.0) if duration > 0.0 else -1.0
+
+
 func con_song(id: int) -> bool:
 	return _song.has(id) and float(_song[id]) < 0.0
 

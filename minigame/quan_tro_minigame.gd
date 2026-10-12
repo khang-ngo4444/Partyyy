@@ -40,6 +40,7 @@ var _cho_diem := 0.0
 
 ## Dải điểm dùng chung ở đáy màn hình.
 @onready var _bang_diem: HBoxContainer = $Lop/BangDiem
+@onready var _dong_ho: Label = $Lop/Clock
 
 
 func _ready() -> void:
@@ -160,12 +161,27 @@ func _dung_bang_diem() -> void:
 
 
 func _process(delta: float) -> void:
+	_ve_dong_ho()
 	if not _dang_chay or not _bang_diem.visible or _game == null or not is_instance_valid(_game):
 		return
 	_cho_diem -= delta
 	if _cho_diem <= 0.0:
 		_cho_diem = NHIP_DIEM
 		_ve_bang_diem()
+
+
+func _ve_dong_ho() -> void:
+	var seconds := _game.giay_con_lai() if is_instance_valid(_game) else -1.0
+	_dong_ho.visible = _dang_chay and not _huong_dan.visible and not _the_ket_qua.visible and seconds >= 0.0
+	if not _dong_ho.visible:
+		return
+	_dong_ho.text = "THỜI GIAN  " + dinh_dang_gio(seconds)
+	_dong_ho.modulate = Color(1, 0.3, 0.2) if seconds <= 10.0 else Color.WHITE
+
+
+static func dinh_dang_gio(seconds: float) -> String:
+	var whole := ceili(maxf(seconds, 0.0))
+	return "%02d:%02d" % [whole / 60, whole % 60]
 
 
 func _ve_bang_diem() -> void:
@@ -196,6 +212,7 @@ func _nguoi(id: int) -> Player:
 func _khi_xong(xep_hang: Array) -> void:
 	if not _dang_chay:
 		return
+	_dong_ho.visible = false
 	var dong := PackedStringArray()
 	for i in xep_hang.size():
 		var id := int(xep_hang[i])
@@ -237,6 +254,7 @@ func huy() -> void:
 
 func _don() -> void:
 	_dang_chay = false
+	_dong_ho.visible = false
 	if _game != null and is_instance_valid(_game):
 		_game.dung_som()
 		_game.queue_free()

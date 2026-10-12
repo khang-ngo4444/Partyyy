@@ -17,6 +17,7 @@ var _migration_deadline: float = 0.0
 var _migration_republish: bool = false
 
 @onready var host: Node = get_parent()
+## Quản trò vẽ đồng hồ; giữ tham chiếu cho công cụ kiểm tra multiplayer.
 @onready var clock: Label = $"../Lop/Clock"
 @onready var fuse: ProgressBar = $"../Lop/Fuse"
 @onready var refresh: Timer = $Refresh
@@ -97,7 +98,6 @@ func _read_snapshot(encoded: String) -> void:
 	state = decoded if decoded is Dictionary else {}
 	if state.is_empty():
 		_seen_round = 0
-		clock.visible = false
 		fuse.visible = false
 		return
 	var round_id: int = int(state["round"])
@@ -111,10 +111,7 @@ func _read_snapshot(encoded: String) -> void:
 func _show_clock() -> void:
 	var now: float = Fusion.get_network_time()
 	var start: float = float(state["start"])
-	clock.visible = true
 	var phase: String = ENDED if state["phase"] == ENDED or now >= start + float(state["duration"]) else (COUNTDOWN if now < start else RUNNING)
-	clock.text = "%s  %02d" % [phase,
-		0 if phase == ENDED else ceili(maxf(start - now if now < start else start + float(state["duration"]) - now, 0.0))]
 	host._huong_dan.visible = now < start and phase != ENDED
 	host._dem.text = str(ceili(maxf(start - now, 0.0)))
 	fuse.visible = state["code"] == "explosive" and phase == RUNNING
@@ -272,7 +269,6 @@ func _clear_session() -> void:
 	_seen_round = 0
 	_migration_snapshot.clear()
 	_migration_republish = false
-	clock.visible = false
 	fuse.visible = false
 
 func _master_changed(_new_id: int, _old_id: int) -> void:
