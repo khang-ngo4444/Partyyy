@@ -8,6 +8,7 @@ enum { DON_DANH, DON_CHUONG }
 
 ## Sân đặt cao hơn phòng chờ chừng này.
 const CAO_SAN := 300.0
+const ThemeBackdrop = preload("res://minigame/chung/theme_backdrop.gd")
 
 ## Rơi thấp hơn mặt sân chừng này là rơi khỏi sàn.
 const ROI_KHOI_SAN := 8.0
@@ -93,6 +94,7 @@ func bat_dau(nguoi_choi: Array, giong: int) -> void:
 	san = san_scene.instantiate() as Node3D
 	san.position.y = CAO_SAN
 	get_tree().current_scene.add_child(san)
+	ThemeBackdrop.attach(san, self, _cam_san())
 	_dung_san()
 
 	# Chỉ nhấc nhân vật của máy này.
