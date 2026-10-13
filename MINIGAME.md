@@ -938,3 +938,15 @@ Bản đầu ưu tiên đọc được và chơi được; hoàn thiện nhịp/
 Luật thuần tách thành factory_rules.gd và wave_rules.gd; objective_game.gd dùng chung lifecycle. Trạng thái linh kiện, điểm, cooldown và sự kiện nằm trong snapshot MatchState. Master xác nhận nhặt/lắp/bắn/đẩy, bỏ request sau hết giờ, xếp hạng theo luật riêng. Solo chạy đủ thời gian. Hướng dẫn hai dòng và trang chi tiết đã thêm.
 
 Kiểm tra: 10 test luật mới và runtime pickup/splash/floor/shelter/swept-wave/results/cleanup/session; 48 test cũ cùng runtime Magma, Spotlight, Lở đá và UI hướng dẫn đều qua. Chưa kiểm Photon với nhiều máy thật; cần chơi thử để tinh chỉnh khoảng cách bàn, độ rộng trú và nhịp sóng. Code ở local.
+
+# 14. Rải sơn — cơ chế đã kiểm tra, chờ tích hợp scene
+
+Tham khảo Turf War của Splatoon (https://splatoon.nintendo.com/en/news/beginner-basics-for-splatoon-3-the-ins-and-outs-of-playing-online/) và Flinger Painting của Mario Party 9 (https://primagames.com/eguides/mario-party-9-eguide/walkthrough/minigames/flinger-painting). Bản PartyBash là mỗi người một màu, chạy tự rải sơn và có thể đánh hất đối thủ. Xếp hạng dựa trên diện tích màu đang còn ở cuối ván, không cộng tổng lượng sơn đã rải.
+
+Luật và controller nằm trong minigame/paint/paint_rules.gd và paint.gd. Grid 56 x 56 trên sân 28m, nét sơn bán kính 0.85m có quét liên tục giữa hai vị trí chân. Sơn mới chuyển quyền sở hữu ô, giảm diện tích chủ cũ và tăng chủ mới. Nhảy, choáng hoặc teleport ngắt nét. Màu và diện tích được giữ trong snapshot master; đánh xác nhận tầm, hướng, độ cao, cooldown 0.8 giây; người bị đánh bị hất và ngừng rải 0.7 giây, vẫn được chạy thoát. Renderer dùng một texture động trên sàn có sẵn, không sinh hàng nghìn mesh.
+
+10 test luật cùng runtime grounded/jump/hit/cooldown/paint interruption/texture/60s result/restore đã qua; Forward+ Vulkan đã render và chụp kiểm tra, ảnh giữ tại tests/runtime/paint_preview.png (ignored). Chưa kiểm Photon nhiều máy. Scene production, hướng dẫn, màu scorecard và đăng ký pool chưa làm: công cụ godot-ai node/resource chưa được expose trong phiên dù người dùng đã bật lại. MCP godot cũ tạo scene gameplay thất bại do load script trước khi autoload NetManager sẵn sàng; đã xoá scene root rỗng do lần gọi thất bại tạo ra. Không đưa bản thiếu scene vào pool.
+
+## Nhịp ván cập nhật
+
+Các minigame có thời gian chạy được giới hạn tối đa 60 giây bằng MAX_ROUND_SECONDS và snapshot session. Trú sóng vẫn sáu đợt, mỗi đợt 10 giây (báo 2.5 giây, quét 5 giây). Magma ngập hết trước giây 55 để vẫn tới tâm trong ván một phút. Hướng dẫn thời gian đã sửa. Người dùng yêu cầu tự commit từng phần đã kiểm tra, giữ tác giả và rule Git cũ.

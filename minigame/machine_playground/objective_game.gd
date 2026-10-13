@@ -25,6 +25,8 @@ func _toi_thua() -> bool:
 
 
 func _prepare_shared_owner(player: Player) -> void:
+	if not player.is_mine:
+		return
 	var entered := player.che_do_san
 	super(player)
 	if not entered and player.sync.has_authority():
