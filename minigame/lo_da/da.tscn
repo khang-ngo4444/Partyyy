@@ -2,8 +2,11 @@
 
 [ext_resource type="Material" path="res://materials/mat_stone_light.tres" id="1_m"]
 [ext_resource type="AudioStream" path="res://asset/kenney_impact-sounds/Audio/impactMining_000.ogg" id="2_a"]
+[ext_resource type="Shader" path="res://minigame/lo_da/canh_bao.gdshader" id="3_warning"]
 
 [sub_resource type="SphereMesh" id="Cau"]
+radius = 1.0
+height = 2.0
 radial_segments = 8
 rings = 5
 
@@ -14,10 +17,8 @@ height = 0.06
 radial_segments = 32
 rings = 1
 
-[sub_resource type="StandardMaterial3D" id="MatVong"]
-transparency = 1
-shading_mode = 0
-albedo_color = Color(1, 0.15, 0.1, 0.55)
+[sub_resource type="ShaderMaterial" id="MatVong"]
+shader = ExtResource("3_warning")
 
 [node name="Da" type="Node3D"]
 

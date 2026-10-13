@@ -56,7 +56,7 @@ const KHE := 3.0
 const BAO_HANG := 1.8
 
 ## Đá to rải ra không được để khe cho tâm người hẹp hơn chừng này.
-const KHE_TAM := 1.0
+const KHE_TAM := 1.5
 
 # ─── mưa thiên thạch dồn từ chân dốc ───
 
@@ -94,6 +94,21 @@ var _xep_xong := false
 var _cam: Camera3D = null
 var _lua: Node3D = null
 var _tt: Array[Node] = []
+var _cho_ve: Dictionary = {}
+var _xin_ve_luc := -99.0
+var _hien_cu: Dictionary = {}
+var _chan_cu := Vector3.ZERO
+var _t_cu := 0.0
+@onready var _tien_do: Label = $TienDo/Nhan
+
+
+func bat_dau(ids: Array, giong: int) -> void:
+	ket_thuc_khi_con_mot = ids.size() > 1
+	super(ids, giong)
+	var p := _nguoi(NetManager.local_id())
+	_chan_cu = p.global_position - san.global_position if p != null else Vector3.ZERO
+	_t_cu = 0.0
+	$TienDo.visible = true
 
 
 func _ready() -> void:
@@ -114,7 +129,13 @@ func _dung_san() -> void:
 	_ve_dich.clear()
 	_da_ve = false
 	_xep_xong = false
+	_cho_ve.clear()
+	_xin_ve_luc = -99.0
+	_hien_cu.clear()
+	for p: Player in get_tree().get_nodes_in_group("players"):
+		_hien_cu[p] = [p.model_root.visible, p.name_tag.visible]
 	_cam.position = Vector3(0.0, CAM_CAO, BE * 0.5 + CAM_LUI)
+	_dung_chi_dan()
 
 
 ## Một hàng ngang trên bệ xuất phát.
@@ -129,12 +150,18 @@ func _luat_moi_nhip() -> void:
 	_cap_nhat_cam()
 	var toi := _nguoi(NetManager.local_id())
 	if toi != null and con_song(NetManager.local_id()):
-		if not _da_ve and d_cua(NetManager.local_id()) >= VACH_DICH:
+		if not _ve_dich.has(NetManager.local_id()) and d_cua(NetManager.local_id()) >= VACH_DICH:
 			_da_ve = true
-			Fusion.rpc(_net_ve_dich, NetManager.local_id())
+			if t - _xin_ve_luc >= 0.25:
+				_xin_ve_luc = t
+				Fusion.rpc_to(Fusion.TARGET_MASTER, _net_ve_dich, NetManager.local_id())
 		# Đánh hết choáng sẽ mở khoá — về đích rồi thì giữ khoá mỗi khung.
 		if _da_ve:
 			toi.khoa_di_chuyen = true
+			toi.velocity = Vector3.ZERO
+	_cap_nhat_tien_do()
+	if NetManager.is_master():
+		_duyet_ve_dich()
 	if NetManager.is_master() and _het_nguoi_leo():
 		_chot_ket_qua()
 
@@ -151,10 +178,13 @@ func _toi_thua() -> bool:
 	if -chan.z < pha_d(gio()):
 		return true
 	var t := gio()
-	for e: Dictionary in _dang:
-		if cham(_lich[int(e["i"])], t, chan):
-			return true
-	return false
+	var hit := false
+	for da: Dictionary in _lich:
+		if cham_qua(da, _t_cu, t, _chan_cu, chan):
+			hit = true
+	_chan_cu = chan
+	_t_cu = t
+	return hit
 
 
 # ─── đá: hình ───
@@ -183,13 +213,14 @@ func _cap_nhat_da(t: float) -> void:
 			than.position = vi_tri_da(da, t)
 			than.scale = Vector3.ONE * r
 			than.rotation.x = maxf(t - t_roi, 0.0) * V_LAN / r
-		var vong := n.get_node("Vong") as Node3D
+		var vong := n.get_node("Vong") as MeshInstance3D
 		vong.visible = t < t_roi
 		if vong.visible:
 			var d := float(da["d"])
 			var k_bao := clampf((t - t_roi + float(da["bao"])) / float(da["bao"]), 0.0, 1.0)
-			var rv := ban_kinh_chet(r) * lerpf(0.35, 1.0, k_bao)
+			var rv := ban_kinh_chet(r)
 			vong.scale = Vector3(rv, 1.0, rv)
+			vong.set_instance_shader_parameter("urgency", k_bao)
 			vong.position = Vector3(float(da["x"]), mat(d) + 0.04, -d)
 			vong.rotation.x = DOC if d > 0.0 and d < DAI else 0.0
 		if not bool(e["dap"]) and t >= t_roi:
@@ -236,6 +267,45 @@ func _cap_nhat_cam() -> void:
 	_cam.position = _cam.position.lerp(muon, minf(1.0, CAM_BAM * get_process_delta_time()))
 
 
+func _cap_nhat_tien_do() -> void:
+	var id := NetManager.local_id()
+	if _ve_dich.has(id):
+		_tien_do.text = "ĐÍCH #%d" % (_ve_dich.find(id) + 1)
+	elif not con_song(id):
+		var watching := _nguoi_dan_dau()
+		_tien_do.text = "Xem · %s · %.0f m" % [Player.ten_theo_id(get_tree(), watching), maxf(d_cua(watching), 0.0)]
+	else:
+		_tien_do.text = "%.0f / %.0f m" % [clampf(d_cua(id), 0.0, VACH_DICH), VACH_DICH]
+
+
+func _dung_chi_dan() -> void:
+	var gold := StandardMaterial3D.new()
+	gold.albedo_color = Color("ffd166")
+	gold.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	gold.cull_mode = BaseMaterial3D.CULL_DISABLED
+	for d in range(10, int(DAI), 20):
+		var arrow := MeshInstance3D.new()
+		var mesh := ImmediateMesh.new()
+		mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+		for point: Vector2 in [Vector2(0, -1.3), Vector2(-0.8, 0.7), Vector2(0.8, 0.7)]:
+			mesh.surface_add_vertex(Vector3(point.x, mat(d - point.y) + 0.025, -d + point.y))
+		mesh.surface_end()
+		arrow.mesh = mesh
+		arrow.material_override = gold
+		san.add_child(arrow)
+	for row in range(2):
+		for column in range(14):
+			var square := MeshInstance3D.new()
+			var box := BoxMesh.new()
+			box.size = Vector3(1, 0.025, 0.4)
+			square.mesh = box
+			var material := StandardMaterial3D.new()
+			material.albedo_color = Color("fff5df") if (row + column) % 2 == 0 else Color("342940")
+			square.material_override = material
+			square.position = Vector3(column - 6.5, mat(DAI) + 0.035, VACH_DICH * -1 + (row - 0.5) * 0.4)
+			san.add_child(square)
+
+
 func _nguoi_dan_dau() -> int:
 	var ai := NetManager.local_id()
 	var xa := -INF
@@ -259,8 +329,48 @@ func d_cua(id: int) -> float:
 
 @rpc("any_peer", "call_local")
 func _net_ve_dich(id: int) -> void:
-	if _song.has(id) and not _ve_dich.has(id):
+	if not _chay or not NetManager.is_master() or not con_song(id) or _ve_dich.has(id):
+		return
+	var sender := Fusion.get_rpc_sender()
+	if sender != 0 and sender != id:
+		return
+	# RPC có thể tới trước vị trí replicate: đợi ngắn thay vì bỏ mất lượt về đích.
+	if not _cho_ve.has(id):
+		_cho_ve[id] = gio()
+	_duyet_ve_dich()
+
+
+func _duyet_ve_dich() -> void:
+	for key: Variant in _cho_ve.keys():
+		var id := int(key)
+		if co_the_ve_dich(id):
+			_cho_ve.erase(id)
+			Fusion.rpc(_net_da_ve, id)
+		elif not con_song(id) or gio() - float(_cho_ve[id]) > 2.0:
+			_cho_ve.erase(id)
+
+
+func co_the_ve_dich(id: int) -> bool:
+	return _chay and con_song(id) and not _ve_dich.has(id) and d_cua(id) >= VACH_DICH
+
+
+@rpc("any_peer", "call_local")
+func _net_da_ve(id: int) -> void:
+	if _chay and con_song(id) and not _ve_dich.has(id):
 		_ve_dich.append(id)
+		if id == NetManager.local_id():
+			_da_ve = true
+
+
+func _co_the_danh(id: int) -> bool:
+	return con_song(id) and not _ve_dich.has(id) and not (id == NetManager.local_id() and _da_ve)
+
+
+@rpc("any_peer", "call_local")
+func _net_chet(id: int, giay: float) -> void:
+	if not _chay or _ve_dich.has(id):
+		return
+	super(id, giay)
 
 
 func _het_nguoi_leo() -> bool:
@@ -275,13 +385,18 @@ func _khi_ai_do_chet(id: int) -> void:
 	if p == null:
 		return
 	p.model_root.visible = false
+	p.name_tag.visible = false
 	if id == NetManager.local_id():
 		p.khoa_di_chuyen = true
 
 
 func dung_som() -> void:
-	for p: Player in get_tree().get_nodes_in_group("players"):
-		p.model_root.visible = true
+	for p: Player in _hien_cu:
+		if is_instance_valid(p):
+			p.model_root.visible = bool(_hien_cu[p][0])
+			p.name_tag.visible = bool(_hien_cu[p][1])
+	_hien_cu.clear()
+	$TienDo.visible = false
 	super()
 
 
@@ -293,6 +408,10 @@ func _chot_ket_qua() -> void:
 	_xep_xong = true
 	_chay = false
 	set_process(false)
+	Fusion.rpc(_net_xep_hang, xep_hang_hien_tai())
+
+
+func xep_hang_hien_tai() -> Array:
 	var xep: Array = []
 	for id in _ve_dich:
 		xep.append(int(id))
@@ -308,7 +427,7 @@ func _chot_ket_qua() -> void:
 	for i in range(_thu_tu_chet.size() - 1, -1, -1):
 		if not xep.has(int(_thu_tu_chet[i])):
 			xep.append(int(_thu_tu_chet[i]))
-	Fusion.rpc(_net_xep_hang, xep)
+	return xep
 
 
 func diem_cua(id: int) -> float:
@@ -366,6 +485,21 @@ static func cham(da: Dictionary, t: float, chan: Vector3) -> bool:
 	return c.distance_to(gan) < ban_kinh_chet(float(da["r"]))
 
 
+## Kiểm cả quãng đá và người đã đi, kể cả khung hình bị giật.
+static func cham_qua(da: Dictionary, t0: float, t1: float, p0: Vector3, p1: Vector3) -> bool:
+	var start := maxf(t0, float(da["t"]) - GIAY_ROI)
+	var end := minf(t1, float(da["t"]) + (float(da["d"]) - D_HET) / V_LAN)
+	if end < start or t1 < t0:
+		return false
+	var steps := maxi(1, ceili((end - start) / 0.005))
+	for i in range(steps + 1):
+		var t := lerpf(start, end, float(i) / steps)
+		var alpha := clampf((t - t0) / maxf(t1 - t0, 0.0001), 0.0, 1.0)
+		if cham(da, t, p0.lerp(p1, alpha)):
+			return true
+	return false
+
+
 ## Đầu tường thiên thạch: sau `d` này là chết.
 static func pha_d(t: float) -> float:
 	if t <= PHA_BAT_DAU:
@@ -389,6 +523,15 @@ static func lich_da(giong: int) -> Array:
 	var th := HANG_TU
 	while th < 60.0:
 		var d_hang := rng.randf_range(HANG_D_MIN, DAI - R_TO)
+		# Hai hàng gần nhau trên cùng đường lăn có thể bịt khe của nhau.
+		for attempt in 24:
+			var overlaps := false
+			for previous: Dictionary in khe:
+				if absf(d_hang + V_LAN * th - float(previous["u"])) < 2.0 * ban_kinh_chet(R_TO) + V_LAN * GIAY_ROI + 1.0:
+					overlaps = true
+			if not overlaps:
+				break
+			d_hang = rng.randf_range(HANG_D_MIN, DAI - R_TO)
 		var x_khe := rng.randf_range(-RONG * 0.5 + KHE * 0.5, RONG * 0.5 - KHE * 0.5)
 		# Mỗi bên rải đều từ mép khe tới tường; không kẹp vào trong — kẹp là lấn vào khe.
 		for phia in [-1.0, 1.0]:
@@ -401,7 +544,9 @@ static func lich_da(giong: int) -> Array:
 				var x: float = mep_khe + phia * R_TO
 				if so > 1:
 					x = lerpf(x, phia * (RONG * 0.5 - R_TO), float(j) / (so - 1))
-				ds.append({"t": th, "x": x, "d": d_hang, "r": R_TO, "bao": BAO_HANG})
+				var stone := {"t": th, "x": x, "d": d_hang, "r": R_TO, "bao": BAO_HANG}
+				if not _chan_kin(ds, stone):
+					ds.append(stone)
 		khe.append({"u": d_hang + V_LAN * th, "x": x_khe})
 		th += HANG_CACH
 	var t := T_DAU
@@ -432,7 +577,7 @@ static func _chan_kin(ds: Array, da: Dictionary) -> bool:
 	var u := duong_lan(da)
 	var chan: Array = []
 	for o: Dictionary in ds + [da]:
-		if float(o["r"]) >= R_TO and absf(duong_lan(o) - u) < 2.0 * R_TO + V_LAN * GIAY_ROI:
+		if float(o["r"]) >= R_TO and absf(duong_lan(o) - u) < 2.0 * ban_kinh_chet(R_TO) + V_LAN * GIAY_ROI + 1.0:
 			var rc := ban_kinh_chet(float(o["r"]))
 			chan.append(Vector2(float(o["x"]) - rc, float(o["x"]) + rc))
 	return khe_lon_nhat(chan) < KHE_TAM

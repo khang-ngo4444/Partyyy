@@ -6,7 +6,8 @@
 script = ExtResource("1_th")
 tieu_de = "20 · Lở đá"
 noi_dung = "[b]WASD[/b] di chuyển · [b]Space[/b] nhảy, có thể nhảy hai lần.
+[b]Chuột trái / F[/b] đánh choáng · [b]Chuột phải / G[/b] chưởng hất đối thủ.
 
 Leo lên đỉnh càng sớm càng tốt. Tránh vòng đỏ báo đá rơi và đá đang lăn xuống dốc. Đá nhỏ có thể nhảy qua; đá to phải né sang bên.
 
-Thiên thạch tiến từ chân dốc: đừng đứng lại quá lâu. Chạm đá hoặc bị thiên thạch đuổi kịp sẽ bị loại. Người về đích trước đứng trên; chưa về đích thì tính quãng đường leo."
+Thiên thạch tiến từ chân dốc: đừng đứng lại quá lâu. Chạm đá hoặc bị thiên thạch đuổi kịp sẽ bị loại. Người về đích được bảo vệ, chuyển sang xem những người đang leo. Người về đích trước đứng trên; chưa về đích thì tính quãng đường leo, người bị loại sau đứng trên người bị loại trước."

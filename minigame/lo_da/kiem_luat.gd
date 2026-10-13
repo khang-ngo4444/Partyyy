@@ -15,7 +15,7 @@ const SO_LAN_NHAY := 2
 const GIAY_VAN := 60.0
 
 ## Khe nhỏ nhất (cho TÂM người) phải còn giữa các đá to chắn cùng một dải dốc.
-const KHE_TAM := 0.6
+const KHE_TAM := 1.5
 const SO_GIONG := 200
 
 var _loi := 0

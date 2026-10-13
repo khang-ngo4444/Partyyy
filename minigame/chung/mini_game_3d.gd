@@ -201,7 +201,7 @@ func _input(event: InputEvent) -> void:
 	if loai < 0 or gio() - float(_don_luc[loai]) < float(NGHI_DON[loai]) or dang_choang():
 		return
 	var toi := _nguoi(NetManager.local_id())
-	if toi == null or not con_song(NetManager.local_id()):
+	if toi == null or not _co_the_danh(NetManager.local_id()):
 		return
 	get_viewport().set_input_as_handled()
 	_don_luc[loai] = gio()
@@ -221,7 +221,7 @@ func tim_nan(toi: Player, loai: int) -> Player:
 	var gan: Player = null
 	var gan_nhat: float = TAM_DON[loai]
 	for p: Player in get_tree().get_nodes_in_group("players"):
-		if p == toi or not con_song(p.player_id()):
+		if p == toi or not _co_the_danh(p.player_id()):
 			continue
 		var d := p.global_position - toi.global_position
 		d.y = 0.0
@@ -236,7 +236,7 @@ func tim_nan(toi: Player, loai: int) -> Player:
 ## Chỉ máy của nạn nhân tự áp hậu quả.
 @rpc("any_peer", "call_local")
 func _net_danh(ke_danh: int, nan: int, huong: Vector3, loai: int) -> void:
-	if not _chay:
+	if not _chay or not _co_the_danh(ke_danh) or not _co_the_danh(nan):
 		return
 	if nan == NetManager.local_id():
 		var p := _nguoi(nan)
@@ -245,6 +245,10 @@ func _net_danh(ke_danh: int, nan: int, huong: Vector3, loai: int) -> void:
 		elif loai == DON_DANH:
 			_choang_toi = gio() + GIAY_CHOANG
 	_khi_bi_danh(ke_danh, nan, loai)
+
+
+func _co_the_danh(id: int) -> bool:
+	return con_song(id)
 
 
 ## Mọi máy; lớp con thêm luật riêng.
