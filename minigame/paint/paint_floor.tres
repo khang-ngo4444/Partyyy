@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://crc4cjjdlv880"]
+
+[ext_resource type="Shader" uid="uid://b5cg63deroebp" path="res://minigame/paint/paint_floor.gdshader" id="1_uhay5"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_uhay5")
+shader_parameter/arena_origin = Vector2(0, 0)
+shader_parameter/map_size = 28.0

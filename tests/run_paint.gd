@@ -36,7 +36,7 @@ func _runtime() -> void:
 		player.test_id = id
 		fixture.add_child(player)
 		players.append(player)
-	var game: Node = load("res://minigame/paint/paint.gd").new()
+	var game: Node = load("res://minigame/paint/paint.tscn").instantiate()
 	fixture.add_child(game)
 	var original: Vector3 = players[0].global_position
 	var snapshot := {"round": 77, "code": "paint", "seed": 5, "ids": ids,

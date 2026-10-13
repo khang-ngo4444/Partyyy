@@ -4,7 +4,7 @@ extends Node
 const COUNTDOWN := "COUNTDOWN"
 const RUNNING := "RUNNING"
 const ENDED := "ENDED"
-const SUPPORTED: Array[String] = ["explosive", "laser_leap", "toy_factory", "wave_hide", "minefield"]
+const SUPPORTED: Array[String] = ["explosive", "laser_leap", "toy_factory", "wave_hide", "minefield", "paint"]
 
 @export var countdown_seconds: float = 5.0
 @export var result_seconds: float = 5.0

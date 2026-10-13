@@ -7,15 +7,8 @@ const HIT_RANGE := 2.1
 const HIT_PUSH := 7.0
 const EVENT_GRACE := 2.0
 var _view: RefCounted
-var _seen_event := 0
+var _seen_events: Dictionary = {}
 var _name_colors: Dictionary = {}
-
-
-func _init() -> void:
-	ten = "RẢI SƠN"
-	giay_van = MAX_ROUND_SECONDS
-	ket_thuc_khi_con_mot = false
-	san_scene = preload("res://minigame/machine_playground/toy_factory_arena.tscn")
 
 
 func initial_shared_state(ids: Array, _seed: int) -> Dictionary:
@@ -51,16 +44,22 @@ func _present_shared_players() -> void:
 
 
 func _consume_hit(state: Dictionary) -> void:
-	var event: Dictionary = state.events.get(str(NetManager.local_id()), {})
-	var serial := int(event.get("serial", 0))
-	if serial <= _seen_event:
-		return
-	_seen_event = serial
-	var player: Player = _nguoi(NetManager.local_id())
-	if player == null or gio() - float(event.time) > EVENT_GRACE:
-		return
-	var direction := Vector3(float(event.direction[0]), 0, float(event.direction[1]))
-	player.day(direction * HIT_PUSH + Vector3.UP * 2.0)
+	for key: String in state.events:
+		var event: Dictionary = state.events[key]
+		var serial := int(event.get("serial", 0))
+		if serial <= int(_seen_events.get(key, 0)):
+			continue
+		_seen_events[key] = serial
+		var player: Player = _nguoi(int(key))
+		if player == null or gio() - float(event.time) > EVENT_GRACE:
+			continue
+		player.play_reaction("stun", Rules.STUN_SECONDS)
+		var source := _nguoi(int(event.get("attacker", -999)))
+		if source != null:
+			source.play_action()
+		if player.is_mine:
+			var direction := Vector3(float(event.direction[0]), 0, float(event.direction[1]))
+			player.day(direction * HIT_PUSH + Vector3.UP * 2.0)
 
 
 func advance_shared_rules(snapshot: Dictionary, elapsed: float) -> void:

@@ -74,7 +74,7 @@ static func hit(state: Dictionary, attacker: int, victim: int, time: float, dire
 	state.stun[target] = time + STUN_SECONDS
 	stop_stroke(state, victim)
 	state.events[target] = {"serial": int(state.events.get(target, {}).get("serial", 0)) + 1,
-		"time": time, "direction": [direction.x, direction.y]}
+		"time": time, "attacker": attacker, "direction": [direction.x, direction.y]}
 	return true
 
 

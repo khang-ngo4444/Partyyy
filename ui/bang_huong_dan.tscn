@@ -5,6 +5,7 @@
 [ext_resource type="Resource" uid="uid://oivweqhk4rdx" path="res://ui/huong_dan/23_toy_factory.tres" id="26_jlwyd"]
 [ext_resource type="Resource" uid="uid://7imyxy5wpg88" path="res://ui/huong_dan/24_wave_hide.tres" id="27_isluk"]
 [ext_resource type="Resource" path="res://ui/huong_dan/26_minefield.tres" id="28_isluk"]
+[ext_resource type="Resource" path="res://ui/huong_dan/25_paint.tres" id="28_twhcg"]
 [ext_resource type="Resource" path="res://ui/huong_dan/00_tong_quan.tres" id="hd_00"]
 [ext_resource type="Resource" path="res://ui/huong_dan/01_muc_tieu.tres" id="hd_01"]
 [ext_resource type="Resource" path="res://ui/huong_dan/02_phim_chung.tres" id="hd_02"]
@@ -39,7 +40,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.169, 0.106, 0.239, 0.6)
 script = ExtResource("1_howto")
-trang = Array[ExtResource("hd_script")]([ExtResource("hd_00"), ExtResource("hd_01"), ExtResource("hd_02"), ExtResource("hd_03"), ExtResource("hd_04"), ExtResource("hd_05"), ExtResource("hd_06"), ExtResource("hd_07"), ExtResource("hd_08"), ExtResource("hd_09"), ExtResource("hd_10"), ExtResource("hd_11"), ExtResource("hd_12"), ExtResource("hd_13"), ExtResource("hd_14"), ExtResource("hd_15"), ExtResource("hd_16"), ExtResource("hd_17"), ExtResource("hd_18"), ExtResource("hd_19"), ExtResource("hd_20"), ExtResource("hd_21"), ExtResource("hd_22"), ExtResource("26_jlwyd"), ExtResource("27_isluk"), ExtResource("28_isluk")])
+trang = Array[ExtResource("hd_script")]([ExtResource("hd_00"), ExtResource("hd_01"), ExtResource("hd_02"), ExtResource("hd_03"), ExtResource("hd_04"), ExtResource("hd_05"), ExtResource("hd_06"), ExtResource("hd_07"), ExtResource("hd_08"), ExtResource("hd_09"), ExtResource("hd_10"), ExtResource("hd_11"), ExtResource("hd_12"), ExtResource("hd_13"), ExtResource("hd_14"), ExtResource("hd_15"), ExtResource("hd_16"), ExtResource("hd_17"), ExtResource("hd_18"), ExtResource("hd_19"), ExtResource("hd_20"), ExtResource("hd_21"), ExtResource("hd_22"), ExtResource("26_jlwyd"), ExtResource("27_isluk"), ExtResource("28_twhcg"), ExtResource("28_isluk")])
 
 [node name="Center" type="CenterContainer" parent="." unique_id=1578128153]
 layout_mode = 1

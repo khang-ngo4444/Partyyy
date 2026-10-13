@@ -1,7 +1,6 @@
 extends RefCounted
 
 const Rules = preload("res://minigame/paint/paint_rules.gd")
-const FLOOR_SHADER = preload("res://minigame/paint/paint_floor.gdshader")
 const EMPTY_COLOR := Color("eee9dd")
 const COLORS := [Color("f05a77"), Color("36bcee"), Color("f4c542"), Color("9966e9"),
 	Color("46ce91"), Color("f79344"), Color("ed78ce"), Color("5283f2")]
@@ -16,8 +15,7 @@ static func color(index: int) -> Color:
 
 
 func attach(floor_mesh: MeshInstance3D, origin: Vector3) -> void:
-	_material = ShaderMaterial.new()
-	_material.shader = FLOOR_SHADER
+	_material = floor_mesh.material_override.duplicate() as ShaderMaterial
 	_material.set_shader_parameter("arena_origin", Vector2(origin.x, origin.z))
 	floor_mesh.material_override = _material
 

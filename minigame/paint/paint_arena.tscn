@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://d1t5wfiagj1uh"]
+
+[ext_resource type="Material" uid="uid://crc4cjjdlv880" path="res://minigame/paint/paint_floor.tres" id="1_idjbx"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_owec8"]
+sky_top_color = Color(0.38, 0.45, 0.55, 1)
+sky_horizon_color = Color(0.65, 0.67, 0.7, 1)
+ground_bottom_color = Color(0.2, 0.17, 0.13, 1)
+ground_horizon_color = Color(0.65, 0.67, 0.7, 1)
+
+[sub_resource type="Sky" id="Sky_mjqpy"]
+sky_material = SubResource("ProceduralSkyMaterial_owec8")
+
+[sub_resource type="Environment" id="Environment_6chf2"]
+background_mode = 2
+sky = SubResource("Sky_mjqpy")
+ambient_light_source = 3
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.65
+
+[sub_resource type="BoxMesh" id="BoxMesh_nie1y"]
+size = Vector3(28, 1, 28)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_63lk0"]
+size = Vector3(28, 1, 28)
+
+[node name="FactoryArena" type="Node3D" unique_id=1762215677]
+
+[node name="Cam" type="Camera3D" parent="." unique_id=1933533856]
+transform = Transform3D(1, 0, 0, 0, 0.6659722, 0.74597657, 0, -0.74597657, 0.6659722, 0, 28, 25)
+fov = 55.0
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1566810662]
+transform = Transform3D(0.87758255, 0.40342268, -0.25903472, 0, 0.5403023, 0.84147096, 0.47942555, -0.73846024, 0.47415984, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Environment" type="WorldEnvironment" parent="." unique_id=205068056]
+environment = SubResource("Environment_6chf2")
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=458266530]
+
+[node name="Progress" type="Label" parent="HUD" unique_id=2075765842]
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 25.0
+offset_bottom = 55.0
+theme_override_font_sizes/font_size = 26
+
+[node name="Floor" type="MeshInstance3D" parent="." unique_id=1624184474]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+material_override = ExtResource("1_idjbx")
+mesh = SubResource("BoxMesh_nie1y")
+metadata/_godot_ai_physics_v1 = {
+"body": NodePath("../FloorCollider"),
+"collision": NodePath("../FloorCollider/CollisionShape3D"),
+"version": 1,
+"wrapped": false
+}
+
+[node name="FloorCollider" type="StaticBody3D" parent="." unique_id=1514234370]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+metadata/_godot_ai_physics_v1 = {
+"collision": NodePath("CollisionShape3D"),
+"source": NodePath("../Floor"),
+"version": 1,
+"wrapped": false
+}
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FloorCollider" unique_id=1439669499]
+shape = SubResource("BoxShape3D_63lk0")
+metadata/_godot_ai_physics_v1 = {
+"body": NodePath(".."),
+"source": NodePath("../../Floor"),
+"version": 1
+}

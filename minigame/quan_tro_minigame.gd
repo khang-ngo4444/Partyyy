@@ -199,6 +199,8 @@ func _ve_bang_diem() -> void:
 		var id := int(xep[i])
 		var p := _nguoi(id)
 		var mau := NetManager.color_for(p.color_index) if p != null else Color.GRAY
+		if _game.has_method("mau_cua"):
+			mau = _game.mau_cua(id)
 		(o[i] as ODiem).dat(ranking.find(id) + 1, Player.ten_theo_id(get_tree(), id), mau, _game.chu_diem(id),
 				id == NetManager.local_id())
 

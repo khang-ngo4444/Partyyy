@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+tieu_de = "25 · Rải sơn"
+noi_dung = "WASD di chuyển để tự rải một vệt sơn dưới chân. Mỗi người có màu riêng, trùng màu trên bảng điểm. Chỉ rải sơn khi chạm đất.\n\nSơn mới phủ lên sơn cũ: diện tích đó chuyển sang người vừa đi qua. Chạy lại trên màu của mình không cộng điểm lần nữa.\n\nChuột trái / F đánh người gần phía trước. Đối thủ bị hất và ngừng rải sơn 0,7 giây; vẫn có thể chạy để thoát. Mỗi đòn cần 0,8 giây hồi.\n\nVán dài 60 giây. Xếp hạng theo phần trăm sân còn mang màu của mỗi người lúc hết giờ. Người rời phòng xếp sau người còn chơi. Đồng diện tích chia hạng theo thứ tự người chơi."

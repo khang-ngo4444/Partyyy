@@ -16,6 +16,7 @@ const TRO := {
 	"toy_factory": ["Ghép đủ 5 mảnh tại bàn của mình", "WASD chạy · E nhặt / lắp · Chuột bắn", "23_toy_factory"],
 	"wave_hide": ["Trú sau đá để tránh sóng biển", "WASD chạy · E đẩy", "24_wave_hide"],
 	"minefield": ["Tiến xa nhất, tránh mìn và xe lu", "WASD chạy · Đứng yên để dò mìn · 2 mạng", "26_minefield"],
+	"paint": ["Phủ màu của mình nhiều nhất trên sân", "WASD rải sơn · Chuột trái / F đánh", "25_paint"],
 	"lo_da": ["Lên đỉnh, né đá và thiên thạch", "WASD di chuyển · Space nhảy", "20_lo_da"],
 }
 
@@ -28,7 +29,7 @@ static func trang_chi_tiet(code: String) -> String:
 	return str(info[2]) if info.size() >= 3 else ""
 
 static func co_diem_rieng(code: String) -> bool:
-	return code in ["word_wars", "crown", "dem_thu", "toy_factory", "wave_hide", "minefield"]
+	return code in ["word_wars", "crown", "dem_thu", "toy_factory", "wave_hide", "minefield", "paint"]
 
 static func hang_gon(ranking: Array, local_id: int) -> Array:
 	var result := ranking.slice(0, 2)
