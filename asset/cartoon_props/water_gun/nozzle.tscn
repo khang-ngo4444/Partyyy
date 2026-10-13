@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://bcloo2x0j2hv2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vfuse"]
+albedo_color = Color(1, 0.88235295, 0.41960785, 1)
+roughness = 0.55
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_83cwb"]
+top_radius = 0.2
+bottom_radius = 0.2
+height = 0.22
+radial_segments = 10
+rings = 0
+
+[node name="Nozzle" type="Node3D" unique_id=318596520]
+
+[node name="Shell" type="MeshInstance3D" parent="." unique_id=1517975160]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_vfuse")
+mesh = SubResource("CylinderMesh_83cwb")

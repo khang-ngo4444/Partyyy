@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://dtmxjgep85pdw"]
+
+[ext_resource type="PackedScene" uid="uid://csd82b65avh2k" path="res://asset/cartoon_props/water_gun/body.tscn" id="1_22i0l"]
+[ext_resource type="PackedScene" uid="uid://cc2bkwmkjwa8x" path="res://asset/cartoon_props/water_gun/tank.tscn" id="2_sgs7p"]
+[ext_resource type="PackedScene" uid="uid://dh55v18t4lhms" path="res://asset/cartoon_props/water_gun/pump.tscn" id="3_vsaso"]
+[ext_resource type="PackedScene" uid="uid://bhd2aoaywtuo6" path="res://asset/cartoon_props/water_gun/barrel.tscn" id="4_tub04"]
+[ext_resource type="PackedScene" uid="uid://bcloo2x0j2hv2" path="res://asset/cartoon_props/water_gun/nozzle.tscn" id="5_tm32p"]
+
+[node name="WaterGun" type="Node3D" unique_id=1805260]
+
+[node name="Body" parent="." unique_id=1984460470 instance=ExtResource("1_22i0l")]
+
+[node name="Tank" parent="." unique_id=1720895622 instance=ExtResource("2_sgs7p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.5, 0)
+
+[node name="Pump" parent="." unique_id=1554488263 instance=ExtResource("3_vsaso")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, -0.34, 0)
+
+[node name="Barrel" parent="." unique_id=1074137960 instance=ExtResource("4_tub04")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.62, 0.05, 0)
+
+[node name="Nozzle" parent="." unique_id=318596520 instance=ExtResource("5_tm32p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.02, 0.05, 0)

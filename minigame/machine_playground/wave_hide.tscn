@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://dewxd1w2kcxr4"]
+
+[ext_resource type="Script" uid="uid://chxea71cb01yj" path="res://minigame/machine_playground/wave_hide.gd" id="1_xaqdj"]
+[ext_resource type="PackedScene" uid="uid://xw7ykqvnae7e" path="res://minigame/machine_playground/wave_hide_arena.tscn" id="2_t7oaa"]
+
+[node name="WaveHide" type="Node" unique_id=2076815340]
+script = ExtResource("1_xaqdj")
+san_scene = ExtResource("2_t7oaa")
+giay_van = 72.0
+ket_thuc_khi_con_mot = false
+ten = "TRÚ SÓNG"

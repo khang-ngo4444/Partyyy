@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+tieu_de = "23 · Xưởng súng nước"
+noi_dung = "WASD chạy · E nhặt / đặt xuống / lắp tại bàn có tên mình.\nThu đủ thân, bình, bơm, ống và vòi. Chỉ mang một mảnh; mảnh trùng loại không được lắp.\n\nGhép đủ 5 mảnh để có súng nước. Chuột trái ngắm và bắn, một lần mỗi giây. Trúng nước làm rơi mảnh đang cầm; mảnh đã lắp được giữ lại.\n\nVán dài 75 giây. Hoàn thành sớm nhất đứng đầu, tiếp theo tính số mảnh đã lắp."

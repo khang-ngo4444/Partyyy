@@ -6,7 +6,7 @@
 script = ExtResource("1_th")
 tieu_de = "09 · Minigame và phần thưởng"
 noi_dung = "[color=#E0661A][b]KHI NÀO MINIGAME BẮT ĐẦU?[/b][/color]
-Sau khi toàn bộ người chơi đã tung xúc xắc xong một vòng, game chọn ngẫu nhiên một trong 10 minigame. Mỗi trò chỉ xuất hiện một lần trước khi hết lượt của cả bộ trò; Còi trọng tài chỉ chọn trò chưa dùng trong bộ hiện tại.
+Sau khi toàn bộ người chơi đã tung xúc xắc xong một vòng, game chọn ngẫu nhiên một trò trong bộ minigame. Mỗi trò chỉ xuất hiện một lần trước khi hết lượt của cả bộ trò; Còi trọng tài chỉ chọn trò chưa dùng trong bộ hiện tại.
 
 [b]Phần thưởng sau mỗi minigame[/b]
 • Ai cũng có vàng; hạng nhất chỉ hơn mức trung bình 30%, hạng chót kém 30%.

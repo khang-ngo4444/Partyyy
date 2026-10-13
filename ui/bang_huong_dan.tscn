@@ -1,8 +1,10 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://cljjeg0rqsn76"]
 
-[ext_resource type="Script" path="res://ui/how_to_guide.gd" id="1_howto"]
-[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="hd_script"]
-[ext_resource type="Texture2D" path="res://ui/icons/kenney/question.png" id="2_q"]
+[ext_resource type="Script" uid="uid://ciff8li8nmgop" path="res://ui/how_to_guide.gd" id="1_howto"]
+[ext_resource type="Texture2D" uid="uid://chn5ovpsw4pcl" path="res://ui/icons/kenney/question.png" id="2_q"]
+[ext_resource type="Resource" path="res://ui/huong_dan/23_toy_factory.tres" id="26_jlwyd"]
+[ext_resource type="Resource" path="res://ui/huong_dan/24_wave_hide.tres" id="27_isluk"]
+[ext_resource type="Resource" path="res://ui/huong_dan/00_tong_quan.tres" id="hd_00"]
 [ext_resource type="Resource" path="res://ui/huong_dan/01_muc_tieu.tres" id="hd_01"]
 [ext_resource type="Resource" path="res://ui/huong_dan/02_phim_chung.tres" id="hd_02"]
 [ext_resource type="Resource" path="res://ui/huong_dan/03_ban_party.tres" id="hd_03"]
@@ -22,13 +24,12 @@
 [ext_resource type="Resource" path="res://ui/huong_dan/17_temporal_trails.tres" id="hd_17"]
 [ext_resource type="Resource" path="res://ui/huong_dan/18_word_wars.tres" id="hd_18"]
 [ext_resource type="Resource" path="res://ui/huong_dan/19_dem_thu.tres" id="hd_19"]
-
-[ext_resource type="Resource" path="res://ui/huong_dan/00_tong_quan.tres" id="hd_00"]
 [ext_resource type="Resource" path="res://ui/huong_dan/20_lo_da.tres" id="hd_20"]
 [ext_resource type="Resource" path="res://ui/huong_dan/21_sanh.tres" id="hd_21"]
 [ext_resource type="Resource" path="res://ui/huong_dan/22_giao_dien.tres" id="hd_22"]
+[ext_resource type="Script" uid="uid://bglmi24mtj8by" path="res://ui/trang_huong_dan.gd" id="hd_script"]
 
-[node name="BangHuongDan" type="ColorRect"]
+[node name="BangHuongDan" type="ColorRect" unique_id=1201681908]
 process_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -37,9 +38,9 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.169, 0.106, 0.239, 0.6)
 script = ExtResource("1_howto")
-trang = Array[ExtResource("hd_script")]([ExtResource("hd_00"), ExtResource("hd_01"), ExtResource("hd_02"), ExtResource("hd_03"), ExtResource("hd_04"), ExtResource("hd_05"), ExtResource("hd_06"), ExtResource("hd_07"), ExtResource("hd_08"), ExtResource("hd_09"), ExtResource("hd_10"), ExtResource("hd_11"), ExtResource("hd_12"), ExtResource("hd_13"), ExtResource("hd_14"), ExtResource("hd_15"), ExtResource("hd_16"), ExtResource("hd_17"), ExtResource("hd_18"), ExtResource("hd_19"), ExtResource("hd_20"), ExtResource("hd_21"), ExtResource("hd_22")])
+trang = Array[ExtResource("hd_script")]([ExtResource("hd_00"), ExtResource("hd_01"), ExtResource("hd_02"), ExtResource("hd_03"), ExtResource("hd_04"), ExtResource("hd_05"), ExtResource("hd_06"), ExtResource("hd_07"), ExtResource("hd_08"), ExtResource("hd_09"), ExtResource("hd_10"), ExtResource("hd_11"), ExtResource("hd_12"), ExtResource("hd_13"), ExtResource("hd_14"), ExtResource("hd_15"), ExtResource("hd_16"), ExtResource("hd_17"), ExtResource("hd_18"), ExtResource("hd_19"), ExtResource("hd_20"), ExtResource("hd_21"), ExtResource("hd_22"), ExtResource("26_jlwyd"), ExtResource("27_isluk")])
 
-[node name="Center" type="CenterContainer" parent="."]
+[node name="Center" type="CenterContainer" parent="." unique_id=1578128153]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -47,91 +48,90 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HowToPanel" type="PanelContainer" parent="Center"]
+[node name="HowToPanel" type="PanelContainer" parent="Center" unique_id=283945871]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(1160, 640)
 layout_mode = 2
 theme_type_variation = &"KhungTroi"
 
-[node name="VBox" type="VBoxContainer" parent="Center/HowToPanel"]
+[node name="VBox" type="VBoxContainer" parent="Center/HowToPanel" unique_id=657404755]
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="Header" type="HBoxContainer" parent="Center/HowToPanel/VBox"]
+[node name="Header" type="HBoxContainer" parent="Center/HowToPanel/VBox" unique_id=72013844]
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="Icon" type="TextureRect" parent="Center/HowToPanel/VBox/Header"]
+[node name="Icon" type="TextureRect" parent="Center/HowToPanel/VBox/Header" unique_id=513581420]
 custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
 texture = ExtResource("2_q")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Title" type="Label" parent="Center/HowToPanel/VBox/Header"]
+[node name="Title" type="Label" parent="Center/HowToPanel/VBox/Header" unique_id=1918877770]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"ChuTieuDe"
 theme_override_font_sizes/font_size = 48
 text = "CÁCH CHƠI"
 
-[node name="HowToCloseBtn" type="Button" parent="Center/HowToPanel/VBox/Header"]
+[node name="HowToCloseBtn" type="Button" parent="Center/HowToPanel/VBox/Header" unique_id=1850912843]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(210, 60)
 layout_mode = 2
 theme_type_variation = &"NutVang"
 text = "ĐÃ HIỂU"
 
-[node name="Pages" type="HBoxContainer" parent="Center/HowToPanel/VBox"]
+[node name="Pages" type="HBoxContainer" parent="Center/HowToPanel/VBox" unique_id=255204895]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 18
 
-[node name="HowToPageList" type="ItemList" parent="Center/HowToPanel/VBox/Pages"]
+[node name="HowToPageList" type="ItemList" parent="Center/HowToPanel/VBox/Pages" unique_id=2140818446]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(340, 0)
 layout_mode = 2
 fixed_icon_size = Vector2i(28, 28)
 
-[node name="PageCard" type="PanelContainer" parent="Center/HowToPanel/VBox/Pages"]
+[node name="PageCard" type="PanelContainer" parent="Center/HowToPanel/VBox/Pages" unique_id=1288426404]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Page" type="VBoxContainer" parent="Center/HowToPanel/VBox/Pages/PageCard"]
+[node name="Page" type="VBoxContainer" parent="Center/HowToPanel/VBox/Pages/PageCard" unique_id=455329551]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="HowToPageTitle" type="Label" parent="Center/HowToPanel/VBox/Pages/PageCard/Page"]
+[node name="HowToPageTitle" type="Label" parent="Center/HowToPanel/VBox/Pages/PageCard/Page" unique_id=1857156385]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"ChuDauMuc"
 theme_override_font_sizes/font_size = 34
 text = "Mục tiêu ván chơi"
 
-[node name="HowToPageBody" type="RichTextLabel" parent="Center/HowToPanel/VBox/Pages/PageCard/Page"]
+[node name="HowToPageBody" type="RichTextLabel" parent="Center/HowToPanel/VBox/Pages/PageCard/Page" unique_id=907012915]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 2
+theme_override_constants/line_separation = 0
 theme_override_font_sizes/normal_font_size = 20
 theme_override_font_sizes/bold_font_size = 20
 theme_override_font_sizes/italics_font_size = 20
-theme_override_constants/line_separation = 0
 bbcode_enabled = true
-scroll_following = false
 
-[node name="Navigation" type="HBoxContainer" parent="Center/HowToPanel/VBox/Pages/PageCard/Page"]
+[node name="Navigation" type="HBoxContainer" parent="Center/HowToPanel/VBox/Pages/PageCard/Page" unique_id=1480083900]
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="HowToPrevBtn" type="Button" parent="Center/HowToPanel/VBox/Pages/PageCard/Page/Navigation"]
+[node name="HowToPrevBtn" type="Button" parent="Center/HowToPanel/VBox/Pages/PageCard/Page/Navigation" unique_id=30836855]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(180, 58)
 layout_mode = 2
 theme_type_variation = &"NutCam"
 text = "◀  TRƯỚC"
 
-[node name="HowToPageCounter" type="Label" parent="Center/HowToPanel/VBox/Pages/PageCard/Page/Navigation"]
+[node name="HowToPageCounter" type="Label" parent="Center/HowToPanel/VBox/Pages/PageCard/Page/Navigation" unique_id=683568473]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -139,7 +139,7 @@ theme_type_variation = &"ChuDauMuc"
 text = "1 / 19"
 horizontal_alignment = 1
 
-[node name="HowToNextBtn" type="Button" parent="Center/HowToPanel/VBox/Pages/PageCard/Page/Navigation"]
+[node name="HowToNextBtn" type="Button" parent="Center/HowToPanel/VBox/Pages/PageCard/Page/Navigation" unique_id=190194934]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(180, 58)
 layout_mode = 2

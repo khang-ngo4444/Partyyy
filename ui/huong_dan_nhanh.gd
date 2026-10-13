@@ -13,6 +13,8 @@ const TRO := {
 	"temporal_trails": ["Né tường sáng, sống sót tới cuối", "A / D rẽ · Nhân vật tự chạy", "17_temporal_trails"],
 	"word_wars": ["Ghép đúng từ trên đầu", "WASD di chuyển · E nhập chữ", "18_word_wars"],
 	"dem_thu": ["Đếm đúng loại thú được hỏi", "W / S chỉnh số · Space chốt", "19_dem_thu"],
+	"toy_factory": ["Ghép đủ 5 mảnh tại bàn của mình", "WASD chạy · E nhặt / lắp · Chuột bắn", "23_toy_factory"],
+	"wave_hide": ["Trú sau đá để tránh sóng biển", "WASD chạy · E đẩy", "24_wave_hide"],
 	"lo_da": ["Lên đỉnh, né đá và thiên thạch", "WASD di chuyển · Space nhảy", "20_lo_da"],
 }
 
@@ -25,7 +27,7 @@ static func trang_chi_tiet(code: String) -> String:
 	return str(info[2]) if info.size() >= 3 else ""
 
 static func co_diem_rieng(code: String) -> bool:
-	return code in ["word_wars", "crown", "dem_thu"]
+	return code in ["word_wars", "crown", "dem_thu", "toy_factory", "wave_hide"]
 
 static func hang_gon(ranking: Array, local_id: int) -> Array:
 	var result := ranking.slice(0, 2)

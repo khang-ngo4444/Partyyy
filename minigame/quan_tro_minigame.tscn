@@ -1,42 +1,44 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://dof8odfjj81js"]
 
-[ext_resource type="Script" path="res://minigame/quan_tro_minigame.gd" id="1_qt"]
+[ext_resource type="Script" uid="uid://ccichhw1211oe" path="res://minigame/quan_tro_minigame.gd" id="1_qt"]
 [ext_resource type="PackedScene" path="res://minigame/chung/o_diem.tscn" id="2_od"]
-[ext_resource type="Script" path="res://ui/kit/trang_tri.gd" id="3_tt"]
+[ext_resource type="Script" uid="uid://d2qopo4wjeemx" path="res://ui/kit/trang_tri.gd" id="3_tt"]
+[ext_resource type="Texture2D" uid="uid://b4fwktbdj6co6" path="res://ui/icons/cup.svg" id="4_cup"]
+[ext_resource type="PackedScene" uid="uid://bmkeoek33pluq" path="res://minigame/machine_playground/toy_factory.tscn" id="12_s2g0b"]
+[ext_resource type="PackedScene" uid="uid://dewxd1w2kcxr4" path="res://minigame/machine_playground/wave_hide.tscn" id="13_buc4j"]
 [ext_resource type="Script" uid="uid://d33ix7d1kvht1" path="res://minigame/minigame_session.gd" id="13_q52n2"]
-[ext_resource type="Texture2D" path="res://ui/icons/cup.svg" id="4_cup"]
 [ext_resource type="PackedScene" path="res://minigame/tank/tank_battle.tscn" id="g0"]
 [ext_resource type="PackedScene" path="res://minigame/breaking_blocks/breaking_blocks.tscn" id="g1"]
-[ext_resource type="PackedScene" path="res://minigame/laser_leap/laser_leap.tscn" id="g2"]
+[ext_resource type="PackedScene" uid="uid://b4tqjtmiqi2yi" path="res://minigame/laser_leap/laser_leap.tscn" id="g2"]
 [ext_resource type="PackedScene" path="res://minigame/spotlights/spotlights.tscn" id="g3"]
-[ext_resource type="PackedScene" path="res://minigame/explosive/explosive.tscn" id="g5"]
-[ext_resource type="PackedScene" path="res://minigame/crown/crown.tscn" id="g6"]
 [ext_resource type="PackedScene" path="res://minigame/magma/magma.tscn" id="g4"]
+[ext_resource type="PackedScene" uid="uid://nomb1ffimlmf" path="res://minigame/explosive/explosive.tscn" id="g5"]
+[ext_resource type="PackedScene" path="res://minigame/crown/crown.tscn" id="g6"]
 [ext_resource type="PackedScene" path="res://minigame/word_wars/word_wars.tscn" id="g8"]
 [ext_resource type="PackedScene" path="res://minigame/dem_thu/dem_thu.tscn" id="g9"]
 [ext_resource type="PackedScene" path="res://minigame/lo_da/lo_da.tscn" id="g10"]
 
 [sub_resource type="StyleBoxFlat" id="ClockBadge"]
+content_margin_left = 16.0
+content_margin_top = 6.0
+content_margin_right = 16.0
+content_margin_bottom = 6.0
 bg_color = Color(0.025, 0.04, 0.07, 0.92)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
-corner_radius_bottom_left = 12
 corner_radius_bottom_right = 12
-content_margin_left = 16.0
-content_margin_right = 16.0
-content_margin_top = 6.0
-content_margin_bottom = 6.0
+corner_radius_bottom_left = 12
 
-[node name="QuanTroMiniGame" type="Node"]
+[node name="QuanTroMiniGame" type="Node" unique_id=599475255]
 script = ExtResource("1_qt")
+tro_choi = Array[PackedScene]([ExtResource("g0"), ExtResource("g1"), ExtResource("g2"), ExtResource("g3"), ExtResource("g5"), ExtResource("g4"), ExtResource("g6"), ExtResource("g8"), ExtResource("g9"), ExtResource("g10"), ExtResource("12_s2g0b"), ExtResource("13_buc4j")])
 o_diem_scene = ExtResource("2_od")
-tro_choi = Array[PackedScene]([ExtResource("g0"), ExtResource("g1"), ExtResource("g2"), ExtResource("g3"), ExtResource("g5"), ExtResource("g4"), ExtResource("g6"), ExtResource("g8"), ExtResource("g9"), ExtResource("g10")])
 
-[node name="Lop" type="CanvasLayer" parent="."]
-visible = false
+[node name="Lop" type="CanvasLayer" parent="." unique_id=32874784]
 layer = 10
+visible = false
 
-[node name="Nen" type="ColorRect" parent="Lop"]
+[node name="Nen" type="ColorRect" parent="Lop" unique_id=1790397797]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -44,7 +46,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.043, 0.043, 0.055, 1)
 
-[node name="Khung" type="Control" parent="Lop"]
+[node name="Khung" type="Control" parent="Lop" unique_id=294930738]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -53,7 +55,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Bang" type="Control" parent="Lop"]
+[node name="Bang" type="Control" parent="Lop" unique_id=2081200351]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -62,86 +64,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="BangDiem" type="HBoxContainer" parent="Lop"]
-visible = false
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 16.0
-offset_top = -74.0
-offset_right = -16.0
-offset_bottom = -12.0
-grow_horizontal = 2
-grow_vertical = 0
-mouse_filter = 2
-theme_override_constants/separation = 10
-alignment = 1
-
-[node name="HuongDan" type="ColorRect" parent="Lop"]
-visible = false
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.31, 0.765, 0.969, 1)
-
-[node name="TrangTri" type="Control" parent="Lop/HuongDan"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-script = ExtResource("3_tt")
-
-[node name="Center" type="CenterContainer" parent="Lop/HuongDan"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="TheGioiThieu" type="VBoxContainer" parent="Lop/HuongDan/Center"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(860, 0)
-layout_mode = 2
-theme_override_constants/separation = 18
-
-[node name="Tieu" type="Label" parent="Lop/HuongDan/Center/TheGioiThieu"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"ChuTieuDe"
-theme_override_colors/font_color = Color(1, 0.835, 0.31, 1)
-theme_override_font_sizes/font_size = 56
-text = "MINIGAME"
-horizontal_alignment = 1
-
-[node name="LuatCard" type="PanelContainer" parent="Lop/HuongDan/Center/TheGioiThieu"]
-visible = true
-layout_mode = 2
-
-[node name="Luat" type="Label" parent="Lop/HuongDan/Center/TheGioiThieu/LuatCard"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 26
-text = ""
-autowrap_mode = 3
-horizontal_alignment = 1
-
-[node name="Dem" type="Label" parent="Lop/HuongDan/Center/TheGioiThieu"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"ChuTieuDe"
-theme_override_font_sizes/font_size = 130
-text = ""
-horizontal_alignment = 1
-
-[node name="Mo" type="ColorRect" parent="Lop/Bang"]
+[node name="Mo" type="ColorRect" parent="Lop/Bang" unique_id=484639606]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -153,7 +76,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.169, 0.106, 0.239, 0.72)
 
-[node name="TheKetQua" type="PanelContainer" parent="Lop/Bang"]
+[node name="TheKetQua" type="PanelContainer" parent="Lop/Bang" unique_id=1091409256]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -171,12 +94,12 @@ grow_vertical = 2
 mouse_filter = 2
 theme_type_variation = &"KhungTroi"
 
-[node name="Cot" type="VBoxContainer" parent="Lop/Bang/TheKetQua"]
+[node name="Cot" type="VBoxContainer" parent="Lop/Bang/TheKetQua" unique_id=513126359]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 10
 
-[node name="Cup" type="TextureRect" parent="Lop/Bang/TheKetQua/Cot"]
+[node name="Cup" type="TextureRect" parent="Lop/Bang/TheKetQua/Cot" unique_id=563176417]
 custom_minimum_size = Vector2(90, 90)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -185,26 +108,100 @@ texture = ExtResource("4_cup")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TieuDe" type="Label" parent="Lop/Bang/TheKetQua/Cot"]
+[node name="TieuDe" type="Label" parent="Lop/Bang/TheKetQua/Cot" unique_id=1902039562]
 layout_mode = 2
 theme_type_variation = &"ChuTieuDe"
 theme_override_font_sizes/font_size = 52
 text = "KẾT QUẢ"
 horizontal_alignment = 1
 
-[node name="KetQua" type="Label" parent="Lop/Bang/TheKetQua/Cot"]
+[node name="KetQua" type="Label" parent="Lop/Bang/TheKetQua/Cot" unique_id=1187202952]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"ChuNoi"
 theme_override_font_sizes/font_size = 32
-text = ""
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
+[node name="BangDiem" type="HBoxContainer" parent="Lop" unique_id=2114258298]
+visible = false
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -74.0
+offset_right = -16.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="HuongDan" type="ColorRect" parent="Lop" unique_id=1356907586]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.31, 0.765, 0.969, 1)
+
+[node name="TrangTri" type="Control" parent="Lop/HuongDan" unique_id=1369370147]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_tt")
+
+[node name="Center" type="CenterContainer" parent="Lop/HuongDan" unique_id=1205342772]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TheGioiThieu" type="VBoxContainer" parent="Lop/HuongDan/Center" unique_id=193718962]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(860, 0)
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Tieu" type="Label" parent="Lop/HuongDan/Center/TheGioiThieu" unique_id=874010452]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ChuTieuDe"
+theme_override_colors/font_color = Color(1, 0.835, 0.31, 1)
+theme_override_font_sizes/font_size = 56
+text = "MINIGAME"
+horizontal_alignment = 1
+
+[node name="LuatCard" type="PanelContainer" parent="Lop/HuongDan/Center/TheGioiThieu" unique_id=1139209345]
+layout_mode = 2
+
+[node name="Luat" type="Label" parent="Lop/HuongDan/Center/TheGioiThieu/LuatCard" unique_id=1424893869]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Dem" type="Label" parent="Lop/HuongDan/Center/TheGioiThieu" unique_id=2114224180]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ChuTieuDe"
+theme_override_font_sizes/font_size = 130
+horizontal_alignment = 1
+
 [node name="Clock" type="Label" parent="Lop" unique_id=409210790]
 visible = false
-mouse_filter = 2
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -213,10 +210,10 @@ offset_top = 12.0
 offset_right = 72.0
 offset_bottom = 52.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_styles/normal = SubResource("ClockBadge")
 theme_override_colors/font_outline_color = Color(0.0627451, 0.09411765, 0.1254902, 1)
 theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("ClockBadge")
 horizontal_alignment = 1
 vertical_alignment = 1
 

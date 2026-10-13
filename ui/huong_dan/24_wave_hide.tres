@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+tieu_de = "24 · Trú sóng"
+noi_dung = "WASD chạy · E đẩy người gần phía trước.\nMỗi đợt có 3 giây báo hướng sóng. Trú sát phía sau đá theo hướng sóng đi; vùng xanh gợi ý chỗ trú. Đá chỉ chắn trong phạm vi gần.\n\nSáu đợt sóng quét qua đảo từ các hướng khác nhau. Mỗi lần tránh sóng được 1 điểm. Bị cuốn hoặc rơi khỏi đảo sẽ trở lại sân và tiếp tục chơi.\n\nNgười nhiều điểm nhất thắng. Đồng điểm chia hạng theo thứ tự người chơi."

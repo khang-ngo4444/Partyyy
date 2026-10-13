@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://bmkeoek33pluq"]
+
+[ext_resource type="Script" uid="uid://cmmmwu3lsb3yo" path="res://minigame/machine_playground/toy_factory.gd" id="1_ds05h"]
+[ext_resource type="PackedScene" uid="uid://ckopw0ua101qk" path="res://minigame/machine_playground/toy_factory_arena.tscn" id="2_djrse"]
+
+[node name="ToyFactory" type="Node" unique_id=1874804577]
+script = ExtResource("1_ds05h")
+san_scene = ExtResource("2_djrse")
+giay_van = 75.0
+ket_thuc_khi_con_mot = false
+ten = "XƯỞNG SÚNG NƯỚC"

@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://csd82b65avh2k"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v0dyr"]
+albedo_color = Color(1, 0.60784316, 0.32941177, 1)
+roughness = 0.55
+
+[sub_resource type="BoxMesh" id="BoxMesh_nl3ib"]
+size = Vector3(0.8, 0.42, 0.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e77op"]
+albedo_color = Color(0.93333334, 0.4745098, 0.27450982, 1)
+roughness = 0.55
+
+[sub_resource type="BoxMesh" id="BoxMesh_4m1a6"]
+size = Vector3(0.23, 0.45, 0.32)
+
+[node name="WaterGunBody" type="Node3D" unique_id=1984460470]
+
+[node name="Shell" type="MeshInstance3D" parent="." unique_id=1466422648]
+material_override = SubResource("StandardMaterial3D_v0dyr")
+mesh = SubResource("BoxMesh_nl3ib")
+
+[node name="Grip" type="MeshInstance3D" parent="." unique_id=213258626]
+transform = Transform3D(0.9887711, 0.14943814, 0, -0.14943814, 0.9887711, 0, 0, 0, 1, -0.2, -0.35, 0)
+material_override = SubResource("StandardMaterial3D_e77op")
+mesh = SubResource("BoxMesh_4m1a6")

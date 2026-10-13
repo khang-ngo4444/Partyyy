@@ -4,7 +4,7 @@ extends Node
 const COUNTDOWN := "COUNTDOWN"
 const RUNNING := "RUNNING"
 const ENDED := "ENDED"
-const SUPPORTED: Array[String] = ["explosive", "laser_leap"]
+const SUPPORTED: Array[String] = ["explosive", "laser_leap", "toy_factory", "wave_hide"]
 
 @export var countdown_seconds: float = 5.0
 @export var result_seconds: float = 5.0
@@ -71,10 +71,12 @@ func start_match(code: String) -> void:
 	var previous: Variant = match_state().get_meta("last_minigame_round", 0)
 	var round_id: int = maxi(int(previous) + 1, int(Fusion.get_network_time() * 1000.0))
 	match_state().set_meta("last_minigame_round", round_id)
-	publish({"round": round_id, "code": code, "seed": randi(), "ids": ids,
+	var seed := randi()
+	var objective: Dictionary = template.initial_shared_state(ids, seed) if template.has_method("initial_shared_state") else {}
+	publish({"round": round_id, "code": code, "seed": seed, "ids": ids,
 		"alive": alive, "start": Fusion.get_network_time() + countdown_seconds,
 		"duration": template.giay_van, "phase": COUNTDOWN,
-		"parameters": template.network_parameters(), "blasts": []})
+		"parameters": template.network_parameters(), "blasts": [], "objective": objective})
 	template.free()
 
 
@@ -162,6 +164,9 @@ func _collect_departures(snapshot: Dictionary, now: float) -> void:
 
 
 func _update_rules(snapshot: Dictionary, now: float) -> void:
+	if bool(snapshot.get("parameters", {}).get("objectives", false)):
+		_update_objectives(snapshot, now)
+		return
 	var survivors: Array[int] = living_ids(snapshot)
 	var deadline: float = float(snapshot["start"]) + float(snapshot["duration"])
 	if now >= deadline or survivors.size() <= 1:
@@ -231,6 +236,8 @@ func _finish(snapshot: Dictionary, now: float) -> void:
 		if da == db:
 			return int(a) < int(b)
 		return (INF if da < 0.0 else da) > (INF if db < 0.0 else db))
+	if bool(snapshot.get("parameters", {}).get("objectives", false)) and is_instance_valid(host._game):
+		ranking = host._game.shared_ranking(snapshot)
 	snapshot["ranking"] = ranking
 	snapshot["ended"] = now
 	snapshot["phase"] = ENDED
@@ -290,3 +297,35 @@ func _recover_migration(encoded: String) -> bool:
 			publish(_migration_snapshot)
 		return true
 	return false
+
+
+func _update_objectives(snapshot: Dictionary, now: float) -> void:
+	if not is_instance_valid(host._game):
+		return
+	var elapsed: float = now - float(snapshot.start)
+	host._game.advance_shared_rules(snapshot, minf(elapsed, float(snapshot.duration) - 0.001))
+	if elapsed >= float(snapshot.duration):
+		_finish(snapshot, float(snapshot.start) + float(snapshot.duration))
+
+
+func request_action(action: String, payload: Array = []) -> void:
+	Fusion.rpc_to(Fusion.TARGET_MASTER, _request_action, int(state.get("round", 0)), action, payload)
+
+
+@rpc("any_peer", "call_local")
+func _request_action(round_id: int, action: String, payload: Array) -> void:
+	if not authority() or int(state.get("round", 0)) != round_id or state.get("phase", "") != RUNNING:
+		return
+	if not bool(state.get("parameters", {}).get("objectives", false)) or not is_instance_valid(host._game):
+		return
+	var sender := Fusion.get_rpc_sender()
+	if sender == 0:
+		sender = NetManager.local_id()
+	if not living_ids(state).has(sender):
+		return
+	var elapsed: float = Fusion.get_network_time() - float(state.start)
+	if elapsed < 0 or elapsed >= float(state.duration):
+		return
+	var next := state.duplicate(true)
+	if host._game.handle_shared_action(next, sender, action, payload, elapsed):
+		publish(next)
