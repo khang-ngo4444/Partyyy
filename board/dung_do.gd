@@ -390,6 +390,7 @@ func _chieu_hieu_ung(fx: Dictionary) -> void:
 	if hinh == null or hinh.hieu_ung == null or nguoi_tu == null or ban_co.ban == null:
 		return
 	var nguoi_den := ban_co.nguoi(int(fx.get("den", -1)))
+	nguoi_tu.play_action("shoot" if VatPham.la_ngam(mon) else "attack")
 	var tu := nguoi_tu.global_position
 	var den := _diem_den(fx, mon, tu, nguoi_den)
 	var trung := bool(fx.get("trung", true))

@@ -202,6 +202,9 @@ func _ve_ngam(p: Player) -> void:
 func _net_ban(id: int, tu: Vector3, huong: Vector3) -> void:
 	if not _chay or san == null or cau_lua_scene == null or not con_song(id):
 		return
+	var source := _nguoi(id)
+	if source != null:
+		source.play_action("shoot")
 	var c := cau_lua_scene.instantiate() as CauLua
 	san.add_child(c)
 	# Bù nửa RTT cho cầu của người khác (tối đa 0,15 s).

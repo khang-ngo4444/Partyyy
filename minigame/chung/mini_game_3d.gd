@@ -206,6 +206,7 @@ func _input(event: InputEvent) -> void:
 		return
 	get_viewport().set_input_as_handled()
 	_don_luc[loai] = gio()
+	toi.play_action("kick" if loai == DON_CHUONG else "attack")
 	var nan := tim_nan(toi, loai)
 	if nan == null:
 		return
@@ -239,6 +240,12 @@ func tim_nan(toi: Player, loai: int) -> Player:
 func _net_danh(ke_danh: int, nan: int, huong: Vector3, loai: int) -> void:
 	if not _chay or not _co_the_danh(ke_danh) or not _co_the_danh(nan):
 		return
+	var source := _nguoi(ke_danh)
+	var target := _nguoi(nan)
+	if source != null:
+		source.play_action("kick" if loai == DON_CHUONG else "attack")
+	if target != null:
+		target.play_reaction("knockdown" if loai == DON_CHUONG else "stun", GIAY_CHOANG)
 	if nan == NetManager.local_id():
 		var p := _nguoi(nan)
 		if loai == DON_CHUONG and p != null:
@@ -485,6 +492,7 @@ func _restore_shared_players() -> void:
 		return
 	for player: Player in get_tree().get_nodes_in_group("players"):
 		player.model_root.visible = true
+		player.clear_reactions()
 		if player.sync.has_authority():
 			player.collision_layer = Player.LOP_NGUOI
 			player.minigame_life_json = ""

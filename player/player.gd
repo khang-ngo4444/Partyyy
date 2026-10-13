@@ -7,6 +7,7 @@ extends CharacterBody3D
 ## Viền stencil khi ngắm vật (màu, độ dày chỉnh trong shader): hai lượt ghi + vành.
 const VIEN_GHI := preload("res://player/vien_ghi.gdshader")
 const VIEN_VANH := preload("res://player/vien_vanh.gdshader")
+const AnimationState = preload("res://player/animation_state.gd")
 
 ## Thân quay theo hướng chạy nhanh cỡ nào (rad/s).
 const XOAY_THEO_HUONG := 12.0
@@ -118,8 +119,10 @@ var _nap_tu := -1.0
 var _anim: AnimationPlayer = null
 var _meshes: Array[MeshInstance3D] = []
 var _dang_giau := false
-var _playing := ""
 var _loaded_model := -1
+var _animation_state: RefCounted
+var _visual_position := Vector3.ZERO
+var _visual_velocity := Vector3.ZERO
 
 @onready var sync: FusionSharedReplicator = $Replicator
 @onready var rig: CameraRig = $CameraRig
@@ -350,8 +353,12 @@ func _lai(delta: float) -> void:
 	move_and_slide()
 
 
-## Animation mỗi máy tự suy ra từ velocity, không cần đồng bộ.
-func _process(_delta: float) -> void:
+## Derive movement from transforms so remote avatars and board tweens animate too.
+func _process(delta: float) -> void:
+	var was_falling := _visual_velocity.y < -1.0
+	var displacement := global_position - _visual_position
+	_visual_position = global_position
+	_visual_velocity = displacement / maxf(delta, 0.001) if displacement.length() < 8.0 else Vector3.ZERO
 	var holding := carried() != null
 	if is_mine:
 		nhin_doc = rig.rotation.x
@@ -366,10 +373,13 @@ func _process(_delta: float) -> void:
 
 	if _anim == null:
 		return
-	var want := "holding-right" if holding else _pick_anim()
-	if want != _playing:
-		_playing = want
-		_anim.play(want, 0.15)
+	var want := _pick_anim()
+	if holding and want == "idle":
+		want = "holding-right"
+	if _animation_state != null:
+		if was_falling and absf(_visual_velocity.y) < 0.3 and displacement.length() < 1:
+			_animation_state.request("land")
+		_animation_state.tick(want)
 
 
 ## Chọn vật đang ngắm và phủ viền sáng lên nó.
@@ -463,9 +473,10 @@ func _pick_anim() -> String:
 	for n in get_tree().get_nodes_in_group("card_seat"):
 		if n is CardSeat and n.nguoi != 0 and n.nguoi == player_id():
 			return "sit"
-	if absf(velocity.y) > 1.0:
-		return "jump" if velocity.y > 0.0 else "fall"
-	return "sprint" if Vector2(velocity.x, velocity.z).length() > 0.3 else "idle"
+	if absf(_visual_velocity.y) > 1.0:
+		return "jump" if _visual_velocity.y > 0.0 else "fall"
+	var movement := Vector2(_visual_velocity.x, _visual_velocity.z).length()
+	return "sprint" if movement > 3.0 else ("walk" if movement > 0.3 else "idle")
 
 
 ## Dựng model. Fusion có thể ghi lại giá trị replicate sau `_ready` — chặn dựng lần hai.
@@ -473,7 +484,6 @@ func _apply_model() -> void:
 	if _loaded_model == model_index and _anim != null:
 		return
 	_loaded_model = model_index
-	_playing = ""
 	for c in model_root.get_children():
 		c.queue_free()
 	_meshes.clear()
@@ -483,6 +493,8 @@ func _apply_model() -> void:
 	model_root.add_child(inst)
 
 	_anim = CharacterVisual.hoat_anh_cua(inst)
+	_animation_state = AnimationState.new(_anim) if _anim != null else null
+	_visual_position = global_position
 
 	for m: MeshInstance3D in inst.find_children("*", "MeshInstance3D", true, false):
 		_meshes.append(m)
@@ -522,6 +534,29 @@ func _apply_name() -> void:
 	# Không cần thấy tên của chính mình.
 	name_tag.visible = not is_mine
 
+
+func play_action(kind: String = "attack") -> void:
+	if _animation_state != null:
+		_animation_state.request(kind)
+
+
+func play_reaction(kind: String, duration: float = 0.0) -> void:
+	if _animation_state != null:
+		_animation_state.request(kind, duration)
+
+
+func animation_dying() -> bool:
+	return _animation_state != null and _animation_state.dying()
+
+
+func animation_remaining() -> float:
+	return _animation_state.remaining() if _animation_state != null else 0.0
+
+
+func clear_reactions() -> void:
+	if _animation_state != null:
+		_animation_state.clear()
+
 func minigame_life() -> Dictionary:
 	if minigame_life_json.is_empty():
 		return {}
@@ -531,6 +566,7 @@ func minigame_life() -> Dictionary:
 
 func enter_minigame(round_id: int) -> void:
 	if sync.has_authority():
+		clear_reactions()
 		minigame_life_json = JSON.stringify({"round": round_id, "death": -1.0})
 
 
