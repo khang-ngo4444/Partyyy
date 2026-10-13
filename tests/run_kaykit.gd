@@ -22,11 +22,13 @@ func _run() -> void:
 	var arena: Node3D = load("res://minigame/machine_playground/toy_factory_arena.tscn").instantiate()
 	fixture.add_child(arena)
 	var models: Array = []
-	for index in 5:
-		var name: String = ["Knight", "Mage", "Ranger", "Rogue_Hooded", "Barbarian"][index]
+	var names := ["Knight", "Mage", "Ranger", "Rogue_Hooded", "Barbarian", "Rogue",
+		"Skeleton_Warrior", "Skeleton_Mage", "Skeleton_Minion", "Skeleton_Rogue"]
+	for index in names.size():
+		var name: String = names[index]
 		var model: Node3D = load("res://player/characters/%s.tscn" % name).instantiate()
 		fixture.add_child(model)
-		model.position.x = (index - 2) * 3.0
+		model.position = Vector3((index % 5 - 2) * 3.0, 0, (index / 5) * 3.0)
 		models.append(model)
 		var animator: AnimationPlayer = visual.hoat_anh_cua(model)
 		var skeleton: Skeleton3D = model.get_node("Model/Rig_Medium/Skeleton3D")

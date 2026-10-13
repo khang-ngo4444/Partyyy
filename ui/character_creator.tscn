@@ -5,10 +5,15 @@
 [ext_resource type="Texture2D" uid="uid://d3hbibuhg1cug" path="res://ui/icons/kenney/arrowLeft.png" id="6_l"]
 [ext_resource type="Texture2D" uid="uid://cx13x7yv8ui6v" path="res://ui/icons/kenney/arrowRight.png" id="7_r"]
 [ext_resource type="PackedScene" uid="uid://bcx60ubsv4d5s" path="res://player/characters/Barbarian.tscn" id="7_yv7bh"]
+[ext_resource type="PackedScene" uid="uid://cvkqyo0luyjm0" path="res://player/characters/Rogue.tscn" id="8_yn3i4"]
+[ext_resource type="PackedScene" uid="uid://0pb5c0lgtnwe" path="res://player/characters/Skeleton_Mage.tscn" id="10_0vaud"]
+[ext_resource type="PackedScene" uid="uid://c0bwf8stqi5s" path="res://player/characters/Skeleton_Minion.tscn" id="11_7ph2l"]
+[ext_resource type="PackedScene" uid="uid://cp5gr4t2i1p1w" path="res://player/characters/Skeleton_Rogue.tscn" id="12_ughte"]
 [ext_resource type="PackedScene" path="res://player/characters/Knight.tscn" id="nv_0"]
 [ext_resource type="PackedScene" path="res://player/characters/Mage.tscn" id="nv_1"]
 [ext_resource type="PackedScene" path="res://player/characters/Ranger.tscn" id="nv_2"]
 [ext_resource type="PackedScene" path="res://player/characters/Rogue_Hooded.tscn" id="nv_3"]
+[ext_resource type="PackedScene" path="res://player/characters/Skeleton_Warrior.tscn" id="nv_4"]
 [ext_resource type="PackedScene" path="res://ui/nut_chon.tscn" id="r_nut_chon_scene"]
 [ext_resource type="PackedScene" path="res://ui/o_mau.tscn" id="r_o_mau_scene"]
 
@@ -39,7 +44,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_creator")
 nut_chon_scene = ExtResource("r_nut_chon_scene")
-models = Array[PackedScene]([ExtResource("nv_0"), ExtResource("nv_1"), ExtResource("nv_2"), ExtResource("nv_3"), ExtResource("7_yv7bh")])
+models = Array[PackedScene]([ExtResource("nv_0"), ExtResource("nv_1"), ExtResource("nv_2"), ExtResource("nv_3"), ExtResource("7_yv7bh"), ExtResource("8_yn3i4"), ExtResource("nv_4"), ExtResource("10_0vaud"), ExtResource("11_7ph2l"), ExtResource("12_ughte")])
 o_mau_scene = ExtResource("r_o_mau_scene")
 
 [node name="Bg" type="ColorRect" parent="." unique_id=1740606914]
@@ -232,10 +237,12 @@ layout_mode = 2
 theme_type_variation = &"ChuNhan"
 text = "CHỌN NHÂN VẬT"
 
-[node name="ClassGrid" type="HBoxContainer" parent="Margin/Columns/Options/VBox" unique_id=369082637]
+[node name="ClassGrid" type="GridContainer" parent="Margin/Columns/Options/VBox" unique_id=1719594062]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 5
 
 [node name="PrimaryLabel" type="Label" parent="Margin/Columns/Options/VBox" unique_id=1566450408]
 layout_mode = 2

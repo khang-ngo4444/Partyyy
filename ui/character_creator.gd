@@ -4,7 +4,7 @@ extends Control
 ## Màn nhân vật dùng chung:
 ## - open(): từ menu chính, bấm TIẾP TỤC mới lưu vào NetManager.
 ## - open_phong(p): trong phòng (phím M), chọn là áp ngay lên Player (replicate).
-## Phím: Q/E đổi nhân vật, 1–5 chọn nhanh, Esc quay lại. Kéo chuột trên sân khấu để xoay.
+## Phím: Q/E đổi nhân vật, 1–9/0 chọn nhanh, Esc quay lại. Kéo chuột trên sân khấu để xoay.
 
 signal confirmed
 signal cancelled
@@ -34,7 +34,7 @@ var _xoay_tu_dong := true
 @onready var preview_anchor: Node3D = %PreviewAnchor
 @onready var preview_camera: Camera3D = %PreviewCamera
 @onready var viewport_container: SubViewportContainer = %ViewportContainer
-@onready var class_grid: HBoxContainer = %ClassGrid
+@onready var class_grid: GridContainer = %ClassGrid
 @onready var primary_grid: GridContainer = %PrimaryGrid
 @onready var accent_grid: GridContainer = %AccentGrid
 @onready var bubble_box: Control = %BubbleBox
@@ -108,7 +108,7 @@ func _mo_chung() -> void:
 	visible = true
 	set_process(true)
 	_xoay_tu_dong = true
-	preview_anchor.rotation.y = 0.0
+	preview_anchor.rotation.y = PI
 	_rebuild_preview()
 	_refresh_buttons()
 	UINav.xuat_hien([stage, options], 0.08, 0.85)
@@ -152,8 +152,10 @@ func _input(event: InputEvent) -> void:
 		prev_btn.pressed.emit()
 	elif k == KEY_E:
 		next_btn.pressed.emit()
-	elif k >= KEY_1 and k < KEY_1 + models.size():
+	elif k >= KEY_1 and k <= KEY_9 and k < KEY_1 + models.size():
 		_select_model(k - KEY_1)
+	elif k == KEY_0 and models.size() >= 10:
+		_select_model(9)
 	else:
 		return
 	get_viewport().set_input_as_handled()
@@ -182,8 +184,12 @@ func _chup_anh() -> void:
 	var ds: Array[Texture2D] = []
 	for scene in models:
 		var inst := (scene as PackedScene).instantiate() as Node3D
-		inst.rotation.y = deg_to_rad(20.0)
+		inst.rotation.y = PI + deg_to_rad(20.0)
 		anh_viewport.add_child(inst)
+		var animator := CharacterVisual.hoat_anh_cua(inst)
+		if animator != null:
+			animator.play("idle")
+			animator.advance(0.3)
 		anh_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 		await RenderingServer.frame_post_draw
 		ds.append(ImageTexture.create_from_image(anh_viewport.get_texture().get_image()))
@@ -208,7 +214,7 @@ func _gan_anh() -> void:
 func _build_class_buttons() -> void:
 	for index in models.size():
 		var button := nut_chon_scene.instantiate() as Button
-		button.custom_minimum_size = Vector2(98, 112)
+		button.custom_minimum_size = Vector2(88, 82)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.theme_type_variation = &"NutTrang"
 		button.text = str(index + 1)
@@ -222,7 +228,8 @@ func _build_class_buttons() -> void:
 		var picked := index
 		button.pressed.connect(func(): _select_model(picked))
 		class_grid.add_child(button)
-		UIKit.gan_phim(button, str(index + 1))
+		if index < 10:
+			UIKit.gan_phim(button, str((index + 1) % 10))
 	_gan_anh()
 
 

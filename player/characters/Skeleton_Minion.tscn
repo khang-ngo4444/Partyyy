@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://c0bwf8stqi5s"]
+
+[ext_resource type="PackedScene" uid="uid://db6784w1huu7n" path="res://asset/KayKit_Skeletons_1.1_FREE/characters/gltf/Skeleton_Minion.glb" id="1_x052x"]
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_5c0xc"]
+
+[node name="Skeleton_Minion" type="Node3D" unique_id=528222113]
+
+[node name="Model" parent="." unique_id=1569350899 instance=ExtResource("1_x052x")]
+transform = Transform3D(-0.67, 0, -5.857326e-08, 0, 0.67, 0, 5.857326e-08, 0, -0.67, 0, 0, 0)
+
+[node name="PartyAnimationPlayer" type="AnimationPlayer" parent="Model" unique_id=755718967]
+libraries/ = SubResource("AnimationLibrary_5c0xc")

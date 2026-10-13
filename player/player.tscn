@@ -7,9 +7,14 @@
 [ext_resource type="PackedScene" path="res://player/characters/Mage.tscn" id="4_m14"]
 [ext_resource type="PackedScene" path="res://player/characters/Ranger.tscn" id="4_m15"]
 [ext_resource type="PackedScene" path="res://player/characters/Rogue_Hooded.tscn" id="4_m17"]
+[ext_resource type="PackedScene" path="res://player/characters/Skeleton_Warrior.tscn" id="4_m21"]
 [ext_resource type="PackedScene" uid="uid://bcx60ubsv4d5s" path="res://player/characters/Barbarian.tscn" id="6_ebec5"]
+[ext_resource type="PackedScene" uid="uid://cvkqyo0luyjm0" path="res://player/characters/Rogue.tscn" id="7_tqiix"]
+[ext_resource type="PackedScene" uid="uid://0pb5c0lgtnwe" path="res://player/characters/Skeleton_Mage.tscn" id="9_e7oew"]
 [ext_resource type="Script" uid="uid://b71tptl0hxa16" path="res://player/vat_cam.gd" id="9_vatcam"]
+[ext_resource type="PackedScene" uid="uid://c0bwf8stqi5s" path="res://player/characters/Skeleton_Minion.tscn" id="10_c35mf"]
 [ext_resource type="Resource" uid="uid://dohx5p7pdqtuo" path="res://board/danh_muc_vat_pham.tres" id="10_dmvp"]
+[ext_resource type="PackedScene" uid="uid://cp5gr4t2i1p1w" path="res://player/characters/Skeleton_Rogue.tscn" id="11_65viv"]
 [ext_resource type="PackedScene" path="res://player/speech_bubble.tscn" id="11_bong"]
 [ext_resource type="PackedScene" path="res://board/vong_tam.tscn" id="12_vt"]
 
@@ -19,7 +24,7 @@ height = 1.8
 
 [node name="Player" type="CharacterBody3D" unique_id=673555487]
 script = ExtResource("1_player")
-models = Array[PackedScene]([ExtResource("4_m13"), ExtResource("4_m14"), ExtResource("4_m15"), ExtResource("4_m17"), ExtResource("6_ebec5")])
+models = Array[PackedScene]([ExtResource("4_m13"), ExtResource("4_m14"), ExtResource("4_m15"), ExtResource("4_m17"), ExtResource("6_ebec5"), ExtResource("7_tqiix"), ExtResource("4_m21"), ExtResource("9_e7oew"), ExtResource("10_c35mf"), ExtResource("11_65viv")])
 
 [node name="Collision" type="CollisionShape3D" parent="." unique_id=862017264]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)

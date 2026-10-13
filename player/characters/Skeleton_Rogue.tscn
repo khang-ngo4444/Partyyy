@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://cp5gr4t2i1p1w"]
+
+[ext_resource type="PackedScene" uid="uid://pkhyk3c2m1ft" path="res://asset/KayKit_Skeletons_1.1_FREE/characters/gltf/Skeleton_Rogue.glb" id="1_2vr4y"]
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_g41fw"]
+
+[node name="Skeleton_Rogue" type="Node3D" unique_id=747115190]
+
+[node name="Model" parent="." unique_id=1373966987 instance=ExtResource("1_2vr4y")]
+transform = Transform3D(-0.67, 0, -5.857326e-08, 0, 0.67, 0, 5.857326e-08, 0, -0.67, 0, 0, 0)
+
+[node name="PartyAnimationPlayer" type="AnimationPlayer" parent="Model" unique_id=610652091]
+libraries/ = SubResource("AnimationLibrary_g41fw")

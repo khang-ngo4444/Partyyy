@@ -4,10 +4,11 @@ extends RefCounted
 const KayAnimations = preload("res://player/kaykit_animations.gd")
 
 ## Hình nhân vật dùng chung (preview menu, chọn nhân vật, Player): nhuộm màu, phụ kiện,
-## lấy AnimationPlayer. Năm nhân vật dùng chung clip KayKit Rig Medium đã chuẩn hoá.
+## lấy AnimationPlayer. Các nhân vật dùng chung clip KayKit Rig Medium đã chuẩn hoá.
 
 const ARCHETYPE_NAMES: PackedStringArray = [
 	"VỆ BINH", "PHÁP SƯ", "XẠ THỦ", "KẺ LỪA ĐẢO", "MAN DI",
+	"ĐẠO TẶC", "CHIẾN BINH XƯƠNG", "PHÁP SƯ XƯƠNG", "TIỂU XƯƠNG", "ĐẠO TẶC XƯƠNG",
 ]
 
 const ACCESSORY_WORDS: PackedStringArray = [
