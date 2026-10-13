@@ -59,7 +59,7 @@ func _ready() -> void:
 	super()
 	ten = "SEARING SPOTLIGHTS"
 	luat = "WASD chạy · né spotlight"
-	giay_van = 75.0
+	giay_van = MAX_ROUND_SECONDS
 
 
 func bat_dau(nguoi_choi: Array, giong: int) -> void:

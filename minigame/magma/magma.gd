@@ -21,7 +21,7 @@ const BAN_KINH_DINH := 0.8
 const CAO_MEP := 0.2
 const CAO_DINH := 2.0
 const CHO_TRUOC_KHI_NGAP := 10.0
-const NGAP_HET_LUC := 65.0
+const NGAP_HET_LUC := 55.0
 const GOC_HO_TRO := 0.9781476 # 12 độ; chỉ hỗ trợ quanh hướng con trỏ.
 
 ## Máu mất mỗi giây trong nham (máu đầy 100).
@@ -44,7 +44,7 @@ func _ready() -> void:
 	super()
 	ten = "MAGMA & MAGES"
 	luat = "WASD chạy · rê chuột ngắm, giữ chuột trái bắn · dung nham dâng tới tâm · hất nhau vào vùng ngập"
-	giay_van = 75.0
+	giay_van = MAX_ROUND_SECONDS
 
 
 func _dung_san() -> void:

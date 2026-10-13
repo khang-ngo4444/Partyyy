@@ -23,10 +23,10 @@ func test_lava_rises_continuously_and_covers_center() -> void:
 		previous_safe = safe
 	assert_false(Magma.bi_ngap(Magma.BAN_KINH_SAN, 10.0))
 	assert_true(Magma.bi_ngap(Magma.BAN_KINH_SAN, 11.0))
-	assert_false(Magma.bi_ngap(0.0, 60.0))
+	assert_false(Magma.bi_ngap(0.0, Magma.NGAP_HET_LUC - 5.0))
 	assert_true(Magma.bi_ngap(0.0, Magma.NGAP_HET_LUC))
 	assert_eq(Magma.ti_le_san(Magma.NGAP_HET_LUC), 0.0)
-	assert_true(Magma.NGAP_HET_LUC + 100.0 / Magma.MAT_MAU_MOI_GIAY < 75.0)
+	assert_true(Magma.NGAP_HET_LUC + 100.0 / Magma.MAT_MAU_MOI_GIAY < 60.0)
 
 func test_fireball_sweeps_past_target_and_respects_height() -> void:
 	# Cả hai đầu đạn đều đã ở ngoài người: overlap đơn thuần bỏ sót trường hợp này.

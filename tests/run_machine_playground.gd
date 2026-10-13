@@ -55,7 +55,7 @@ func _runtime() -> void:
 		await physics_frame
 		game._present_shared_players()
 		check(game.san.get_node("HUD").visible, "Compact objective should show while running")
-		check(game.giay_con_lai() > 60, "New minigames should use common countdown")
+		check(game.giay_con_lai() > 50 and game.giay_con_lai() <= 60, "New minigames should use one minute countdown")
 		var ray := PhysicsRayQueryParameters3D.create(Vector3(4, 310, -1), Vector3(4, 290, -1), 1)
 		var hit := fixture.get_world_3d().direct_space_state.intersect_ray(ray)
 		check(not hit.is_empty() and absf(hit.position.y - 300) < 0.05, "Playable ground must match visual floor")

@@ -75,7 +75,7 @@ func start_match(code: String) -> void:
 	var objective: Dictionary = template.initial_shared_state(ids, seed) if template.has_method("initial_shared_state") else {}
 	publish({"round": round_id, "code": code, "seed": seed, "ids": ids,
 		"alive": alive, "start": Fusion.get_network_time() + countdown_seconds,
-		"duration": template.giay_van, "phase": COUNTDOWN,
+		"duration": minf(template.giay_van, MiniGame.MAX_ROUND_SECONDS), "phase": COUNTDOWN,
 		"parameters": template.network_parameters(), "blasts": [], "objective": objective})
 	template.free()
 

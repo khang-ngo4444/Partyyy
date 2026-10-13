@@ -3,7 +3,7 @@ extends MiniGame
 ## Tank 1990 — đấu trường 2D, sống lâu nhất thắng; trúng một phát là ra.
 ## Chỉ gửi sự kiện (đổi hướng kèm toạ độ, bắn, trúng, phá gạch); người bị bắn tự nhận.
 
-const GIAY_VAN := 75.0
+const GIAY_VAN := MAX_ROUND_SECONDS
 const CO_DAN := 8.0
 
 ## Xe và đạn sinh giữa ván.

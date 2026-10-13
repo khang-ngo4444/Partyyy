@@ -1,9 +1,9 @@
 extends RefCounted
 
 const WAVE_COUNT := 6
-const CYCLE_SECONDS := 12.0
-const WARNING_SECONDS := 3.0
-const CROSSING_SECONDS := 6.0
+const CYCLE_SECONDS := 10.0
+const WARNING_SECONDS := 2.5
+const CROSSING_SECONDS := 5.0
 const EXTENT := 24.0
 const ROCK_LAYER := 64
 const PUSH_RADIUS := 2.0

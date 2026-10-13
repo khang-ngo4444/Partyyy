@@ -73,6 +73,7 @@ var _het_luc := 0.0
 
 
 func _ready() -> void:
+	giay_van = minf(giay_van, MAX_ROUND_SECONDS)
 	# Sân nằm trong thế giới — không che nền.
 	che_nen = false
 	Fusion.register_broadcast_receiver(self)

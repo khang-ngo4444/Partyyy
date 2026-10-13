@@ -1,6 +1,8 @@
 class_name MiniGame
 extends Node
 
+const MAX_ROUND_SECONDS := 60.0
+
 ## Hợp đồng chung của minigame: nhận danh sách người chơi (`bat_dau`), phát bảng xếp hạng (`xong`).
 ## Minigame chạy trên mọi máy và tự giữ đồng bộ; `xong` phải ra cùng một bảng ở mọi máy.
 
