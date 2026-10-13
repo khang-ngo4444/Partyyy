@@ -52,9 +52,9 @@ không cái nào đăng ký được vào `DANH_SACH` (lý do ở mục 4).
 
 ---
 
-# 3. Minigame pha 3 — hiện có 15 TRÒ
+# 3. Minigame pha 3 — 12 trò đang đăng ký
 
-> **Đang lên kế hoạch (2026-10-07): Lở Đá** — leo dốc kiểu Fall Guys, đá rơi rồi lăn, chạm là chết. Chưa code, xem mục 10.
+> **Cập nhật 2026-10-12: Lở Đá** đã có bản chơi được; sửa hướng dốc/camera, khớp hình đá với vùng chạm, đảm bảo khe đi và hoàn thiện về đích/xem. Chi tiết bản hiện tại và kiểm tra ở đầu mục 10.
 >
 > **Đã xoá (2026-10-05): Sidestep Slope** — gỡ khỏi `DANH_SACH`, xoá `minigame/sidestep/` và khuôn `minigame/chung/mini_game_lan.gd` (không còn trò nào dùng khuôn T4).
 >
@@ -64,11 +64,9 @@ không cái nào đăng ký được vào `DANH_SACH` (lý do ở mục 4).
 
 > **Đã xoá (2026-10-02): Acidic Atoll (chìm đảo), Nhặt quà né rác và Bounding Blocks** — gỡ khỏi `QuanTroMiniGame.DANH_SACH`, xoá thư mục `minigame/acidic_atoll/`, `minigame/nhat_qua/`, `minigame/bounding_blocks/`, `materials/mat_axit.tres` và `minigame/chung/san_luoi.tscn` (lưới 13×13 chỉ Bounding Blocks dùng). Các đoạn bên dưới còn nhắc tới hai trò này là lịch sử.
 
-```
-extends MiniGame   →  17 script, nhưng 2 trong đó là KHUÔN chứ không phải trò
-DANH_SACH          →  15 mục                           ← danh sách thật
-main.gd            →  xin_chay(DANH_SACH.keys().pick_random())
-```
+Pool hiện tại trong `quan_tro_minigame.tscn`: Tank 1990, Breaking Blocks, Laser Leap, Spotlights, Explosive Exchange, Magma & Mages, Crown Capture, Word Wars, Đếm thú và Lở Đá. Temporal Trails còn source/hướng dẫn nhưng chưa có trong pool.
+
+Các bảng 15/18 trò và `DANH_SACH` bên dưới ghi thiết kế/lịch sử trước đây; dùng mảng `tro_choi` và code hiện tại để xác định trò đang chạy.
 
 Hai khuôn chung, trò nào cũng đi qua một trong hai:
 
@@ -601,7 +599,26 @@ bỏ qua.
 
 ---
 
-# 10. Lở Đá — KẾ HOẠCH (2026-10-07, chưa code)
+# 10. Lở Đá
+
+## Bản hiện tại — 2026-10-12
+
+- Dốc chung 14 × 140 m, nghiêng 12°, bệ 6 m, đỉnh 8 m. Ván 60 giây; chạy một mình không chốt ngay.
+- Hình dốc vật lý và camera trước đây bị xoay ngược. Đã sửa; nhân vật thật leo được và đứng yên không trượt.
+- Đá nhỏ bán kính 0,45 m, đá lớn 1,3 m. Mesh đơn vị trước đây chỉ có bán kính 0,5: đã sửa thành 1 để hình và luật cùng kích thước.
+- Báo rơi luôn hiện toàn bộ vùng nguy hiểm; màu/cường độ nhấp nháy thay đổi theo thời gian, không thu nhỏ vùng báo. Kiểm va chạm cả quãng đi giữa hai khung hình.
+- Hàng đá giữ khe 3 m; hàng gần nhau và đá rải không được bịt kín lối. Kiểm 200 hạt giống, mỗi 0,1 giây, mỗi dải dốc 1 m: luôn còn ít nhất 1,5 m cho tâm người giữa đá lớn.
+- Thiên thạch đã có trong bản code trước, tiếp tục tiến từ chân dốc sau giây 5; tới đỉnh khoảng giây 54,5. Không thêm dung nham. Tốc tối đa 4 m/s, chậm hơn nhân vật.
+- Về đích gửi yêu cầu tới master; master đợi vị trí replicate rồi xác nhận. Loại yêu cầu của người đã chết, chưa qua vạch, trùng hoặc ván đã kết thúc.
+- Người về đích được khoá tại đích và miễn đánh/chưởng; chuyển camera sang người đang leo cao nhất. Người bị loại ẩn cả model và tên, trả lại đúng trạng thái khi về bàn.
+- Xếp hạng: về đích theo thứ tự xác nhận → còn sống theo quãng đường → bị loại sau đứng trên. Có chặn chốt hai lần.
+- HUD chỉ thêm quãng đường của mình hoặc trạng thái về đích/xem; đồng hồ dùng hệ thống chung. Mũi tên trên dốc và vạch caro giúp đọc hướng chạy.
+
+Kiểm tra: `tests/run_lo_da.gd` (6 kiểm tra luật + runtime: mặt dốc, di chuyển thật, về đích, xếp hạng, xem và trả trạng thái); `minigame/lo_da/kiem_luat.gd` (200 hạt giống). Chưa xác nhận bằng phòng Photon nhiều máy thật.
+
+## Định hướng gốc — 2026-10-07
+
+Các con số bên dưới là thiết kế ban đầu; bản hiện tại phía trên ghi các điều chỉnh đã triển khai.
 
 Leo dốc kiểu Fall Guys. Đá rơi từ trời, có vòng đỏ báo trước, chạm đất thì **lăn xuống dốc**.
 **Chạm đá là chết.** Ai lên tới đỉnh trước thì xếp trên.
@@ -745,3 +762,179 @@ ván 30–60 s, ít nhất nửa phòng chết.
 
 - Chưa rõ vì sao **Sidestep Slope** bị xoá (cũng là dốc chung + vật lăn). Lở Đá khác ở: đồ rơi
   từ trời có báo trước, chạm là chết, đua tới đích.
+
+
+---
+
+# 11. Ý tưởng playground — cập nhật 2026-10-13
+
+Đèn xanh đèn đỏ đã được gỡ khỏi source, pool, hướng dẫn và bộ kiểm theo yêu cầu. Các đề xuất dưới đây chưa triển khai.
+
+Định hướng: mọi người cùng vào một sân, tương tác với vật/thú/người khác; giữ một mục tiêu chính, WASD và tối đa một nút hành động. Có thể lấy cơ chế từ trò dài hơn rồi cắt các lớp phụ. Thời lượng là núm chỉnh sau chơi thử, không ép mọi ý tưởng về 40 giây. Mỗi bản đầu chỉ một sân và một loại nhiệm vụ.
+
+## 1 · Lùa gà — ưu tiên thử trước
+
+**Một câu luật:** lùa gà vào chuồng của mình.
+
+- Sân cỏ chung khoảng 20 × 20 m, 6–10 con gà, chuồng có màu và biểu tượng của từng người ở mép sân. 2–8 người, khoảng 75–90 giây.
+- Chỉ WASD. Gà tránh người gần nhất; người chơi phải vòng ra phía sau để hướng gà về chuồng. Cửa chuồng dạng phễu rộng để thao tác dễ đọc.
+- Người khác có thể chạy ngang khiến gà đổi hướng hoặc giành đàn đang được lùa. Điểm vui đến từ vị trí của mọi người và phản ứng của đàn.
+- Gà vào chuồng +1 điểm, sau một nhịp có con mới từ giữa sân. Một chuồng nhận gà một lần, không đếm lại con đã vào.
+- Bản đầu dùng một loại gà, một kiểu né người, không bắt/cầm, không kỹ năng, không bài toán quản lý trại. Tái dùng model và animation gà sẵn có.
+- MVP: một con gà có thể được dẫn vào một cửa → nhiều người cùng lùa → đếm điểm và sinh lại. Chỉ thêm tiếng kêu/bụi chân sau khi đường lùa đã vui.
+- Cần thử: gà không quay giật hoặc kẹt góc; người đi đúng phía sau có thể dẫn nó; đàn không chỉ chạy ngẫu nhiên. Chuồng phải có đường tiếp cận tương đương.
+
+## 2 · Dọn nhà tranh đồ
+
+Tham khảo [Moving Out](https://www.team17.com/games/moving-out): giữ hành động nhấc, ném và va chạm đồ đạc; chuyển mục tiêu sang tranh điểm trong một phòng chung.
+
+**Một câu luật:** đưa đồ vào xe của mình.
+
+- Một phòng có bàn, ghế và vài thùng nhẹ; xe/giỏ của mỗi người quanh mép. WASD chạy, E nhấc/đặt; giữ rồi thả E để ném. Khoảng 90 giây.
+- Mỗi lần giữ một món. Đồ nằm dưới đất thì ai cũng nhặt được; đồ vào xe được chốt điểm. Có thể ném qua vật cản, hoặc nhanh tay lấy món người khác vừa thả.
+- Điểm vui: đồ bật khỏi bàn, mắc ở cửa rộng, bị ném hụt xe; mọi người vừa tìm đường vừa phá đường của nhau.
+- MVP chỉ một loại thùng nhẹ và một phòng; không cần đồ hai người khiêng, nhiều tầng hoặc nhiệm vụ phụ. Cửa rộng, xe có miệng lớn để người mới vẫn ghi điểm được.
+- Xếp hạng theo số món giao, hoà xét lần giao cuối. Tái dùng cơ chế cầm/ném; cần chủ mô phỏng vật lý thống nhất để đồ không nằm hai chỗ.
+
+## 3 · Bếp một món
+
+Tham khảo [Overcooked! 2](https://www.team17.com/games/overcooked-2): giữ tranh nguyên liệu và ghép món trên bàn chung.
+
+**Một câu luật:** ghép hai nguyên liệu rồi giao bánh.
+
+- Sân bếp có hai nguồn nguyên liệu, 3–4 bàn ghép và các quầy giao có dấu người chơi. WASD + E nhấc/đặt. Khoảng 90–120 giây.
+- Mỗi người giữ một nguyên liệu. Đặt đủ hai loại lên bàn sẽ tạo một chiếc bánh; mang bánh về quầy mình +1 điểm.
+- Có thể lấy nguyên liệu từ bàn chưa hoàn thành hoặc nhanh tay lấy bánh vừa ghép. Tình huống vui đến từ việc cùng dùng bàn, tranh nguyên liệu và đổi kế hoạch khi đồ bị lấy.
+- Bản đầu có đúng một công thức, hai biểu tượng nguyên liệu. Không chặt, nấu, rửa bát, cháy bếp hoặc danh sách đơn hàng. Công thức vẽ ngay trên bàn ghép.
+- MVP: nhấc/đặt → ghép đúng cặp → giao bánh; rồi mới thử bố trí bàn để có cạnh tranh nhưng không tắc đường.
+
+## 4 · Ném bóng hạ lon
+
+**Một câu luật:** ném bóng làm đổ lon để lấy điểm.
+
+- Sân hội chợ chung, ba cụm lon to, bóng mềm vô hạn với hồi ném ngắn. WASD chạy, chuột ngắm và bấm ném. Khoảng 60–75 giây.
+- Các cụm lon ở nhiều hướng để người chơi phải đổi vị trí. Lon đổ +1 điểm rồi dựng lại sau vài giây. Bóng có thể nảy; người khác đứng chắn làm cú ném đổi hướng.
+- Bản đầu: một loại bóng, một loại lon lớn, hỗ trợ ngắm nhẹ. Không thanh lực ném, kho đạn hoặc vũ khí khác nhau.
+- MVP cần ưu tiên trúng dễ đọc: bóng to, mục tiêu to, hình va chạm khớp hình vẽ. Tranh điểm và những cú nảy bất ngờ là phần cần giữ.
+- Tái dùng cơ chế ngắm/cầu lửa đã tối ưu; thay hậu quả hất người bằng mục tiêu có trạng thái đổ và phục hồi.
+
+## 5 · Ma trốn trong đồ
+
+Tham khảo [Luigi’s Ghost Mansion trong Nintendo Land](https://www.nintendo.com/en-za/Iwata-Asks/Iwata-Asks-Nintendo-Land/Nintendo-Land/4-Like-Team-Sports-/4-Like-Team-Sports-692173.html): giữ ý tưởng tìm dấu hiệu để săn ma. Thiết kế đề xuất dùng ma AI trong đồ vật.
+
+**Một câu luật:** tìm đồ vật có ma rồi bắt nó.
+
+- Một phòng sáng với 6–8 đồ vật lớn: thùng, ghế, tủ. Ma AI trú trong một món; món đó thỉnh thoảng rung hoặc phát tiếng cười.
+- WASD + E kiểm tra. Đoán đúng thì ma bật ra chạy một đoạn; chạm được ma +2 điểm. Mọi người cùng thấy ma xuất hiện nên người khác có thể giành bắt.
+- Kiểm tra sai chỉ bị hắt hơi/choáng ngắn, không phải ngồi xem. Ván khoảng 75–90 giây.
+- Bản đầu: một con ma, một dấu hiệu rung, một hành động kiểm tra. Không tối toàn map, không vai ma do người chơi điều khiển, không pin đèn hoặc nhiều loại phép.
+- MVP: trú → báo dấu hiệu → lộ ra → đuổi bắt. Thử độ rõ dấu hiệu trước khi thêm đánh lừa.
+
+## 6 · Bập bênh hỗn loạn
+
+**Một câu luật:** ở trên bệ lâu nhất.
+
+- Cả phòng trên một bệ lớn có thể nghiêng theo phân bố người chơi. Dồn sang một bên làm bệ nghiêng về bên đó. Chỉ WASD; khoảng 60–90 giây.
+- Người chơi đi để giữ thăng bằng, nhưng vị trí mình cũng làm mọi người khác mất thăng bằng. Hướng vui: giả vờ chạy cùng nhóm rồi đổi phía, dồn nhau về mép.
+- Rơi xuống nệm được đưa lại lên sau 2 giây. Điểm là thời gian ở trên bệ; mọi người tiếp tục chơi tới cuối.
+- MVP chỉ một bệ, giới hạn góc nghiêng và một kiểu trượt. Không thêm chướng ngại ngẫu nhiên ở bản đầu.
+- Đây là lựa chọn có triển khai khó hơn vì cần sàn chuyển động ổn định và cùng một trạng thái nghiêng trên các máy. Nên thử bản vật lý một người trước.
+
+## Lựa chọn đề xuất
+
+**Lùa gà** phù hợp nhất để làm thử ngay: chỉ di chuyển, có phản ứng nhìn thấy được, nhiều người thật sự ảnh hưởng đến cùng một đàn và tận dụng asset sẵn có.
+
+**Dọn nhà tranh đồ** là hướng thứ hai nếu muốn tình huống vật lý hài hước. Bếp một món phù hợp khi muốn thêm ghép/giành vật; Ma trốn trong đồ thêm quan sát/đuổi bắt; Bập bênh để sau khi đã thử độ ổn định sàn.
+
+Prototype trò được chọn với 2 người rồi 4 người trước; chỉ thêm vào pool khi cơ chế chính đã chơi vui. UI trong ván giữ đồng hồ và điểm; hướng dẫn hai dòng ở intro, luật đầy đủ ở Cách chơi.
+
+
+# 12. Tham khảo Machine Party — 2026-10-13
+
+Nguồn đối chiếu: [Steam chính thức](https://store.steampowered.com/app/4108000/Machine_Party/), [achievement chính thức](https://steamcommunity.com/stats/4108000/achievements/) và [mô tả từng minigame của Destructoid](https://www.destructoid.com/all-machine-party-minigames-and-how-to-win/). Đây là đọc/đối chiếu nguồn; các phương án dưới đây là chuyển thể đề xuất, chưa triển khai.
+
+Điểm thiết kế đáng học: nhiệm vụ có thể nói một câu; vật và không gian là nơi thể hiện tiến độ; người chơi có hành động làm đối thủ khó hoàn thành nhiệm vụ. Khi chuyển sang PartyBash, dùng phản ứng cartoon như bắn nước, phủ sơn, bật khỏi bệ. Giữ sự tranh giành và hậu quả dễ nhìn.
+
+## A · Ném rác qua sân — từ Debris Platforms
+
+Nguồn gốc: dọn debris khỏi bệ của mình, có thể ném nó sang bệ đối thủ. Achievement cũng xác nhận khả năng ném thùng hất người khỏi bệ.
+
+**Luật bản đề xuất:** hết giờ, khu của ai ít rác nhất thắng.
+
+- Một sân chung 20 × 20 m có các vùng thảm màu của từng người quanh mép. Cả phòng đi lại giữa các vùng, không có làn chạy riêng.
+- Bắt đầu với cùng số thùng xốp/túi rác trên mỗi thảm. WASD + E nhấc/đặt; giữ rồi thả E để ném bằng cơ chế đã có.
+- Có thể dọn khu mình, ném sang khu khác, chặn một cú ném hoặc đem thùng trở lại. Những lần ném hụt và đối thủ ném trả tạo tình huống vui.
+- Bản đầu 60 giây, một loại đồ, một lần kiểm cuối ván. Bảng đếm rác đặt cạnh từng thảm; HUD chỉ giờ. Không cần máy ép/áp lực riêng cho mỗi vùng ở bản đầu.
+- Trước khi làm art, thử 2 người với 3 thùng mỗi khu: nhấc rõ, ném trúng vùng lớn, vùng đếm khớp vị trí vật. Sau đó thử 4 người, rồi điều chỉnh số thùng theo roster.
+- Khi đồng điểm, có thể dùng số thùng riêng biệt đã được đưa ra khỏi khu mình làm chỉ số phụ; một thùng chỉ đóng góp một lần để tránh nhặt/ném lặp kiếm thống kê.
+
+## B · Lắp đồ chơi rồi phá nhau — từ Firearm Factory
+
+Nguồn gốc: thu thập/lắp các bộ phận thành súng. Achievement thể hiện người lắp sau vẫn có thể hạ người đã lắp trước.
+
+**Luật bản đề xuất:** tìm năm mảnh, lắp súng nước rồi tranh thắng.
+
+- Một xưởng đồ chơi chung, ba kiểu linh kiện và bàn lắp có hình mẫu của từng người. WASD + E nhấc/lắp; mỗi lần cầm một mảnh.
+- Dùng đúng ba biểu tượng lớn, không công thức chữ hoặc kho inventory. Linh kiện sai không lắp vào bàn.
+- Người lắp xong có thể dùng súng nước để làm đối thủ bị hất/choáng ngắn. Những người chưa xong tiếp tục lắp và có cơ hội đáp trả khi hoàn thành.
+- Đề xuất trước mắt tính thứ tự hoàn thành, trong một cửa sổ 60–75 giây; sau khi hoàn thành, nhiệm vụ phụ là gây khó cho người còn lắp. Không chốt toàn ván ngay khi người đầu tiên xong.
+- Để tránh người nhanh thắng áp đảo, nước chỉ làm rơi mảnh đang cầm tại chỗ, không xoá mảnh đã lắp và không loại người chưa có súng. Giới hạn hồi bắn.
+- Prototype trước phần nhặt/lắp; thử phần quấy phá sau. Nếu sự quấy phá không tạo lựa chọn vui, giữ bản lắp/tranh linh kiện thay vì thêm nhiều đòn.
+
+## C · Tranh thùng — từ Forklift Certified
+
+Nguồn gốc: đưa thùng vào vùng chứa của mình, có thể lấy thùng của đối thủ. Bản đề xuất bỏ bước điều khiển xe nâng, giữ sự tranh giành thùng.
+
+**Luật bản đề xuất:** hết giờ, giỏ của ai nhiều thùng nhất thắng.
+
+- Sân kho chung, thùng giữa sân, các ô chứa có màu người chơi. WASD + E cầm/thả; mỗi người giữ một thùng.
+- Thùng đặt trong ô vẫn có thể bị lấy lại. Có thể đi gom, giữ ô nhà hoặc đột nhập ô người dẫn.
+- Bản đầu một loại thùng, 60–75 giây, không xe/cần gạt/tải trọng. Đếm thùng đang nằm trong ô khi chốt, không chấm điểm vĩnh viễn lúc giao.
+- So với Ném rác: Ném rác muốn đưa đồ ra khỏi khu mình, Tranh thùng muốn kéo đồ về khu mình. Chỉ nên prototype một hướng trước để tránh hai trò giống nhau về thao tác.
+
+## D · Tranh hốc trú — từ Tunnel Hazard
+
+Nguồn gốc: trú trong hốc đúng tín hiệu; achievement nhắc thắng nhờ lấy hốc cuối cùng.
+
+- Sân chung với các hốc quanh tường. Máy báo nguy hiểm, chỉ một số hốc mở/sáng an toàn.
+- Mọi người tranh hốc một chỗ trước khi máy phun nước/đẩy quét qua sân. Có một nút đẩy nhẹ để giành chỗ; kiểm va chạm và thời gian hồi phải rõ.
+- Bản đầu 4–6 đợt, không cần chạy qua đường dài. Người trượt đợt nhận 0 điểm, người trú được nhận 1 rồi mọi người trở về sân.
+- Ưu tiên thao tác tranh chỗ; nguồn này có thể tạo một trò cạnh tranh không gian, ngoài các trò né laser/spotlight đã có.
+
+## E · Đuổi bắt sơn — từ Inside Job
+
+Nguồn gốc: một người tìm công cụ để bắt/lây cho những người chạy trong phòng. Bản đề xuất dùng cây lăn sơn.
+
+- Một phòng có bàn và vách thấp để vòng qua. Mỗi người lần lượt làm người săn trong 10–12 giây; những người còn lại né.
+- WASD + E chạm sơn ở tầm gần. Chạm được một người +1; người đó bị phủ sơn/khựng ngắn rồi tiếp tục chạy với miễn chạm ngắn.
+- Luân phiên vai để ai cũng được săn, xếp hạng bằng số lần chạm hợp lệ. Không cần bóng tối tăng dần, nhiều trạng thái lây nhiễm hay vai vĩnh viễn.
+- Bản đầu thử 2/4 người để kiểm tầm bắt và đường vòng, sau đó mới quyết định tổng thời lượng cho 8 người.
+
+## Thứ tự prototype đề xuất sau khi tham khảo
+
+1. Ném rác qua sân: chỉ một mục tiêu, dùng được cơ chế cầm/ném sẵn có, đối thủ tác động trực tiếp tới kết quả của nhau.
+2. Lắp đồ chơi: thêm nhặt/lắp và lợi thế đạt được sớm, phù hợp nếu muốn một minigame có chuyển vai ngay trong ván.
+3. Tranh hốc trú hoặc Đuổi bắt sơn để đa dạng tương tác không gian.
+
+Người dùng đã chọn Xưởng súng nước và Trú sóng; bản triển khai nằm ở mục 13. Các ý tưởng Lùa gà/Dọn nhà/Bếp ở mục 11 vẫn là phương án tham khảo trước đó.
+
+
+# 13. Plan triển khai đã chọn — 2026-10-13
+
+Người dùng chọn ý tưởng 2 và 4, yêu cầu 5 mảnh cho súng nước, sóng biển quét qua và không giới hạn hình dáng map. Tiến hành hai prototype:
+
+1. **Xưởng súng nước (`toy_factory`)**: 5 mảnh thân, bình, bơm, ống, vòi; tìm trong xưởng chung, E nhặt/thả/lắp tại bàn của mình. Lắp đủ được bắn nước làm đối thủ rơi mảnh đang cầm, không mất mảnh đã lắp. 75 giây; người hoàn thành trước đứng trên, chưa xong xét số mảnh. Tạo asset 3D riêng cho 5 mảnh và súng hoàn chỉnh vì asset repo chưa có bộ súng nước phù hợp.
+2. **Trú sóng (`wave_hide`)**: đảo có đường bờ bất quy tắc, 6 đợt sóng theo nhiều hướng, cảnh báo 3 giây rồi sóng tiến qua sân. Đá lớn chắn sóng, E đẩy người khác khỏi chỗ trú. Mỗi đợt tránh được +1; bị cuốn quay lại chơi. Dùng rock của Kenney nature-kit sẵn có; tự dựng cát, mặt nước, sóng và bọt. Đường bờ là polygon chỉnh được, không đóng khung sân vuông/circle.
+3. Đồng hồ, seed, điểm, linh kiện và sự kiện giữ trong session/MatchState; master xác nhận thao tác và xếp hạng. Hướng dẫn hai dòng trước ván, trang Cách chơi riêng.
+4. Kiểm: đủ đúng 5 loại; không lắp/tranh nhặt hai lần; bắn không phá phần đã lắp; sóng che bởi đá; va chạm theo quãng quét; đổi hướng; kết quả, thời gian và cleanup. Chạy baseline sau khi tích hợp.
+
+Bản đầu ưu tiên đọc được và chơi được; hoàn thiện nhịp/phân bố vật sau chơi thử. Không push khi chưa có yêu cầu mới.
+
+
+## Trạng thái bản triển khai
+
+Đã thêm hai scene vào pool (12 trò): toy_factory và wave_hide. Năm linh kiện, súng hoàn chỉnh và bàn lắp là PackedScene tự tạo bằng MCP node/resource; đá lấy từ Kenney nature-kit sẵn có. Sân đảo dùng CSGPolygon3D, chỉnh đường bờ trong Inspector. Mỗi đá có collision riêng cho vật cản và truy vấn chắn sóng; vị trí người chơi được so với mặt sóng chạy xuyên đảo.
+
+Luật thuần tách thành factory_rules.gd và wave_rules.gd; objective_game.gd dùng chung lifecycle. Trạng thái linh kiện, điểm, cooldown và sự kiện nằm trong snapshot MatchState. Master xác nhận nhặt/lắp/bắn/đẩy, bỏ request sau hết giờ, xếp hạng theo luật riêng. Solo chạy đủ thời gian. Hướng dẫn hai dòng và trang chi tiết đã thêm.
+
+Kiểm tra: 10 test luật mới và runtime pickup/splash/floor/shelter/swept-wave/results/cleanup/session; 48 test cũ cùng runtime Magma, Spotlight, Lở đá và UI hướng dẫn đều qua. Chưa kiểm Photon với nhiều máy thật; cần chơi thử để tinh chỉnh khoảng cách bàn, độ rộng trú và nhịp sóng. Code ở local.
