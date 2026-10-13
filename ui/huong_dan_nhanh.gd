@@ -4,7 +4,7 @@ extends RefCounted
 ## Chỉ mục tiêu và thao tác chính trước ván. Luật đầy đủ nằm trong Cách chơi.
 const TRO := {
 	"tank_battle": ["Sống sót tới cuối trận", "WASD di chuyển · J / Space bắn", "10_tank"],
-	"breaking_blocks": ["Tránh sàn vỡ, đừng rơi", "WASD di chuyển · Space nhảy", "11_breaking_blocks"],
+	"breaking_blocks": ["Né nhóm sàn sắp rớt, đừng ngã", "WASD di chuyển · Space nhảy", "11_breaking_blocks"],
 	"laser_leap": ["Né và nhảy qua tia laser", "WASD di chuyển · Space nhảy", "12_laser_leap"],
 	"spotlights": ["Nhớ vị trí, né spotlight khi tối", "WASD di chuyển", "13_spotlights"],
 	"magma": ["Hất đối thủ vào dung nham đang dâng", "WASD di chuyển · Chuột ngắm / bắn", "14_magma"],

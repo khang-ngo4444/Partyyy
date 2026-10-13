@@ -4,11 +4,13 @@
 
 [resource]
 script = ExtResource("1_th")
-tieu_de = "11 · Breaking Blocks"
+tieu_de = "11 · Sàn rớt"
 noi_dung = "[color=#E0661A][b]PHÍM[/b][/color]
 [b]W A S D[/b] chạy · [b]Space[/b] nhảy.
 
 [color=#E0661A][b]LUẬT[/b][/color]
-Đứng trên một ô quá lâu làm ô nứt rồi vỡ. Vết nứt được giữ lại khi bạn rời ô, vì vậy phải liên tục chọn đường an toàn và nhảy qua khe.
+Theo từng đợt, một nhóm sàn nhấp nháy báo trước rồi hạ xuống. Có đợt mất nửa sân, có đợt mất những nhóm khác. Chạy sang phần còn an toàn hoặc nhảy qua khe.
 
-Rơi khỏi sàn sẽ bị loại. [b]Xếp hạng:[/b] sống sót lâu hơn đứng trên."
+Sau một khoảng ngắn, phần lớn sàn được đưa lên lại. Về cuối ván, một số ô mất vĩnh viễn. Không cần đứng lâu trên ô để làm ô rớt.
+
+Rơi khỏi sàn sẽ bị loại. [b]Xếp hạng:[/b] người ngã đầu xếp cuối; người ngã sau đứng trên, theo thứ tự master nhận thông báo ngã. Ván tối đa 60 giây."
