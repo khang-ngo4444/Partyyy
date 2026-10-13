@@ -2,8 +2,9 @@
 
 [ext_resource type="Script" uid="uid://ciff8li8nmgop" path="res://ui/how_to_guide.gd" id="1_howto"]
 [ext_resource type="Texture2D" uid="uid://chn5ovpsw4pcl" path="res://ui/icons/kenney/question.png" id="2_q"]
-[ext_resource type="Resource" path="res://ui/huong_dan/23_toy_factory.tres" id="26_jlwyd"]
-[ext_resource type="Resource" path="res://ui/huong_dan/24_wave_hide.tres" id="27_isluk"]
+[ext_resource type="Resource" uid="uid://oivweqhk4rdx" path="res://ui/huong_dan/23_toy_factory.tres" id="26_jlwyd"]
+[ext_resource type="Resource" uid="uid://7imyxy5wpg88" path="res://ui/huong_dan/24_wave_hide.tres" id="27_isluk"]
+[ext_resource type="Resource" path="res://ui/huong_dan/26_minefield.tres" id="28_isluk"]
 [ext_resource type="Resource" path="res://ui/huong_dan/00_tong_quan.tres" id="hd_00"]
 [ext_resource type="Resource" path="res://ui/huong_dan/01_muc_tieu.tres" id="hd_01"]
 [ext_resource type="Resource" path="res://ui/huong_dan/02_phim_chung.tres" id="hd_02"]
@@ -14,11 +15,11 @@
 [ext_resource type="Resource" path="res://ui/huong_dan/07_vat_pham.tres" id="hd_07"]
 [ext_resource type="Resource" path="res://ui/huong_dan/08_ruong_hoi_sinh.tres" id="hd_08"]
 [ext_resource type="Resource" path="res://ui/huong_dan/09_minigame.tres" id="hd_09"]
-[ext_resource type="Resource" path="res://ui/huong_dan/10_tank.tres" id="hd_10"]
+[ext_resource type="Resource" uid="uid://5r4ajq0rgxp6" path="res://ui/huong_dan/10_tank.tres" id="hd_10"]
 [ext_resource type="Resource" path="res://ui/huong_dan/11_breaking_blocks.tres" id="hd_11"]
 [ext_resource type="Resource" path="res://ui/huong_dan/12_laser_leap.tres" id="hd_12"]
-[ext_resource type="Resource" path="res://ui/huong_dan/13_spotlights.tres" id="hd_13"]
-[ext_resource type="Resource" path="res://ui/huong_dan/14_magma.tres" id="hd_14"]
+[ext_resource type="Resource" uid="uid://bxs40y8lxvids" path="res://ui/huong_dan/13_spotlights.tres" id="hd_13"]
+[ext_resource type="Resource" uid="uid://dtn6dcootv150" path="res://ui/huong_dan/14_magma.tres" id="hd_14"]
 [ext_resource type="Resource" path="res://ui/huong_dan/15_explosive.tres" id="hd_15"]
 [ext_resource type="Resource" path="res://ui/huong_dan/16_crown.tres" id="hd_16"]
 [ext_resource type="Resource" path="res://ui/huong_dan/17_temporal_trails.tres" id="hd_17"]
@@ -38,7 +39,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.169, 0.106, 0.239, 0.6)
 script = ExtResource("1_howto")
-trang = Array[ExtResource("hd_script")]([ExtResource("hd_00"), ExtResource("hd_01"), ExtResource("hd_02"), ExtResource("hd_03"), ExtResource("hd_04"), ExtResource("hd_05"), ExtResource("hd_06"), ExtResource("hd_07"), ExtResource("hd_08"), ExtResource("hd_09"), ExtResource("hd_10"), ExtResource("hd_11"), ExtResource("hd_12"), ExtResource("hd_13"), ExtResource("hd_14"), ExtResource("hd_15"), ExtResource("hd_16"), ExtResource("hd_17"), ExtResource("hd_18"), ExtResource("hd_19"), ExtResource("hd_20"), ExtResource("hd_21"), ExtResource("hd_22"), ExtResource("26_jlwyd"), ExtResource("27_isluk")])
+trang = Array[ExtResource("hd_script")]([ExtResource("hd_00"), ExtResource("hd_01"), ExtResource("hd_02"), ExtResource("hd_03"), ExtResource("hd_04"), ExtResource("hd_05"), ExtResource("hd_06"), ExtResource("hd_07"), ExtResource("hd_08"), ExtResource("hd_09"), ExtResource("hd_10"), ExtResource("hd_11"), ExtResource("hd_12"), ExtResource("hd_13"), ExtResource("hd_14"), ExtResource("hd_15"), ExtResource("hd_16"), ExtResource("hd_17"), ExtResource("hd_18"), ExtResource("hd_19"), ExtResource("hd_20"), ExtResource("hd_21"), ExtResource("hd_22"), ExtResource("26_jlwyd"), ExtResource("27_isluk"), ExtResource("28_isluk")])
 
 [node name="Center" type="CenterContainer" parent="." unique_id=1578128153]
 layout_mode = 1

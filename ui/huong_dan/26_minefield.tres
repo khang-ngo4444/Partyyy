@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+tieu_de = "26 · Dò mìn"
+noi_dung = "WASD di chuyển. Đứng yên 0,65 giây để dò các ô gần mình. Số trên ô là số mìn ở 8 ô xung quanh; mìn đã dò hiện màu hồng. Dấu dò được chia sẻ cho mọi người.\n\nMỗi người có 2 mạng. Trúng mìn mất 1 mạng và khựng lại một chút; mìn nổ được dọn khỏi sân. Miễn thương ngắn giúp tránh mất cả 2 mạng cùng lúc. Không nhảy trong ván này.\n\nXe lu mây xuất phát sau 5 giây và tăng tốc từ phía sau. Xe lu loại ngay người bị bắt, dù còn 2 mạng. Tới bệ vàng cuối sân thì an toàn.\n\nXếp hạng theo khoảng cách tiến xa nhất, tối đa 48 m. Chạy vòng và lùi lại không cộng điểm. Đồng quãng đường: người về đích trước, rồi số mạng còn lại, rồi thứ tự người chơi. Ván tối đa 60 giây, kết thúc sớm khi mọi người đã về đích hoặc bị loại."

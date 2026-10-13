@@ -20,6 +20,10 @@ func shared_ranking(snapshot: Dictionary) -> Array:
 	return snapshot.ids.duplicate()
 
 
+func round_complete(_snapshot: Dictionary) -> bool:
+	return false
+
+
 func _toi_thua() -> bool:
 	return false
 

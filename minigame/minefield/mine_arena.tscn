@@ -1,0 +1,206 @@
+[gd_scene format=3 uid="uid://c27so1jvspl5d"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_owec8"]
+sky_top_color = Color(0.38, 0.45, 0.55, 1)
+sky_horizon_color = Color(0.65, 0.67, 0.7, 1)
+ground_bottom_color = Color(0.2, 0.17, 0.13, 1)
+ground_horizon_color = Color(0.65, 0.67, 0.7, 1)
+
+[sub_resource type="Sky" id="Sky_mjqpy"]
+sky_material = SubResource("ProceduralSkyMaterial_owec8")
+
+[sub_resource type="Environment" id="Environment_6chf2"]
+background_mode = 2
+sky = SubResource("Sky_mjqpy")
+ambient_light_source = 3
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.65
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_naolb"]
+albedo_color = Color(0.64705884, 0.79607844, 0.8156863, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gltke"]
+size = Vector3(16, 1, 58)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vxdp6"]
+size = Vector3(16, 1, 58)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_luwrp"]
+albedo_color = Color(0.9607843, 0.7254902, 0.45490196, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_3bxdc"]
+top_radius = 1.3
+bottom_radius = 1.3
+height = 15.5
+radial_segments = 12
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ej88t"]
+albedo_color = Color(1, 0.9647059, 0.91764706, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_042ue"]
+radius = 2.0
+height = 3.0
+radial_segments = 12
+rings = 6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hsut3"]
+albedo_color = Color(1, 0.9647059, 0.91764706, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_17e0k"]
+radius = 2.0
+height = 3.0
+radial_segments = 12
+rings = 6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5v3f3"]
+albedo_color = Color(1, 0.9647059, 0.91764706, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ono1p"]
+radius = 2.0
+height = 3.0
+radial_segments = 12
+rings = 6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hrc6c"]
+albedo_color = Color(0.23921569, 0.3254902, 0.42352942, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_rwmpv"]
+radius = 0.28
+height = 0.65
+radial_segments = 8
+rings = 4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m5gry"]
+albedo_color = Color(0.23921569, 0.3254902, 0.42352942, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_s4bn1"]
+radius = 0.28
+height = 0.65
+radial_segments = 8
+rings = 4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8t2ru"]
+albedo_color = Color(0.9372549, 0.54901963, 0.6666667, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ljshn"]
+radius = 0.26
+height = 0.24
+radial_segments = 8
+rings = 4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gngl3"]
+albedo_color = Color(0.40392157, 0.9137255, 0.9372549, 1)
+
+[sub_resource type="TorusMesh" id="TorusMesh_e7ayv"]
+inner_radius = 3.1
+outer_radius = 3.2
+rings = 32
+ring_segments = 6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7w87j"]
+albedo_color = Color(0.96862745, 0.87058824, 0.5411765, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6laus"]
+size = Vector3(14, 0.08, 3)
+
+[node name="FactoryArena" type="Node3D" unique_id=1762215677]
+
+[node name="Cam" type="Camera3D" parent="." unique_id=1933533856]
+transform = Transform3D(1, 0, 0, 0, 0.51481885, 0.857299, 0, -0.857299, 0.51481885, 0, 18, 10)
+fov = 55.0
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1566810662]
+transform = Transform3D(0.87758255, 0.40342268, -0.25903472, 0, 0.5403023, 0.84147096, 0.47942555, -0.73846024, 0.47415984, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Environment" type="WorldEnvironment" parent="." unique_id=205068056]
+environment = SubResource("Environment_6chf2")
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=458266530]
+
+[node name="Progress" type="Label" parent="HUD" unique_id=2075765842]
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 25.0
+offset_bottom = 55.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.14509805, 0.26666668, 0.34117648, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 26
+
+[node name="Floor" type="MeshInstance3D" parent="." unique_id=1624184474]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -24)
+material_override = SubResource("StandardMaterial3D_naolb")
+mesh = SubResource("BoxMesh_gltke")
+metadata/_godot_ai_physics_v1 = {
+"body": NodePath("../FloorCollider"),
+"collision": NodePath("../FloorCollider/CollisionShape3D"),
+"version": 1,
+"wrapped": false
+}
+
+[node name="FloorCollider" type="StaticBody3D" parent="." unique_id=1514234370]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -24)
+metadata/_godot_ai_physics_v1 = {
+"collision": NodePath("CollisionShape3D"),
+"source": NodePath("../Floor"),
+"version": 1,
+"wrapped": false
+}
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FloorCollider" unique_id=1439669499]
+shape = SubResource("BoxShape3D_vxdp6")
+metadata/_godot_ai_physics_v1 = {
+"body": NodePath(".."),
+"source": NodePath("../../Floor"),
+"version": 1
+}
+
+[node name="Tiles" type="Node3D" parent="." unique_id=344420213]
+
+[node name="Roller" type="Node3D" parent="." unique_id=384463500]
+
+[node name="Drum" type="MeshInstance3D" parent="Roller" unique_id=830650548]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 1.3, 1.3)
+material_override = SubResource("StandardMaterial3D_luwrp")
+mesh = SubResource("CylinderMesh_3bxdc")
+
+[node name="Cloud1" type="MeshInstance3D" parent="Roller" unique_id=676404138]
+transform = Transform3D(1.4, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2.5, 2.2)
+material_override = SubResource("StandardMaterial3D_ej88t")
+mesh = SubResource("SphereMesh_042ue")
+
+[node name="Cloud2" type="MeshInstance3D" parent="Roller" unique_id=430219393]
+transform = Transform3D(1.4, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 2.2)
+material_override = SubResource("StandardMaterial3D_hsut3")
+mesh = SubResource("SphereMesh_17e0k")
+
+[node name="Cloud3" type="MeshInstance3D" parent="Roller" unique_id=1358784444]
+transform = Transform3D(1.4, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.5, 2.2)
+material_override = SubResource("StandardMaterial3D_5v3f3")
+mesh = SubResource("SphereMesh_ono1p")
+
+[node name="Eye1" type="MeshInstance3D" parent="Roller" unique_id=2097754180]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 3.1, 4.2)
+material_override = SubResource("StandardMaterial3D_hrc6c")
+mesh = SubResource("SphereMesh_rwmpv")
+
+[node name="Eye2" type="MeshInstance3D" parent="Roller" unique_id=1615954857]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 3.1, 4.2)
+material_override = SubResource("StandardMaterial3D_m5gry")
+mesh = SubResource("SphereMesh_s4bn1")
+
+[node name="Smile" type="MeshInstance3D" parent="Roller" unique_id=803127322]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 4.3)
+material_override = SubResource("StandardMaterial3D_8t2ru")
+mesh = SubResource("SphereMesh_ljshn")
+
+[node name="Scanner" type="MeshInstance3D" parent="." unique_id=1073767613]
+visible = false
+material_override = SubResource("StandardMaterial3D_gngl3")
+mesh = SubResource("TorusMesh_e7ayv")
+
+[node name="Finish" type="MeshInstance3D" parent="." unique_id=649379543]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, -49.5)
+material_override = SubResource("StandardMaterial3D_7w87j")
+mesh = SubResource("BoxMesh_6laus")

@@ -4,7 +4,7 @@ extends Node
 const COUNTDOWN := "COUNTDOWN"
 const RUNNING := "RUNNING"
 const ENDED := "ENDED"
-const SUPPORTED: Array[String] = ["explosive", "laser_leap", "toy_factory", "wave_hide"]
+const SUPPORTED: Array[String] = ["explosive", "laser_leap", "toy_factory", "wave_hide", "minefield"]
 
 @export var countdown_seconds: float = 5.0
 @export var result_seconds: float = 5.0
@@ -306,6 +306,8 @@ func _update_objectives(snapshot: Dictionary, now: float) -> void:
 	host._game.advance_shared_rules(snapshot, minf(elapsed, float(snapshot.duration) - 0.001))
 	if elapsed >= float(snapshot.duration):
 		_finish(snapshot, float(snapshot.start) + float(snapshot.duration))
+	elif host._game.round_complete(snapshot):
+		_finish(snapshot, now)
 
 
 func request_action(action: String, payload: Array = []) -> void:

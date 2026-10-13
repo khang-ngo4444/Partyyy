@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bmkeoek33pluq" path="res://minigame/machine_playground/toy_factory.tscn" id="12_s2g0b"]
 [ext_resource type="PackedScene" uid="uid://dewxd1w2kcxr4" path="res://minigame/machine_playground/wave_hide.tscn" id="13_buc4j"]
 [ext_resource type="Script" uid="uid://d33ix7d1kvht1" path="res://minigame/minigame_session.gd" id="13_q52n2"]
+[ext_resource type="PackedScene" uid="uid://q7hlm0oet5bs" path="res://minigame/minefield/minefield.tscn" id="14_buc4j"]
 [ext_resource type="PackedScene" path="res://minigame/tank/tank_battle.tscn" id="g0"]
 [ext_resource type="PackedScene" path="res://minigame/breaking_blocks/breaking_blocks.tscn" id="g1"]
 [ext_resource type="PackedScene" uid="uid://b4tqjtmiqi2yi" path="res://minigame/laser_leap/laser_leap.tscn" id="g2"]
@@ -31,7 +32,7 @@ corner_radius_bottom_left = 12
 
 [node name="QuanTroMiniGame" type="Node" unique_id=599475255]
 script = ExtResource("1_qt")
-tro_choi = Array[PackedScene]([ExtResource("g0"), ExtResource("g1"), ExtResource("g2"), ExtResource("g3"), ExtResource("g5"), ExtResource("g4"), ExtResource("g6"), ExtResource("g8"), ExtResource("g9"), ExtResource("g10"), ExtResource("12_s2g0b"), ExtResource("13_buc4j")])
+tro_choi = Array[PackedScene]([ExtResource("g0"), ExtResource("g1"), ExtResource("g2"), ExtResource("g3"), ExtResource("g5"), ExtResource("g4"), ExtResource("g6"), ExtResource("g8"), ExtResource("g9"), ExtResource("g10"), ExtResource("12_s2g0b"), ExtResource("13_buc4j"), ExtResource("14_buc4j")])
 o_diem_scene = ExtResource("2_od")
 
 [node name="Lop" type="CanvasLayer" parent="." unique_id=32874784]

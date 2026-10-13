@@ -1,0 +1,79 @@
+[gd_scene format=3 uid="uid://ierbmu5oga38"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xelog"]
+albedo_color = Color(0.73333335, 0.90588236, 0.76862746, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_agok4"]
+size = Vector3(1.94, 0.08, 1.94)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8njjr"]
+albedo_color = Color(1, 0.54509807, 0.70980394, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_4nyjd"]
+radius = 0.48
+height = 0.55
+radial_segments = 8
+rings = 4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_agok4"]
+albedo_color = Color(0.20392157, 0.30588236, 0.4117647, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_8njjr"]
+radius = 0.065
+height = 0.1
+radial_segments = 6
+rings = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4nyjd"]
+albedo_color = Color(0.20392157, 0.30588236, 0.4117647, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_w8yn4"]
+radius = 0.065
+height = 0.1
+radial_segments = 6
+rings = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v7m7b"]
+albedo_color = Color(0.38039216, 0.7921569, 0.627451, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_nxq4u"]
+radius = 0.15
+height = 0.1
+radial_segments = 6
+rings = 3
+
+[node name="MineTile" type="Node3D" unique_id=1183930121]
+
+[node name="Tile" type="MeshInstance3D" parent="." unique_id=1247151329]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
+material_override = SubResource("StandardMaterial3D_xelog")
+mesh = SubResource("BoxMesh_agok4")
+
+[node name="Mine" type="MeshInstance3D" parent="." unique_id=1096789410]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.36, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_8njjr")
+mesh = SubResource("SphereMesh_4nyjd")
+
+[node name="Eye1" type="MeshInstance3D" parent="Mine" unique_id=1801957832]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.14, 0.17, 0.24)
+material_override = SubResource("StandardMaterial3D_agok4")
+mesh = SubResource("SphereMesh_8njjr")
+
+[node name="Eye2" type="MeshInstance3D" parent="Mine" unique_id=1418414877]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.14, 0.17, 0.24)
+material_override = SubResource("StandardMaterial3D_4nyjd")
+mesh = SubResource("SphereMesh_w8yn4")
+
+[node name="Leaf" type="MeshInstance3D" parent="Mine" unique_id=975571904]
+transform = Transform3D(1.5, 0, 0, 0, 1, 0, 0, 0, 0.7, 0.1, 0.3, 0)
+material_override = SubResource("StandardMaterial3D_v7m7b")
+mesh = SubResource("SphereMesh_nxq4u")
+
+[node name="Clue" type="Label3D" parent="." unique_id=576837801]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.16, 0)
+visible = false
+pixel_size = 0.01
+modulate = Color(0.15686275, 0.31764707, 0.39215687, 1)
+font_size = 84
+outline_size = 0
