@@ -30,6 +30,8 @@ func _run() -> void:
 		fixture.add_child(model)
 		model.position = Vector3((index % 5 - 2) * 3.0, 0, (index / 5) * 3.0)
 		models.append(model)
+		var authored: AnimationPlayer = model.get_node("Model/PartyAnimationPlayer")
+		check(authored.get_animation_list().is_empty(), name + " must not retain obsolete authored clips")
 		var animator: AnimationPlayer = visual.hoat_anh_cua(model)
 		var skeleton: Skeleton3D = model.get_node("Model/Rig_Medium/Skeleton3D")
 		for alias: String in clips.CLIPS:
