@@ -2,6 +2,11 @@ extends SceneTree
 
 var failures := 0
 
+class ActionRecorder extends Node:
+	var actions: Array = []
+	func request_action(action: String, _payload: Array) -> void:
+		actions.append(action)
+
 func _initialize() -> void:
 	_run.call_deferred()
 
@@ -47,7 +52,7 @@ func _runtime() -> void:
 	await physics_frame
 	await physics_frame
 	game._present_shared_players()
-	check(game._tiles.size() == 168, "All authored tiles should be instantiated")
+	check(game._tiles.size() == 84, "Short six-column field uses 84 tiles")
 	check(game.giay_con_lai() > 59 and game.giay_con_lai() <= 60, "One minute timer")
 	check(player.so_lan_nhay == 0, "Jumping is disabled during minefield")
 	var ray := PhysicsRayQueryParameters3D.create(Vector3(0, 310, -20), Vector3(0, 290, -20), 1)
@@ -56,6 +61,23 @@ func _runtime() -> void:
 	var session: Node = controller.get_node("Session")
 	session._update_rules(snapshot, float(snapshot.start) + 1)
 	check(snapshot.phase == "RUNNING", "Solo practice must not end immediately")
+	check(snapshot.objective.revealed.is_empty(), "No automatic scanner during simulation")
+	check(game.handle_shared_action(snapshot, id, "scan", [], 1), "Master accepts right-click scanner action")
+	check(not game.handle_shared_action(snapshot, id, "scan", [], 1.1), "Scanner cooldown cannot be bypassed")
+	check(not snapshot.objective.revealed.is_empty(), "Explicit scan reveals nearby cells")
+	var recorder := ActionRecorder.new()
+	fixture.add_child(recorder)
+	game.shared_session = recorder
+	var click := InputEventMouseButton.new()
+	click.pressed = true
+	click.button_index = MOUSE_BUTTON_LEFT
+	game._input(click)
+	check(recorder.actions.is_empty(), "Left click must not scan")
+	click.button_index = MOUSE_BUTTON_RIGHT
+	game._input(click)
+	check(recorder.actions == ["scan"], "Right click sends the scanner action")
+	game.shared_session = null
+	recorder.free()
 	var rules: Script = load("res://minigame/minefield/mine_rules.gd")
 	var mine: int = snapshot.objective.mines.find(true)
 	var center: Vector2 = rules.center(mine)
@@ -65,9 +87,9 @@ func _runtime() -> void:
 	check(int(snapshot.objective.players[str(id)].hp) == 1, "Master resolves first mine hit")
 	check(float(snapshot.alive[str(id)]) < 0, "First hit is not elimination")
 	snapshot.objective.players[str(id)].immune = 100
-	game.advance_shared_rules(snapshot, 58)
-	check(float(snapshot.alive[str(id)]) == 58, "Roller eliminates despite immunity")
-	session._update_rules(snapshot, float(snapshot.start) + 58)
+	game.advance_shared_rules(snapshot, 23)
+	check(float(snapshot.alive[str(id)]) == 23, "Faster roller eliminates despite immunity")
+	session._update_rules(snapshot, float(snapshot.start) + 23)
 	check(snapshot.phase == "ENDED", "All eliminated ends early")
 	check(snapshot.ranking == [id], "Distance ranking is published")
 	if OS.get_cmdline_user_args().has("--capture"):

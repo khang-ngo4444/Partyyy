@@ -1,9 +1,13 @@
 # Dò mìn
 
-Shared free movement field, two hearts, 48 m forward progress, maximum 60 seconds.
-Standing still for 0.65 seconds reveals nearby cells and their eight-neighbor
-mine counts. Reveals and cleared mines are shared. The cloud roller waits five
-seconds, accelerates, and crosses the finish at 58 seconds; it ignores hearts
+Shared free movement field, two hearts, 28 m forward progress, maximum 60 seconds.
+Six columns make the playable road 12 m wide. All danger cells are mined except
+one winding corridor; turns clear one additional sideways step. The first two
+rows are safe. Right-click reveals nearby cells and their eight-neighbor mine
+counts, with a 0.7 second cooldown and a brief pulse at the scan origin. Standing
+or moving never scans automatically. Reveals and cleared mines are shared.
+The cloud roller waits two seconds, accelerates, and crosses the finish at
+23 seconds; it ignores hearts
 and mine immunity. Finished players are protected. The round also ends when all
 participants finish, leave, or are eliminated.
 
@@ -21,7 +25,8 @@ This version uses one round, two hearts and original pastel fruit mines/cloud
 roller assets. All scene nodes, primitives, materials and colliders were authored
 through Godot MCP. No third-party Machine Party assets are included.
 
-Validation: `tests/run_minefield.gd` exercises nine rule tests (including safe
+Validation: `tests/run_minefield.gd` exercises ten rule tests (including dense
+single-corridor rows and safe
 route reachability for 100 seeds), instantiated arena collision, first hit,
 roller elimination, shared session ranking/early completion and cleanup.
 Optional `-- --capture` saves an ignored GPU preview. Real Photon multi-client

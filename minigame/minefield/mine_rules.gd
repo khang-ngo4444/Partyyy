@@ -1,11 +1,14 @@
 extends RefCounted
 
-const COLUMNS := 7
-const ROWS := 24
+const COLUMNS := 6
+const ROWS := 14
 const CELL := 2.0
 const LENGTH := ROWS * CELL
 const WIDTH := COLUMNS * CELL
-const SCAN_WAIT := 0.65
+const SCAN_COOLDOWN := 0.7
+const SCAN_FLASH := 0.45
+const ROLLER_START := 2.0
+const ROLLER_FINISH := 23.0
 const SCAN_RADIUS := 3.2
 const HIT_IMMUNITY := 1.2
 
@@ -15,25 +18,29 @@ static func initial(ids: Array, seed: int) -> Dictionary:
 	rng.seed = seed
 	var mines: Array = []
 	for index in COLUMNS * ROWS:
-		mines.append(index >= COLUMNS * 2 and rng.randf() < 0.2)
-	# Clear a connected route, including sideways steps between consecutive rows.
+		mines.append(index >= COLUMNS * 2)
+	# One narrow connected corridor; every other cell in a danger row is mined.
 	var column := COLUMNS / 2
 	for row in range(2, ROWS):
-		var next := clampi(column + rng.randi_range(-1, 1), 0, COLUMNS - 1)
+		var direction := -1 if rng.randi_range(0, 1) == 0 else 1
+		if column == 1:
+			direction = 1
+		elif column == COLUMNS - 2:
+			direction = -1
+		var next := column + direction if row % 2 == 0 else column
 		for x in range(mini(column, next), maxi(column, next) + 1):
-			mines[(row - 1) * COLUMNS + x] = false
 			mines[row * COLUMNS + x] = false
 		column = next
 	var state := {"mines": mines, "revealed": {}, "exploded": {}, "players": {}, "events": {}}
 	for id: Variant in ids:
 		state.players[str(int(id))] = {"hp": 2, "distance": 0.0, "finished": -1.0,
-			"immune": -1.0, "still": 0.0, "last": [], "scan_at": -1.0}
+			"immune": -1.0, "last": [], "scan_at": -1.0, "scanned": -99.0}
 	return state
 
 
 static func front(elapsed: float) -> float:
-	var t := clampf((elapsed - 5.0) / 53.0, 0, 1)
-	return -6.0 + (LENGTH + 7.0) * (0.45 * t + 0.55 * t * t)
+	var t := clampf((elapsed - ROLLER_START) / (ROLLER_FINISH - ROLLER_START), 0, 1)
+	return -4.0 + (LENGTH + 5.0) * (0.7 * t + 0.3 * t * t)
 
 
 static func cell_at(point: Vector2) -> int:
@@ -101,14 +108,22 @@ static func advance(state: Dictionary, id: int, point: Vector2, elapsed: float) 
 	if point.y >= LENGTH:
 		player.finished = elapsed
 		return
-	if previous.distance_to(point) > 0.07:
-		player.still = elapsed
-	elif elapsed - float(player.still) >= SCAN_WAIT and elapsed >= float(player.scan_at):
-		for index in state.mines.size():
-			if center(index).distance_to(point) <= SCAN_RADIUS:
-				state.revealed[str(index)] = true
-		player.scan_at = elapsed + 0.3
 	player.last = [point.x, point.y]
+
+
+static func scan(state: Dictionary, id: int, point: Vector2, elapsed: float) -> bool:
+	var player: Dictionary = state.players.get(str(id), {})
+	if player.is_empty() or not point.is_finite() or cell_at(point) < 0:
+		return false
+	if int(player.hp) <= 0 or float(player.finished) >= 0 or elapsed < float(player.scan_at):
+		return false
+	player.scan_at = elapsed + SCAN_COOLDOWN
+	player.scanned = elapsed
+	player.scan_origin = [point.x, point.y]
+	for index in state.mines.size():
+		if center(index).distance_to(point) <= SCAN_RADIUS:
+			state.revealed[str(index)] = true
+	return true
 
 
 static func complete(state: Dictionary) -> bool:

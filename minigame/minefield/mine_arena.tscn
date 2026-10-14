@@ -19,11 +19,11 @@ ambient_light_energy = 0.65
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_naolb"]
 albedo_color = Color(0.64705884, 0.79607844, 0.8156863, 1)
 
-[sub_resource type="BoxMesh" id="BoxMesh_gltke"]
-size = Vector3(16, 1, 58)
+[sub_resource type="BoxMesh" id="BoxMesh_naolb"]
+size = Vector3(14, 1, 38)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_vxdp6"]
-size = Vector3(16, 1, 58)
+[sub_resource type="BoxShape3D" id="BoxShape3D_gltke"]
+size = Vector3(14, 1, 38)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_luwrp"]
 albedo_color = Color(0.9607843, 0.7254902, 0.45490196, 1)
@@ -100,8 +100,8 @@ ring_segments = 6
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7w87j"]
 albedo_color = Color(0.96862745, 0.87058824, 0.5411765, 1)
 
-[sub_resource type="BoxMesh" id="BoxMesh_6laus"]
-size = Vector3(14, 0.08, 3)
+[sub_resource type="BoxMesh" id="BoxMesh_vxdp6"]
+size = Vector3(12, 0.08, 3)
 
 [node name="FactoryArena" type="Node3D" unique_id=1762215677]
 
@@ -129,9 +129,9 @@ theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 26
 
 [node name="Floor" type="MeshInstance3D" parent="." unique_id=1624184474]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -24)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -14)
 material_override = SubResource("StandardMaterial3D_naolb")
-mesh = SubResource("BoxMesh_gltke")
+mesh = SubResource("BoxMesh_naolb")
 metadata/_godot_ai_physics_v1 = {
 "body": NodePath("../FloorCollider"),
 "collision": NodePath("../FloorCollider/CollisionShape3D"),
@@ -140,7 +140,7 @@ metadata/_godot_ai_physics_v1 = {
 }
 
 [node name="FloorCollider" type="StaticBody3D" parent="." unique_id=1514234370]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -24)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -14)
 metadata/_godot_ai_physics_v1 = {
 "collision": NodePath("CollisionShape3D"),
 "source": NodePath("../Floor"),
@@ -149,7 +149,7 @@ metadata/_godot_ai_physics_v1 = {
 }
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="FloorCollider" unique_id=1439669499]
-shape = SubResource("BoxShape3D_vxdp6")
+shape = SubResource("BoxShape3D_gltke")
 metadata/_godot_ai_physics_v1 = {
 "body": NodePath(".."),
 "source": NodePath("../../Floor"),
@@ -201,6 +201,6 @@ material_override = SubResource("StandardMaterial3D_gngl3")
 mesh = SubResource("TorusMesh_e7ayv")
 
 [node name="Finish" type="MeshInstance3D" parent="." unique_id=649379543]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, -49.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, -29.5)
 material_override = SubResource("StandardMaterial3D_7w87j")
-mesh = SubResource("BoxMesh_6laus")
+mesh = SubResource("BoxMesh_vxdp6")

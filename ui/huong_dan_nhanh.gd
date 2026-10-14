@@ -15,7 +15,7 @@ const TRO := {
 	"dem_thu": ["Đếm đúng loại thú được hỏi", "W / S chỉnh số · Space chốt", "19_dem_thu"],
 	"toy_factory": ["Ghép đủ 5 mảnh tại bàn của mình", "WASD chạy · E nhặt / lắp · Chuột bắn", "23_toy_factory"],
 	"wave_hide": ["Trú sau đá để tránh sóng biển", "WASD chạy · E đẩy", "24_wave_hide"],
-	"minefield": ["Tiến xa nhất, tránh mìn và xe lu", "WASD chạy · Đứng yên để dò mìn · 2 mạng", "26_minefield"],
+	"minefield": ["Luồn qua đường mìn, tránh xe lu", "WASD chạy · Chuột phải dò mìn · 2 mạng", "26_minefield"],
 	"paint": ["Phủ màu của mình nhiều nhất trên sân", "WASD rải sơn · Chuột trái / F đánh", "25_paint"],
 	"lo_da": ["Lên đỉnh, né đá và thiên thạch", "WASD di chuyển · Space nhảy", "20_lo_da"],
 }

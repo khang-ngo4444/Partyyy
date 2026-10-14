@@ -58,7 +58,7 @@ func _luat_moi_nhip() -> void:
 	if player == null:
 		return
 	var local := player.global_position - san.global_position
-	local.x = clampf(local.x, -6.65, 6.65)
+	local.x = clampf(local.x, -Rules.WIDTH * 0.5 + 0.35, Rules.WIDTH * 0.5 - 0.35)
 	local.z = clampf(local.z, -Rules.LENGTH - 2, -0.35)
 	if local.y < -1 or local.y > 4:
 		local.y = 1
@@ -94,9 +94,9 @@ func _present_shared_players() -> void:
 		var stunned := elapsed < float(own.immune) - 0.45
 		player.khoa_di_chuyen = player.khoa_di_chuyen or finished or stunned
 		var scanner: MeshInstance3D = san.get_node("Scanner")
-		scanner.position = player.global_position - san.global_position
-		scanner.position.y = 0.12
-		scanner.visible = _chay and con_song(id) and not finished and elapsed - float(own.still) >= Rules.SCAN_WAIT
+		var origin: Array = own.get("scan_origin", [0, 0])
+		scanner.position = Vector3(float(origin[0]), 0.12, -float(origin[1]))
+		scanner.visible = _chay and con_song(id) and not finished and elapsed - float(own.scanned) < Rules.SCAN_FLASH
 		san.get_node("HUD/Progress").text = "%s  ·  %.1f m%s" % ["♥".repeat(int(own.hp)), float(own.distance), "  ✓" if finished else ""]
 		var target_z := clampf(player.global_position.z - san.global_position.z, -Rules.LENGTH + 6, -4)
 		if not con_song(id):
@@ -120,6 +120,25 @@ func _consume_events(state: Dictionary, elapsed: float) -> void:
 				player.play_reaction("hit", 0.75)
 			if player.is_mine:
 				player.velocity = Vector3.ZERO
+
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+		if _chay and gio() >= 0:
+			request_action("scan")
+			get_viewport().set_input_as_handled()
+
+
+func handle_shared_action(snapshot: Dictionary, id: int, action: String, _payload: Array, elapsed: float) -> bool:
+	var player := _nguoi(id)
+	if action != "scan" or player == null or elapsed < 0 or elapsed >= float(snapshot.duration):
+		return false
+	if float(snapshot.alive.get(str(id), 0)) >= 0:
+		return false
+	var local := player.global_position - san.global_position
+	if absf(local.y) > 2:
+		return false
+	return Rules.scan(snapshot.objective, id, Vector2(local.x, -local.z), elapsed)
 
 
 func shared_ranking(snapshot: Dictionary) -> Array:

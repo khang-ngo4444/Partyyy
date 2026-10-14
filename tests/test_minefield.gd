@@ -38,13 +38,15 @@ func test_connected_route_for_many_seeds() -> void:
 func test_two_lives_and_no_double_damage() -> void:
 	var state := Rules.initial([1], 2)
 	state.mines.fill(false)
-	state.mines[17] = true
-	state.mines[24] = true
-	Rules.advance(state, 1, Rules.center(17), 1)
+	var first := Rules.COLUMNS * 2 + 2
+	var second := first + Rules.COLUMNS
+	state.mines[first] = true
+	state.mines[second] = true
+	Rules.advance(state, 1, Rules.center(first), 1)
 	assert_eq(state.players["1"].hp, 1)
-	Rules.advance(state, 1, Rules.center(24), 1.1)
+	Rules.advance(state, 1, Rules.center(second), 1.1)
 	assert_eq(state.players["1"].hp, 1)
-	Rules.advance(state, 1, Rules.center(24), 2.3)
+	Rules.advance(state, 1, Rules.center(second), 2.3)
 	assert_eq(state.players["1"].hp, 0)
 
 
@@ -54,31 +56,48 @@ func test_roller_ignores_hearts_and_immunity() -> void:
 	Rules.advance(state, 1, Vector2(0, 1), 40)
 	assert_eq(state.players["1"].hp, 0)
 	assert_eq(state.events["1"].kind, "roller")
-	assert_true(Rules.front(58) > Rules.LENGTH)
-	assert_eq(Rules.front(4), -6.0)
+	assert_true(Rules.front(23) > Rules.LENGTH)
+	assert_eq(Rules.front(1), -4.0)
+	assert_true(Rules.front(10) > 5, "Roller should pressure the field early")
 
 
-func test_scanning_requires_standing_and_cancels_when_moving() -> void:
+func test_no_auto_scan_and_explicit_scan_cooldown() -> void:
 	var state := Rules.initial([1], 7)
 	Rules.advance(state, 1, Vector2(0, 1), 0)
 	Rules.advance(state, 1, Vector2(0, 1), 0.5)
 	assert_true(state.revealed.is_empty())
 	Rules.advance(state, 1, Vector2(0, 1), 0.7)
+	assert_true(state.revealed.is_empty(), "Standing still must never auto scan")
+	assert_true(Rules.scan(state, 1, Vector2(0, 1), 1))
 	assert_false(state.revealed.is_empty())
-	state.revealed.clear()
-	Rules.advance(state, 1, Vector2(1, 1), 0.8)
-	Rules.advance(state, 1, Vector2(1, 1), 1.1)
-	assert_true(state.revealed.is_empty())
+	assert_false(Rules.scan(state, 1, Vector2(0, 1), 1.1))
+	assert_true(Rules.scan(state, 1, Vector2(0, 1), 1.8))
+	state.players["1"].hp = 0
+	assert_false(Rules.scan(state, 1, Vector2(0, 1), 3))
+	assert_false(Rules.scan(state, 999, Vector2(0, 1), 3))
+
+
+func test_dense_single_corridor_rows() -> void:
+	for seed in 100:
+		var state := Rules.initial([1], seed)
+		for row in range(2, Rules.ROWS):
+			var clear := 0
+			for column in Rules.COLUMNS:
+				clear += 0 if state.mines[row * Rules.COLUMNS + column] else 1
+			assert_true(clear == 1 or clear == 2, "Only the route and its turning step are safe")
+			assert_true(state.mines[row * Rules.COLUMNS] and state.mines[(row + 1) * Rules.COLUMNS - 1], "Outer edges cannot bypass the corridor")
 
 
 func test_swept_movement_hits_intermediate_mine() -> void:
 	var state := Rules.initial([1], 7)
 	state.mines.fill(false)
-	state.mines[17] = true
-	Rules.advance(state, 1, Vector2(0, 3), 0)
-	Rules.advance(state, 1, Vector2(0, 7), 1)
+	var mine := Rules.COLUMNS * 2 + 2
+	state.mines[mine] = true
+	var x := Rules.center(mine).x
+	Rules.advance(state, 1, Vector2(x, 3), 0)
+	Rules.advance(state, 1, Vector2(x, 7), 1)
 	assert_eq(state.players["1"].hp, 1)
-	assert_true(state.exploded.has("17"))
+	assert_true(state.exploded.has(str(mine)))
 
 
 func test_distance_not_accumulated_and_teleports_rejected() -> void:
@@ -95,12 +114,13 @@ func test_distance_not_accumulated_and_teleports_rejected() -> void:
 func test_clues_and_json_roundtrip() -> void:
 	var state := Rules.initial([1], 7)
 	state.mines.fill(false)
-	state.mines[16] = true
-	state.mines[18] = true
-	assert_eq(Rules.clue(state, 17), 2)
-	state.exploded["16"] = 1
+	var middle := Rules.COLUMNS * 2 + 2
+	state.mines[middle - 1] = true
+	state.mines[middle + 1] = true
+	assert_eq(Rules.clue(state, middle), 2)
+	state.exploded[str(middle - 1)] = 1
 	var restored: Dictionary = JSON.parse_string(JSON.stringify(state))
-	assert_eq(Rules.clue(restored, 17), 1)
+	assert_eq(Rules.clue(restored, middle), 1)
 	Rules.advance(restored, 1, Vector2(0, 1), 0)
 	assert_eq(restored.players["1"].hp, 2)
 
@@ -111,8 +131,9 @@ func test_distance_ranking_and_finish_protection() -> void:
 	state.players["1"].hp = 0
 	state.players["2"].distance = 10
 	assert_eq(Rules.ranking(state, [2, 1], {"1": 5, "2": -1}), [1, 2])
-	state.players["2"].last = [0, 47]
-	Rules.advance(state, 2, Vector2(0, 48), 10)
-	Rules.advance(state, 2, Vector2(0, 48), 59)
+	state.mines.fill(false)
+	state.players["2"].last = [0, Rules.LENGTH - 1]
+	Rules.advance(state, 2, Vector2(0, Rules.LENGTH), 10)
+	Rules.advance(state, 2, Vector2(0, Rules.LENGTH), 59)
 	assert_eq(state.players["2"].hp, 2)
 	assert_true(Rules.complete(state))
