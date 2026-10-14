@@ -10,8 +10,9 @@ func _run() -> void:
 	runner.run_suite(load("res://tests/test_shared_minigames.gd").new())
 	var results: Dictionary = runner.get_results()
 	print(JSON.stringify(results))
+	var pool_ok: bool = _check_pool_decode()
 	var physics_ok: bool = await _check_corridors()
-	quit(1 if int(results.get("failed", 0)) > 0 or not physics_ok else 0)
+	quit(1 if int(results.get("failed", 0)) > 0 or not physics_ok or not pool_ok else 0)
 
 func _check_corridors() -> bool:
 	var arena: Node3D = load("res://minigame/word_wars/san_chu.tscn").instantiate()
@@ -49,3 +50,20 @@ func _check_corridors() -> bool:
 	body.free()
 	arena.free()
 	return blocks_path and button_reachable and corridor_clear and button_recovers and labels_ready
+
+func _check_pool_decode() -> bool:
+	var state: Node = load("res://net/match_state.tscn").instantiate()
+	root.add_child(state)
+	state.set_process(false)
+	var controller: Node = load("res://minigame/quan_tro_minigame.tscn").instantiate()
+	root.add_child(controller)
+	var passed := true
+	for encoded: String in ["", "   ", "{broken", "null", "[]"]:
+		state.minigame_pool_json = encoded
+		passed = passed and controller._pool_state().is_empty()
+	state.minigame_pool_json = '{"played":["paint"]}'
+	passed = passed and controller._pool_state() == {"played": ["paint"]}
+	controller.free()
+	state.free()
+	print("POOL DECODE: ", passed)
+	return passed

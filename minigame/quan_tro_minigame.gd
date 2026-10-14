@@ -71,10 +71,12 @@ func co_tro(ma: String) -> bool:
 
 func _pool_state() -> Dictionary:
 	var ms := get_tree().get_first_node_in_group("match_state") as MatchState
-	if ms == null:
+	if ms == null or ms.minigame_pool_json.strip_edges().is_empty():
 		return {}
-	var decoded: Variant = JSON.parse_string(ms.minigame_pool_json)
-	return decoded if decoded is Dictionary else {}
+	var parser := JSON.new()
+	if parser.parse(ms.minigame_pool_json) != OK:
+		return {}
+	return parser.data if parser.data is Dictionary else {}
 
 
 func chon_tro_ngau_nhien(uu_tien: String = "") -> String:
