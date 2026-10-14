@@ -52,7 +52,7 @@ func _runtime() -> void:
 	await physics_frame
 	await physics_frame
 	game._present_shared_players()
-	check(game._tiles.size() == 84, "Short six-column field uses 84 tiles")
+	check(game._tiles.size() == 56, "Four-column field uses 56 tiles")
 	check(game.giay_con_lai() > 59 and game.giay_con_lai() <= 60, "One minute timer")
 	check(player.so_lan_nhay == 0, "Jumping is disabled during minefield")
 	var ray := PhysicsRayQueryParameters3D.create(Vector3(0, 310, -20), Vector3(0, 290, -20), 1)

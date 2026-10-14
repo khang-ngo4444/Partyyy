@@ -10,6 +10,7 @@ func suite_name() -> String:
 func test_seed_is_repeatable_and_spawn_is_safe() -> void:
 	var state := Rules.initial([1, 2], 7)
 	assert_eq(state, Rules.initial([1, 2], 7))
+	assert_true(state.mines != Rules.initial([1, 2], 9).mines, "Narrow field should retain seeded route variety")
 	for index in Rules.COLUMNS * 2:
 		assert_false(state.mines[index])
 	assert_eq(state.players["1"].hp, 2)

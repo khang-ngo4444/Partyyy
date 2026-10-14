@@ -1,6 +1,6 @@
 extends RefCounted
 
-const COLUMNS := 6
+const COLUMNS := 4
 const ROWS := 14
 const CELL := 2.0
 const LENGTH := ROWS * CELL
@@ -20,17 +20,20 @@ static func initial(ids: Array, seed: int) -> Dictionary:
 	for index in COLUMNS * ROWS:
 		mines.append(index >= COLUMNS * 2)
 	# One narrow connected corridor; every other cell in a danger row is mined.
-	var column := COLUMNS / 2
+	var column := rng.randi_range(1, COLUMNS - 2)
+	var previous_bend := false
 	for row in range(2, ROWS):
 		var direction := -1 if rng.randi_range(0, 1) == 0 else 1
 		if column == 1:
 			direction = 1
 		elif column == COLUMNS - 2:
 			direction = -1
-		var next := column + direction if row % 2 == 0 else column
+		var bend := row == 2 or (not previous_bend and rng.randf() < 0.7)
+		var next := column + direction if bend else column
 		for x in range(mini(column, next), maxi(column, next) + 1):
 			mines[row * COLUMNS + x] = false
 		column = next
+		previous_bend = bend
 	var state := {"mines": mines, "revealed": {}, "exploded": {}, "players": {}, "events": {}}
 	for id: Variant in ids:
 		state.players[str(int(id))] = {"hp": 2, "distance": 0.0, "finished": -1.0,

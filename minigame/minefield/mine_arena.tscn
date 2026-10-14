@@ -20,10 +20,10 @@ ambient_light_energy = 0.65
 albedo_color = Color(0.64705884, 0.79607844, 0.8156863, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_naolb"]
-size = Vector3(14, 1, 38)
+size = Vector3(10, 1, 38)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gltke"]
-size = Vector3(14, 1, 38)
+size = Vector3(10, 1, 38)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_luwrp"]
 albedo_color = Color(0.9607843, 0.7254902, 0.45490196, 1)
@@ -101,7 +101,7 @@ ring_segments = 6
 albedo_color = Color(0.96862745, 0.87058824, 0.5411765, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_vxdp6"]
-size = Vector3(12, 0.08, 3)
+size = Vector3(8, 0.08, 3)
 
 [node name="FactoryArena" type="Node3D" unique_id=1762215677]
 

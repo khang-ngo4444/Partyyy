@@ -17,7 +17,7 @@ const THEMES := {
 	"lo_da": [Vector2(14, 148), Vector2(0, -71), "Rocks", "#afcedf", "#7898a1", "#617c80"],
 	"toy_factory": [Vector2(28, 28), Vector2.ZERO, "Workshop", "#d9e0f2", "#aabdd8", "#929fbc"],
 	"wave_hide": [Vector2(100, 100), Vector2.ZERO, "Palms", "#abdef1", "#94cddd", "#609fae"],
-	"minefield": [Vector2(14, 38), Vector2(0, -14), "Forest", "#c5e8f0", "#a7d8c4", "#83b69f"],
+	"minefield": [Vector2(10, 38), Vector2(0, -14), "Forest", "#c5e8f0", "#a7d8c4", "#83b69f"],
 	"paint": [Vector2(28, 28), Vector2.ZERO, "Workshop", "#ebdff2", "#cab8dd", "#a49ab8"],
 	"temporal_trails": [Vector2(24, 24), Vector2.ZERO, "Castle", "#a0d9e2", "#62969d", "#406d7d"],
 }
