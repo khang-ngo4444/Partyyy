@@ -8,7 +8,7 @@ func _ready() -> void:
 	name_tag.visible = not is_mine
 	var model: Node3D = load("res://player/characters/Mage.tscn").instantiate()
 	model_root.add_child(model)
-	model.get_node("Model/PartyAnimationPlayer").play("idle")
+	CharacterVisual.hoat_anh_cua(model).play("idle")
 	set_physics_process(false)
 	set_process(false)
 
