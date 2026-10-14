@@ -100,6 +100,8 @@ func hien_dau_hieu(can: Dictionary) -> void:
 ## -1 = cất rương.
 func dat_ruong(i: int) -> void:
 	_dat_vat(_ruong, i)
+	if i >= 0 and not _o.is_empty():
+		_ruong.global_basis = _o[_chi_so(i)].global_basis * Basis(Vector3.UP, PI * 0.5)
 
 
 ## -1 = không có chó.
