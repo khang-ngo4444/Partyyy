@@ -11,4 +11,3 @@ point_count = 2
 script = ExtResource("1_ex")
 fuse_curve = SubResource("Curve_s6n8q")
 san_scene = ExtResource("2_san")
-giay_van = 75.0

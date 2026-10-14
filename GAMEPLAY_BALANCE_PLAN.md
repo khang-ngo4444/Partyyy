@@ -133,7 +133,7 @@ vang_tb    = max(0, (250 − R · tile_money% · money_gain) / vong_quy_doi)    
 vang(hang) = làm tròn tới bội số 5 của vang_tb · (1.3 − 0.6·(hang−1)/(N−1))
 ```
 
-Hạng nhất nhận 1,3 lần trung bình, hạng chót 0,7 lần → chênh lệch chỉ ±30%.
+Trước khi làm tròn, hạng nhất nhận 1,3 lần trung bình, hạng chót 0,7 lần. Làm tròn bội 5 có thể tạo hạng bằng thưởng nhau hoặc làm tỷ lệ lệch nhẹ ở mức thưởng thấp. Với một người, hệ số hạng là 1.
 
 ### Bảng tính sẵn
 
@@ -150,7 +150,7 @@ Hạng nhất nhận 1,3 lần trung bình, hạng chót 0,7 lần → chênh l�
 | 10 | 8 | 30 · 30 · 30 · 25 · 25 · 25 · 20 · 20 · 20 · 15 | 24.0 | ~249 | 140 |
 
 \* Chênh tối đa = người thắng **mọi** minigame so với người thua **mọi** minigame, chỉ tính vàng
-minigame. Khoảng 1,1–1,5 rương; thực tế sẽ nhỏ hơn nhiều.
+minigame. Khoảng 0,8–1,65 rương theo quy mô phòng; thực tế sẽ nhỏ hơn nhiều.
 
 ### Đồ nhận sau mỗi minigame
 
@@ -171,8 +171,8 @@ minigame. Khoảng 1,1–1,5 rương; thực tế sẽ nhỏ hơn nhiều.
 
 ### Kiểm tra nhịp ván
 
-- 4 người: 14 vòng; thưởng cơ bản 15 · 15 · 10 · 10 vàng. Hai vòng cuối dùng hệ số 1,5 trước khi làm tròn. Tổng kỳ vọng trung bình, gồm ô tiền, khoảng 240 vàng/người; hạng nhất liên tục có thể đủ 100 vàng khoảng vòng 6.
-- 10 người: 8 vòng; thưởng cơ bản 30 · 30 · 25 · 25 · 25 · 20 · 20 · 20 · 15 · 15 vàng. Mục tiêu 35 phút là mô hình dự kiến với lượt 20 giây và minigame đủ 60 giây; ván có nhiều minigame kết thúc sớm sẽ ngắn hơn.
+- 4 người: 14 vòng; thưởng cơ bản 15 · 15 · 10 · 10 vàng. Hai vòng cuối dùng hệ số 1,5 trước khi làm tròn. Tổng kỳ vọng trung bình, gồm ô tiền, khoảng 243 vàng/người; hạng nhất liên tục có thể đủ 100 vàng khoảng vòng 6.
+- 10 người: 8 vòng; thưởng cơ bản 30 · 30 · 30 · 25 · 25 · 25 · 20 · 20 · 20 · 15 vàng. Mục tiêu 35 phút là mô hình dự kiến với lượt 20 giây và minigame đủ 60 giây; ván có nhiều minigame kết thúc sớm sẽ ngắn hơn.
 - Bảng tổng thu nhập phía trên đã tính bonus hai vòng cuối, sai số làm tròn bội 5 và vàng từ ô tiền; chưa tính thuế, ống heo, cướp hoặc chi mua rương.
 - Đây là baseline để playtest, chưa phải kết quả đo cân bằng nhiều người. Không thay số liệu camera, HP hoặc tốc độ của minigame bằng thông số cũ trong tài liệu thiết kế.
 

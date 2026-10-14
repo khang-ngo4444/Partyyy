@@ -6,6 +6,5 @@
 [node name="ToyFactory" type="Node" unique_id=1874804577]
 script = ExtResource("1_ds05h")
 san_scene = ExtResource("2_djrse")
-giay_van = 75.0
 ket_thuc_khi_con_mot = false
 ten = "XƯỞNG SÚNG NƯỚC"

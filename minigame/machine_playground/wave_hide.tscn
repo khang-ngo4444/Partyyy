@@ -6,6 +6,5 @@
 [node name="WaveHide" type="Node" unique_id=2076815340]
 script = ExtResource("1_xaqdj")
 san_scene = ExtResource("2_t7oaa")
-giay_van = 72.0
 ket_thuc_khi_con_mot = false
 ten = "TRÚ SÓNG"
