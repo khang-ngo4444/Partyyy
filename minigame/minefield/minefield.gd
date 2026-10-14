@@ -82,8 +82,8 @@ func _present_shared_players() -> void:
 		var mine := bool(state.mines[index])
 		tile.get_node("Mine").visible = revealed and mine and not exploded
 		var clue: Label3D = tile.get_node("Clue")
-		clue.visible = revealed and (not mine or exploded)
-		clue.text = "✦" if exploded else str(Rules.clue(state, index))
+		clue.visible = exploded
+		clue.text = "✦" if exploded else ""
 		var palette := 4 if exploded else (3 if revealed and mine else (2 if revealed else index % 2))
 		tile.get_node("Tile").material_override = _materials[palette]
 	var id := NetManager.local_id()

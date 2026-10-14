@@ -53,21 +53,6 @@ static func center(index: int) -> Vector2:
 	return Vector2((index % COLUMNS + 0.5) * CELL - WIDTH / 2, (index / COLUMNS + 0.5) * CELL)
 
 
-static func clue(state: Dictionary, index: int) -> int:
-	var count := 0
-	var row := index / COLUMNS
-	var column := index % COLUMNS
-	for dy in range(-1, 2):
-		for dx in range(-1, 2):
-			var x := column + dx
-			var y := row + dy
-			if (dx != 0 or dy != 0) and x >= 0 and x < COLUMNS and y >= 0 and y < ROWS:
-				var neighbor := y * COLUMNS + x
-				if state.mines[neighbor] and not state.exploded.has(str(neighbor)):
-					count += 1
-	return count
-
-
 static func event(state: Dictionary, key: String, kind: String, elapsed: float) -> void:
 	var previous: Dictionary = state.events.get(key, {})
 	state.events[key] = {"serial": int(previous.get("serial", 0)) + 1, "kind": kind, "time": elapsed}

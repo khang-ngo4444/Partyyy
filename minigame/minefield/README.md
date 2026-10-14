@@ -3,8 +3,8 @@
 Shared free movement field, two hearts, 28 m forward progress, maximum 60 seconds.
 Six columns make the playable road 12 m wide. All danger cells are mined except
 one winding corridor; turns clear one additional sideways step. The first two
-rows are safe. Right-click reveals nearby cells and their eight-neighbor mine
-counts, with a 0.7 second cooldown and a brief pulse at the scan origin. Standing
+rows are safe. Right-click reveals nearby mines and safe cells without number
+labels, with a 0.7 second cooldown and a brief pulse at the scan origin. Standing
 or moving never scans automatically. Reveals and cleared mines are shared.
 The cloud roller waits two seconds, accelerates, and crosses the finish at
 23 seconds; it ignores hearts

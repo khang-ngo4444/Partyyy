@@ -111,16 +111,12 @@ func test_distance_not_accumulated_and_teleports_rejected() -> void:
 	assert_eq(state.players["1"].distance, 5.0)
 
 
-func test_clues_and_json_roundtrip() -> void:
+func test_scan_and_json_roundtrip() -> void:
 	var state := Rules.initial([1], 7)
-	state.mines.fill(false)
-	var middle := Rules.COLUMNS * 2 + 2
-	state.mines[middle - 1] = true
-	state.mines[middle + 1] = true
-	assert_eq(Rules.clue(state, middle), 2)
-	state.exploded[str(middle - 1)] = 1
+	assert_true(Rules.scan(state, 1, Vector2(0, 1), 1))
 	var restored: Dictionary = JSON.parse_string(JSON.stringify(state))
-	assert_eq(Rules.clue(restored, middle), 1)
+	assert_eq(restored.revealed.size(), state.revealed.size())
+	assert_false(Rules.scan(restored, 1, Vector2(0, 1), 1.1))
 	Rules.advance(restored, 1, Vector2(0, 1), 0)
 	assert_eq(restored.players["1"].hp, 2)
 
