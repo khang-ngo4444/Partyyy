@@ -3,9 +3,11 @@ extends "res://minigame/machine_playground/objective_game.gd"
 const Rules = preload("res://minigame/paint/paint_rules.gd")
 const PaintView = preload("res://minigame/paint/paint_view.gd")
 const PAINT_HEIGHT := 0.35
-const HIT_RANGE := 2.1
+const HIT_RANGE := 1.8
+const HIT_FORWARD_DOT := 0.65
 const HIT_PUSH := 7.0
 const EVENT_GRACE := 2.0
+var _next_attack := -1.0
 var _view: RefCounted
 var _seen_events: Dictionary = {}
 var _name_colors: Dictionary = {}
@@ -40,7 +42,20 @@ func _present_shared_players() -> void:
 	var label: Label = san.get_node("HUD/Progress")
 	label.text = "Sơn của bạn %.1f%%" % Rules.percent(state, id)
 	label.modulate = PaintView.color(maxi(shared_snapshot.ids.find(id), 0))
+	_consume_swings(state)
 	_consume_hit(state)
+
+
+func _consume_swings(state: Dictionary) -> void:
+	for key: String in state.get("swings", {}):
+		var event: Dictionary = state.swings[key]
+		var seen_key := "swing:" + key
+		if int(event.serial) <= int(_seen_events.get(seen_key, 0)):
+			continue
+		_seen_events[seen_key] = int(event.serial)
+		var player := _nguoi(int(key))
+		if player != null and not player.is_mine and gio() - float(event.time) <= EVENT_GRACE:
+			player.play_action()
 
 
 func _consume_hit(state: Dictionary) -> void:
@@ -54,9 +69,6 @@ func _consume_hit(state: Dictionary) -> void:
 		if player == null or gio() - float(event.time) > EVENT_GRACE:
 			continue
 		player.play_reaction("stun", Rules.STUN_SECONDS)
-		var source := _nguoi(int(event.get("attacker", -999)))
-		if source != null:
-			source.play_action()
 		if player.is_mine:
 			var direction := Vector3(float(event.direction[0]), 0, float(event.direction[1]))
 			player.day(direction * HIT_PUSH + Vector3.UP * 2.0)
@@ -94,8 +106,20 @@ func _luat_moi_nhip() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("danh"):
-		request_action("hit")
+	if not event.is_action_pressed("danh") or not _chay or gio() < 0 or gio() >= float(shared_snapshot.get("duration", 60)):
+		return
+	var id := NetManager.local_id()
+	var elapsed := gio()
+	var state: Dictionary = shared_snapshot.objective
+	if not con_song(id) or elapsed < _next_attack or elapsed < float(state.stun.get(str(id), -1)):
+		return
+	var player := _nguoi(id)
+	if player == null:
+		return
+	_next_attack = elapsed + Rules.HIT_COOLDOWN
+	player.play_action()
+	request_action("hit")
+	get_viewport().set_input_as_handled()
 
 
 func handle_shared_action(snapshot: Dictionary, id: int, action: String, _payload: Array, elapsed: float) -> bool:
@@ -106,7 +130,7 @@ func handle_shared_action(snapshot: Dictionary, id: int, action: String, _payloa
 		return false
 	var target := _hit_target(snapshot, attacker)
 	if target == null:
-		return false
+		return Rules.swing(snapshot.objective, id, elapsed)
 	var direction := target.global_position - attacker.global_position
 	return Rules.hit(snapshot.objective, id, target.player_id(), elapsed,
 		Vector2(direction.x, direction.z).normalized())
@@ -115,7 +139,7 @@ func handle_shared_action(snapshot: Dictionary, id: int, action: String, _payloa
 func _hit_target(snapshot: Dictionary, attacker: Player) -> Player:
 	var target: Player = null
 	var nearest := HIT_RANGE
-	var forward := -attacker.global_basis.z
+	var forward := Vector3(-attacker.global_basis.z.x, 0, -attacker.global_basis.z.z).normalized()
 	for candidate_id: Variant in snapshot.ids:
 		if int(candidate_id) == attacker.player_id() or float(snapshot.alive[str(int(candidate_id))]) >= 0:
 			continue
@@ -126,7 +150,7 @@ func _hit_target(snapshot: Dictionary, attacker: Player) -> Player:
 		if absf(delta.y) > 1.5:
 			continue
 		delta.y = 0
-		if delta.length() < 0.01 or delta.length() > nearest or forward.dot(delta.normalized()) < 0.2:
+		if delta.length() < 0.01 or delta.length() > nearest or forward.dot(delta.normalized()) < HIT_FORWARD_DOT:
 			continue
 		nearest = delta.length()
 		target = candidate

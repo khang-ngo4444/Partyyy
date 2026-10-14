@@ -12,7 +12,7 @@ const STUN_SECONDS := 0.7
 
 static func initial(ids: Array) -> Dictionary:
 	var state := {"cells": "0".repeat(GRID_SIZE * GRID_SIZE), "counts": {},
-		"last": {}, "cooldown": {}, "stun": {}, "events": {}}
+		"last": {}, "cooldown": {}, "stun": {}, "events": {}, "swings": {}}
 	for id: Variant in ids:
 		state.counts[str(int(id))] = 0
 	return state
@@ -63,14 +63,19 @@ static func stop_stroke(state: Dictionary, id: int) -> void:
 	state.last.erase(str(id))
 
 
-static func hit(state: Dictionary, attacker: int, victim: int, time: float, direction: Vector2) -> bool:
+static func swing(state: Dictionary, attacker: int, time: float) -> bool:
 	var key := str(attacker)
-	var target := str(victim)
-	if attacker == victim or not state.counts.has(key) or not state.counts.has(target):
-		return false
-	if time < float(state.cooldown.get(key, -1)) or time < float(state.stun.get(key, -1)):
+	if not state.counts.has(key) or time < float(state.cooldown.get(key, -1)) or time < float(state.stun.get(key, -1)):
 		return false
 	state.cooldown[key] = time + HIT_COOLDOWN
+	state.swings[key] = {"serial": int(state.swings.get(key, {}).get("serial", 0)) + 1, "time": time}
+	return true
+
+
+static func hit(state: Dictionary, attacker: int, victim: int, time: float, direction: Vector2) -> bool:
+	var target := str(victim)
+	if attacker == victim or not state.counts.has(target) or not swing(state, attacker, time):
+		return false
 	state.stun[target] = time + STUN_SECONDS
 	stop_stroke(state, victim)
 	state.events[target] = {"serial": int(state.events.get(target, {}).get("serial", 0)) + 1,

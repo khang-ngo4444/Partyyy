@@ -77,3 +77,12 @@ func test_rank_uses_final_coverage_and_departures_rank_last() -> void:
 	var state := Rules.initial([1, 2, 3])
 	state.counts = {"1": 50, "2": 80, "3": 100}
 	assert_eq(Rules.ranking(state, [1, 2, 3], {"1": -1, "2": -1, "3": 5}), [2, 1, 3])
+
+func test_miss_has_a_replicated_swing_and_cooldown() -> void:
+	var state := Rules.initial([1, 2])
+	assert_true(Rules.swing(state, 1, 2))
+	assert_eq(state.swings["1"].serial, 1)
+	assert_false(Rules.hit(state, 1, 2, 2.1, Vector2.RIGHT))
+	assert_true(state.events.is_empty())
+	state.stun["1"] = 5.0
+	assert_false(Rules.swing(state, 1, 4.0))

@@ -61,8 +61,28 @@ func _runtime() -> void:
 	check(int(snapshot.objective.counts[str(local)]) == area, "Jump should not paint in air")
 	players[0].global_position = game.san.to_global(Vector3.ZERO)
 	players[1].global_position = game.san.to_global(Vector3(0, 0, -1))
+	for offset: Vector3 in [Vector3(0, 0, 1), Vector3(1, 0, 0), Vector3(0, 0, -1.9)]:
+		players[1].global_position = players[0].global_position + offset
+		check(game._hit_target(snapshot, players[0]) == null, "Reject rear, side and distant paint targets")
+	players[0].rotation.y = PI
+	players[1].global_position = players[0].global_position + Vector3(0, 0, 1)
+	check(game._hit_target(snapshot, players[0]) == players[1], "Attack follows the avatar facing direction")
+	players[0].rotation.y = 0
+	players[1].global_position = players[0].global_position + Vector3(0, 0, -1)
 	check(game.handle_shared_action(snapshot, local, "hit", [], 2), "Nearby facing target can be hit")
 	check(not game.handle_shared_action(snapshot, local, "hit", [], 2.1), "Attack cooldown must be master validated")
+	var animator: AnimationPlayer = CharacterVisual.hoat_anh_cua(players[0].get_node("ModelRoot").get_child(0))
+	players[0]._animation_state = load("res://player/animation_state.gd").new(animator)
+	players[1].global_position = players[0].global_position + Vector3(0, 0, 1)
+	check(game.handle_shared_action(snapshot, local, "hit", [], 3), "Miss is accepted as a swing")
+	check(snapshot.objective.events[str(local + 1)].serial == 1, "Miss cannot damage the target behind the attacker")
+	var attack := InputEventAction.new()
+	attack.action = "danh"
+	attack.pressed = true
+	game._input(attack)
+	players[0]._animation_state.tick("idle")
+	check(animator.current_animation == "attack", "Click immediately plays native KayKit punch even without a target")
+	check(players[0].model_root.scale.x > 1.3, "Arena avatar is enlarged")
 	var victim_area: int = snapshot.objective.counts[str(local + 1)]
 	game.advance_shared_rules(snapshot, 2.2)
 	check(int(snapshot.objective.counts[str(local + 1)]) == victim_area, "Hit interrupts target painting")
