@@ -5,7 +5,7 @@ extends RefCounted
 const TRO := {
 	"tank_battle": ["Sống sót tới cuối trận", "WASD di chuyển · J / Space bắn", "10_tank"],
 	"breaking_blocks": ["Né nhóm sàn sắp rớt, đừng ngã", "WASD di chuyển · Space nhảy", "11_breaking_blocks"],
-	"laser_leap": ["Né và nhảy qua tia laser", "WASD di chuyển · Space nhảy", "12_laser_leap"],
+	"laser_leap": ["Né tia laser đang quét sân", "WASD di chuyển", "12_laser_leap"],
 	"spotlights": ["Nhớ vị trí, né spotlight khi tối", "WASD di chuyển", "13_spotlights"],
 	"magma": ["Hất đối thủ vào dung nham đang dâng", "WASD di chuyển · Chuột ngắm / bắn", "14_magma"],
 	"explosive": ["Chuyền bom trước khi nổ", "WASD di chuyển · E chuyền", "15_explosive"],
@@ -17,7 +17,7 @@ const TRO := {
 	"wave_hide": ["Trú sau đá để tránh sóng biển", "WASD chạy · E đẩy", "24_wave_hide"],
 	"minefield": ["Luồn qua đường mìn, tránh xe lu", "WASD chạy · Chuột phải dò mìn · 2 mạng", "26_minefield"],
 	"paint": ["Phủ màu của mình nhiều nhất trên sân", "WASD rải sơn · Chuột trái / F đánh", "25_paint"],
-	"lo_da": ["Lên đỉnh, né đá và thiên thạch", "WASD di chuyển · Space nhảy", "20_lo_da"],
+	"lo_da": ["Lên đỉnh, né đá và thiên thạch", "WASD di chuyển", "20_lo_da"],
 }
 
 static func tom_tat(code: String) -> String:

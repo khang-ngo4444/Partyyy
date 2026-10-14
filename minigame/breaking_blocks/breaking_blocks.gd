@@ -13,6 +13,10 @@ var _plan: Array = []
 var _warning_material: StandardMaterial3D
 
 
+func allows_jump() -> bool:
+	return true
+
+
 func _ready() -> void:
 	super()
 	_warning_material = mat_bao.duplicate() as StandardMaterial3D

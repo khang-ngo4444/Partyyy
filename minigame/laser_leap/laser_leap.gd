@@ -19,7 +19,7 @@ var _wave: int = -1
 func _ready() -> void:
 	super()
 	ten = "LASER LEAP"
-	luat = "WASD chạy · Space nhảy qua tia · tránh ánh sáng cảnh báo"
+	luat = "WASD chạy · né tia laser · tránh ánh sáng cảnh báo"
 
 
 func network_parameters() -> Dictionary:

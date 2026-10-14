@@ -46,6 +46,7 @@ const THUONG_SONG_CUOI := 10.0
 
 var shared_snapshot: Dictionary = {}
 var shared_session: Node = null
+var _saved_jumps: Dictionary = {}
 var _reported_dead: bool = false
 
 var san: Node3D = null
@@ -118,6 +119,7 @@ func bat_dau(nguoi_choi: Array, giong: int) -> void:
 func dung_som() -> void:
 	_chay = false
 	set_process(false)
+	_restore_jump_policy()
 	_restore_shared_players()
 	_che_do_san(false)
 	var toi := _nguoi(NetManager.local_id())
@@ -395,6 +397,7 @@ func _che_do_san(bat: bool) -> void:
 		p.che_do_san = bat
 		# Bàn party khoá WASD — mở khi vào sân, trả lại khi ra.
 		if bat:
+			_apply_jump_policy(p)
 			_khoa_cu = p.khoa_di_chuyen
 			p.khoa_di_chuyen = false
 			var c := _cam_san()
@@ -502,6 +505,7 @@ func _restore_shared_players() -> void:
 func _prepare_shared_owner(player: Player) -> void:
 	if not player.sync.has_authority():
 		return
+	_apply_jump_policy(player)
 	var camera: Camera3D = _cam_san()
 	if camera != null and not camera.current:
 		camera.make_current()
@@ -514,3 +518,26 @@ func _prepare_shared_owner(player: Player) -> void:
 	player.global_position = san.global_position + Vector3(7.0, 1.0, 0.0)
 	if con_song(player.player_id()):
 		player.enter_minigame(int(shared_snapshot["round"]))
+
+
+func allows_jump() -> bool:
+	return false
+
+
+func _apply_jump_policy(player: Player) -> void:
+	if not player.is_mine:
+		return
+	var key := player.get_instance_id()
+	if _saved_jumps.has(key):
+		return
+	_saved_jumps[key] = player.so_lan_nhay
+	if not allows_jump():
+		player.so_lan_nhay = 0
+
+
+func _restore_jump_policy() -> void:
+	for player: Player in get_tree().get_nodes_in_group("players"):
+		var key := player.get_instance_id()
+		if _saved_jumps.has(key):
+			player.so_lan_nhay = int(_saved_jumps[key])
+	_saved_jumps.clear()

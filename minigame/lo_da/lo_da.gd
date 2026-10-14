@@ -18,11 +18,11 @@ const VACH_DICH := DAI + 1.0
 
 # ─── đá ───
 
-## Nhỏ: nhảy một lần là qua. To: nhảy đôi (`so_lan_nhay` 2, đỉnh 2,4 m) vẫn không qua.
+## Hai kích cỡ đá: người chơi né ngang, không nhảy trong ván này.
 const R_NHO := 0.45
 const R_TO := 1.3
 
-## Nhanh hơn `Player.speed` 6 — không chạy thoát xuống được, phải né ngang hoặc nhảy.
+## Nhanh hơn `Player.speed` 6 — không chạy thoát xuống được, phải né ngang.
 const V_LAN := 7.5
 const CAO_ROI := 22.0
 const GIAY_ROI := 0.55

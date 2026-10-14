@@ -4,7 +4,6 @@ const Rules = preload("res://minigame/minefield/mine_rules.gd")
 const TILE_SCENE = preload("res://minigame/minefield/mine_tile.tscn")
 var _tiles: Array[Node3D] = []
 var _seen_events: Dictionary = {}
-var _jump_before := -1
 var _materials: Array[StandardMaterial3D] = []
 
 
@@ -13,7 +12,8 @@ func initial_shared_state(ids: Array, seed: int) -> Dictionary:
 
 
 func _cho_vao(index: int, total: int) -> Vector3:
-	return Vector3(lerpf(-5, 5, float(index) / maxi(total - 1, 1)) if total > 1 else 0, 0, -1)
+	var edge := Rules.WIDTH * 0.5 - 1.0
+	return Vector3(lerpf(-edge, edge, float(index) / maxi(total - 1, 1)) if total > 1 else 0, 0, -1)
 
 
 func _dung_san() -> void:
@@ -25,10 +25,6 @@ func _dung_san() -> void:
 		tile.position = Vector3(center.x, 0, -center.y)
 		san.get_node("Tiles").add_child(tile)
 		_tiles.append(tile)
-	var player := _nguoi(NetManager.local_id())
-	if player != null:
-		_jump_before = player.so_lan_nhay
-		player.so_lan_nhay = 0
 
 
 func advance_shared_rules(snapshot: Dictionary, elapsed: float) -> void:
@@ -151,11 +147,3 @@ func diem_cua(id: int) -> float:
 
 func chu_diem(id: int) -> String:
 	return "%.1f m" % diem_cua(id)
-
-
-func dung_som() -> void:
-	var player := _nguoi(NetManager.local_id())
-	if player != null and _jump_before >= 0:
-		player.so_lan_nhay = _jump_before
-	_jump_before = -1
-	super()

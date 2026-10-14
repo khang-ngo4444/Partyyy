@@ -6,9 +6,9 @@
 script = ExtResource("1_th")
 tieu_de = "12 · Laser Leap"
 noi_dung = "[color=#E0661A][b]PHÍM[/b][/color]
-[b]W A S D[/b] chạy · [b]Space[/b] nhảy.
+[b]W A S D[/b] di chuyển. Ván này không nhảy.
 
 [color=#E0661A][b]LUẬT[/b][/color]
-Nhảy qua các tia laser đang quét sàn. Tia đổi hướng, tốc độ và tâm quay theo từng đợt nên không thể chỉ học một nhịp cố định.
+Di chuyển né các tia laser đang quét sàn. Tia đổi hướng, tốc độ và tâm quay theo từng đợt nên không thể chỉ học một nhịp cố định.
 
-Chạm tia hoặc rơi khỏi sàn sẽ bị loại. Ván tối đa 90 giây. [b]Xếp hạng:[/b] sống sót lâu hơn đứng trên."
+Chạm tia hoặc rơi khỏi sàn sẽ bị loại. Ván tối đa 60 giây. [b]Xếp hạng:[/b] sống sót lâu hơn đứng trên."
