@@ -27,7 +27,7 @@ size = Vector3(28, 1, 28)
 [node name="FactoryArena" type="Node3D" unique_id=1762215677]
 
 [node name="Cam" type="Camera3D" parent="." unique_id=1933533856]
-transform = Transform3D(1, 0, 0, 0, 0.6659722, 0.74597657, 0, -0.74597657, 0.6659722, 0, 28, 25)
+transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 24, 24)
 fov = 55.0
 
 [node name="Sun" type="DirectionalLight3D" parent="." unique_id=1566810662]
