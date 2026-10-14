@@ -18,10 +18,10 @@ const ROI_KHOI_SAN := 8.0
 ## Tầm tính từ tâm người đánh tới tâm nạn nhân.
 const NUT_DANH := "danh"
 const NUT_CHUONG := "chuong"
-const TAM_DON := [1.7, 2.8]
+const TAM_DON := [1.5, 2.5]
 
 ## Nạn nhân phải ở phía trước (tích vô hướng tối thiểu).
-const GOC_DON := [0.2, 0.5]
+const GOC_DON := [0.65, 0.7]
 
 ## Nghỉ giữa hai đòn cùng loại (giây).
 const NGHI_DON := [0.55, 1.1]
@@ -32,7 +32,7 @@ const CHUONG_NGANG := 10.0
 const CHUONG_LEN := 3.5
 
 ## Phóng to hình nhân vật trong sân (chỉ hình).
-const TO_HON := 1.3
+const TO_HON := 1.65
 
 ## Sống tới cuối ván được cộng thêm.
 const THUONG_SONG_CUOI := 10.0
@@ -230,6 +230,8 @@ func tim_nan(toi: Player, loai: int) -> Player:
 		if p == toi or not _co_the_danh(p.player_id()):
 			continue
 		var d := p.global_position - toi.global_position
+		if absf(d.y) > 1.5:
+			continue
 		d.y = 0.0
 		var dai := d.length()
 		if dai > gan_nhat or dai < 0.001 or truoc.dot(d / dai) < float(GOC_DON[loai]):
@@ -246,10 +248,17 @@ func _net_danh(ke_danh: int, nan: int, huong: Vector3, loai: int) -> void:
 		return
 	var source := _nguoi(ke_danh)
 	var target := _nguoi(nan)
-	if source != null:
-		source.play_action("kick" if loai == DON_CHUONG else "attack")
-	if target != null:
-		target.play_reaction("knockdown" if loai == DON_CHUONG else "stun", GIAY_CHOANG)
+	if source == null or target == null or loai < DON_DANH or loai > DON_CHUONG:
+		return
+	var delta := target.global_position - source.global_position
+	if absf(delta.y) > 1.5:
+		return
+	delta.y = 0.0
+	var forward := Vector3(-source.global_basis.z.x, 0, -source.global_basis.z.z).normalized()
+	if delta.length() < 0.001 or delta.length() > float(TAM_DON[loai]) or forward.dot(delta.normalized()) < float(GOC_DON[loai]):
+		return
+	source.play_action("kick" if loai == DON_CHUONG else "attack")
+	target.play_reaction("knockdown" if loai == DON_CHUONG else "stun", GIAY_CHOANG)
 	if nan == NetManager.local_id():
 		var p := _nguoi(nan)
 		if loai == DON_CHUONG and p != null:

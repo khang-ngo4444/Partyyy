@@ -114,7 +114,11 @@ func _check_phase_reactions(fixture: Node3D, states: Script, visual: Script, rul
 	game._chay = true
 	game._song = {id: -1, id + 1: -1}
 	game.set_process(false)
-	game._net_danh(id + 1, id, Vector3.RIGHT, 0)
+	actors[0].position = Vector3(0, 0, 1)
+	game._net_danh(id + 1, id, Vector3.BACK, 0)
+	check(not actors[0]._animation_state.active(), "Phase 3 rejects hits behind the attacker")
+	actors[0].position = Vector3(0, 0, -1)
+	game._net_danh(id + 1, id, Vector3.FORWARD, 0)
 	actors[0]._animation_state.tick("sprint")
 	actors[1]._animation_state.tick("idle")
 	check(actors[0]._anim.current_animation == "stun", "Phase 3 hit applies stun animation to victim")
