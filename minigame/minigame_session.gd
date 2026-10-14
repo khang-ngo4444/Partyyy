@@ -102,6 +102,16 @@ func _read_snapshot(encoded: String) -> void:
 		_seen_round = 0
 		fuse.visible = false
 		return
+	# JSON numbers decode as floats; roster lookups require integer player IDs.
+	var ids: Array[int] = []
+	for id: Variant in state["ids"]:
+		ids.append(int(id))
+	state["ids"] = ids
+	if state.has("ranking"):
+		var ranking: Array[int] = []
+		for id: Variant in state["ranking"]:
+			ranking.append(int(id))
+		state["ranking"] = ranking
 	var round_id: int = int(state["round"])
 	if round_id != _seen_round:
 		_seen_round = round_id
