@@ -304,7 +304,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			return
 	if not _den_luot_minh():
 		return
-	if event.is_action_pressed("jump") or event.is_action_pressed("interact"):
+	if event.is_action_pressed("jump"):
 		get_viewport().set_input_as_handled()
 		# Luôn gieo hai hột; hột thứ hai chỉ dùng khi có Hai hột xí ngầu.
 		Fusion.rpc(_net_tung, NetManager.local_id(), randi() % 6 + 1, randi() % 6 + 1)
@@ -533,7 +533,7 @@ func _bao_dam_cam_tu_do() -> void:
 	# Bắt đầu chếch phía sau-trên quân của mình, nhìn xuống ô đang đứng.
 	var toi := nguoi(NetManager.local_id())
 	var dich := toi.global_position if toi != null else cam_tu_do.tam
-	cam_tu_do.dat_nhin(dich + Vector3(0.0, 14.0, 12.0), dich)
+	cam_tu_do.dat_nhin(dich + Vector3(0.0, 11.5, 10.0), dich)
 
 
 ## Đổi qua lại camera tự do / gắn nhân vật.

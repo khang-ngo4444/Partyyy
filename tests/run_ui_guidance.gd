@@ -53,6 +53,10 @@ func _run() -> void:
 	status._tt = {"do": {}, "su_kien": "Test event"}
 	status._ve_thanh_duoi()
 	check(not status._thanh_duoi.visible, "Empty bag should not occupy the screen")
+	status._duoc_dung = true
+	status._chon = -1
+	check(status._goi_y_dung_do(["sung_1_phat"]) == "Space · Tung xúc xắc", "Default roll hint stays Space-only even with items")
+	status._duoc_dung = false
 	status._ve_su_kien()
 	check(status._su_kien.visible, "New event should appear")
 	status._su_kien_toi = 0.0

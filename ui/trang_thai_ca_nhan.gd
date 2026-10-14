@@ -153,7 +153,7 @@ func _goi_y_dung_do(tui: Array) -> String:
 	if not _duoc_dung:
 		return ""
 	var k := LuatBan.khoa(NetManager.local_id())
-	var goi_y := "Space tung xúc xắc"
+	var goi_y := "Space · Tung xúc xắc"
 	if _chon >= 0 and _chon < tui.size() and str(tui[_chon]) != "":
 		var mon := str(tui[_chon])
 		var ten := VatPham.ten(mon)
@@ -170,7 +170,4 @@ func _goi_y_dung_do(tui: Array) -> String:
 		goi_y = "Khoá đồ · Space"
 	elif (_tt.get("da_dung", {}) as Dictionary).has(k):
 		goi_y = "Space · Tung xúc xắc"
-	elif tui.slice(0, VatPham.SO_O_NHANH).any(func(mon) -> bool:
-			return str(mon) != "" and VatPham.nham(str(mon)) != VatPham.Nham.TU_DONG):
-		goi_y = "1–5 Dùng đồ · Space Tung"
 	return goi_y
