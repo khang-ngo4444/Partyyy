@@ -30,7 +30,7 @@ func _run() -> void:
 		player.so_lan_nhay = 2
 		game._apply_jump_policy(player)
 		game._apply_jump_policy(player)
-		check(player.so_lan_nhay == (2 if code == "breaking_blocks" else 0), code + ": only falling floor permits jumping")
+		check(player.so_lan_nhay == (2 if code in ["breaking_blocks", "laser_leap"] else 0), code + ": falling floor and laser leap permit jumping")
 		player.global_position = Vector3(0, 5, 0)
 		player.velocity = Vector3.ZERO
 		player._lan_nhay = 0
@@ -42,7 +42,7 @@ func _run() -> void:
 		await process_frame
 		player.set_physics_process(false)
 		Input.action_release("jump")
-		check((player.velocity.y > 0) == (code == "breaking_blocks"), code + ": actual Space input follows the game policy")
+		check((player.velocity.y > 0) == (code in ["breaking_blocks", "laser_leap"]), code + ": actual Space input follows the game policy")
 		game._restore_jump_policy()
 		check(player.so_lan_nhay == 2, code + ": original jump count restored on exit")
 		game.free()

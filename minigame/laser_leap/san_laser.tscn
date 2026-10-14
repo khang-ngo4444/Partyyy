@@ -1,22 +1,23 @@
 [gd_scene format=3 uid="uid://jiv3tivu0fmt"]
 
-[ext_resource type="PackedScene" path="res://minigame/chung/san_dau.tscn" id="1_st"]
-[ext_resource type="PackedScene" path="res://minigame/chung/san_tron.tscn" id="2_sr"]
 [ext_resource type="Material" path="res://materials/mat_san_canh_bao.tres" id="3_m"]
 [ext_resource type="Script" uid="uid://cv1ugbpyswsux" path="res://minigame/laser_leap/laser_beam.gd" id="3_o1njq"]
 [ext_resource type="Material" uid="uid://cun0ujq36gqec" path="res://materials/mat_laser_telegraph.tres" id="4_o1njq"]
+[ext_resource type="Material" path="res://materials/mat_san_thuong.tres" id="5_o1njq"]
 
-[sub_resource type="BoxMesh" id="Box_tia"]
-size = Vector3(30, 0.24, 0.7)
+[sub_resource type="BoxMesh" id="BoxMesh_o1njq"]
+size = Vector3(34, 0.24, 0.7)
 
-[sub_resource type="BoxShape3D" id="Shape_tia"]
-size = Vector3(30, 0.24, 0.7)
+[sub_resource type="BoxShape3D" id="BoxShape3D_5ndp1"]
+size = Vector3(34, 0.24, 0.7)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5ndp1"]
+size = Vector3(24, 0.4, 24)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_it2w4"]
+size = Vector3(24, 0.4, 24)
 
 [node name="SanLaser" type="Node3D" unique_id=510327549]
-
-[node name="SanDau" parent="." unique_id=755330167 instance=ExtResource("1_st")]
-
-[node name="SanTron" parent="." unique_id=1369067548 instance=ExtResource("2_sr")]
 
 [node name="Tia0" type="Node3D" parent="." unique_id=660197470]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
@@ -25,43 +26,28 @@ warning_material = ExtResource("4_o1njq")
 
 [node name="Mat" type="MeshInstance3D" parent="Tia0" unique_id=1493077425]
 material_override = ExtResource("3_m")
-mesh = SubResource("Box_tia")
+mesh = SubResource("BoxMesh_o1njq")
 
 [node name="Vung" type="Area3D" parent="Tia0" unique_id=430231615]
 collision_layer = 0
 collision_mask = 2
 
 [node name="Hinh" type="CollisionShape3D" parent="Tia0/Vung" unique_id=882053383]
-shape = SubResource("Shape_tia")
+shape = SubResource("BoxShape3D_5ndp1")
 
-[node name="Tia1" type="Node3D" parent="." unique_id=1754355294]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
-script = ExtResource("3_o1njq")
-warning_material = ExtResource("4_o1njq")
+[node name="Floor" type="MeshInstance3D" parent="." unique_id=1546388042]
+material_override = ExtResource("5_o1njq")
+mesh = SubResource("BoxMesh_5ndp1")
 
-[node name="Mat" type="MeshInstance3D" parent="Tia1" unique_id=1375471150]
-material_override = ExtResource("3_m")
-mesh = SubResource("Box_tia")
+[node name="FloorBody" type="StaticBody3D" parent="." unique_id=503100116]
 
-[node name="Vung" type="Area3D" parent="Tia1" unique_id=1039092290]
-collision_layer = 0
-collision_mask = 2
+[node name="Shape" type="CollisionShape3D" parent="FloorBody" unique_id=1834800980]
+shape = SubResource("BoxShape3D_it2w4")
 
-[node name="Hinh" type="CollisionShape3D" parent="Tia1/Vung" unique_id=1284897646]
-shape = SubResource("Shape_tia")
+[node name="Cam" type="Camera3D" parent="." unique_id=1042056796]
+transform = Transform3D(1, 0, 0, 0, 0.7592566, 0.65079135, 0, -0.65079135, 0.7592566, 0, 18, 21)
+fov = 60.0
 
-[node name="Tia2" type="Node3D" parent="." unique_id=1334219036]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
-script = ExtResource("3_o1njq")
-warning_material = ExtResource("4_o1njq")
-
-[node name="Mat" type="MeshInstance3D" parent="Tia2" unique_id=1034100524]
-material_override = ExtResource("3_m")
-mesh = SubResource("Box_tia")
-
-[node name="Vung" type="Area3D" parent="Tia2" unique_id=2091280919]
-collision_layer = 0
-collision_mask = 2
-
-[node name="Hinh" type="CollisionShape3D" parent="Tia2/Vung" unique_id=1451352253]
-shape = SubResource("Shape_tia")
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=533526609]
+transform = Transform3D(0.86601907, -0.3535631, 0.3535593, 0, 0.70710295, 0.7071106, -0.500011, -0.61237127, 0.61236465, 0, 0, 0)
+light_energy = 1.1

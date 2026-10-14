@@ -6,4 +6,3 @@
 [node name="LaserLeap" type="Node" unique_id=400360223]
 script = ExtResource("1_ll")
 san_scene = ExtResource("2_san")
-giay_van = 90.0

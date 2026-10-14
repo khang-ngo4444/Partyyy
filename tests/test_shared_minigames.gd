@@ -14,18 +14,23 @@ func test_laser_replays_same_seed() -> void:
 		JSON.stringify(LaserGame.build_schedule(4242, 90.0, parameters)))
 	game.free()
 
-func test_laser_variety_and_telegraph() -> void:
+func test_laser_sequence_traverses_alternating_axes() -> void:
 	var game: Node = LaserGame.new()
-	var schedule: Array = LaserGame.build_schedule(42, 90.0, game.network_parameters())
-	var counts: Dictionary = {}
-	var previous_end: float = 0.0
+	var schedule: Array = LaserGame.build_schedule(42, 60.0, game.network_parameters())
+	var previous_end := 0.0
+	var previous_axis := -1
+	assert_true(schedule.size() >= 6)
 	for wave: Dictionary in schedule:
-		assert_true(float(wave["start"]) - previous_end >= game.telegraph_seconds - 0.0001)
-		assert_true(wave["beams"].size() >= 1 and wave["beams"].size() <= 3)
-		counts[wave["beams"].size()] = true
-		previous_end = float(wave["end"])
-	assert_eq(counts.size(), 3)
+		assert_true(float(wave.start) - previous_end >= game.telegraph_seconds - 0.0001)
+		assert_true(float(wave.end) <= 60.0)
+		assert_true(int(wave.axis) != previous_axis)
+		assert_true(absf(float(wave.direction)) == 1)
+		assert_true(float(wave.end) - float(wave.start) >= game.sweep_last)
+		previous_end = float(wave.end)
+		previous_axis = int(wave.axis)
+	assert_true(game.allows_jump())
 	game.free()
+
 
 func test_beam_capsule_boundary_and_corner() -> void:
 	var half_size := Vector2(15.0, 0.35)

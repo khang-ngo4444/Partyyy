@@ -5,7 +5,7 @@ extends RefCounted
 const TRO := {
 	"tank_battle": ["Sống sót tới cuối trận", "WASD di chuyển · J / Space bắn", "10_tank"],
 	"breaking_blocks": ["Né nhóm sàn sắp rớt, đừng ngã", "WASD di chuyển · Space nhảy", "11_breaking_blocks"],
-	"laser_leap": ["Né tia laser đang quét sân", "WASD di chuyển", "12_laser_leap"],
+	"laser_leap": ["Canh nhịp nhảy qua laser", "WASD di chuyển · Space nhảy", "12_laser_leap"],
 	"spotlights": ["Nhớ vị trí, né spotlight khi tối", "WASD di chuyển", "13_spotlights"],
 	"magma": ["Hất đối thủ vào dung nham đang dâng", "WASD di chuyển · Chuột ngắm / bắn", "14_magma"],
 	"explosive": ["Chuyền bom trước khi nổ", "WASD di chuyển · E chuyền", "15_explosive"],
