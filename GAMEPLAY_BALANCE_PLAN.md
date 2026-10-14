@@ -1,6 +1,6 @@
 # Kế hoạch Phase 2 (bàn cờ) — vật phẩm, kết thúc ván, kinh tế
 
-Trạng thái: **PLAN, chưa code.** Thay cho baseline cũ (4 rương 3 giả 1 thật, hạng 1 nhận súng).
+Trạng thái sau tích hợp ngày 2026-10-14: **cơ chế Phase 2 đã có trong code**. Tài liệu này lưu định hướng; số liệu hiện hành ở mục 4 được đối chiếu với `board/kinh_te.gd`, `board/gameplay_settings.gd` và minigame thực tế. Bản này thay baseline cũ (4 rương 3 giả 1 thật, hạng 1 nhận súng).
 
 Ý tưởng cơ chế có tham khảo các party game cùng thể loại, nhưng **tên, hình tượng, model là của
 mình** (chủ đề đồ vật Việt / tuổi thơ). Không nhắc tên game khác trong game, store page, trailer;
@@ -118,7 +118,7 @@ bản thân · **Chọn ô** = chọn một ô trong tầm.
 
 ### Giả định
 
-- Mỗi lượt khoảng 20 giây; minigame khoảng 90 giây + 15 giây chuyển cảnh. Ván khoảng **35 phút**.
+- Mỗi lượt khoảng 20 giây; minigame tối đa 60 giây + 5 giây đếm ngược + 5 giây kết quả. Ván khoảng **35 phút**.
 - Bàn: vòng chính 40 ô + 16 ô đường tắt, 1 xúc xắc 6 mặt (trung bình 3,5 bước/lượt).
 - Mục tiêu: mỗi người kiếm khoảng **250 vàng cả ván** (đủ khoảng 2,5 rương), **bất kể số người**.
   Đông người thì ít vòng hơn, nên vàng mỗi vòng tăng để tổng cả ván giữ nguyên.
@@ -127,8 +127,9 @@ bản thân · **Chọn ô** = chọn một ô trong tầm.
 ### Công thức (master tự tính)
 
 ```
-R          = round(2100 / (105 + 20·N))                 # số vòng cả ván; setting so_vong = 0 là tự tính
-vang_tb    = 250 / R − tile_money% · money_gain          # vàng minigame trung bình mỗi người mỗi vòng
+R          = round(2100 / (70 + 20·N))                 # số vòng cả ván; setting so_vong = 0 là tự tính
+vong_quy_doi = R + min(R, 2) · 0.5                  # bonus 1,5× của hai vòng cuối
+vang_tb    = max(0, (250 − R · tile_money% · money_gain) / vong_quy_doi)          # vàng minigame trung bình mỗi người mỗi vòng
 vang(hang) = làm tròn tới bội số 5 của vang_tb · (1.3 − 0.6·(hang−1)/(N−1))
 ```
 
@@ -138,15 +139,15 @@ Hạng nhất nhận 1,3 lần trung bình, hạng chót 0,7 lần → chênh l�
 
 | Số người | R | Vàng theo hạng (1 → chót) | TB/vòng | Tổng 1 người cả ván | Chênh tối đa cả ván* |
 |---|---|---|---|---|---|
-| 2 | 14 | 20 · 10 | 15 | ~262 | 140 |
-| 3 | 13 | 20 · 15 · 10 | 15 | ~244 | 130 |
-| 4 | 11 | 25 · 20 · 15 · 15 | 19 | ~248 | 110 |
-| 5 | 10 | 30 · 25 · 20 · 20 · 15 | 22 | ~258 | 150 |
-| 6 | 9 | 30 · 30 · 25 · 25 · 20 · 15 | 24 | ~251 | 135 |
-| 7 | 9 | 30 · 30 · 25 · 25 · 20 · 20 · 15 | 24 | ~246 | 135 |
-| 8 | 8 | 35 · 35 · 30 · 30 · 25 · 25 · 20 · 20 | 27,5 | ~250 | 120 |
-| 9 | 7 | 40 · 40 · 35 · 35 · 30 · 30 · 25 · 25 · 20 | 31 | ~244 | 140 |
-| 10 | 7 | 40 · 40 · 35 · 35 · 35 · 30 · 30 · 25 · 25 · 20 | 31,5 | ~247 | 140 |
+| 2 | 19 | 10 · 5 | 7.5 | ~224 | 95 |
+| 3 | 16 | 15 · 10 · 10 | 11.7 | ~253 | 90 |
+| 4 | 14 | 15 · 15 · 10 · 10 | 12.5 | ~242 | 80 |
+| 5 | 12 | 20 · 20 · 15 · 15 · 10 | 16.0 | ~251 | 130 |
+| 6 | 11 | 25 · 20 · 20 · 15 · 15 · 10 | 17.5 | ~252 | 165 |
+| 7 | 10 | 25 · 25 · 20 · 20 · 15 · 15 · 15 | 19.3 | ~250 | 120 |
+| 8 | 9 | 30 · 25 · 25 · 25 · 20 · 20 · 15 · 15 | 21.9 | ~252 | 135 |
+| 9 | 8 | 30 · 30 · 30 · 25 · 25 · 25 · 20 · 20 · 15 | 24.4 | ~250 | 140 |
+| 10 | 8 | 30 · 30 · 30 · 25 · 25 · 25 · 20 · 20 · 20 · 15 | 24.0 | ~249 | 140 |
 
 \* Chênh tối đa = người thắng **mọi** minigame so với người thua **mọi** minigame, chỉ tính vàng
 minigame. Khoảng 1,1–1,5 rương; thực tế sẽ nhỏ hơn nhiều.
@@ -170,12 +171,12 @@ minigame. Khoảng 1,1–1,5 rương; thực tế sẽ nhỏ hơn nhiều.
 
 ### Kiểm tra nhịp ván
 
-- 4 người: người nhất mọi minigame kiếm khoảng 29 vàng/vòng (25 + 3,75) → đủ 100 vàng ở khoảng
-  **vòng 4**; người trung bình khoảng vòng 5. Không ai mở rương trước vòng 3.
-- 10 người: mỗi người cả ván chỉ đi khoảng 25 ô → luật mở khi đi qua và Hai hột xí ngầu là cần thiết.
-- Dự kiến người thắng khoảng 3 Cúp, trung bình 1–1,5 Cúp mỗi người.
+- 4 người: 14 vòng; thưởng cơ bản 15 · 15 · 10 · 10 vàng. Hai vòng cuối dùng hệ số 1,5 trước khi làm tròn. Tổng kỳ vọng trung bình, gồm ô tiền, khoảng 240 vàng/người; hạng nhất liên tục có thể đủ 100 vàng khoảng vòng 6.
+- 10 người: 8 vòng; thưởng cơ bản 30 · 30 · 25 · 25 · 25 · 20 · 20 · 20 · 15 · 15 vàng. Mục tiêu 35 phút là mô hình dự kiến với lượt 20 giây và minigame đủ 60 giây; ván có nhiều minigame kết thúc sớm sẽ ngắn hơn.
+- Bảng tổng thu nhập phía trên đã tính bonus hai vòng cuối, sai số làm tròn bội 5 và vàng từ ô tiền; chưa tính thuế, ống heo, cướp hoặc chi mua rương.
+- Đây là baseline để playtest, chưa phải kết quả đo cân bằng nhiều người. Không thay số liệu camera, HP hoặc tốc độ của minigame bằng thông số cũ trong tài liệu thiết kế.
 
-## 5. Cần sửa trong code
+## 5. Checklist thiết kế đã tích hợp (lưu để đối chiếu)
 
 - `board/pha_ban_co.gd`: bỏ `ruong` (mảng 4 ô) và `ruong_that`; thêm `ruong_o` (1 ô), `coc`
   (Cúp theo người), `vong_con`. `thang` chỉ đặt khi `vong_con` về 0. Hỏi mở rương khi đi ngang ô rương.
@@ -188,7 +189,7 @@ minigame. Khoảng 1,1–1,5 rương; thực tế sẽ nhỏ hơn nhiều.
 - Nhắm: mở rộng `_muc_tieu_sung` với tham số tầm + kiểu (tia / hình nón / trúng người đầu tiên).
   Client vẫn chỉ gửi `origin + direction`; master raycast và áp luật.
 
-## 6. Thứ tự làm
+## 6. Thứ tự triển khai ban đầu (lịch sử)
 
 1. **Đợt 1 — kết thúc ván + kinh tế**: Rương báu, Cúp, số vòng, thưởng minigame mới, bảng trọng số ô.
 2. **Đợt 2 — không cần UI mới**: Bát cháo hành, Vỏ sầu riêng, Pháo dây, Rào tre, Hai hột xí ngầu,

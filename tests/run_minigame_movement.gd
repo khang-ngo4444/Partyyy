@@ -30,6 +30,7 @@ func _run() -> void:
 		player.so_lan_nhay = 2
 		game._apply_jump_policy(player)
 		game._apply_jump_policy(player)
+		check(game.giay_van <= game.MAX_ROUND_SECONDS, code + ": duration must not exceed one minute")
 		check(player.so_lan_nhay == (2 if code in ["breaking_blocks", "laser_leap"] else 0), code + ": falling floor and laser leap permit jumping")
 		player.global_position = Vector3(0, 5, 0)
 		player.velocity = Vector3.ZERO

@@ -56,25 +56,25 @@ func test_land_tax_choice_survives_next_round() -> void:
 
 func test_round_count_and_gold_scale_with_players() -> void:
 	var settings := GameplaySettings.defaults()
-	assert_eq(KinhTe.so_vong(4, settings), 11)
-	assert_eq(KinhTe.so_vong(10, settings), 7)
+	assert_eq(KinhTe.so_vong(4, settings), 14)
+	assert_eq(KinhTe.so_vong(10, settings), 8)
 	settings["so_vong"] = 5
 	assert_eq(KinhTe.so_vong(10, settings), 5)
 	settings = GameplaySettings.defaults()
 	var tien: Array = []
 	for hang in 4:
-		tien.append(KinhTe.vang_hang(hang, 4, 11, settings))
-	assert_eq(tien, [25, 20, 15, 15])
+		tien.append(KinhTe.vang_hang(hang, 4, 14, settings))
+	assert_eq(tien, [15, 15, 10, 10])
 
 
 func test_minigame_reward_gold_and_items_survive_new_round() -> void:
 	var settings := GameplaySettings.defaults()
 	var state := LuatBan.trang_thai_moi([11, 22, 33], {}, settings)
-	state["so_vong"] = 13
+	state["so_vong"] = KinhTe.so_vong(3, settings)
 	var rng := RandomNumberGenerator.new()
 	var reward := KinhTe.thuong_minigame(state, [33, 22, 11], settings, rng)
-	assert_contains(reward, "Hạng 1 +20 vàng")
-	assert_eq(int(state["tien"][LuatBan.khoa(22)]), 15)
+	assert_contains(reward, "Hạng 1 +15 vàng")
+	assert_eq(int(state["tien"][LuatBan.khoa(22)]), 10)
 	assert_eq((state["do"][LuatBan.khoa(33)] as Array).size(), 1)
 	assert_eq((state["do"][LuatBan.khoa(11)] as Array).size(), 1)
 	var next_round := LuatBan.trang_thai_moi([33, 22, 11], state, settings)
@@ -168,3 +168,22 @@ func test_bag_slots_full_storage_and_swap() -> void:
 	# Thuế đồ lấy món đầu tiên có thật, bỏ qua ô trống.
 	assert_eq(LuatBan.lay_mon_dau(state2, "11"), "chao_hanh")
 	assert_eq(state2["do"]["11"], [])
+
+func test_budget_includes_final_round_bonus_for_all_room_sizes() -> void:
+	var settings := GameplaySettings.defaults()
+	var tile_gold: float = settings.tile_money / 100.0 * settings.money_gain
+	for players: int in range(1, 11):
+		var rounds := KinhTe.so_vong(players, settings)
+		var expected_total: float = tile_gold * rounds
+		for round_number: int in range(1, rounds + 1):
+			var multiplier := KinhTe.NHAN_VONG_CUOI if round_number > rounds - KinhTe.SO_VONG_CUOI else 1.0
+			var previous := 999999
+			for rank: int in players:
+				var gold := KinhTe.vang_hang(rank, players, rounds, settings, multiplier)
+				assert_true(gold >= 0 and gold <= previous)
+				previous = gold
+				expected_total += gold / float(players)
+		assert_true(absf(expected_total - KinhTe.VANG_CA_VAN) <= 40.0)
+		assert_true(absf(rounds * (KinhTe.GIAY_MINIGAME + players * KinhTe.GIAY_MOI_LUOT) - KinhTe.GIAY_MOI_VAN) <= 150.0)
+	# A custom one-round match has only one boosted round, never two.
+	assert_true(is_equal_approx(KinhTe.vang_trung_binh(1, settings) * 1.5 + tile_gold, KinhTe.VANG_CA_VAN))

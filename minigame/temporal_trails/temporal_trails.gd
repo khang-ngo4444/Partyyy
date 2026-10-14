@@ -47,7 +47,7 @@ func _ready() -> void:
 	ten = "TEMPORAL TRAILS"
 	luat = "Tự chạy thẳng · A/D để rẽ · đâm vào tường sáng hay viền sân là ra · trụ lại cuối cùng"
 	# Lưới đỡ; ván thường xong khi còn một người.
-	giay_van = 90.0
+	giay_van = MAX_ROUND_SECONDS
 
 
 func bat_dau(nguoi_choi: Array, giong: int) -> void:
