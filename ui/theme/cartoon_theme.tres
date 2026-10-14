@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=118 format=3]
+[gd_resource type="Theme" load_steps=120 format=3]
 
 [ext_resource type="FontFile" path="res://ui/theme/fonts/Nunito.ttf" id="f_nunito"]
 [ext_resource type="FontFile" path="res://ui/theme/fonts/Baloo2.ttf" id="f_baloo"]
@@ -1790,6 +1790,38 @@ anti_aliasing_size = 1.2
 
 [sub_resource type="StyleBoxEmpty" id="Tab_panel"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8kfbi"]
+content_margin_left = 6.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 0.8353, 0.3098, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.1686, 0.1059, 0.2392, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5581c"]
+content_margin_left = 6.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 0.8353, 0.3098, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.1686, 0.1059, 0.2392, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
 [resource]
 default_font = SubResource("F_than")
 default_font_size = 22
@@ -2127,11 +2159,14 @@ ItemList/styles/panel = SubResource("DS_panel")
 ItemList/styles/focus = SubResource("DS_focus")
 ItemList/styles/selected = SubResource("DS_chon")
 ItemList/styles/selected_focus = SubResource("DS_chon_f")
+ItemList/styles/hovered_selected = SubResource("StyleBoxFlat_8kfbi")
+ItemList/styles/hovered_selected_focus = SubResource("StyleBoxFlat_5581c")
 ItemList/styles/hovered = SubResource("DS_hover")
 ItemList/styles/cursor = SubResource("DS_cursor")
 ItemList/styles/cursor_unfocused = SubResource("DS_cursor_u")
 ItemList/colors/font_color = Color(0.1686, 0.1059, 0.2392, 1)
 ItemList/colors/font_hovered_color = Color(0.1686, 0.1059, 0.2392, 1)
+ItemList/colors/font_hovered_selected_color = Color(0.1686, 0.1059, 0.2392, 1)
 ItemList/colors/font_selected_color = Color(0.1686, 0.1059, 0.2392, 1)
 ItemList/font_sizes/font_size = 20
 ItemList/constants/v_separation = 8
