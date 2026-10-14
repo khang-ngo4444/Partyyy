@@ -35,6 +35,28 @@ func _run() -> void:
 	creator._select_model(0)
 	creator._input(event)
 	check(creator._model_index == 9, "Zero hotkey selects model ten")
+	var animator: AnimationPlayer = CharacterVisual.hoat_anh_cua(creator._preview)
+	check(not animator.is_playing(), "Character preview must stay still")
+	check(not creator.has_node("Margin/Columns/Stage/VBox/AnimationButtons"), "Remove animation preview controls")
+	var initial_fov: float = creator.preview_camera.fov
+	creator.get_node("%ZoomInBtn").pressed.emit()
+	check(creator.preview_camera.fov < initial_fov, "Zoom-in button magnifies the model")
+	creator.get_node("%ZoomOutBtn").pressed.emit()
+	check(is_equal_approx(creator.preview_camera.fov, initial_fov), "Zoom-out button reverses zoom")
+	var wheel := InputEventMouseButton.new()
+	wheel.button_index = MOUSE_BUTTON_WHEEL_UP
+	wheel.pressed = true
+	creator._keo_xoay(wheel)
+	check(creator.preview_camera.fov < initial_fov, "Mouse wheel zooms the preview")
+	for step: int in 30:
+		creator._zoom_preview(1)
+	check(creator.preview_camera.fov == creator.MIN_PREVIEW_FOV, "Limit zoom-in")
+	for step: int in 30:
+		creator._zoom_preview(-1)
+	check(creator.preview_camera.fov == creator.MAX_PREVIEW_FOV, "Limit zoom-out")
+	creator.close()
+	creator.open()
+	check(creator.preview_camera.fov == initial_fov, "Reopening resets preview zoom")
 	await create_timer(0.2).timeout
 	check(creator.confirm_btn.get_global_rect().end.y <= 720, "Choices must not push confirm off screen at 720p")
 	if OS.get_cmdline_user_args().has("--capture"):

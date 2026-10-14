@@ -25,6 +25,16 @@ static func hoat_anh_cua(wrapper: Node3D) -> AnimationPlayer:
 	return animator
 
 
+## Freeze one native standing pose for previews and portrait thumbnails.
+static func pose_for_preview(wrapper: Node3D) -> void:
+	var animator := hoat_anh_cua(wrapper)
+	if animator == null:
+		return
+	animator.play("idle")
+	animator.advance(0.0)
+	animator.pause()
+
+
 static func apply_customization(root: Node3D, primary: Color, accent: Color,
 		accessory_enabled: bool) -> void:
 	for mesh: MeshInstance3D in root.find_children("*", "MeshInstance3D", true, false):

@@ -6,6 +6,11 @@ extends Control
 ## - open_phong(p): trong phòng (phím M), chọn là áp ngay lên Player (replicate).
 ## Phím: Q/E đổi nhân vật, 1–9/0 chọn nhanh, Esc quay lại. Kéo chuột trên sân khấu để xoay.
 
+const PREVIEW_FOV := 31.0
+const MIN_PREVIEW_FOV := 21.0
+const MAX_PREVIEW_FOV := 48.0
+const ZOOM_STEP := 3.0
+
 signal confirmed
 signal cancelled
 
@@ -23,11 +28,8 @@ var _accent_index := 1
 var _accessory_enabled := true
 var _bubble := 0
 var _preview: Node3D
-var _animation: AnimationPlayer
-var _playing := "idle"
 var _player: Player = null  # khác null = chế độ trong phòng
 var _keo := false
-var _xoay_tu_dong := true
 
 @onready var stage: Control = %Stage
 @onready var options: Control = %Options
@@ -63,14 +65,10 @@ func _ready() -> void:
 	UIKit.gan_phim(prev_btn, "Q")
 	UIKit.gan_phim(next_btn, "E")
 	UIKit.gan_phim(back_btn, "Esc")
-	var anim := {%IdleBtn: ["idle", "ĐỨNG"], %WalkBtn: ["walk", "ĐI"],
-			%JumpBtn: ["jump", "NHẢY"], %SitBtn: ["sit", "NGỒI"]}
-	for b: Button in anim:
-		var a: Array = anim[b]
-		b.pressed.connect(func(): _play_preview(a[0], a[1]))
+	%ZoomInBtn.pressed.connect(func(): _zoom_preview(1))
+	%ZoomOutBtn.pressed.connect(func(): _zoom_preview(-1))
 	viewport_container.gui_input.connect(_keo_xoay)
 	visible = false
-	set_process(false)
 	if _anh.is_empty():
 		_chup_anh.call_deferred()
 
@@ -106,8 +104,9 @@ func _mo_chung() -> void:
 	accessory_check.set_pressed_no_signal(_accessory_enabled)
 	player_name_label.text = NetManager.player_name if NetManager.player_name != "" else "Bạn"
 	visible = true
-	set_process(true)
-	_xoay_tu_dong = true
+	_keo = false
+	preview_camera.fov = PREVIEW_FOV
+	_zoom_preview(0)
 	preview_anchor.rotation.y = PI
 	_rebuild_preview()
 	_refresh_buttons()
@@ -119,7 +118,6 @@ func close() -> void:
 	if not visible:
 		return
 	visible = false
-	set_process(false)
 	cancelled.emit()
 
 
@@ -129,7 +127,6 @@ func _confirm() -> void:
 	NetManager.accent_index = _accent_index
 	NetManager.accessory_enabled = _accessory_enabled
 	visible = false
-	set_process(false)
 	confirmed.emit()
 
 
@@ -163,18 +160,21 @@ func _input(event: InputEvent) -> void:
 
 # ---------- Xem trước ----------
 
-func _process(delta: float) -> void:
-	if _xoay_tu_dong:
-		preview_anchor.rotation.y = wrapf(preview_anchor.rotation.y + delta * 0.35, -PI, PI)
-	if _animation != null and _playing == "jump" and not _animation.is_playing():
-		_play_preview("idle", "ĐỨNG")
+func _zoom_preview(direction: int) -> void:
+	preview_camera.fov = clampf(preview_camera.fov - direction * ZOOM_STEP,
+		MIN_PREVIEW_FOV, MAX_PREVIEW_FOV)
+	%ZoomInBtn.disabled = preview_camera.fov <= MIN_PREVIEW_FOV
+	%ZoomOutBtn.disabled = preview_camera.fov >= MAX_PREVIEW_FOV
 
 
 func _keo_xoay(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		_keo = event.pressed
-		if _keo:
-			_xoay_tu_dong = false
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			_keo = event.pressed
+		elif event.pressed and event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			_zoom_preview(1)
+		elif event.pressed and event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			_zoom_preview(-1)
 	elif event is InputEventMouseMotion and _keo:
 		preview_anchor.rotation.y += event.relative.x * 0.012
 
@@ -186,10 +186,7 @@ func _chup_anh() -> void:
 		var inst := (scene as PackedScene).instantiate() as Node3D
 		inst.rotation.y = PI + deg_to_rad(20.0)
 		anh_viewport.add_child(inst)
-		var animator := CharacterVisual.hoat_anh_cua(inst)
-		if animator != null:
-			animator.play("idle")
-			animator.advance(0.3)
+		CharacterVisual.pose_for_preview(inst)
 		anh_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 		await RenderingServer.frame_post_draw
 		ds.append(ImageTexture.create_from_image(anh_viewport.get_texture().get_image()))
@@ -304,10 +301,9 @@ func _rebuild_preview() -> void:
 		_preview.queue_free()
 	_preview = models[posmod(_model_index, models.size())].instantiate() as Node3D
 	preview_anchor.add_child(_preview)
-	_animation = CharacterVisual.hoat_anh_cua(_preview)
+	CharacterVisual.pose_for_preview(_preview)
 	_apply_preview_customization()
 	archetype_name.text = CharacterVisual.ARCHETYPE_NAMES[_model_index]
-	_play_preview("idle", "ĐỨNG")
 
 
 func _apply_preview_customization() -> void:
@@ -316,12 +312,6 @@ func _apply_preview_customization() -> void:
 	CharacterVisual.apply_customization(_preview,
 			NetManager.color_for(_primary_index),
 			NetManager.color_for(_accent_index), _accessory_enabled)
-
-
-func _play_preview(animation: String, _label: String) -> void:
-	_playing = animation
-	if _animation != null and _animation.has_animation(animation):
-		_animation.play(animation, 0.18)
 
 
 func _refresh_buttons() -> void:

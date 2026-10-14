@@ -9,11 +9,11 @@
 [ext_resource type="PackedScene" uid="uid://0pb5c0lgtnwe" path="res://player/characters/Skeleton_Mage.tscn" id="10_0vaud"]
 [ext_resource type="PackedScene" uid="uid://c0bwf8stqi5s" path="res://player/characters/Skeleton_Minion.tscn" id="11_7ph2l"]
 [ext_resource type="PackedScene" uid="uid://cp5gr4t2i1p1w" path="res://player/characters/Skeleton_Rogue.tscn" id="12_ughte"]
-[ext_resource type="PackedScene" path="res://player/characters/Knight.tscn" id="nv_0"]
-[ext_resource type="PackedScene" path="res://player/characters/Mage.tscn" id="nv_1"]
-[ext_resource type="PackedScene" path="res://player/characters/Ranger.tscn" id="nv_2"]
-[ext_resource type="PackedScene" path="res://player/characters/Rogue_Hooded.tscn" id="nv_3"]
-[ext_resource type="PackedScene" path="res://player/characters/Skeleton_Warrior.tscn" id="nv_4"]
+[ext_resource type="PackedScene" uid="uid://viba344tvrcn" path="res://player/characters/Knight.tscn" id="nv_0"]
+[ext_resource type="PackedScene" uid="uid://btb6f1oqcda0n" path="res://player/characters/Mage.tscn" id="nv_1"]
+[ext_resource type="PackedScene" uid="uid://bcbv675f1djaf" path="res://player/characters/Ranger.tscn" id="nv_2"]
+[ext_resource type="PackedScene" uid="uid://yi6rskgaf0ql" path="res://player/characters/Rogue_Hooded.tscn" id="nv_3"]
+[ext_resource type="PackedScene" uid="uid://b5ct4tv71ile8" path="res://player/characters/Skeleton_Warrior.tscn" id="nv_4"]
 [ext_resource type="PackedScene" path="res://ui/nut_chon.tscn" id="r_nut_chon_scene"]
 [ext_resource type="PackedScene" path="res://ui/o_mau.tscn" id="r_o_mau_scene"]
 
@@ -177,45 +177,27 @@ transform = Transform3D(-0.819, -0.176, -0.546, 0, 0.951, -0.309, 0.574, -0.251,
 light_color = Color(1, 0.75, 0.85, 1)
 light_energy = 0.9
 
-[node name="AnimationButtons" type="HBoxContainer" parent="Margin/Columns/Stage/VBox" unique_id=535645413]
+[node name="ZoomButtons" type="HBoxContainer" parent="Margin/Columns/Stage/VBox" unique_id=535645413]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="IdleBtn" type="Button" parent="Margin/Columns/Stage/VBox/AnimationButtons" unique_id=515925164]
+[node name="ZoomOutBtn" type="Button" parent="Margin/Columns/Stage/VBox/ZoomButtons" unique_id=515925164]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"NutTrang"
 theme_override_font_sizes/font_size = 20
-text = "ĐỨNG"
+text = "−  THU NHỎ"
 
-[node name="WalkBtn" type="Button" parent="Margin/Columns/Stage/VBox/AnimationButtons" unique_id=586652479]
+[node name="ZoomInBtn" type="Button" parent="Margin/Columns/Stage/VBox/ZoomButtons" unique_id=586652479]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"NutTrang"
 theme_override_font_sizes/font_size = 20
-text = "ĐI"
-
-[node name="JumpBtn" type="Button" parent="Margin/Columns/Stage/VBox/AnimationButtons" unique_id=382116829]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 54)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"NutTrang"
-theme_override_font_sizes/font_size = 20
-text = "NHẢY"
-
-[node name="SitBtn" type="Button" parent="Margin/Columns/Stage/VBox/AnimationButtons" unique_id=1275740791]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 54)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"NutTrang"
-theme_override_font_sizes/font_size = 20
-text = "NGỒI"
+text = "+  PHÓNG TO"
 
 [node name="Options" type="PanelContainer" parent="Margin/Columns" unique_id=380758301]
 unique_name_in_owner = true
