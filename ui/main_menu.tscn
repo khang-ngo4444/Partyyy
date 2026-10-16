@@ -1,16 +1,16 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bbs6qvdlierie"]
 
-[ext_resource type="Script" path="res://ui/main_menu.gd" id="1_menu"]
-[ext_resource type="AudioStream" path="res://asset/kenney_interface-sounds/Audio/click_003.ogg" id="4_click"]
-[ext_resource type="PackedScene" path="res://ui/character_creator.tscn" id="5_creator"]
+[ext_resource type="Script" uid="uid://c30tttaqc6jlt" path="res://ui/main_menu.gd" id="1_menu"]
+[ext_resource type="AudioStream" uid="uid://cloaii5w132nd" path="res://asset/kenney_interface-sounds/Audio/click_003.ogg" id="4_click"]
+[ext_resource type="PackedScene" uid="uid://dvper3iuvcixy" path="res://ui/character_creator.tscn" id="5_creator"]
+[ext_resource type="Script" uid="uid://d2qopo4wjeemx" path="res://ui/kit/trang_tri.gd" id="6_tt"]
+[ext_resource type="Texture2D" uid="uid://d3hbibuhg1cug" path="res://ui/icons/kenney/arrowLeft.png" id="7_back"]
+[ext_resource type="Texture2D" uid="uid://kyd7016eee1o" path="res://ui/icons/kenney/plus.png" id="8_plus"]
+[ext_resource type="Texture2D" uid="uid://bd2edpnsj37i2" path="res://ui/icons/kenney/return.png" id="9_ref"]
+[ext_resource type="Texture2D" uid="uid://bngclyay2lkkn" path="res://ui/icons/kenney/exitRight.png" id="10_vao"]
 [ext_resource type="PackedScene" path="res://ui/nut_dong.tscn" id="r_nut_dong_scene"]
-[ext_resource type="Script" path="res://ui/kit/trang_tri.gd" id="6_tt"]
-[ext_resource type="Texture2D" path="res://ui/icons/kenney/arrowLeft.png" id="7_back"]
-[ext_resource type="Texture2D" path="res://ui/icons/kenney/plus.png" id="8_plus"]
-[ext_resource type="Texture2D" path="res://ui/icons/kenney/return.png" id="9_ref"]
-[ext_resource type="Texture2D" path="res://ui/icons/kenney/exitRight.png" id="10_vao"]
 
-[node name="MainMenu" type="Control"]
+[node name="MainMenu" type="Control" unique_id=1843574097]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,7 +20,7 @@ grow_vertical = 2
 script = ExtResource("1_menu")
 nut_dong_scene = ExtResource("r_nut_dong_scene")
 
-[node name="Vignette" type="ColorRect" parent="."]
+[node name="Vignette" type="ColorRect" parent="." unique_id=1037254141]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -30,7 +30,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.31, 0.765, 0.969, 0.12)
 
-[node name="TrangTri" type="Control" parent="."]
+[node name="TrangTri" type="Control" parent="." unique_id=1676491790]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -40,7 +40,7 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("6_tt")
 
-[node name="MainScreen" type="Control" parent="."]
+[node name="MainScreen" type="Control" parent="." unique_id=1316640506]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -50,7 +50,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Logo" type="VBoxContainer" parent="MainScreen"]
+[node name="Logo" type="VBoxContainer" parent="MainScreen" unique_id=1298947136]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 56.0
@@ -60,26 +60,26 @@ offset_bottom = 220.0
 rotation = -0.04
 theme_override_constants/separation = 0
 
-[node name="Title" type="Label" parent="MainScreen/Logo"]
+[node name="Title" type="Label" parent="MainScreen/Logo" unique_id=1884691800]
 layout_mode = 2
 theme_type_variation = &"ChuTieuDe"
 theme_override_colors/font_color = Color(1, 0.835, 0.31, 1)
-theme_override_constants/outline_size = 18
 theme_override_constants/shadow_offset_y = 9
+theme_override_constants/outline_size = 18
 theme_override_constants/shadow_outline_size = 18
 theme_override_font_sizes/font_size = 104
 text = "PARTYBASH"
 
-[node name="TaglinePill" type="PanelContainer" parent="MainScreen/Logo"]
+[node name="TaglinePill" type="PanelContainer" parent="MainScreen/Logo" unique_id=832486331]
 layout_mode = 2
 size_flags_horizontal = 0
 theme_type_variation = &"ThePill"
 
-[node name="Tagline" type="Label" parent="MainScreen/Logo/TaglinePill"]
+[node name="Tagline" type="Label" parent="MainScreen/Logo/TaglinePill" unique_id=149690865]
 layout_mode = 2
 text = "Tiệc tùng cùng bạn bè trên Rumble Reef!"
 
-[node name="StatusPill" type="PanelContainer" parent="MainScreen"]
+[node name="StatusPill" type="PanelContainer" parent="MainScreen" unique_id=947169168]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -91,24 +91,24 @@ offset_bottom = 80.0
 grow_horizontal = 0
 theme_type_variation = &"ThePill"
 
-[node name="Row" type="HBoxContainer" parent="MainScreen/StatusPill"]
+[node name="Row" type="HBoxContainer" parent="MainScreen/StatusPill" unique_id=1882169278]
 layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 2
 
-[node name="StatusDot" type="Panel" parent="MainScreen/StatusPill/Row"]
+[node name="StatusDot" type="Panel" parent="MainScreen/StatusPill/Row" unique_id=1619481369]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(18, 18)
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="MainStatus" type="Label" parent="MainScreen/StatusPill/Row"]
+[node name="MainStatus" type="Label" parent="MainScreen/StatusPill/Row" unique_id=1748325684]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 19
 text = "Đang kết nối tới máy chủ…"
 
-[node name="TileRow" type="HBoxContainer" parent="MainScreen"]
+[node name="TileRow" type="HBoxContainer" parent="MainScreen" unique_id=182644903]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 7
@@ -125,32 +125,32 @@ grow_vertical = 0
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="PlayBtn" type="Button" parent="MainScreen/TileRow"]
+[node name="PlayBtn" type="Button" parent="MainScreen/TileRow" unique_id=366036478]
 unique_name_in_owner = true
 layout_mode = 2
 text = "CHƠI ONLINE"
 
-[node name="CharacterBtn" type="Button" parent="MainScreen/TileRow"]
+[node name="CharacterBtn" type="Button" parent="MainScreen/TileRow" unique_id=1156044646]
 unique_name_in_owner = true
 layout_mode = 2
 text = "NHÂN VẬT"
 
-[node name="HowToBtn" type="Button" parent="MainScreen/TileRow"]
+[node name="HowToBtn" type="Button" parent="MainScreen/TileRow" unique_id=1793165843]
 unique_name_in_owner = true
 layout_mode = 2
 text = "CÁCH CHƠI"
 
-[node name="SettingsBtn" type="Button" parent="MainScreen/TileRow"]
+[node name="SettingsBtn" type="Button" parent="MainScreen/TileRow" unique_id=1025073674]
 unique_name_in_owner = true
 layout_mode = 2
 text = "CÀI ĐẶT"
 
-[node name="QuitBtn" type="Button" parent="MainScreen/TileRow"]
+[node name="QuitBtn" type="Button" parent="MainScreen/TileRow" unique_id=1736148752]
 unique_name_in_owner = true
 layout_mode = 2
 text = "THOÁT"
 
-[node name="OnlineScreen" type="Control" parent="."]
+[node name="OnlineScreen" type="Control" parent="." unique_id=1550591236]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -161,7 +161,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Header" type="HBoxContainer" parent="OnlineScreen"]
+[node name="Header" type="HBoxContainer" parent="OnlineScreen" unique_id=1065612695]
 layout_mode = 0
 offset_left = 48.0
 offset_top = 28.0
@@ -169,7 +169,7 @@ offset_right = 900.0
 offset_bottom = 112.0
 theme_override_constants/separation = 24
 
-[node name="OnlineBackBtn" type="Button" parent="OnlineScreen/Header"]
+[node name="OnlineBackBtn" type="Button" parent="OnlineScreen/Header" unique_id=718678518]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
@@ -178,13 +178,13 @@ theme_type_variation = &"NutTrang"
 text = "QUAY LẠI"
 icon = ExtResource("7_back")
 
-[node name="Title" type="Label" parent="OnlineScreen/Header"]
+[node name="Title" type="Label" parent="OnlineScreen/Header" unique_id=1260198219]
 layout_mode = 2
 theme_type_variation = &"ChuTieuDe"
 theme_override_font_sizes/font_size = 64
 text = "CHƠI ONLINE"
 
-[node name="Body" type="HBoxContainer" parent="OnlineScreen"]
+[node name="Body" type="HBoxContainer" parent="OnlineScreen" unique_id=272185942]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -197,33 +197,33 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 26
 
-[node name="Left" type="VBoxContainer" parent="OnlineScreen/Body"]
+[node name="Left" type="VBoxContainer" parent="OnlineScreen/Body" unique_id=1018609907]
 custom_minimum_size = Vector2(440, 0)
 layout_mode = 2
 theme_override_constants/separation = 22
 
-[node name="NameCard" type="PanelContainer" parent="OnlineScreen/Body/Left"]
+[node name="NameCard" type="PanelContainer" parent="OnlineScreen/Body/Left" unique_id=922432028]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"KhungVang"
 
-[node name="VBox" type="VBoxContainer" parent="OnlineScreen/Body/Left/NameCard"]
+[node name="VBox" type="VBoxContainer" parent="OnlineScreen/Body/Left/NameCard" unique_id=1389205568]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="IdentityLabel" type="Label" parent="OnlineScreen/Body/Left/NameCard/VBox"]
+[node name="IdentityLabel" type="Label" parent="OnlineScreen/Body/Left/NameCard/VBox" unique_id=744354701]
 layout_mode = 2
 theme_type_variation = &"ChuDauMuc"
 text = "TÊN CỦA BẠN"
 
-[node name="NameEdit" type="LineEdit" parent="OnlineScreen/Body/Left/NameCard/VBox"]
+[node name="NameEdit" type="LineEdit" parent="OnlineScreen/Body/Left/NameCard/VBox" unique_id=1751934401]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 58)
 layout_mode = 2
 placeholder_text = "Nhập tên của bạn"
 max_length = 16
 
-[node name="HostBtn" type="Button" parent="OnlineScreen/Body/Left/NameCard/VBox"]
+[node name="HostBtn" type="Button" parent="OnlineScreen/Body/Left/NameCard/VBox" unique_id=24615431]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
@@ -232,16 +232,16 @@ theme_override_font_sizes/font_size = 30
 text = "TẠO PHÒNG MỚI"
 icon = ExtResource("8_plus")
 
-[node name="CodeCard" type="PanelContainer" parent="OnlineScreen/Body/Left"]
+[node name="CodeCard" type="PanelContainer" parent="OnlineScreen/Body/Left" unique_id=1433244493]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"KhungTroi"
 
-[node name="VBox" type="VBoxContainer" parent="OnlineScreen/Body/Left/CodeCard"]
+[node name="VBox" type="VBoxContainer" parent="OnlineScreen/Body/Left/CodeCard" unique_id=1508520536]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="CodeLabel" type="Label" parent="OnlineScreen/Body/Left/CodeCard/VBox"]
+[node name="CodeLabel" type="Label" parent="OnlineScreen/Body/Left/CodeCard/VBox" unique_id=30102991]
 layout_mode = 2
 theme_type_variation = &"ChuDauMuc"
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -249,18 +249,18 @@ theme_override_colors/font_outline_color = Color(0.169, 0.106, 0.239, 1)
 theme_override_constants/outline_size = 8
 text = "VÀO BẰNG MÃ PHÒNG"
 
-[node name="CodeRow" type="HBoxContainer" parent="OnlineScreen/Body/Left/CodeCard/VBox"]
+[node name="CodeRow" type="HBoxContainer" parent="OnlineScreen/Body/Left/CodeCard/VBox" unique_id=1763950777]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="CodeEdit" type="LineEdit" parent="OnlineScreen/Body/Left/CodeCard/VBox/CodeRow"]
+[node name="CodeEdit" type="LineEdit" parent="OnlineScreen/Body/Left/CodeCard/VBox/CodeRow" unique_id=1330480554]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 62)
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "VD: PLAYER-AB12"
 
-[node name="JoinCodeBtn" type="Button" parent="OnlineScreen/Body/Left/CodeCard/VBox/CodeRow"]
+[node name="JoinCodeBtn" type="Button" parent="OnlineScreen/Body/Left/CodeCard/VBox/CodeRow" unique_id=1777093191]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(120, 62)
 layout_mode = 2
@@ -268,25 +268,25 @@ theme_type_variation = &"NutCam"
 text = "VÀO"
 icon = ExtResource("10_vao")
 
-[node name="RoomCard" type="PanelContainer" parent="OnlineScreen/Body"]
+[node name="RoomCard" type="PanelContainer" parent="OnlineScreen/Body" unique_id=1171995077]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="RoomContent" type="VBoxContainer" parent="OnlineScreen/Body/RoomCard"]
+[node name="RoomContent" type="VBoxContainer" parent="OnlineScreen/Body/RoomCard" unique_id=458430167]
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="RoomHeader" type="HBoxContainer" parent="OnlineScreen/Body/RoomCard/RoomContent"]
+[node name="RoomHeader" type="HBoxContainer" parent="OnlineScreen/Body/RoomCard/RoomContent" unique_id=1948695444]
 layout_mode = 2
 
-[node name="RoomsTitle" type="Label" parent="OnlineScreen/Body/RoomCard/RoomContent/RoomHeader"]
+[node name="RoomsTitle" type="Label" parent="OnlineScreen/Body/RoomCard/RoomContent/RoomHeader" unique_id=663839734]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"ChuDauMuc"
 text = "PHÒNG ĐANG MỞ"
 
-[node name="RefreshBtn" type="Button" parent="OnlineScreen/Body/RoomCard/RoomContent/RoomHeader"]
+[node name="RefreshBtn" type="Button" parent="OnlineScreen/Body/RoomCard/RoomContent/RoomHeader" unique_id=441587222]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
@@ -295,7 +295,7 @@ theme_override_font_sizes/font_size = 22
 text = "LÀM MỚI"
 icon = ExtResource("9_ref")
 
-[node name="EmptyHint" type="Label" parent="OnlineScreen/Body/RoomCard/RoomContent"]
+[node name="EmptyHint" type="Label" parent="OnlineScreen/Body/RoomCard/RoomContent" unique_id=1568221301]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -305,18 +305,18 @@ text = "Chưa có phòng mở"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Scroll" type="ScrollContainer" parent="OnlineScreen/Body/RoomCard/RoomContent"]
+[node name="Scroll" type="ScrollContainer" parent="OnlineScreen/Body/RoomCard/RoomContent" unique_id=495566628]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="RoomList" type="VBoxContainer" parent="OnlineScreen/Body/RoomCard/RoomContent/Scroll"]
+[node name="RoomList" type="VBoxContainer" parent="OnlineScreen/Body/RoomCard/RoomContent/Scroll" unique_id=151128785]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 14
 
-[node name="StatusPill" type="PanelContainer" parent="OnlineScreen"]
+[node name="StatusPill" type="PanelContainer" parent="OnlineScreen" unique_id=1002188766]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -329,13 +329,13 @@ grow_vertical = 0
 size_flags_horizontal = 0
 theme_type_variation = &"ThePill"
 
-[node name="Status" type="Label" parent="OnlineScreen/StatusPill"]
+[node name="Status" type="Label" parent="OnlineScreen/StatusPill" unique_id=2016282378]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Đang kết nối…"
 text_overrun_behavior = 3
 
-[node name="SetupScreen" type="Control" parent="."]
+[node name="SetupScreen" type="Control" parent="." unique_id=745666674]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -346,7 +346,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Header" type="HBoxContainer" parent="SetupScreen"]
+[node name="Header" type="HBoxContainer" parent="SetupScreen" unique_id=844364667]
 layout_mode = 0
 offset_left = 48.0
 offset_top = 24.0
@@ -354,34 +354,33 @@ offset_right = 1232.0
 offset_bottom = 110.0
 theme_override_constants/separation = 20
 
-[node name="Title" type="Label" parent="SetupScreen/Header"]
+[node name="Title" type="Label" parent="SetupScreen/Header" unique_id=524528509]
 layout_mode = 2
 theme_type_variation = &"ChuTieuDe"
 theme_override_font_sizes/font_size = 56
 text = "LUẬT CHƠI"
 
-[node name="RoomPill" type="PanelContainer" parent="SetupScreen/Header"]
+[node name="RoomPill" type="PanelContainer" parent="SetupScreen/Header" unique_id=60039343]
 layout_mode = 2
 size_flags_vertical = 4
 theme_type_variation = &"ThePill"
 
-[node name="SetupRoom" type="Label" parent="SetupScreen/Header/RoomPill"]
+[node name="SetupRoom" type="Label" parent="SetupScreen/Header/RoomPill" unique_id=147106254]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"ChuDauMuc"
 theme_override_font_sizes/font_size = 24
 text = "PHÒNG —"
 
-[node name="SetupRole" type="Label" parent="SetupScreen/Header"]
+[node name="SetupRole" type="Label" parent="SetupScreen/Header" unique_id=2068644180]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 4
 theme_type_variation = &"ChuNoi"
 text = "Chọn luật rồi xác nhận để mở sảnh."
 autowrap_mode = 3
 
-[node name="Body" type="PanelContainer" parent="SetupScreen"]
+[node name="Body" type="PanelContainer" parent="SetupScreen" unique_id=2028485809]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -394,52 +393,52 @@ offset_bottom = -112.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SetupControls" type="HBoxContainer" parent="SetupScreen/Body"]
+[node name="SetupControls" type="HBoxContainer" parent="SetupScreen/Body" unique_id=688541370]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 26
 
-[node name="Left" type="VBoxContainer" parent="SetupScreen/Body/SetupControls"]
+[node name="Left" type="VBoxContainer" parent="SetupScreen/Body/SetupControls" unique_id=1996281545]
 custom_minimum_size = Vector2(450, 0)
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="PercentTitle" type="Label" parent="SetupScreen/Body/SetupControls/Left"]
+[node name="PercentTitle" type="Label" parent="SetupScreen/Body/SetupControls/Left" unique_id=2010824350]
 layout_mode = 2
 theme_type_variation = &"ChuDauMuc"
 text = "TỶ LỆ 4 LOẠI Ô"
 
-[node name="PresetRow" type="HBoxContainer" parent="SetupScreen/Body/SetupControls/Left"]
+[node name="PresetRow" type="HBoxContainer" parent="SetupScreen/Body/SetupControls/Left" unique_id=594639593]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="PercentGrid" type="VBoxContainer" parent="SetupScreen/Body/SetupControls/Left"]
+[node name="PercentGrid" type="VBoxContainer" parent="SetupScreen/Body/SetupControls/Left" unique_id=2126134580]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Sep" type="VSeparator" parent="SetupScreen/Body/SetupControls"]
+[node name="Sep" type="VSeparator" parent="SetupScreen/Body/SetupControls" unique_id=1174690105]
 layout_mode = 2
 
-[node name="Right" type="VBoxContainer" parent="SetupScreen/Body/SetupControls"]
+[node name="Right" type="VBoxContainer" parent="SetupScreen/Body/SetupControls" unique_id=1687904552]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
-[node name="RuleTitle" type="Label" parent="SetupScreen/Body/SetupControls/Right"]
+[node name="RuleTitle" type="Label" parent="SetupScreen/Body/SetupControls/Right" unique_id=822423108]
 layout_mode = 2
 theme_type_variation = &"ChuDauMuc"
 text = "NHỊP ĐỘ & PHẦN THƯỞNG"
 
-[node name="RuleGrid" type="GridContainer" parent="SetupScreen/Body/SetupControls/Right"]
+[node name="RuleGrid" type="GridContainer" parent="SetupScreen/Body/SetupControls/Right" unique_id=1910629677]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 14
 theme_override_constants/v_separation = 10
 columns = 2
 
-[node name="Footer" type="HBoxContainer" parent="SetupScreen"]
+[node name="Footer" type="HBoxContainer" parent="SetupScreen" unique_id=356105069]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -453,25 +452,25 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_constants/separation = 18
 
-[node name="StatusPill" type="PanelContainer" parent="SetupScreen/Footer"]
+[node name="StatusPill" type="PanelContainer" parent="SetupScreen/Footer" unique_id=455583828]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_type_variation = &"ThePill"
 
-[node name="SetupStatus" type="Label" parent="SetupScreen/Footer/StatusPill"]
+[node name="SetupStatus" type="Label" parent="SetupScreen/Footer/StatusPill" unique_id=1280672949]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Tổng tỷ lệ ô: 100% — sẵn sàng"
 
-[node name="SetupLeaveBtn" type="Button" parent="SetupScreen/Footer"]
+[node name="SetupLeaveBtn" type="Button" parent="SetupScreen/Footer" unique_id=474454118]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 68)
 layout_mode = 2
 theme_type_variation = &"NutDo"
 text = "RỜI PHÒNG"
 
-[node name="SetupConfirmBtn" type="Button" parent="SetupScreen/Footer"]
+[node name="SetupConfirmBtn" type="Button" parent="SetupScreen/Footer" unique_id=206204412]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(330, 68)
 layout_mode = 2
@@ -479,7 +478,7 @@ theme_type_variation = &"NutVang"
 theme_override_font_sizes/font_size = 28
 text = "VÀO SẢNH!"
 
-[node name="Footer" type="Label" parent="."]
+[node name="Footer" type="Label" parent="." unique_id=1959791546]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -494,10 +493,10 @@ grow_horizontal = 0
 grow_vertical = 0
 theme_type_variation = &"ChuNoi"
 theme_override_font_sizes/font_size = 16
-text = "RUMBLE REEF · BUILD 0.1.1"
+text = "RUMBLE REEF · BUILD 0.1.2"
 horizontal_alignment = 2
 
-[node name="QuitOverlay" type="ColorRect" parent="."]
+[node name="QuitOverlay" type="ColorRect" parent="." unique_id=2071982093]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -508,7 +507,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.169, 0.106, 0.239, 0.6)
 
-[node name="Center" type="CenterContainer" parent="QuitOverlay"]
+[node name="Center" type="CenterContainer" parent="QuitOverlay" unique_id=77734003]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -516,35 +515,35 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="QuitPanel" type="PanelContainer" parent="QuitOverlay/Center"]
+[node name="QuitPanel" type="PanelContainer" parent="QuitOverlay/Center" unique_id=464288374]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(520, 0)
 layout_mode = 2
 theme_type_variation = &"KhungHong"
 
-[node name="VBox" type="VBoxContainer" parent="QuitOverlay/Center/QuitPanel"]
+[node name="VBox" type="VBoxContainer" parent="QuitOverlay/Center/QuitPanel" unique_id=1876607108]
 layout_mode = 2
 theme_override_constants/separation = 18
 
-[node name="Title" type="Label" parent="QuitOverlay/Center/QuitPanel/VBox"]
+[node name="Title" type="Label" parent="QuitOverlay/Center/QuitPanel/VBox" unique_id=1558161459]
 layout_mode = 2
 theme_type_variation = &"ChuTieuDe"
 theme_override_font_sizes/font_size = 48
 text = "THOÁT GAME?"
 horizontal_alignment = 1
 
-[node name="Message" type="Label" parent="QuitOverlay/Center/QuitPanel/VBox"]
+[node name="Message" type="Label" parent="QuitOverlay/Center/QuitPanel/VBox" unique_id=1921577852]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Bữa tiệc vẫn còn đang vui mà!"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="Actions" type="HBoxContainer" parent="QuitOverlay/Center/QuitPanel/VBox"]
+[node name="Actions" type="HBoxContainer" parent="QuitOverlay/Center/QuitPanel/VBox" unique_id=492279122]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="QuitCancelBtn" type="Button" parent="QuitOverlay/Center/QuitPanel/VBox/Actions"]
+[node name="QuitCancelBtn" type="Button" parent="QuitOverlay/Center/QuitPanel/VBox/Actions" unique_id=2125675773]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 68)
 layout_mode = 2
@@ -552,7 +551,7 @@ size_flags_horizontal = 3
 theme_type_variation = &"NutVang"
 text = "Ở LẠI"
 
-[node name="QuitConfirmBtn" type="Button" parent="QuitOverlay/Center/QuitPanel/VBox/Actions"]
+[node name="QuitConfirmBtn" type="Button" parent="QuitOverlay/Center/QuitPanel/VBox/Actions" unique_id=1474477593]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 68)
 layout_mode = 2
@@ -560,10 +559,10 @@ size_flags_horizontal = 3
 theme_type_variation = &"NutDo"
 text = "THOÁT"
 
-[node name="ClickSound" type="AudioStreamPlayer" parent="."]
+[node name="ClickSound" type="AudioStreamPlayer" parent="." unique_id=1859172669]
 stream = ExtResource("4_click")
 volume_db = -9.0
 
-[node name="CharacterCreator" parent="." instance=ExtResource("5_creator")]
+[node name="CharacterCreator" parent="." unique_id=743469635 instance=ExtResource("5_creator")]
 unique_name_in_owner = true
 layout_mode = 1
