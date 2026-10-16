@@ -10,30 +10,19 @@ func suite_name() -> String:
 func test_seed_is_repeatable_and_spawn_is_safe() -> void:
 	var state := Rules.initial([1, 2], 7)
 	assert_eq(state, Rules.initial([1, 2], 7))
-	assert_true(state.mines != Rules.initial([1, 2], 9).mines, "Narrow field should retain seeded route variety")
-	for index in Rules.COLUMNS * 2:
+	assert_true(state.mines != Rules.initial([1, 2], 9).mines, "Different seeds must randomize mine positions")
+	for index in Rules.COLUMNS * Rules.SAFE_ROWS:
 		assert_false(state.mines[index])
 	assert_eq(state.players["1"].hp, 2)
 
 
-func test_connected_route_for_many_seeds() -> void:
+func test_dense_random_fields_for_many_seeds() -> void:
+	var danger_cells := Rules.COLUMNS * (Rules.ROWS - Rules.SAFE_ROWS)
 	for seed in 100:
 		var state := Rules.initial([1], seed)
-		var reached := {0: true}
-		var queue: Array = [0]
-		while not queue.is_empty():
-			var index: int = queue.pop_front()
-			for direction: Vector2i in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
-				var x := index % Rules.COLUMNS + direction.x
-				var y := index / Rules.COLUMNS + direction.y
-				var neighbor := y * Rules.COLUMNS + x
-				if x >= 0 and x < Rules.COLUMNS and y >= 0 and y < Rules.ROWS and not state.mines[neighbor] and not reached.has(neighbor):
-					reached[neighbor] = true
-					queue.append(neighbor)
-		var success := false
-		for index in range((Rules.ROWS - 1) * Rules.COLUMNS, Rules.ROWS * Rules.COLUMNS):
-			success = success or reached.has(index)
-		assert_true(success, "Seed %d must have a traversable route" % seed)
+		var density := float(state.mines.count(true)) / danger_cells
+		assert_true(density >= 0.6 and density <= 0.7, "Seed %d must remain densely mined" % seed)
+		assert_eq(state.mines.size(), Rules.COLUMNS * Rules.ROWS)
 
 
 func test_two_lives_and_no_double_damage() -> void:
@@ -78,15 +67,27 @@ func test_no_auto_scan_and_explicit_scan_cooldown() -> void:
 	assert_false(Rules.scan(state, 999, Vector2(0, 1), 3))
 
 
-func test_dense_single_corridor_rows() -> void:
+func test_random_generation_does_not_reserve_edges_or_a_corridor() -> void:
+	var row_counts := {}
+	var mined_cells := {}
+	var clear_cells := {}
 	for seed in 100:
 		var state := Rules.initial([1], seed)
-		for row in range(2, Rules.ROWS):
-			var clear := 0
+		for row in range(Rules.SAFE_ROWS, Rules.ROWS):
+			var mine_count := 0
 			for column in Rules.COLUMNS:
-				clear += 0 if state.mines[row * Rules.COLUMNS + column] else 1
-			assert_true(clear == 1 or clear == 2, "Only the route and its turning step are safe")
-			assert_true(state.mines[row * Rules.COLUMNS] and state.mines[(row + 1) * Rules.COLUMNS - 1], "Outer edges cannot bypass the corridor")
+				var index := row * Rules.COLUMNS + column
+				if state.mines[index]:
+					mine_count += 1
+					mined_cells[index] = true
+				else:
+					clear_cells[index] = true
+			row_counts[mine_count] = true
+	for count in range(Rules.COLUMNS + 1):
+		assert_true(row_counts.has(count), "Random rows can contain %d mines, including full barriers" % count)
+	var danger_cells := Rules.COLUMNS * (Rules.ROWS - Rules.SAFE_ROWS)
+	assert_eq(mined_cells.size(), danger_cells, "Every danger cell can contain a mine")
+	assert_eq(clear_cells.size(), danger_cells, "No lane or edge is permanently mined")
 
 
 func test_swept_movement_hits_intermediate_mine() -> void:

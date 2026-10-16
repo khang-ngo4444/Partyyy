@@ -5,6 +5,8 @@ const ROWS := 14
 const CELL := 2.0
 const LENGTH := ROWS * CELL
 const WIDTH := COLUMNS * CELL
+const SAFE_ROWS := 2
+const MINE_DENSITY := 0.65
 const SCAN_COOLDOWN := 0.7
 const SCAN_FLASH := 0.45
 const ROLLER_START := 2.0
@@ -17,23 +19,15 @@ static func initial(ids: Array, seed: int) -> Dictionary:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed
 	var mines: Array = []
-	for index in COLUMNS * ROWS:
-		mines.append(index >= COLUMNS * 2)
-	# One narrow connected corridor; every other cell in a danger row is mined.
-	var column := rng.randi_range(1, COLUMNS - 2)
-	var previous_bend := false
-	for row in range(2, ROWS):
-		var direction := -1 if rng.randi_range(0, 1) == 0 else 1
-		if column == 1:
-			direction = 1
-		elif column == COLUMNS - 2:
-			direction = -1
-		var bend := row == 2 or (not previous_bend and rng.randf() < 0.7)
-		var next := column + direction if bend else column
-		for x in range(mini(column, next), maxi(column, next) + 1):
-			mines[row * COLUMNS + x] = false
-		column = next
-		previous_bend = bend
+	mines.resize(COLUMNS * ROWS)
+	mines.fill(false)
+	var candidates := range(SAFE_ROWS * COLUMNS, mines.size())
+	var mine_count := roundi(candidates.size() * MINE_DENSITY)
+	# Sample the whole danger area without carving or reserving a safe route.
+	for _mine in mine_count:
+		var choice := rng.randi_range(0, candidates.size() - 1)
+		mines[candidates[choice]] = true
+		candidates.remove_at(choice)
 	var state := {"mines": mines, "revealed": {}, "exploded": {}, "players": {}, "events": {}}
 	for id: Variant in ids:
 		state.players[str(int(id))] = {"hp": 2, "distance": 0.0, "finished": -1.0,
