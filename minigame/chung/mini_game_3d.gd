@@ -82,6 +82,9 @@ func _ready() -> void:
 	# Phải gỡ đăng ký RPC khi rời cây (mỗi ván tạo mới).
 	tree_exiting.connect(func(): Fusion.unregister_broadcast_receiver(self))
 	set_process(false)
+	var authored_arena := get_node_or_null("Arena") as Node3D
+	if authored_arena != null:
+		authored_arena.hide()
 
 
 func bat_dau(nguoi_choi: Array, giong: int) -> void:
@@ -92,9 +95,12 @@ func bat_dau(nguoi_choi: Array, giong: int) -> void:
 	for id in nguoi_choi:
 		_song[int(id)] = -1.0
 
-	san = san_scene.instantiate() as Node3D
+	san = get_node_or_null("Arena") as Node3D
+	if san == null:
+		san = san_scene.instantiate() as Node3D
+		get_tree().current_scene.add_child(san)
 	san.position.y = CAO_SAN
-	get_tree().current_scene.add_child(san)
+	san.show()
 	ThemeBackdrop.attach(san, self, _cam_san())
 	_dung_san()
 

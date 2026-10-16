@@ -2,9 +2,17 @@
 
 [ext_resource type="Script" uid="uid://bpvcdyppgapr2" path="res://minigame/minefield/minefield.gd" id="1_c1tth"]
 [ext_resource type="PackedScene" uid="uid://c27so1jvspl5d" path="res://minigame/minefield/mine_arena.tscn" id="2_5m4sc"]
+[ext_resource type="Material" uid="uid://cigthu4kaxj8s" path="res://minigame/minefield/palette_0.tres" id="2_c87ss"]
+[ext_resource type="Material" uid="uid://djtabw65vfjdi" path="res://minigame/minefield/palette_1.tres" id="3_b1vlx"]
+[ext_resource type="Material" uid="uid://da746dn8nlbkm" path="res://minigame/minefield/palette_2.tres" id="4_qfnvp"]
+[ext_resource type="Material" uid="uid://dj7f3wksv02td" path="res://minigame/minefield/palette_3.tres" id="5_nigdk"]
+[ext_resource type="Material" uid="uid://df0r2jtnq6r3o" path="res://minigame/minefield/palette_4.tres" id="6_li0ce"]
 
 [node name="Minefield" type="Node" unique_id=1425913028]
 script = ExtResource("1_c1tth")
-san_scene = ExtResource("2_5m4sc")
+tile_materials = Array[StandardMaterial3D]([ExtResource("2_c87ss"), ExtResource("3_b1vlx"), ExtResource("4_qfnvp"), ExtResource("5_nigdk"), ExtResource("6_li0ce")])
 ket_thuc_khi_con_mot = false
 ten = "DÒ MÌN"
+
+[node name="Arena" parent="." unique_id=1762215677 instance=ExtResource("2_5m4sc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 300, 0)

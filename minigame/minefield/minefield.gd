@@ -1,10 +1,9 @@
 extends "res://minigame/machine_playground/objective_game.gd"
 
 const Rules = preload("res://minigame/minefield/mine_rules.gd")
-const TILE_SCENE = preload("res://minigame/minefield/mine_tile.tscn")
+@export var tile_materials: Array[StandardMaterial3D] = []
 var _tiles: Array[Node3D] = []
 var _seen_events: Dictionary = {}
-var _materials: Array[StandardMaterial3D] = []
 
 
 func initial_shared_state(ids: Array, seed: int) -> Dictionary:
@@ -17,13 +16,8 @@ func _cho_vao(index: int, total: int) -> Vector3:
 
 
 func _dung_san() -> void:
-	for index in 5:
-		_materials.append(load("res://minigame/minefield/palette_%d.tres" % index))
 	for index in Rules.COLUMNS * Rules.ROWS:
-		var tile: Node3D = TILE_SCENE.instantiate()
-		var center: Vector2 = Rules.center(index)
-		tile.position = Vector3(center.x, 0, -center.y)
-		san.get_node("Tiles").add_child(tile)
+		var tile: Node3D = san.get_node("Tiles/Tile%02d" % index)
 		_tiles.append(tile)
 
 
@@ -81,7 +75,7 @@ func _present_shared_players() -> void:
 		clue.visible = exploded
 		clue.text = "✦" if exploded else ""
 		var palette := 4 if exploded else (3 if revealed and mine else (2 if revealed else index % 2))
-		tile.get_node("Tile").material_override = _materials[palette]
+		tile.get_node("Tile").material_override = tile_materials[palette]
 	var id := NetManager.local_id()
 	var own: Dictionary = state.players.get(str(id), {})
 	var player := _nguoi(id)

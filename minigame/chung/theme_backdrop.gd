@@ -36,6 +36,9 @@ static func key_for(game: Node) -> String:
 
 
 static func attach(arena: Node3D, game: Node, camera: Camera3D) -> Node3D:
+	var authored_backdrop := arena.get_node_or_null("ThemeBackdrop") as Node3D
+	if authored_backdrop != null:
+		return authored_backdrop
 	var key := key_for(game)
 	if not THEMES.has(key):
 		return null

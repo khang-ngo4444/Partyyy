@@ -1,20 +1,11 @@
 [gd_scene format=3 uid="uid://c27so1jvspl5d"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_owec8"]
-sky_top_color = Color(0.38, 0.45, 0.55, 1)
-sky_horizon_color = Color(0.65, 0.67, 0.7, 1)
-ground_bottom_color = Color(0.2, 0.17, 0.13, 1)
-ground_horizon_color = Color(0.65, 0.67, 0.7, 1)
-
-[sub_resource type="Sky" id="Sky_mjqpy"]
-sky_material = SubResource("ProceduralSkyMaterial_owec8")
-
-[sub_resource type="Environment" id="Environment_6chf2"]
-background_mode = 2
-sky = SubResource("Sky_mjqpy")
-ambient_light_source = 3
-ambient_light_color = Color(1, 1, 1, 1)
-ambient_light_energy = 0.65
+[ext_resource type="Environment" uid="uid://dn8ha2nxj3buu" path="res://minigame/chung/theme_environment.tres" id="1_042ue"]
+[ext_resource type="PackedScene" uid="uid://ierbmu5oga38" path="res://minigame/minefield/mine_tile.tscn" id="1_vxdp6"]
+[ext_resource type="Material" uid="uid://b5h7fuu2js712" path="res://minigame/minefield/wall_short.tres" id="2_ej88t"]
+[ext_resource type="Material" uid="uid://ctowdj3bvuh5k" path="res://minigame/minefield/wall_long.tres" id="3_042ue"]
+[ext_resource type="Material" uid="uid://oivoaxp30gxn" path="res://minigame/minefield/ceiling.tres" id="4_hsut3"]
+[ext_resource type="Material" uid="uid://bc8oe0pns7ilc" path="res://minigame/minefield/scenic_ground.tres" id="5_17e0k"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_naolb"]
 albedo_color = Color(0.64705884, 0.79607844, 0.8156863, 1)
@@ -103,20 +94,36 @@ albedo_color = Color(0.96862745, 0.87058824, 0.5411765, 1)
 [sub_resource type="BoxMesh" id="BoxMesh_vxdp6"]
 size = Vector3(8, 0.08, 3)
 
+[sub_resource type="PlaneMesh" id="PlaneMesh_obnx2"]
+size = Vector2(1, 1)
+orientation = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_p1fcj"]
+size = Vector2(1, 1)
+orientation = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_iw3iv"]
+size = Vector2(1, 1)
+orientation = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_mwpdg"]
+size = Vector2(1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cxc28"]
+
 [node name="FactoryArena" type="Node3D" unique_id=1762215677]
 
 [node name="Cam" type="Camera3D" parent="." unique_id=1933533856]
 transform = Transform3D(1, 0, 0, 0, 0.51481885, 0.857299, 0, -0.857299, 0.51481885, 0, 18, 10)
+environment = ExtResource("1_042ue")
 fov = 55.0
 
 [node name="Sun" type="DirectionalLight3D" parent="." unique_id=1566810662]
 transform = Transform3D(0.87758255, 0.40342268, -0.25903472, 0, 0.5403023, 0.84147096, 0.47942555, -0.73846024, 0.47415984, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Environment" type="WorldEnvironment" parent="." unique_id=205068056]
-environment = SubResource("Environment_6chf2")
-
 [node name="HUD" type="CanvasLayer" parent="." unique_id=458266530]
+visible = false
 
 [node name="Progress" type="Label" parent="HUD" unique_id=2075765842]
 offset_left = 24.0
@@ -157,6 +164,174 @@ metadata/_godot_ai_physics_v1 = {
 }
 
 [node name="Tiles" type="Node3D" parent="." unique_id=344420213]
+
+[node name="Tile00" parent="Tiles" unique_id=1183930121 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -1)
+
+[node name="Tile01" parent="Tiles" unique_id=382116882 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -1)
+
+[node name="Tile02" parent="Tiles" unique_id=2020501432 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -1)
+
+[node name="Tile03" parent="Tiles" unique_id=352142900 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -1)
+
+[node name="Tile04" parent="Tiles" unique_id=1907493749 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -3)
+
+[node name="Tile05" parent="Tiles" unique_id=652149050 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -3)
+
+[node name="Tile06" parent="Tiles" unique_id=618395178 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -3)
+
+[node name="Tile07" parent="Tiles" unique_id=1275356082 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -3)
+
+[node name="Tile08" parent="Tiles" unique_id=733992677 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -5)
+
+[node name="Tile09" parent="Tiles" unique_id=1431322722 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -5)
+
+[node name="Tile10" parent="Tiles" unique_id=1026234903 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -5)
+
+[node name="Tile11" parent="Tiles" unique_id=675624409 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -5)
+
+[node name="Tile12" parent="Tiles" unique_id=1149659761 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -7)
+
+[node name="Tile13" parent="Tiles" unique_id=1304583013 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -7)
+
+[node name="Tile14" parent="Tiles" unique_id=2032020696 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -7)
+
+[node name="Tile15" parent="Tiles" unique_id=2049938310 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -7)
+
+[node name="Tile16" parent="Tiles" unique_id=187080320 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -9)
+
+[node name="Tile17" parent="Tiles" unique_id=1971353007 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -9)
+
+[node name="Tile18" parent="Tiles" unique_id=638128230 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -9)
+
+[node name="Tile19" parent="Tiles" unique_id=1971322202 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -9)
+
+[node name="Tile20" parent="Tiles" unique_id=727212414 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -11)
+
+[node name="Tile21" parent="Tiles" unique_id=2007842285 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -11)
+
+[node name="Tile22" parent="Tiles" unique_id=957229591 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -11)
+
+[node name="Tile23" parent="Tiles" unique_id=2055230993 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -11)
+
+[node name="Tile24" parent="Tiles" unique_id=538816950 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -13)
+
+[node name="Tile25" parent="Tiles" unique_id=262185423 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -13)
+
+[node name="Tile26" parent="Tiles" unique_id=1422685509 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -13)
+
+[node name="Tile27" parent="Tiles" unique_id=124420938 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -13)
+
+[node name="Tile28" parent="Tiles" unique_id=1062081677 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -15)
+
+[node name="Tile29" parent="Tiles" unique_id=330143385 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -15)
+
+[node name="Tile30" parent="Tiles" unique_id=330368245 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -15)
+
+[node name="Tile31" parent="Tiles" unique_id=709519574 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -15)
+
+[node name="Tile32" parent="Tiles" unique_id=1819423925 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -17)
+
+[node name="Tile33" parent="Tiles" unique_id=785587440 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -17)
+
+[node name="Tile34" parent="Tiles" unique_id=243496546 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -17)
+
+[node name="Tile35" parent="Tiles" unique_id=1774669285 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -17)
+
+[node name="Tile36" parent="Tiles" unique_id=628603119 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -19)
+
+[node name="Tile37" parent="Tiles" unique_id=1990067716 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -19)
+
+[node name="Tile38" parent="Tiles" unique_id=1271196504 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -19)
+
+[node name="Tile39" parent="Tiles" unique_id=1288377265 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -19)
+
+[node name="Tile40" parent="Tiles" unique_id=65212264 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -21)
+
+[node name="Tile41" parent="Tiles" unique_id=1573920124 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -21)
+
+[node name="Tile42" parent="Tiles" unique_id=1801587039 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -21)
+
+[node name="Tile43" parent="Tiles" unique_id=1610450284 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -21)
+
+[node name="Tile44" parent="Tiles" unique_id=755633232 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -23)
+
+[node name="Tile45" parent="Tiles" unique_id=131534412 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -23)
+
+[node name="Tile46" parent="Tiles" unique_id=770234642 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -23)
+
+[node name="Tile47" parent="Tiles" unique_id=1473789952 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -23)
+
+[node name="Tile48" parent="Tiles" unique_id=1771954095 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -25)
+
+[node name="Tile49" parent="Tiles" unique_id=1302908741 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -25)
+
+[node name="Tile50" parent="Tiles" unique_id=31902526 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -25)
+
+[node name="Tile51" parent="Tiles" unique_id=1226692078 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -25)
+
+[node name="Tile52" parent="Tiles" unique_id=1594225079 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -27)
+
+[node name="Tile53" parent="Tiles" unique_id=1571902880 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -27)
+
+[node name="Tile54" parent="Tiles" unique_id=1792930322 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -27)
+
+[node name="Tile55" parent="Tiles" unique_id=78622318 instance=ExtResource("1_vxdp6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -27)
 
 [node name="Roller" type="Node3D" parent="." unique_id=384463500]
 
@@ -204,3 +379,43 @@ mesh = SubResource("TorusMesh_e7ayv")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, -29.5)
 material_override = SubResource("StandardMaterial3D_7w87j")
 mesh = SubResource("BoxMesh_vxdp6")
+
+[node name="ThemeBackdrop" type="Node3D" parent="." unique_id=589135220]
+
+[node name="Wrap" type="Node3D" parent="ThemeBackdrop" unique_id=1884350279]
+
+[node name="BackWall" type="MeshInstance3D" parent="ThemeBackdrop/Wrap" unique_id=1050678694]
+transform = Transform3D(12.8, 0, 0, 0, 52, 0, 0, 0, 1, 0, 10, -34.4)
+material_override = ExtResource("2_ej88t")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_obnx2")
+
+[node name="LeftWall" type="MeshInstance3D" parent="ThemeBackdrop/Wrap" unique_id=1748531978]
+transform = Transform3D(-2.832498e-06, 0, 1, 0, 52, 0, -64.8, 0, -4.371139e-08, -6.4, 10, -2)
+material_override = ExtResource("3_042ue")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_p1fcj")
+
+[node name="RightWall" type="MeshInstance3D" parent="ThemeBackdrop/Wrap" unique_id=1696753465]
+transform = Transform3D(-2.832498e-06, 0, -1, 0, 52, 0, 64.8, 0, -4.371139e-08, 6.4, 10, -2)
+material_override = ExtResource("3_042ue")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_iw3iv")
+
+[node name="FrontWall" type="MeshInstance3D" parent="ThemeBackdrop/Wrap" unique_id=705621898]
+transform = Transform3D(-12.8, 0, -8.742278e-08, 0, 52, 0, 1.1190116e-06, 0, -1, 0, 10, 30.4)
+material_override = ExtResource("2_ej88t")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_obnx2")
+
+[node name="Ceiling" type="MeshInstance3D" parent="ThemeBackdrop/Wrap" unique_id=1593625633]
+transform = Transform3D(12.8, 0, 0, 0, -1, 5.664996e-06, 0, -8.742278e-08, -64.8, 0, 36, -2)
+material_override = ExtResource("4_hsut3")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_mwpdg")
+
+[node name="HorizonGround" type="MeshInstance3D" parent="ThemeBackdrop" unique_id=742016250]
+transform = Transform3D(12.8, 0, 0, 0, 0.2, 0, 0, 0, 64.8, 0, -16, -2)
+material_override = ExtResource("5_17e0k")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_cxc28")

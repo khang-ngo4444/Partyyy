@@ -1,5 +1,17 @@
 # Dò mìn
 
+Open `minefield.tscn` to see the authored `Arena` instance in the editor.
+`mine_arena.tscn` contains all 56 named tile instances under `Tiles`, the camera,
+floor/collider, roller, scanner, finish, HUD and complete `ThemeBackdrop`.
+Edit their nodes or material resources directly; starting a round reuses these
+nodes and preserves authored scenery transforms/materials. Gameplay code handles
+the seeded mine state, scanning, damage and moving existing objects; it does
+not build the field or enclosure. The Arena instance sits at the minigame's
+300 m elevation and is hidden until the round starts.
+The root's `tile_materials` Inspector array controls tile state colors. The
+environment is assigned to `Arena/Cam`, so loading the scene cannot replace
+the lobby's world environment.
+
 Shared free movement field, two hearts, 28 m forward progress, maximum 60 seconds.
 Four columns make the playable road 8 m wide. Mines are sampled randomly across
 the entire danger area at 65% density (31 of 48 danger cells), using the shared

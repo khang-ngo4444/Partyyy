@@ -40,6 +40,13 @@ func _runtime() -> void:
 	var controller: Node = load("res://minigame/quan_tro_minigame.tscn").instantiate()
 	fixture.add_child(controller)
 	var game: Node = load("res://minigame/minefield/minefield.tscn").instantiate()
+	var authored_arena: Node3D = game.get_node("Arena")
+	check(authored_arena.get_node("Tiles").get_child_count() == 56, "All tiles exist before running the scene")
+	check(authored_arena.has_node("ThemeBackdrop/Wrap/BackWall"), "Scenery exists in the authored scene")
+	check(authored_arena.get_node("Cam").environment != null and not authored_arena.has_node("Environment"), "Authored camera environment cannot change the lobby world")
+	var authored_wall: MeshInstance3D = authored_arena.get_node("ThemeBackdrop/Wrap/BackWall")
+	var authored_material := authored_wall.material_override
+	var authored_wall_transform := authored_wall.transform
 	fixture.add_child(game)
 	var snapshot := {"round": 43, "code": "minefield", "seed": 7, "ids": [id],
 		"alive": {str(id): -1}, "start": Engine.get_singleton("Fusion").call("get_network_time"),
@@ -47,12 +54,18 @@ func _runtime() -> void:
 		"objective": game.initial_shared_state([id], 7), "parameters": {"objectives": true}}
 	game.shared_snapshot = snapshot.duplicate(true)
 	game.bat_dau([id], 7)
+	check(game.san == authored_arena, "Gameplay uses the existing Arena node")
+	check(game.san.get_node("Tiles").get_child_count() == 56, "Starting the round does not duplicate tiles")
+	check(authored_wall.material_override == authored_material and authored_wall.transform == authored_wall_transform, "Runtime preserves authored scenery settings")
 	game.set_process(false)
 	game.set_physics_process(false)
 	await physics_frame
 	await physics_frame
 	game._present_shared_players()
 	check(game._tiles.size() == 56, "Four-column field uses 56 tiles")
+	for index in game._tiles.size():
+		var center: Vector2 = load("res://minigame/minefield/mine_rules.gd").center(index)
+		check(game._tiles[index].position == Vector3(center.x, 0, -center.y), "Authored tile matches rule coordinates: %d" % index)
 	check(game.giay_con_lai() > 59 and game.giay_con_lai() <= 60, "One minute timer")
 	check(player.so_lan_nhay == 0, "Jumping is disabled during minefield")
 	var ray := PhysicsRayQueryParameters3D.create(Vector3(0, 310, -20), Vector3(0, 290, -20), 1)

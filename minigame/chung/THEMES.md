@@ -2,7 +2,7 @@
 
 Toàn bộ 14 minigame đang hoạt động có lớp cảnh bao quanh. Ưu tiên cảnh 2.5D: hình render từ model có sẵn phủ lên vách liên tục, bầu trời và nền cùng tông. Đã bỏ nhóm cột/đạo cụ rời từng đặt quanh sân.
 
-13 sân 3D dùng prefab `theme_backdrop.tscn`: bốn vách, trần và nền phong cảnh. Tank dùng `ScenicFrame`, một TextureRect phủ viewport sau bàn chơi 2D. Temporal Trails chưa hoạt động vẫn có cấu hình tương thích.
+12 sân 3D dùng prefab `theme_backdrop.tscn`: bốn vách, trần và nền phong cảnh. Minefield gắn sẵn toàn bộ bao cảnh trong `mine_arena.tscn`, cùng 56 ô và camera; runtime giữ nguyên các node/material đã chỉnh trong editor. Tank dùng `ScenicFrame`, một TextureRect phủ viewport sau bàn chơi 2D. Temporal Trails chưa hoạt động vẫn có cấu hình tương thích.
 
 | Chủ đề | Minigame |
 | --- | --- |
