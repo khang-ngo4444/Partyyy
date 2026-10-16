@@ -1,9 +1,17 @@
 extends RefCounted
 
-## Sparse scenery around an arena. All visual nodes/resources are authored in the prefab.
+## Continuous illustrated enclosure around each arena, built from the authored prefab.
 ## Decorative walls have no collision and never provide a safe landing surface.
 const SCENE = preload("res://minigame/chung/theme_backdrop.tscn")
 const ENVIRONMENT = preload("res://minigame/chung/theme_environment.tres")
+const WALL_MATERIAL = preload("res://minigame/chung/wallpaper.tres")
+const ARTWORK_HEIGHT := {"Forest": 14.0, "Rocks": 52.0, "Castle": 12.0, "Palms": 24.0, "Workshop": 12.0}
+const ARENA_MARGIN := 1.4
+const LASER_MARGIN := 5.0
+const SCENERY_BOTTOM := -16.0
+const ROOM_TOP := 36.0
+const MOUNTAIN_TOP := 56.0
+const CAMERA_CLEARANCE := 24.0
 
 const THEMES := {
 	"breaking_blocks": [Vector2(24, 24), Vector2.ZERO, "Castle", "#ccd5f7", "#b19edb", "#7284b8"],
@@ -33,7 +41,7 @@ static func attach(arena: Node3D, game: Node, camera: Camera3D) -> Node3D:
 		return null
 	var backdrop := SCENE.instantiate() as Node3D
 	arena.add_child(backdrop)
-	configure(backdrop, key)
+	configure(backdrop, key, camera)
 	# Spotlight owns its camera environment and switches every light on/off itself.
 	if camera != null and key != "spotlights":
 		var environment := ENVIRONMENT.duplicate(true) as Environment
@@ -46,92 +54,69 @@ static func attach(arena: Node3D, game: Node, camera: Camera3D) -> Node3D:
 	return backdrop
 
 
-static func configure(backdrop: Node3D, key: String) -> void:
+const WALLPAPERS := {
+	"Forest": preload("res://minigame/chung/scenery/forest.png"),
+	"Rocks": preload("res://minigame/chung/scenery/rocks.png"),
+	"Castle": preload("res://minigame/chung/scenery/castle.png"),
+	"Palms": preload("res://minigame/chung/scenery/palms.png"),
+	"Workshop": preload("res://minigame/chung/scenery/workshop.png"),
+}
+
+
+static func configure(backdrop: Node3D, key: String, camera: Camera3D = null) -> void:
 	var theme: Array = THEMES[key]
 	var footprint: Vector2 = theme[0]
 	var center: Vector2 = theme[1]
-	var half := footprint * 0.5 + Vector2(5, 5)
-	var height := 12.0 if key != "lo_da" else 52.0
-	var base := -3.0
-	var wall_color := Color(theme[4])
-	var back: MeshInstance3D = backdrop.get_node("Wrap/BackWall")
-	var left: MeshInstance3D = backdrop.get_node("Wrap/LeftWall")
-	var right: MeshInstance3D = backdrop.get_node("Wrap/RightWall")
-	back.position = Vector3(center.x, base + height * 0.5, center.y - half.y)
-	back.scale = Vector3(half.x * 2, height, 0.2)
-	for pair: Array in [[left, -1.0], [right, 1.0]]:
-		var wall: MeshInstance3D = pair[0]
-		wall.position = Vector3(center.x + half.x * float(pair[1]), base + height * 0.5, center.y)
-		wall.scale = Vector3(0.2, height, half.y * 2)
-	for wall: MeshInstance3D in [back, left, right]:
-		_tint(wall, wall_color)
-		# Theatre walls receive light: no bright unshaded backdrop during blackout.
-		if key == "spotlights":
-			(wall.material_override as StandardMaterial3D).shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL
+	var margin := LASER_MARGIN if key == "laser_leap" else ARENA_MARGIN
+	var half := footprint * 0.5 + Vector2.ONE * margin
+	if camera != null and camera.projection == Camera3D.PROJECTION_ORTHOGONAL:
+		# Parallel rays can start outside narrow side walls in a wide viewport.
+		var aspect := camera.get_viewport().get_visible_rect().size.aspect()
+		var view_width := camera.size * aspect if camera.keep_aspect == Camera3D.KEEP_HEIGHT else camera.size
+		half.x = maxf(half.x, view_width * 0.5 + margin)
+	var bottom := SCENERY_BOTTOM
+	var top := MOUNTAIN_TOP if key == "lo_da" else ROOM_TOP
+	var front := half.y + CAMERA_CLEARANCE # Keep the arena camera inside the illustrated shell.
+	var height := top - bottom
+	var middle_y := (top + bottom) * 0.5
+	var depth := front + half.y
+	var middle_z := center.y + (front - half.y) * 0.5
+	var walls := [
+		["BackWall", Vector3(center.x, middle_y, center.y - half.y), 0.0, half.x * 2],
+		["LeftWall", Vector3(center.x - half.x, middle_y, middle_z), PI * 0.5, depth],
+		["RightWall", Vector3(center.x + half.x, middle_y, middle_z), -PI * 0.5, depth],
+		["FrontWall", Vector3(center.x, middle_y, center.y + front), PI, half.x * 2],
+	]
+	for specification: Array in walls:
+		var wall: MeshInstance3D = backdrop.get_node("Wrap/" + str(specification[0]))
+		wall.position = specification[1]
+		wall.rotation = Vector3(0, float(specification[2]), 0)
+		wall.scale = Vector3(float(specification[3]), height, 1)
+		var material := WALL_MATERIAL.duplicate() as ShaderMaterial
+		material.set_shader_parameter("wallpaper", WALLPAPERS[str(theme[2])])
+		material.set_shader_parameter("tint", Color(theme[4]).lerp(Color.WHITE, 0.75))
+		material.set_shader_parameter("wall_size", Vector2(float(specification[3]), height))
+		material.set_shader_parameter("wall_top", top)
+		material.set_shader_parameter("artwork_height", ARTWORK_HEIGHT[str(theme[2])])
+		material.set_shader_parameter("receive_lighting", key == "spotlights")
+		wall.material_override = material
+	var ceiling: MeshInstance3D = backdrop.get_node("Wrap/Ceiling")
+	ceiling.position = Vector3(center.x, top, middle_z)
+	ceiling.rotation = Vector3(PI, 0, 0)
+	ceiling.scale = Vector3(half.x * 2, 1, depth)
+	_tint(ceiling, Color(theme[3]))
+	var ceiling_material := ceiling.material_override as StandardMaterial3D
+	ceiling_material.albedo_texture = null
+	ceiling_material.cull_mode = BaseMaterial3D.CULL_BACK
+	ceiling_material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL if key == "spotlights" else BaseMaterial3D.SHADING_MODE_UNSHADED
 	var ground: MeshInstance3D = backdrop.get_node("HorizonGround")
-	ground.position = Vector3(center.x, -15, center.y)
-	ground.scale = Vector3(half.x * 2, 0.2, half.y * 2)
+	ground.position = Vector3(center.x, bottom, middle_z)
+	ground.scale = Vector3(half.x * 2, 0.2, depth)
 	_tint(ground, Color(theme[5]))
-	ground.visible = key not in ["spotlights", "wave_hide", "magma"]
-	for group: Node3D in backdrop.get_node("Decorations").get_children():
-		group.visible = group.name == String(theme[2])
-		if not group.visible:
-			continue
-		_arrange_props(group, footprint, center, key)
-		if group.name == "Rocks":
-			for mesh: MeshInstance3D in group.find_children("*", "MeshInstance3D", true, false):
-				var source := mesh.get_active_material(0) as StandardMaterial3D
-				if source != null:
-					var rock_material := source.duplicate() as StandardMaterial3D
-					rock_material.albedo_texture = null
-					rock_material.albedo_color = wall_color.darkened(0.2)
-					mesh.material_override = rock_material
-
-
-static func _arrange_props(group: Node3D, footprint: Vector2, center: Vector2, key: String) -> void:
-	# Lava and ocean surfaces extend beyond the playable island. Dress the island's
-	# perimeter, not the far edge of those large background planes.
-	if key in ["magma", "wave_hide"]:
-		footprint = Vector2(28, 28)
-	var side_x := footprint.x * 0.5 + 2.6
-	var z_start := center.y - footprint.y * 0.5 + 3.0
-	var z_end := center.y + footprint.y * 0.5 - 4.0
-	if key == "wave_hide":
-		side_x = 23.0
-		z_start = -20
-		z_end = 12
-	for index in group.get_child_count():
-		var prop := group.get_child(index) as Node3D
-		var z := lerpf(z_start, z_end, float(index / 2) / 3.0)
-		var y := maxf(-z, 0.0) * tan(0.20943951) if key == "lo_da" else -0.2
-		prop.position = Vector3(side_x * (-1 if index % 2 == 0 else 1), y, z)
-		var sizes := {"Forest": 5.0, "Rocks": 6.0, "Castle": 3.0, "Palms": 5.0, "Workshop": 3.0}
-		var size: float = sizes[String(group.name)]
-		prop.scale = Vector3.ONE * size
-		prop.rotation.y = PI * 0.5 * float(index % 4)
-		_keep_outside_playfield(prop, footprint.x * 0.5 + 1.0, index % 2 == 1)
-
-
-## Imported meshes can have off-center pivots. Place the whole scaled mesh outside,
-## rather than only its node origin, so scenery cannot cover a narrow route.
-static func _keep_outside_playfield(prop: Node3D, boundary: float, on_right: bool) -> void:
-	var minimum := INF
-	var maximum := -INF
-	for mesh: MeshInstance3D in prop.find_children("*", "MeshInstance3D", true, false):
-		var relative := Transform3D.IDENTITY
-		var ancestor: Node3D = mesh
-		while ancestor != prop:
-			relative = ancestor.transform * relative
-			ancestor = ancestor.get_parent() as Node3D
-		var bounds: AABB = (prop.transform * relative) * mesh.get_aabb()
-		minimum = minf(minimum, bounds.position.x)
-		maximum = maxf(maximum, bounds.end.x)
-	if minimum == INF:
-		return
-	if on_right:
-		prop.position.x += maxf(boundary - minimum, 0.0)
-	else:
-		prop.position.x -= maxf(maximum + boundary, 0.0)
+	# This is only scenery. Falling still eliminates players above this surface.
+	ground.visible = true
+	if key == "spotlights":
+		(ground.material_override as StandardMaterial3D).shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL
 
 
 static func _tint(mesh: MeshInstance3D, color: Color) -> void:

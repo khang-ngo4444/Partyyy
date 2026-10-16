@@ -108,8 +108,13 @@ func dung_som() -> void:
 			l.light_cull_mask = int(_den_ngoai[l])
 	_den_ngoai.clear()
 	for geometry in _lop_hinh:
-		if is_instance_valid(geometry):
+		# Arena geometry is about to be freed; changing its layers breaks light
+		# pairing on Godot 4.7 Forward+. Only surviving player meshes need restoring.
+		if is_instance_valid(geometry) and not san.is_ancestor_of(geometry):
+			var was_visible: bool = geometry.visible
+			geometry.visible = false
 			geometry.layers = int(_lop_hinh[geometry])
+			geometry.visible = was_visible
 	_lop_hinh.clear()
 	for node in _hien_phu:
 		if is_instance_valid(node):

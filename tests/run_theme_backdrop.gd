@@ -20,19 +20,18 @@ func _run() -> void:
 		var backdrop: Node3D = themes.SCENE.instantiate()
 		themes.configure(backdrop, key)
 		check(backdrop.find_children("*", "CollisionObject3D", true, false).is_empty(), key + ": scenery must not block players or catch a fall")
-		var active := 0
-		for group: Node3D in backdrop.get_node("Decorations").get_children():
-			if group.visible:
-				active += 1
-		check(active == 1, key + ": only the selected decoration set is drawn")
+		check(not backdrop.has_node("Decorations"), key + ": replace detached prop rows with illustrated walls")
+		check(backdrop.get_node("Wrap").get_child_count() == 5, key + ": four walls and a ceiling close the shell")
+		for name: String in ["BackWall", "LeftWall", "RightWall", "FrontWall"]:
+			var wall: MeshInstance3D = backdrop.get_node("Wrap/" + name)
+			check(wall.material_override.get_shader_parameter("wallpaper") is Texture2D and wall.mesh is PlaneMesh, key + ": continuous illustrated wall")
 		var ground: MeshInstance3D = backdrop.get_node("HorizonGround")
 		check(ground.position.y < -base.ROI_KHOI_SAN, key + ": scenic ground remains below elimination threshold")
 		if key == "spotlights":
-			var material: StandardMaterial3D = backdrop.get_node("Wrap/BackWall").material_override
-			check(material.shading_mode != BaseMaterial3D.SHADING_MODE_UNSHADED, "Theatre scenery must obey blackout")
+			var material: ShaderMaterial = backdrop.get_node("Wrap/BackWall").material_override
+			check(material.get_shader_parameter("receive_lighting") == true, "Theatre scenery must obey blackout")
 		if key == "lo_da":
-			var last: Node3D = backdrop.get_node("Decorations/Rocks/Prop0")
-			check(last.position.y > 25, "Mountain props follow the uphill arena elevation")
+			check(backdrop.get_node("Wrap/Ceiling").position.y > 40, "Mountain enclosure covers the uphill camera")
 		backdrop.free()
 	var first: Node3D = themes.SCENE.instantiate()
 	var second: Node3D = themes.SCENE.instantiate()

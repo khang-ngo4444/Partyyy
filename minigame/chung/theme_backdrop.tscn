@@ -1,32 +1,36 @@
 [gd_scene format=3 uid="uid://cx2toxkn3dgdc"]
 
-[ext_resource type="PackedScene" uid="uid://di0exlqdantmm" path="res://asset/kenney_nature-kit/Models/GLTF format/tree_pineRoundC.glb" id="1_mwpdg"]
 [ext_resource type="Texture2D" uid="uid://y530a0vaco2s" path="res://minigame/chung/theme_wall_gradient.tres" id="1_xqvpx"]
-[ext_resource type="PackedScene" uid="uid://bral1ouodajla" path="res://asset/kenney_nature-kit/Models/GLTF format/rock_tallH.glb" id="2_nvymp"]
-[ext_resource type="PackedScene" uid="uid://bj3p3rkqioqoi" path="res://asset/kenney_castle-kit/Models/GLB format/wall-pillar.glb" id="3_xqvpx"]
-[ext_resource type="PackedScene" uid="uid://b7mpxlglaqx3n" path="res://asset/kenney_nature-kit/Models/GLTF format/tree_palmShort.glb" id="4_hv7rv"]
-[ext_resource type="PackedScene" uid="uid://bsmlmpwfnhhyt" path="res://asset/kenney_furniture-kit/Models/GLTF format/bookcaseOpen.glb" id="5_nvymp"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hv7rv"]
 shading_mode = 0
 albedo_color = Color(0.6156863, 0.8392157, 0.79607844, 1)
 albedo_texture = ExtResource("1_xqvpx")
 
-[sub_resource type="BoxMesh" id="BoxMesh_k3ylh"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_obnx2"]
+size = Vector2(1, 1)
+orientation = 2
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ov4t4"]
 shading_mode = 0
 albedo_color = Color(0.6156863, 0.8392157, 0.79607844, 1)
 albedo_texture = ExtResource("1_xqvpx")
 
-[sub_resource type="BoxMesh" id="BoxMesh_yqrvj"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_p1fcj"]
+size = Vector2(1, 1)
+orientation = 2
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k3ylh"]
 shading_mode = 0
 albedo_color = Color(0.6156863, 0.8392157, 0.79607844, 1)
 albedo_texture = ExtResource("1_xqvpx")
 
-[sub_resource type="BoxMesh" id="BoxMesh_86st4"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_iw3iv"]
+size = Vector2(1, 1)
+orientation = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_mwpdg"]
+size = Vector2(1, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_repo3"]
 albedo_color = Color(0.5019608, 0.73333335, 0.64705884, 1)
@@ -41,158 +45,34 @@ albedo_color = Color(0.5019608, 0.73333335, 0.64705884, 1)
 transform = Transform3D(38, 0, 0, 0, 12, 0, 0, 0, 0.2, 0, 3, -19)
 material_override = SubResource("StandardMaterial3D_hv7rv")
 cast_shadow = 0
-mesh = SubResource("BoxMesh_k3ylh")
+mesh = SubResource("PlaneMesh_obnx2")
 
 [node name="LeftWall" type="MeshInstance3D" parent="Wrap" unique_id=1646178886]
 transform = Transform3D(0.2, 0, 0, 0, 12, 0, 0, 0, 38, -19, 3, 0)
 material_override = SubResource("StandardMaterial3D_ov4t4")
 cast_shadow = 0
-mesh = SubResource("BoxMesh_yqrvj")
+mesh = SubResource("PlaneMesh_p1fcj")
 
 [node name="RightWall" type="MeshInstance3D" parent="Wrap" unique_id=2033548067]
 transform = Transform3D(0.2, 0, 0, 0, 12, 0, 0, 0, 38, 19, 3, 0)
 material_override = SubResource("StandardMaterial3D_k3ylh")
 cast_shadow = 0
-mesh = SubResource("BoxMesh_86st4")
+mesh = SubResource("PlaneMesh_iw3iv")
+
+[node name="FrontWall" type="MeshInstance3D" parent="Wrap" unique_id=1598091581]
+transform = Transform3D(38, 0, 0, 0, 12, 0, 0, 0, 0.2, 0, 3, -19)
+material_override = SubResource("StandardMaterial3D_hv7rv")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_obnx2")
+
+[node name="Ceiling" type="MeshInstance3D" parent="Wrap" unique_id=1768451447]
+transform = Transform3D(38, 0, 0, 0, 12, 0, 0, 0, 0.2, 0, 3, -19)
+material_override = SubResource("StandardMaterial3D_hv7rv")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_mwpdg")
 
 [node name="HorizonGround" type="MeshInstance3D" parent="." unique_id=1660803949]
 transform = Transform3D(38, 0, 0, 0, 0.2, 0, 0, 0, 38, 0, -15, 0)
 material_override = SubResource("StandardMaterial3D_repo3")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_cxc28")
-
-[node name="Decorations" type="Node3D" parent="." unique_id=841887513]
-
-[node name="Forest" type="Node3D" parent="Decorations" unique_id=1588792411]
-
-[node name="Prop0" parent="Decorations/Forest" unique_id=36126586 instance=ExtResource("1_mwpdg")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -16.6, -0.2, -11)
-
-[node name="Prop1" parent="Decorations/Forest" unique_id=1190142535 instance=ExtResource("1_mwpdg")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.6, -0.2, -11)
-
-[node name="Prop2" parent="Decorations/Forest" unique_id=40706280 instance=ExtResource("1_mwpdg")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -16.6, -0.2, -4)
-
-[node name="Prop3" parent="Decorations/Forest" unique_id=88996372 instance=ExtResource("1_mwpdg")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.6, -0.2, -4)
-
-[node name="Prop4" parent="Decorations/Forest" unique_id=669614401 instance=ExtResource("1_mwpdg")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -16.6, -0.2, 3)
-
-[node name="Prop5" parent="Decorations/Forest" unique_id=921058927 instance=ExtResource("1_mwpdg")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.6, -0.2, 3)
-
-[node name="Prop6" parent="Decorations/Forest" unique_id=1376059395 instance=ExtResource("1_mwpdg")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -16.6, -0.2, 10)
-
-[node name="Prop7" parent="Decorations/Forest" unique_id=2142145554 instance=ExtResource("1_mwpdg")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.6, -0.2, 10)
-
-[node name="Rocks" type="Node3D" parent="Decorations" unique_id=441553082]
-visible = false
-
-[node name="Prop0" parent="Decorations/Rocks" unique_id=1807649935 instance=ExtResource("2_nvymp")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -16.6, -0.2, -11)
-
-[node name="Prop1" parent="Decorations/Rocks" unique_id=118070299 instance=ExtResource("2_nvymp")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.6, -0.2, -11)
-
-[node name="Prop2" parent="Decorations/Rocks" unique_id=1152128641 instance=ExtResource("2_nvymp")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -16.6, -0.2, -4)
-
-[node name="Prop3" parent="Decorations/Rocks" unique_id=1149259187 instance=ExtResource("2_nvymp")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.6, -0.2, -4)
-
-[node name="Prop4" parent="Decorations/Rocks" unique_id=564094989 instance=ExtResource("2_nvymp")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -16.6, -0.2, 3)
-
-[node name="Prop5" parent="Decorations/Rocks" unique_id=1046616283 instance=ExtResource("2_nvymp")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.6, -0.2, 3)
-
-[node name="Prop6" parent="Decorations/Rocks" unique_id=11304453 instance=ExtResource("2_nvymp")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -16.6, -0.2, 10)
-
-[node name="Prop7" parent="Decorations/Rocks" unique_id=500979578 instance=ExtResource("2_nvymp")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.6, -0.2, 10)
-
-[node name="Castle" type="Node3D" parent="Decorations" unique_id=782287143]
-visible = false
-
-[node name="Prop0" parent="Decorations/Castle" unique_id=535674531 instance=ExtResource("3_xqvpx")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -16.6, -0.2, -11)
-
-[node name="Prop1" parent="Decorations/Castle" unique_id=174761171 instance=ExtResource("3_xqvpx")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.6, -0.2, -11)
-
-[node name="Prop2" parent="Decorations/Castle" unique_id=207096055 instance=ExtResource("3_xqvpx")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -16.6, -0.2, -4)
-
-[node name="Prop3" parent="Decorations/Castle" unique_id=2120624741 instance=ExtResource("3_xqvpx")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.6, -0.2, -4)
-
-[node name="Prop4" parent="Decorations/Castle" unique_id=433431942 instance=ExtResource("3_xqvpx")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -16.6, -0.2, 3)
-
-[node name="Prop5" parent="Decorations/Castle" unique_id=670915246 instance=ExtResource("3_xqvpx")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.6, -0.2, 3)
-
-[node name="Prop6" parent="Decorations/Castle" unique_id=1154073381 instance=ExtResource("3_xqvpx")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -16.6, -0.2, 10)
-
-[node name="Prop7" parent="Decorations/Castle" unique_id=904466274 instance=ExtResource("3_xqvpx")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.6, -0.2, 10)
-
-[node name="Palms" type="Node3D" parent="Decorations" unique_id=402828421]
-visible = false
-
-[node name="Prop0" parent="Decorations/Palms" unique_id=304677873 instance=ExtResource("4_hv7rv")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -16.6, -0.2, -11)
-
-[node name="Prop1" parent="Decorations/Palms" unique_id=1049145270 instance=ExtResource("4_hv7rv")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.6, -0.2, -11)
-
-[node name="Prop2" parent="Decorations/Palms" unique_id=1212983691 instance=ExtResource("4_hv7rv")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -16.6, -0.2, -4)
-
-[node name="Prop3" parent="Decorations/Palms" unique_id=186087675 instance=ExtResource("4_hv7rv")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.6, -0.2, -4)
-
-[node name="Prop4" parent="Decorations/Palms" unique_id=950578316 instance=ExtResource("4_hv7rv")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -16.6, -0.2, 3)
-
-[node name="Prop5" parent="Decorations/Palms" unique_id=51978988 instance=ExtResource("4_hv7rv")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.6, -0.2, 3)
-
-[node name="Prop6" parent="Decorations/Palms" unique_id=1389513656 instance=ExtResource("4_hv7rv")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -16.6, -0.2, 10)
-
-[node name="Prop7" parent="Decorations/Palms" unique_id=1598864575 instance=ExtResource("4_hv7rv")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.6, -0.2, 10)
-
-[node name="Workshop" type="Node3D" parent="Decorations" unique_id=273190019]
-visible = false
-
-[node name="Prop0" parent="Decorations/Workshop" unique_id=1915377279 instance=ExtResource("5_nvymp")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -16.6, -0.2, -11)
-
-[node name="Prop1" parent="Decorations/Workshop" unique_id=432099743 instance=ExtResource("5_nvymp")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.6, -0.2, -11)
-
-[node name="Prop2" parent="Decorations/Workshop" unique_id=1148084104 instance=ExtResource("5_nvymp")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -16.6, -0.2, -4)
-
-[node name="Prop3" parent="Decorations/Workshop" unique_id=1183944844 instance=ExtResource("5_nvymp")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.6, -0.2, -4)
-
-[node name="Prop4" parent="Decorations/Workshop" unique_id=1738789685 instance=ExtResource("5_nvymp")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -16.6, -0.2, 3)
-
-[node name="Prop5" parent="Decorations/Workshop" unique_id=1108216376 instance=ExtResource("5_nvymp")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.6, -0.2, 3)
-
-[node name="Prop6" parent="Decorations/Workshop" unique_id=1137987100 instance=ExtResource("5_nvymp")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -16.6, -0.2, 10)
-
-[node name="Prop7" parent="Decorations/Workshop" unique_id=259622348 instance=ExtResource("5_nvymp")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.6, -0.2, 10)
