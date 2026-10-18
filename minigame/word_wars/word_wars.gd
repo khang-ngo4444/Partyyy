@@ -1,6 +1,6 @@
 extends MiniGame3D
 
-## WORD WARS — cả phòng gõ cùng một chuỗi từ: chạy tới ô chữ trên sàn và bấm E từng chữ.
+## WORD WARS — chạy giữa các bệ chữ, đứng cạnh nút và bấm E từng chữ.
 ## Từ là hàm của (hạt giống, số từ đã xong); mỗi chữ đúng gửi một gói. Đòn tay không gây choáng/hất.
 
 ## E (trong sân không có gì để nhặt).
@@ -8,7 +8,7 @@ const NUT_GO := "interact"
 ## Nghỉ giữa hai lần gõ (chặn giữ phím lướt qua ô).
 const NGHI_GO := 0.15
 ## Kẹp người chơi trong sàn (không chết vì rơi).
-const BAN_KINH_GIU := 11.0
+const NUA_SAN := 13.4
 
 ## Từ 3–6 chữ, chỉ A–Z.
 const TU := ["CAT", "DOG", "SUN", "FOX", "BOX", "JAM", "KEY", "ZIP", "MOON", "STAR",
@@ -34,7 +34,7 @@ var _go_luc := -99.0
 func _ready() -> void:
 	super()
 	ten = "WORD WARS"
-	luat = "WASD chạy · đứng lên ô chữ rồi bấm E · gõ đúng từ trên đầu · chuột trái đánh"
+	luat = "WASD chạy giữa các bệ · đứng cạnh chữ rồi bấm E · gõ đúng từ trên đầu · chuột trái đánh"
 	giay_van = 60.0
 
 
@@ -57,7 +57,7 @@ func dung_som() -> void:
 
 
 func _luat_moi_nhip() -> void:
-	giu_trong_san(BAN_KINH_GIU)
+	_giu_trong_san_vuong()
 	for id in _nhan:
 		var n := _nhan[id] as Label3D
 		if is_instance_valid(n):
@@ -81,13 +81,14 @@ func _unhandled_input(event: InputEvent) -> void:
 	var tu := tu_hien_tai(id)
 	var k := int(_tien[id])
 	if k < tu.length() and o.chu == tu[k]:
-		Fusion.rpc(_net_tien, id, k + 1)
+		Fusion.rpc(_net_tien, id, int(_diem[id]), k + 1)
+		o.nhan()
 
 
 ## Gửi con số tiến độ (không phải "+1") để gói trễ/lặp không cộng đúp.
 @rpc("any_peer", "call_local")
-func _net_tien(id: int, tien: int) -> void:
-	if not _tien.has(id) or tien != int(_tien[id]) + 1:
+func _net_tien(id: int, so_tu: int, tien: int) -> void:
+	if not _chay or not _tien.has(id) or so_tu != int(_diem[id]) or tien != int(_tien[id]) + 1:
 		return
 	if tien >= tu_hien_tai(id).length():
 		_diem[id] = int(_diem[id]) + 1
@@ -100,12 +101,31 @@ func tu_hien_tai(id: int) -> String:
 	return tu_cua(hat_giong, int(_diem.get(id, 0)))
 
 
-## null = không đứng trên ô nào.
+## null = không có nút trong tầm; chọn bệ gần nhất nếu vùng tương tác giao nhau.
 func _o_duoi_chan(p: Player) -> OChu:
+	var gan: OChu = null
+	var khoang_cach := INF
 	for o in _o:
 		if o.vung.overlaps_body(p):
-			return o
-	return null
+			var d := o.global_position.distance_squared_to(p.global_position)
+			if d < khoang_cach:
+				gan = o
+				khoang_cach = d
+	return gan
+
+
+func _giu_trong_san_vuong() -> void:
+	var p := _nguoi(NetManager.local_id())
+	if p == null or san == null:
+		return
+	var cho := san.to_local(p.global_position)
+	cho.x = clampf(cho.x, -NUA_SAN, NUA_SAN)
+	cho.z = clampf(cho.z, -NUA_SAN, NUA_SAN)
+	p.global_position = san.to_global(cho)
+
+
+func ban_kinh_vao_san() -> float:
+	return 12.0
 
 
 # ─── nhãn trên đầu ───
@@ -174,12 +194,14 @@ func _toi_thua() -> bool:
 ## Từ thứ `so_xong` (chung cả phòng); hai từ liền nhau không trùng.
 static func tu_cua(giong: int, so_xong: int) -> String:
 	var rng := RandomNumberGenerator.new()
-	rng.seed = hash([giong, so_xong])
-	var k := rng.randi() % TU.size()
-	if so_xong > 0:
-		var truoc := tu_cua_chi_so(giong, so_xong - 1)
+	var truoc := -1
+	var k := 0
+	for i in range(maxi(so_xong, 0) + 1):
+		rng.seed = hash([giong, i])
+		k = rng.randi() % TU.size()
 		while k == truoc:
 			k = rng.randi() % TU.size()
+		truoc = k
 	return TU[k]
 
 

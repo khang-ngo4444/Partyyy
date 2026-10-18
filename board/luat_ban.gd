@@ -8,7 +8,7 @@ const TEN_THUE := ["đất", "máu", "tiền", "trang bị"]
 ## Sát thương của món "gục ngay".
 const GUC := 1000
 ## Bảng trạng thái giữ nguyên khi sang vòng mới.
-const BANG_GIU_QUA_VONG := ["bay", "rao", "neo", "doc", "heo", "quai", "chieu"]
+const BANG_GIU_QUA_VONG := ["bay", "rao", "neo", "doc", "heo", "quai", "chieu", "animation_events"]
 
 
 static func khoa(id) -> String:
@@ -151,6 +151,8 @@ static func tru_mau(tt: Dictionary, k: String, sat_thuong: int) -> bool:
 	var mau: Dictionary = _bang(tt, "mau")
 	var con := int(mau.get(k, 0)) - sat_thuong
 	mau[k] = maxi(con, 0)
+	if sat_thuong > 0:
+		animation_event(tt, k, "hit")
 	return con <= 0
 
 
@@ -164,8 +166,17 @@ static func tieu_khien(tt: Dictionary, k: String) -> void:
 
 ## Hồi đầy máu, về checkpoint (hoặc ô neo). Không mất vàng, không mất Cúp.
 static func chet(tt: Dictionary, k: String, settings: Dictionary) -> void:
+	animation_event(tt, k, "death")
 	_bang(tt, "mau")[k] = int(settings.get("max_health", 10))
 	_bang(tt, "o")[k] = LuatHieuUng.khi_guc(tt, k, int(_bang(tt, "hoi_sinh").get(k, 0)))
+
+
+## HP is restored in the same snapshot on death, so replicate an explicit reaction.
+static func animation_event(tt: Dictionary, key: String, kind: String) -> void:
+	if not tt.has("animation_events"):
+		tt.animation_events = {}
+	var previous: Dictionary = tt.animation_events.get(key, {})
+	tt.animation_events[key] = {"serial": int(previous.get("serial", 0)) + 1, "kind": kind}
 
 
 ## Áp một loại thuế; không có đất/đồ để lấy thì thu tiền.

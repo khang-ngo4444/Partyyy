@@ -1,11 +1,14 @@
 class_name CharacterVisual
 extends RefCounted
 
+const KayAnimations = preload("res://player/kaykit_animations.gd")
+
 ## Hình nhân vật dùng chung (preview menu, chọn nhân vật, Player): nhuộm màu, phụ kiện,
-## lấy AnimationPlayer. Năm nhân vật dùng chung thư viện `hoat_anh_rig_medium.res`.
+## lấy AnimationPlayer. Các nhân vật dùng chung clip KayKit Rig Medium đã chuẩn hoá.
 
 const ARCHETYPE_NAMES: PackedStringArray = [
-	"VỆ BINH", "PHÁP SƯ", "XẠ THỦ", "KẺ LỪA ĐẢO", "CHIẾN BINH XƯƠNG",
+	"VỆ BINH", "PHÁP SƯ", "XẠ THỦ", "KẺ LỪA ĐẢO", "MAN DI",
+	"ĐẠO TẶC", "CHIẾN BINH XƯƠNG", "PHÁP SƯ XƯƠNG", "TIỂU XƯƠNG", "ĐẠO TẶC XƯƠNG",
 ]
 
 const ACCESSORY_WORDS: PackedStringArray = [
@@ -17,7 +20,19 @@ const ACCENT_WORDS: PackedStringArray = [
 
 
 static func hoat_anh_cua(wrapper: Node3D) -> AnimationPlayer:
-	return wrapper.find_child("PartyAnimationPlayer", true, false) as AnimationPlayer
+	var animator := wrapper.find_child("PartyAnimationPlayer", true, false) as AnimationPlayer
+	KayAnimations.bind(animator)
+	return animator
+
+
+## Freeze one native standing pose for previews and portrait thumbnails.
+static func pose_for_preview(wrapper: Node3D) -> void:
+	var animator := hoat_anh_cua(wrapper)
+	if animator == null:
+		return
+	animator.play("idle")
+	animator.advance(0.0)
+	animator.pause()
 
 
 static func apply_customization(root: Node3D, primary: Color, accent: Color,

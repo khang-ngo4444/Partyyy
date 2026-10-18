@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://dh55v18t4lhms"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hi5na"]
+albedo_color = Color(0.5372549, 0.8392157, 0.42745098, 1)
+roughness = 0.55
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_hlg0g"]
+top_radius = 0.12
+bottom_radius = 0.12
+height = 0.55
+radial_segments = 10
+rings = 0
+
+[node name="Pump" type="Node3D" unique_id=1554488263]
+
+[node name="Shell" type="MeshInstance3D" parent="." unique_id=618885258]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_hi5na")
+mesh = SubResource("CylinderMesh_hlg0g")

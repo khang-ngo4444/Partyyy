@@ -1,0 +1,12 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://cc1grhgwklm8p"]
+
+[ext_resource type="Shader" uid="uid://c8ola71qrei05" path="res://minigame/chung/wallpaper.gdshader" id="1_ld8n3"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_ld8n3")
+shader_parameter/wall_size = Vector2(48, 52)
+shader_parameter/wall_top = 36.0
+shader_parameter/artwork_height = 12.0
+shader_parameter/tint = Color(1, 1, 1, 1)
+shader_parameter/receive_lighting = false

@@ -16,6 +16,16 @@ outer_radius = 11.5
 height = 6.0
 radius = 2.66
 
+[sub_resource type="TorusMesh" id="SelfRing"]
+inner_radius = 0.56
+outer_radius = 0.67
+rings = 24
+ring_segments = 6
+
+[sub_resource type="StandardMaterial3D" id="SelfRingMaterial"]
+shading_mode = 0
+albedo_color = Color(1, 0.83, 0.12, 1)
+
 [node name="SanSpot" type="Node3D" unique_id=1633116369]
 
 [node name="SanDau" parent="." unique_id=1273395959 instance=ExtResource("1_sd")]
@@ -36,10 +46,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 material_override = ExtResource("3_v")
 mesh = SubResource("Torus_vien")
 
+[node name="DauToi" type="MeshInstance3D" parent="."]
+visible = false
+position = Vector3(0, 0.26, 0)
+mesh = SubResource("SelfRing")
+material_override = SubResource("SelfRingMaterial")
+cast_shadow = 0
+
 [node name="Den0" type="Node3D" parent="." unique_id=1049127184]
 
 [node name="Bong" type="SpotLight3D" parent="Den0" unique_id=291705206]
-transform = Transform3D(1, 0, 0, 0, 7.54979e-08, 1, 0, -1, 7.54979e-08, 0, 12, 0)
+position = Vector3(0, 12, 0)
+rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(1, 0.86, 0.6, 1)
 light_energy = 12.0
 spot_range = 19.0
@@ -62,7 +80,8 @@ mesh = ExtResource("5_egmqt")
 [node name="Den1" type="Node3D" parent="." unique_id=1740555002]
 
 [node name="Bong" type="SpotLight3D" parent="Den1" unique_id=1955855528]
-transform = Transform3D(1, 0, 0, 0, 7.54979e-08, 1, 0, -1, 7.54979e-08, 0, 12, 0)
+position = Vector3(0, 12, 0)
+rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(1, 0.86, 0.6, 1)
 light_energy = 12.0
 spot_range = 19.0
@@ -85,7 +104,8 @@ mesh = ExtResource("5_egmqt")
 [node name="Den2" type="Node3D" parent="." unique_id=970283144]
 
 [node name="Bong" type="SpotLight3D" parent="Den2" unique_id=511578527]
-transform = Transform3D(1, 0, 0, 0, 7.54979e-08, 1, 0, -1, 7.54979e-08, 0, 12, 0)
+position = Vector3(0, 12, 0)
+rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(1, 0.86, 0.6, 1)
 light_energy = 12.0
 spot_range = 19.0
@@ -108,7 +128,8 @@ mesh = ExtResource("5_egmqt")
 [node name="Den3" type="Node3D" parent="." unique_id=344175582]
 
 [node name="Bong" type="SpotLight3D" parent="Den3" unique_id=1145880705]
-transform = Transform3D(1, 0, 0, 0, 7.54979e-08, 1, 0, -1, 7.54979e-08, 0, 12, 0)
+position = Vector3(0, 12, 0)
+rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(1, 0.86, 0.6, 1)
 light_energy = 12.0
 spot_range = 19.0
@@ -131,7 +152,8 @@ mesh = ExtResource("5_egmqt")
 [node name="Den4" type="Node3D" parent="." unique_id=40311774]
 
 [node name="Bong" type="SpotLight3D" parent="Den4" unique_id=1203740632]
-transform = Transform3D(1, 0, 0, 0, 7.54979e-08, 1, 0, -1, 7.54979e-08, 0, 12, 0)
+position = Vector3(0, 12, 0)
+rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(1, 0.86, 0.6, 1)
 light_energy = 12.0
 spot_range = 19.0
@@ -154,7 +176,8 @@ mesh = ExtResource("5_egmqt")
 [node name="Den5" type="Node3D" parent="." unique_id=772038210]
 
 [node name="Bong" type="SpotLight3D" parent="Den5" unique_id=1255040706]
-transform = Transform3D(1, 0, 0, 0, 7.54979e-08, 1, 0, -1, 7.54979e-08, 0, 12, 0)
+position = Vector3(0, 12, 0)
+rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(1, 0.86, 0.6, 1)
 light_energy = 12.0
 spot_range = 19.0
@@ -177,7 +200,8 @@ mesh = ExtResource("5_egmqt")
 [node name="Den6" type="Node3D" parent="." unique_id=577770837]
 
 [node name="Bong" type="SpotLight3D" parent="Den6" unique_id=313727618]
-transform = Transform3D(1, 0, 0, 0, 7.54979e-08, 1, 0, -1, 7.54979e-08, 0, 12, 0)
+position = Vector3(0, 12, 0)
+rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(1, 0.86, 0.6, 1)
 light_energy = 12.0
 spot_range = 19.0
@@ -200,7 +224,8 @@ mesh = ExtResource("5_egmqt")
 [node name="Den7" type="Node3D" parent="." unique_id=888974693]
 
 [node name="Bong" type="SpotLight3D" parent="Den7" unique_id=798930299]
-transform = Transform3D(1, 0, 0, 0, 7.54979e-08, 1, 0, -1, 7.54979e-08, 0, 12, 0)
+position = Vector3(0, 12, 0)
+rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(1, 0.86, 0.6, 1)
 light_energy = 12.0
 spot_range = 19.0

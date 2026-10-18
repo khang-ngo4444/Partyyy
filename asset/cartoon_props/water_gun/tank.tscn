@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://cc2bkwmkjwa8x"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1tnew"]
+albedo_color = Color(0.2627451, 0.77254903, 0.92941177, 1)
+roughness = 0.55
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_vjg7r"]
+top_radius = 0.24
+bottom_radius = 0.24
+height = 0.65
+radial_segments = 10
+rings = 0
+
+[node name="WaterTank" type="Node3D" unique_id=1720895622]
+
+[node name="Shell" type="MeshInstance3D" parent="." unique_id=1442439737]
+material_override = SubResource("StandardMaterial3D_1tnew")
+mesh = SubResource("CylinderMesh_vjg7r")

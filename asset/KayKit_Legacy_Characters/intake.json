@@ -1,0 +1,30 @@
+[
+  {
+    "archive": "KayKit Spooktober Seasonal Pack 1.1.zip",
+    "sha256": "5fd3180b26d79cb3e8ed5d334aac80634fd9bd64051a695e4af4ef6da27f0004",
+    "library": "asset/KayKit_Legacy_Characters/spooktober_1_1",
+    "files": 3,
+    "rigged": false
+  },
+  {
+    "archive": "KayKit Mini-Game Variety Pack 1.2.zip",
+    "sha256": "078d13c02dddec6eebe917c49ec40164dc74b6964756cb4a0ace1aaf84574c9d",
+    "library": "asset/KayKit_Legacy_Characters/mini_game_1_2",
+    "files": 4,
+    "rigged": false
+  },
+  {
+    "archive": "KayKit Dungeon Pack 1.0.zip",
+    "sha256": "36a9b8ba5c14397fd08ddbb49d616e1c6545e05167650cb9ace4314b23164f75",
+    "library": "asset/KayKit_Legacy_Characters/dungeon_1_0",
+    "files": 11,
+    "rigged": false
+  },
+  {
+    "archive": "KayKit Character Pack - Skeletons 1.0.zip",
+    "sha256": "a26d454abbe6366164135491fecba54f07ffb65ff222433ffad7769ffb5a89b1",
+    "library": "asset/KayKit_Legacy_Characters/skeletons_1_0",
+    "files": 9,
+    "rigged": false
+  }
+]

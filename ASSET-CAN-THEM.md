@@ -292,7 +292,7 @@ chỉ còn logic. Sửa hình thì mở scene trong editor.
 |---|---|
 | `board/ban_party_map.tscn` (quần đảo Rumble Reef, ~1370 node) | Vật chuyển động thuộc group `ban_do_xoay` / `ban_do_nhap_nho` / `ban_do_bay_vong` / `ban_do_troi`, thông số ở metadata. Lối gỗ `Boardwalk_*` và chân ô `TilePedestal_*` đặt theo vị trí ô lúc lưu — dời ô trong `ban_party.tscn` thì kéo chúng theo |
 | `board/xuc_xac_3d.tscn` | Thân ngà, 12 cạnh vàng, 21 chấm, vòng sáng, chữ |
-| `player/characters/*.tscn` + `hoat_anh_rig_medium.res` | `AnimationPlayer` đặt sẵn, dùng chung một `AnimationLibrary` (đã đặt loop) |
+| `player/characters/*.tscn` + `player/kaykit_animations.gd` | `AnimationPlayer` đặt sẵn; runtime nạp clip gốc KayKit Character Animations 1.1 và chuẩn hoá tên, bone path, loop; đã bỏ thư viện cũ `hoat_anh_rig_medium.res` |
 | `ui/character_picker.tscn` → `AnhViewport` | SubViewport + camera + 2 đèn chụp ảnh nhân vật |
 | `ui/music_picker.tscn` → `HopThuMuc` | FileDialog chọn thư mục, nối tín hiệu bằng `[connection]` |
 | `ui/nut_chon`, `nut_model`, `nut_dong`, `dong_chu`, `o_mau` `.tscn` | Dòng/nút danh sách dùng chung cho các màn UI |

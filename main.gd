@@ -196,17 +196,13 @@ func _lenh_minigame(doi_so: PackedStringArray) -> void:
 	quan_tro.xin_chay(ma)
 
 
-## Hết một vòng bàn → minigame (Còi trọng tài thì đúng trò đã chọn).
-## ponytail: rút ngẫu nhiên trần, có thể lặp trò vừa chơi.
+## Hết vòng: rút trong pool chưa chơi. Còi chỉ ưu tiên trò còn trong pool.
 func _khi_het_vong(_thu_tu_cu: Array) -> void:
 	if NetManager.is_master() and not quan_tro.dang_chay():
 		var coi := str(ban_co.tt.get("coi", ""))
-		if quan_tro.co_tro(coi):
-			quan_tro.xin_chay(coi)
-			return
-		var danh_sach := quan_tro.danh_sach()
-		if not danh_sach.is_empty():
-			quan_tro.xin_chay(str(danh_sach[randi() % danh_sach.size()]))
+		var ma := quan_tro.chon_tro_ngau_nhien(coi)
+		if not ma.is_empty():
+			quan_tro.xin_chay(ma)
 
 
 ## Hết minigame: xếp hạng thành thứ tự lượt vòng sau.

@@ -129,19 +129,19 @@ func _luat_moi_nhip() -> void:
 func _ve_bang(vong: int, pha: float, m: Dictionary) -> void:
 	var loai: String = TEN_LOAI[int(m["hoi"])]
 	if pha < GIAY_HOI:
-		_cau_hoi.text = "Vòng %d/%d — hãy đếm số %s!" % [vong + 1, SO_VONG, loai]
+		_cau_hoi.text = "%s · %d/%d" % [loai, vong + 1, SO_VONG]
 		var truoc := "" if vong == 0 else "Vòng trước: đáp án %d" % int(_lich[vong - 1]["dap_an"])
 		_so_dem.text = ""
 		_goi_y.text = truoc
 	elif pha < GIAY_HOI + GIAY_CHAY:
-		_cau_hoi.text = "Đếm số %s..." % loai
+		_cau_hoi.text = loai
 		_so_dem.text = ""
 		_goi_y.text = ""
 	else:
-		_cau_hoi.text = "Có bao nhiêu %s?" % loai
+		_cau_hoi.text = loai
 		_so_dem.text = "◀  %d  ▶" % _dem
-		_goi_y.text = ("Đã chốt — chờ người khác" if _vong_da_chot >= vong
-				else "W/S chỉnh số · Space chốt (%.0f s)" % (GIAY_VONG - pha))
+		_goi_y.text = ("Đã chốt" if _vong_da_chot >= vong
+				else "%.0f s" % (GIAY_VONG - pha))
 
 
 func _unhandled_input(event: InputEvent) -> void:

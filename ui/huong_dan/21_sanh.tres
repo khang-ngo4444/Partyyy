@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="TrangHuongDan" format=3]
+
+[ext_resource type="Script" path="res://ui/trang_huong_dan.gd" id="1_th"]
+
+[resource]
+script = ExtResource("1_th")
+tieu_de = "21 · Hoạt động ở sảnh"
+noi_dung = "[b]E[/b] tương tác với vật, ghế hoặc bàn chơi ở gần. [b]Q[/b] đặt vật xuống hoặc rời ghế. Giữ rồi thả E để ném vật đang cầm.
+
+[b]Bàn bài[/b]
+Ngồi vào ghế để tham gia. Chỉ các lựa chọn ở lượt hiện tại xuất hiện trên màn hình; chờ lượt nếu chưa tới bạn.
+
+[b]Tháp Hà Nội / đập chuột[/b]
+Tới bảng của trò để bắt đầu. Bảng tại chỗ hiển thị tiến độ, thời gian và kết quả.
+
+[b]Thuyền[/b]
+Ngồi ghế lái, W/S lái và Q xuống.
+
+Khi đã sẵn sàng thi đấu Party, tới khu bắt đầu ở giữa sảnh."

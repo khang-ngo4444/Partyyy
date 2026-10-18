@@ -4,15 +4,19 @@
 [ext_resource type="Material" path="res://materials/mat_o_nguy_hiem.tres" id="2_m"]
 
 [sub_resource type="SphereMesh" id="Sph_cau"]
-radius = 0.45
-height = 0.9
+radius = 0.55
+height = 1.1
+radial_segments = 12
+rings = 5
 
 [sub_resource type="SphereShape3D" id="Shape_cau"]
-radius = 0.45
+radius = 0.55
 
 [node name="CauLua" type="Area3D"]
 collision_layer = 0
 collision_mask = 2
+monitoring = false
+monitorable = false
 script = ExtResource("1_cl")
 
 [node name="Mat" type="MeshInstance3D" parent="."]

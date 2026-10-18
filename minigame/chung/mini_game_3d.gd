@@ -8,6 +8,7 @@ enum { DON_DANH, DON_CHUONG }
 
 ## Sân đặt cao hơn phòng chờ chừng này.
 const CAO_SAN := 300.0
+const ThemeBackdrop = preload("res://minigame/chung/theme_backdrop.gd")
 
 ## Rơi thấp hơn mặt sân chừng này là rơi khỏi sàn.
 const ROI_KHOI_SAN := 8.0
@@ -17,10 +18,10 @@ const ROI_KHOI_SAN := 8.0
 ## Tầm tính từ tâm người đánh tới tâm nạn nhân.
 const NUT_DANH := "danh"
 const NUT_CHUONG := "chuong"
-const TAM_DON := [1.7, 2.8]
+const TAM_DON := [1.5, 2.5]
 
 ## Nạn nhân phải ở phía trước (tích vô hướng tối thiểu).
-const GOC_DON := [0.2, 0.5]
+const GOC_DON := [0.65, 0.7]
 
 ## Nghỉ giữa hai đòn cùng loại (giây).
 const NGHI_DON := [0.55, 1.1]
@@ -31,7 +32,7 @@ const CHUONG_NGANG := 10.0
 const CHUONG_LEN := 3.5
 
 ## Phóng to hình nhân vật trong sân (chỉ hình).
-const TO_HON := 1.3
+const TO_HON := 1.65
 
 ## Sống tới cuối ván được cộng thêm.
 const THUONG_SONG_CUOI := 10.0
@@ -41,6 +42,12 @@ const THUONG_SONG_CUOI := 10.0
 ## 0 = không giới hạn, chạy tới khi còn một người.
 @export var giay_van := 60.0
 @export var co_danh := false
+@export var ket_thuc_khi_con_mot := true
+
+var shared_snapshot: Dictionary = {}
+var shared_session: Node = null
+var _saved_jumps: Dictionary = {}
+var _reported_dead: bool = false
 
 var san: Node3D = null
 var hat_giong := 0
@@ -68,12 +75,16 @@ var _het_luc := 0.0
 
 
 func _ready() -> void:
+	giay_van = minf(giay_van, MAX_ROUND_SECONDS)
 	# Sân nằm trong thế giới — không che nền.
 	che_nen = false
 	Fusion.register_broadcast_receiver(self)
 	# Phải gỡ đăng ký RPC khi rời cây (mỗi ván tạo mới).
 	tree_exiting.connect(func(): Fusion.unregister_broadcast_receiver(self))
 	set_process(false)
+	var authored_arena := get_node_or_null("Arena") as Node3D
+	if authored_arena != null:
+		authored_arena.hide()
 
 
 func bat_dau(nguoi_choi: Array, giong: int) -> void:
@@ -84,14 +95,18 @@ func bat_dau(nguoi_choi: Array, giong: int) -> void:
 	for id in nguoi_choi:
 		_song[int(id)] = -1.0
 
-	san = san_scene.instantiate() as Node3D
+	san = get_node_or_null("Arena") as Node3D
+	if san == null:
+		san = san_scene.instantiate() as Node3D
+		get_tree().current_scene.add_child(san)
 	san.position.y = CAO_SAN
-	get_tree().current_scene.add_child(san)
+	san.show()
+	ThemeBackdrop.attach(san, self, _cam_san())
 	_dung_san()
 
 	# Chỉ nhấc nhân vật của máy này.
 	var toi := _nguoi(NetManager.local_id())
-	if toi != null:
+	if toi != null and toi.sync.has_authority():
 		_cho_cu = toi.global_transform
 		_co_cho_cu = true
 		var i := maxi(nguoi_choi.find(NetManager.local_id()), 0)
@@ -99,7 +114,9 @@ func bat_dau(nguoi_choi: Array, giong: int) -> void:
 		toi.velocity = Vector3.ZERO
 	_che_do_san(true)
 
-	_bat_dau_luc = _gio_may()
+	_bat_dau_luc = float(shared_snapshot["start"]) if not shared_snapshot.is_empty() else _gio_may()
+	if not shared_snapshot.is_empty() and toi != null and nguoi_choi.has(NetManager.local_id()):
+		toi.enter_minigame(int(shared_snapshot["round"]))
 	_chay = true
 	set_process(true)
 
@@ -108,6 +125,8 @@ func bat_dau(nguoi_choi: Array, giong: int) -> void:
 func dung_som() -> void:
 	_chay = false
 	set_process(false)
+	_restore_jump_policy()
+	_restore_shared_players()
 	_che_do_san(false)
 	var toi := _nguoi(NetManager.local_id())
 	if toi != null and _co_cho_cu:
@@ -121,7 +140,14 @@ func dung_som() -> void:
 
 ## Giây từ lúc ván bắt đầu — chướng ngại là hàm của số này.
 func gio() -> float:
-	return _gio_may() - _bat_dau_luc
+	return Fusion.get_network_time() - _bat_dau_luc if not shared_snapshot.is_empty() else _gio_may() - _bat_dau_luc
+
+
+func giay_con_lai() -> float:
+	if not _chay:
+		return -1.0
+	var duration := giay_van if shared_snapshot.is_empty() else float(shared_snapshot["duration"])
+	return maxf(duration - maxf(gio(), 0.0), 0.0) if duration > 0.0 else -1.0
 
 
 func con_song(id: int) -> bool:
@@ -137,6 +163,9 @@ func so_con_song() -> int:
 
 
 func _process(_delta: float) -> void:
+	if not shared_snapshot.is_empty():
+		_present_shared_players()
+		return
 	if not _chay:
 		return
 	if co_danh:
@@ -146,7 +175,7 @@ func _process(_delta: float) -> void:
 		xin_chet()
 	if not NetManager.is_master():
 		return
-	if so_con_song() <= 1 or (giay_van > 0.0 and gio() >= giay_van):
+	if (ket_thuc_khi_con_mot and so_con_song() <= 1) or (giay_van > 0.0 and gio() >= giay_van):
 		_chot_ket_qua()
 
 
@@ -183,10 +212,11 @@ func _input(event: InputEvent) -> void:
 	if loai < 0 or gio() - float(_don_luc[loai]) < float(NGHI_DON[loai]) or dang_choang():
 		return
 	var toi := _nguoi(NetManager.local_id())
-	if toi == null or not con_song(NetManager.local_id()):
+	if toi == null or not _co_the_danh(NetManager.local_id()):
 		return
 	get_viewport().set_input_as_handled()
 	_don_luc[loai] = gio()
+	toi.play_action("kick" if loai == DON_CHUONG else "attack")
 	var nan := tim_nan(toi, loai)
 	if nan == null:
 		return
@@ -203,9 +233,11 @@ func tim_nan(toi: Player, loai: int) -> Player:
 	var gan: Player = null
 	var gan_nhat: float = TAM_DON[loai]
 	for p: Player in get_tree().get_nodes_in_group("players"):
-		if p == toi or not con_song(p.player_id()):
+		if p == toi or not _co_the_danh(p.player_id()):
 			continue
 		var d := p.global_position - toi.global_position
+		if absf(d.y) > 1.5:
+			continue
 		d.y = 0.0
 		var dai := d.length()
 		if dai > gan_nhat or dai < 0.001 or truoc.dot(d / dai) < float(GOC_DON[loai]):
@@ -218,8 +250,21 @@ func tim_nan(toi: Player, loai: int) -> Player:
 ## Chỉ máy của nạn nhân tự áp hậu quả.
 @rpc("any_peer", "call_local")
 func _net_danh(ke_danh: int, nan: int, huong: Vector3, loai: int) -> void:
-	if not _chay:
+	if not _chay or not _co_the_danh(ke_danh) or not _co_the_danh(nan):
 		return
+	var source := _nguoi(ke_danh)
+	var target := _nguoi(nan)
+	if source == null or target == null or loai < DON_DANH or loai > DON_CHUONG:
+		return
+	var delta := target.global_position - source.global_position
+	if absf(delta.y) > 1.5:
+		return
+	delta.y = 0.0
+	var forward := Vector3(-source.global_basis.z.x, 0, -source.global_basis.z.z).normalized()
+	if delta.length() < 0.001 or delta.length() > float(TAM_DON[loai]) or forward.dot(delta.normalized()) < float(GOC_DON[loai]):
+		return
+	source.play_action("kick" if loai == DON_CHUONG else "attack")
+	target.play_reaction("knockdown" if loai == DON_CHUONG else "stun", GIAY_CHOANG)
 	if nan == NetManager.local_id():
 		var p := _nguoi(nan)
 		if loai == DON_CHUONG and p != null:
@@ -227,6 +272,10 @@ func _net_danh(ke_danh: int, nan: int, huong: Vector3, loai: int) -> void:
 		elif loai == DON_DANH:
 			_choang_toi = gio() + GIAY_CHOANG
 	_khi_bi_danh(ke_danh, nan, loai)
+
+
+func _co_the_danh(id: int) -> bool:
+	return con_song(id)
 
 
 ## Mọi máy; lớp con thêm luật riêng.
@@ -268,6 +317,9 @@ func giu_trong_san(r: float) -> void:
 
 ## Tự khai thua.
 func xin_chet() -> void:
+	if not shared_snapshot.is_empty():
+		_report_shared_death(gio())
+		return
 	if not con_song(NetManager.local_id()):
 		return
 	Fusion.rpc(_net_chet, NetManager.local_id(), gio())
@@ -360,6 +412,7 @@ func _che_do_san(bat: bool) -> void:
 		p.che_do_san = bat
 		# Bàn party khoá WASD — mở khi vào sân, trả lại khi ra.
 		if bat:
+			_apply_jump_policy(p)
 			_khoa_cu = p.khoa_di_chuyen
 			p.khoa_di_chuyen = false
 			var c := _cam_san()
@@ -398,3 +451,108 @@ static func goc_quay(pha: float, t: float, toc_dau: float, toc_cuoi: float,
 	if t > tang_het:
 		quet += toc_cuoi * (t - tang_het)
 	return pha + quet
+
+
+func network_parameters() -> Dictionary:
+	return {}
+
+
+func apply_shared_state(snapshot: Dictionary) -> void:
+	shared_snapshot = snapshot.duplicate(true)
+	_song.clear()
+	var alive: Dictionary = snapshot["alive"]
+	for key: Variant in alive:
+		_song[int(key)] = float(alive[key])
+	if snapshot["phase"] == "ENDED" and not _da_chot:
+		_het_luc = float(snapshot["ended"]) - float(snapshot["start"])
+		_da_chot = true
+		_chay = false
+		xong.emit(snapshot["ranking"])
+
+
+func _physics_process(_delta: float) -> void:
+	if shared_snapshot.is_empty() or not _chay:
+		return
+	if gio() < 0.0:
+		return
+	if gio() >= float(shared_snapshot["duration"]):
+		return
+	_luat_moi_nhip()
+	if con_song(NetManager.local_id()) and _toi_thua():
+		xin_chet()
+
+
+func _report_shared_death(elapsed: float) -> void:
+	var player: Player = _nguoi(NetManager.local_id())
+	if _reported_dead or player == null or not con_song(player.player_id()):
+		return
+	if not player.sync.has_authority():
+		return
+	_reported_dead = true
+	player.eliminate_minigame(int(shared_snapshot["round"]), elapsed)
+	_song[player.player_id()] = elapsed
+
+
+func _present_shared_players() -> void:
+	for player: Player in get_tree().get_nodes_in_group("players"):
+		_prepare_shared_owner(player)
+		var life: Dictionary = player.minigame_life()
+		var id: int = player.player_id()
+		var eliminated: bool = not con_song(id)
+		if int(life.get("round", 0)) == int(shared_snapshot["round"]):
+			eliminated = eliminated or float(life.get("death", -1.0)) >= 0.0
+		player.model_root.visible = not eliminated
+		if player.sync.has_authority():
+			player.khoa_di_chuyen = eliminated or gio() < 0.0 or _da_chot or gio() >= float(shared_snapshot["duration"])
+			player.collision_layer = 0 if eliminated else Player.LOP_NGUOI
+
+
+func _restore_shared_players() -> void:
+	if shared_snapshot.is_empty():
+		return
+	for player: Player in get_tree().get_nodes_in_group("players"):
+		player.model_root.visible = true
+		player.clear_reactions()
+		if player.sync.has_authority():
+			player.collision_layer = Player.LOP_NGUOI
+			player.minigame_life_json = ""
+
+func _prepare_shared_owner(player: Player) -> void:
+	if not player.sync.has_authority():
+		return
+	_apply_jump_policy(player)
+	var camera: Camera3D = _cam_san()
+	if camera != null and not camera.current:
+		camera.make_current()
+	if player.che_do_san:
+		return
+	_cho_cu = player.global_transform
+	_co_cho_cu = true
+	_khoa_cu = player.khoa_di_chuyen
+	player.che_do_san = true
+	player.global_position = san.global_position + Vector3(7.0, 1.0, 0.0)
+	if con_song(player.player_id()):
+		player.enter_minigame(int(shared_snapshot["round"]))
+
+
+func allows_jump() -> bool:
+	return false
+
+
+func _apply_jump_policy(player: Player) -> void:
+	if not player.is_mine:
+		return
+	var key := player.get_instance_id()
+	if _saved_jumps.has(key):
+		return
+	_saved_jumps[key] = player.so_lan_nhay
+	if not allows_jump():
+		player.so_lan_nhay = 0
+
+
+func _restore_jump_policy() -> void:
+	for player: Player in get_tree().get_nodes_in_group("players"):
+		var key := player.get_instance_id()
+		if _saved_jumps.has(key):
+			player.so_lan_nhay = int(_saved_jumps[key])
+	_saved_jumps.clear()

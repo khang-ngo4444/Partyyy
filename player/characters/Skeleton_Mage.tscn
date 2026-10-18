@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://0pb5c0lgtnwe"]
+
+[ext_resource type="PackedScene" uid="uid://coq8j2qifkunj" path="res://asset/KayKit_Skeletons_1.1_FREE/characters/gltf/Skeleton_Mage.glb" id="1_o8o6f"]
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mcco6"]
+
+[node name="Skeleton_Mage" type="Node3D" unique_id=211097835]
+
+[node name="Model" parent="." unique_id=1818477567 instance=ExtResource("1_o8o6f")]
+transform = Transform3D(-0.67, 0, -5.857326e-08, 0, 0.67, 0, 5.857326e-08, 0, -0.67, 0, 0, 0)
+
+[node name="PartyAnimationPlayer" type="AnimationPlayer" parent="Model" unique_id=2008391558]
+libraries/ = SubResource("AnimationLibrary_mcco6")

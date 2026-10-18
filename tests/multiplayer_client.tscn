@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://c6gp3g86lhy4p"]
+
+[ext_resource type="Script" uid="uid://ceqxevbt7ypxb" path="res://tests/multiplayer_client.gd" id="1_gkgd3"]
+[ext_resource type="PackedScene" path="res://main.tscn" id="2_kxpsk"]
+
+[node name="MultiplayerClient" type="Node" unique_id=518488599]
+script = ExtResource("1_gkgd3")
+
+[node name="Main" parent="." unique_id=1820108537 instance=ExtResource("2_kxpsk")]

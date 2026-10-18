@@ -24,7 +24,7 @@ var _pitch := deg_to_rad(-45.0)
 
 
 func _ready() -> void:
-	fov = 62.0
+	fov = 58.0
 	_ap_goc()
 
 

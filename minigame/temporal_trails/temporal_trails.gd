@@ -47,7 +47,7 @@ func _ready() -> void:
 	ten = "TEMPORAL TRAILS"
 	luat = "Tự chạy thẳng · A/D để rẽ · đâm vào tường sáng hay viền sân là ra · trụ lại cuối cùng"
 	# Lưới đỡ; ván thường xong khi còn một người.
-	giay_van = 90.0
+	giay_van = MAX_ROUND_SECONDS
 
 
 func bat_dau(nguoi_choi: Array, giong: int) -> void:
@@ -121,7 +121,7 @@ func _chu_trang_thai() -> String:
 	if not _dang_lai:
 		return "SẴN SÀNG..."
 	if not con_song(NetManager.local_id()):
-		return "BẠN ĐÃ ĐÂM VÀO TƯỜNG · còn %d người" % so_con_song()
+		return "Đã loại · %d còn lại" % so_con_song()
 	return "Còn %d người" % so_con_song()
 
 

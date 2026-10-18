@@ -61,7 +61,7 @@ func xin_dung_day() -> void:
 
 
 func loi_nhac() -> String:
-	return "Đang ngồi — [Q] đứng dậy  ·  [ESC] menu"
+	return "Q · Đứng dậy"
 
 
 ## Ngồi quay mặt theo +Z của ghế, lùi vào nệm theo `lech_ngoi`.

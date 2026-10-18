@@ -1,20 +1,46 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene format=3]
 
 [ext_resource type="PackedScene" path="res://minigame/chung/san_dau.tscn" id="1_st"]
 [ext_resource type="PackedScene" path="res://minigame/chung/san_tron.tscn" id="2_sr"]
 [ext_resource type="Environment" path="res://materials/env_san_sang.tres" id="3_env"]
-[ext_resource type="Material" path="res://materials/mat_san_canh_bao.tres" id="5_b"]
-[ext_resource type="Material" path="res://materials/mat_san_thuong.tres" id="6_a"]
-[ext_resource type="Material" path="res://materials/mat_nham_san.tres" id="7_ns"]
-[ext_resource type="Material" path="res://materials/mat_nham_vuc.tres" id="8_nv"]
+[ext_resource type="Shader" path="res://minigame/magma/dung_nham.gdshader" id="4_lava"]
 
-[sub_resource type="PlaneMesh" id="Plane_nham"]
-size = Vector2(90, 90)
+[sub_resource type="StandardMaterial3D" id="Rock"]
+albedo_color = Color(0.22, 0.25, 0.3, 1)
+roughness = 0.95
 
-[sub_resource type="CylinderMesh" id="Cyl_vung"]
+[sub_resource type="CylinderMesh" id="Slope"]
+top_radius = 0.8
+bottom_radius = 11.5
+height = 1.8
+radial_segments = 48
+
+[sub_resource type="CylinderMesh" id="Base"]
 top_radius = 11.5
 bottom_radius = 11.5
-height = 0.02
+height = 0.4
+radial_segments = 48
+
+[sub_resource type="ConvexPolygonShape3D" id="IslandShape"]
+points = PackedVector3Array(0, 2, 0, 0.8, 2, 0, 0.793156, 2, 0.104421, 0.772741, 2, 0.207055, 0.739104, 2, 0.306147, 0.69282, 2, 0.4, 0.634683, 2, 0.487009, 0.565685, 2, 0.565685, 0.487009, 2, 0.634683, 0.4, 2, 0.69282, 0.306147, 2, 0.739104, 0.207055, 2, 0.772741, 0.104421, 2, 0.793156, 0, 2, 0.8, -0.104421, 2, 0.793156, -0.207055, 2, 0.772741, -0.306147, 2, 0.739104, -0.4, 2, 0.69282, -0.487009, 2, 0.634683, -0.565685, 2, 0.565685, -0.634683, 2, 0.487009, -0.69282, 2, 0.4, -0.739104, 2, 0.306147, -0.772741, 2, 0.207055, -0.793156, 2, 0.104421, -0.8, 2, 0, -0.793156, 2, -0.104421, -0.772741, 2, -0.207055, -0.739104, 2, -0.306147, -0.69282, 2, -0.4, -0.634683, 2, -0.487009, -0.565685, 2, -0.565685, -0.487009, 2, -0.634683, -0.4, 2, -0.69282, -0.306147, 2, -0.739104, -0.207055, 2, -0.772741, -0.104421, 2, -0.793156, 0, 2, -0.8, 0.104421, 2, -0.793156, 0.207055, 2, -0.772741, 0.306147, 2, -0.739104, 0.4, 2, -0.69282, 0.487009, 2, -0.634683, 0.565685, 2, -0.565685, 0.634683, 2, -0.487009, 0.69282, 2, -0.4, 0.739104, 2, -0.306147, 0.772741, 2, -0.207055, 0.793156, 2, -0.104421, 11.5, 0.2, 0, 11.401616, 0.2, 1.501051, 11.108147, 0.2, 2.976419, 10.624615, 0.2, 4.400859, 9.959292, 0.2, 5.75, 9.123563, 0.2, 7.000756, 8.131728, 0.2, 8.131728, 7.000756, 0.2, 9.123563, 5.75, 0.2, 9.959292, 4.400859, 0.2, 10.624615, 2.976419, 0.2, 11.108147, 1.501051, 0.2, 11.401616, 0, 0.2, 11.5, -1.501051, 0.2, 11.401616, -2.976419, 0.2, 11.108147, -4.400859, 0.2, 10.624615, -5.75, 0.2, 9.959292, -7.000756, 0.2, 9.123563, -8.131728, 0.2, 8.131728, -9.123563, 0.2, 7.000756, -9.959292, 0.2, 5.75, -10.624615, 0.2, 4.400859, -11.108147, 0.2, 2.976419, -11.401616, 0.2, 1.501051, -11.5, 0.2, 0, -11.401616, 0.2, -1.501051, -11.108147, 0.2, -2.976419, -10.624615, 0.2, -4.400859, -9.959292, 0.2, -5.75, -9.123563, 0.2, -7.000756, -8.131728, 0.2, -8.131728, -7.000756, 0.2, -9.123563, -5.75, 0.2, -9.959292, -4.400859, 0.2, -10.624615, -2.976419, 0.2, -11.108147, -1.501051, 0.2, -11.401616, 0, 0.2, -11.5, 1.501051, 0.2, -11.401616, 2.976419, 0.2, -11.108147, 4.400859, 0.2, -10.624615, 5.75, 0.2, -9.959292, 7.000756, 0.2, -9.123563, 8.131728, 0.2, -8.131728, 9.123563, 0.2, -7.000756, 9.959292, 0.2, -5.75, 10.624615, 0.2, -4.400859, 11.108147, 0.2, -2.976419, 11.401616, 0.2, -1.501051, 11.5, -0.2, 0, 11.401616, -0.2, 1.501051, 11.108147, -0.2, 2.976419, 10.624615, -0.2, 4.400859, 9.959292, -0.2, 5.75, 9.123563, -0.2, 7.000756, 8.131728, -0.2, 8.131728, 7.000756, -0.2, 9.123563, 5.75, -0.2, 9.959292, 4.400859, -0.2, 10.624615, 2.976419, -0.2, 11.108147, 1.501051, -0.2, 11.401616, 0, -0.2, 11.5, -1.501051, -0.2, 11.401616, -2.976419, -0.2, 11.108147, -4.400859, -0.2, 10.624615, -5.75, -0.2, 9.959292, -7.000756, -0.2, 9.123563, -8.131728, -0.2, 8.131728, -9.123563, -0.2, 7.000756, -9.959292, -0.2, 5.75, -10.624615, -0.2, 4.400859, -11.108147, -0.2, 2.976419, -11.401616, -0.2, 1.501051, -11.5, -0.2, 0, -11.401616, -0.2, -1.501051, -11.108147, -0.2, -2.976419, -10.624615, -0.2, -4.400859, -9.959292, -0.2, -5.75, -9.123563, -0.2, -7.000756, -8.131728, -0.2, -8.131728, -7.000756, -0.2, -9.123563, -5.75, -0.2, -9.959292, -4.400859, -0.2, -10.624615, -2.976419, -0.2, -11.108147, -1.501051, -0.2, -11.401616, 0, -0.2, -11.5, 1.501051, -0.2, -11.401616, 2.976419, -0.2, -11.108147, 4.400859, -0.2, -10.624615, 5.75, -0.2, -9.959292, 7.000756, -0.2, -9.123563, 8.131728, -0.2, -8.131728, 9.123563, -0.2, -7.000756, 9.959292, -0.2, -5.75, 10.624615, -0.2, -4.400859, 11.108147, -0.2, -2.976419, 11.401616, -0.2, -1.501051)
+
+[sub_resource type="PlaneMesh" id="LavaPlane"]
+size = Vector2(90, 90)
+
+[sub_resource type="ShaderMaterial" id="Lava"]
+shader = ExtResource("4_lava")
+
+[sub_resource type="StandardMaterial3D" id="AimMaterial"]
+shading_mode = 0
+albedo_color = Color(0.4, 1, 1, 1)
+emission_enabled = true
+emission = Color(0.1, 0.7, 0.8, 1)
+
+[sub_resource type="TorusMesh" id="Aim"]
+inner_radius = 0.27
+outer_radius = 0.36
+rings = 16
+ring_segments = 6
 
 [node name="SanMagma" type="Node3D"]
 
@@ -26,19 +52,23 @@ environment = ExtResource("3_env")
 [node name="SanTron" parent="." instance=ExtResource("2_sr")]
 
 [node name="Mat" parent="SanTron" index="0"]
-material_override = ExtResource("7_ns")
+position = Vector3(0, 1.1, 0)
+mesh = SubResource("Slope")
+material_override = SubResource("Rock")
 
-[node name="VungBao" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.21, 0)
-mesh = SubResource("Cyl_vung")
-material_override = ExtResource("5_b")
+[node name="Hinh" parent="SanTron/Than" index="0"]
+shape = SubResource("IslandShape")
 
-[node name="VungAnToan" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.23, 0)
-mesh = SubResource("Cyl_vung")
-material_override = ExtResource("6_a")
+[node name="De" type="MeshInstance3D" parent="SanTron"]
+mesh = SubResource("Base")
+material_override = SubResource("Rock")
 
 [node name="DungNham" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -6, 0)
-mesh = SubResource("Plane_nham")
-material_override = ExtResource("8_nv")
+position = Vector3(0, -1.4, 0)
+mesh = SubResource("LavaPlane")
+material_override = SubResource("Lava")
+
+[node name="TamNgam" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("Aim")
+material_override = SubResource("AimMaterial")

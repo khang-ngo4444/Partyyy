@@ -1,0 +1,78 @@
+[gd_scene format=3 uid="uid://cx2toxkn3dgdc"]
+
+[ext_resource type="Texture2D" uid="uid://y530a0vaco2s" path="res://minigame/chung/theme_wall_gradient.tres" id="1_xqvpx"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hv7rv"]
+shading_mode = 0
+albedo_color = Color(0.6156863, 0.8392157, 0.79607844, 1)
+albedo_texture = ExtResource("1_xqvpx")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_obnx2"]
+size = Vector2(1, 1)
+orientation = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ov4t4"]
+shading_mode = 0
+albedo_color = Color(0.6156863, 0.8392157, 0.79607844, 1)
+albedo_texture = ExtResource("1_xqvpx")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_p1fcj"]
+size = Vector2(1, 1)
+orientation = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k3ylh"]
+shading_mode = 0
+albedo_color = Color(0.6156863, 0.8392157, 0.79607844, 1)
+albedo_texture = ExtResource("1_xqvpx")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_iw3iv"]
+size = Vector2(1, 1)
+orientation = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_mwpdg"]
+size = Vector2(1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_repo3"]
+albedo_color = Color(0.5019608, 0.73333335, 0.64705884, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cxc28"]
+
+[node name="ThemeBackdrop" type="Node3D" unique_id=2012952906]
+
+[node name="Wrap" type="Node3D" parent="." unique_id=318418371]
+
+[node name="BackWall" type="MeshInstance3D" parent="Wrap" unique_id=1736023264]
+transform = Transform3D(38, 0, 0, 0, 12, 0, 0, 0, 0.2, 0, 3, -19)
+material_override = SubResource("StandardMaterial3D_hv7rv")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_obnx2")
+
+[node name="LeftWall" type="MeshInstance3D" parent="Wrap" unique_id=1646178886]
+transform = Transform3D(0.2, 0, 0, 0, 12, 0, 0, 0, 38, -19, 3, 0)
+material_override = SubResource("StandardMaterial3D_ov4t4")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_p1fcj")
+
+[node name="RightWall" type="MeshInstance3D" parent="Wrap" unique_id=2033548067]
+transform = Transform3D(0.2, 0, 0, 0, 12, 0, 0, 0, 38, 19, 3, 0)
+material_override = SubResource("StandardMaterial3D_k3ylh")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_iw3iv")
+
+[node name="FrontWall" type="MeshInstance3D" parent="Wrap" unique_id=1598091581]
+transform = Transform3D(38, 0, 0, 0, 12, 0, 0, 0, 0.2, 0, 3, -19)
+material_override = SubResource("StandardMaterial3D_hv7rv")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_obnx2")
+
+[node name="Ceiling" type="MeshInstance3D" parent="Wrap" unique_id=1768451447]
+transform = Transform3D(38, 0, 0, 0, 12, 0, 0, 0, 0.2, 0, 3, -19)
+material_override = SubResource("StandardMaterial3D_hv7rv")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_mwpdg")
+
+[node name="HorizonGround" type="MeshInstance3D" parent="." unique_id=1660803949]
+transform = Transform3D(38, 0, 0, 0, 0.2, 0, 0, 0, 38, 0, -15, 0)
+material_override = SubResource("StandardMaterial3D_repo3")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_cxc28")

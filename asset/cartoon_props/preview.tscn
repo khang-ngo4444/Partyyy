@@ -1,0 +1,78 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://asset/cartoon_props/cartoon_crown.tscn" id="1_crown"]
+[ext_resource type="PackedScene" path="res://asset/cartoon_props/cartoon_bomb.tscn" id="2_bomb"]
+
+[sub_resource type="Environment" id="Studio"]
+background_mode = 1
+background_color = Color(0.065, 0.085, 0.14, 1)
+ambient_light_source = 3
+ambient_light_color = Color(0.75, 0.85, 1, 1)
+ambient_light_energy = 0.65
+tonemap_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="PlinthMaterial"]
+albedo_color = Color(0.16, 0.23, 0.33, 1)
+roughness = 0.8
+
+[sub_resource type="CylinderMesh" id="PlinthMesh"]
+top_radius = 1.15
+bottom_radius = 1.25
+height = 0.22
+radial_segments = 12
+
+[node name="CartoonPropsPreview" type="Node3D"]
+
+[node name="Camera" type="Camera3D" parent="."]
+position = Vector3(0, 3.6, 7)
+rotation = Vector3(-0.34, 0, 0)
+projection = 1
+size = 4.6
+current = true
+environment = SubResource("Studio")
+
+[node name="Key" type="DirectionalLight3D" parent="."]
+rotation = Vector3(-0.85, -0.5, 0)
+light_color = Color(1, 0.9, 0.78, 1)
+light_energy = 1.5
+shadow_enabled = true
+
+[node name="Fill" type="OmniLight3D" parent="."]
+position = Vector3(-3, 3, 2)
+light_color = Color(0.4, 0.7, 1, 1)
+light_energy = 1.8
+omni_range = 10
+
+[node name="Crown" parent="." instance=ExtResource("1_crown")]
+position = Vector3(-1.5, 0.55, 0)
+scale = Vector3(1.6, 1.6, 1.6)
+
+[node name="Bomb" parent="." instance=ExtResource("2_bomb")]
+position = Vector3(1.5, 1.2, 0)
+scale = Vector3(1.4, 1.4, 1.4)
+
+[node name="CrownPlinth" type="MeshInstance3D" parent="."]
+position = Vector3(-1.5, 0.2, 0)
+mesh = SubResource("PlinthMesh")
+material_override = SubResource("PlinthMaterial")
+
+[node name="BombPlinth" type="MeshInstance3D" parent="."]
+position = Vector3(1.5, 0.2, 0)
+mesh = SubResource("PlinthMesh")
+material_override = SubResource("PlinthMaterial")
+
+[node name="CrownLabel" type="Label3D" parent="."]
+position = Vector3(-1.5, -0.25, 0.9)
+billboard = 1
+font_size = 48
+pixel_size = 0.004
+text = "CROWN CAPTURE"
+modulate = Color(1, 0.8, 0.24, 1)
+
+[node name="BombLabel" type="Label3D" parent="."]
+position = Vector3(1.5, -0.25, 0.9)
+billboard = 1
+font_size = 48
+pixel_size = 0.004
+text = "EXPLOSIVE"
+modulate = Color(1, 0.55, 0.3, 1)

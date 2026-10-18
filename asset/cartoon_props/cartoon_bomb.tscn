@@ -1,0 +1,141 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://asset/cartoon_props/bomb_shell.obj" id="1_mesh"]
+
+[sub_resource type="StandardMaterial3D" id="Shell"]
+albedo_color = Color(0.12, 0.14, 0.24, 1)
+roughness = 0.65
+metallic = 0.15
+
+[sub_resource type="StandardMaterial3D" id="Collar"]
+albedo_color = Color(0.35, 0.38, 0.5, 1)
+roughness = 0.65
+
+[sub_resource type="StandardMaterial3D" id="Fuse"]
+albedo_color = Color(1, 0.72, 0.30, 1)
+roughness = 0.65
+
+[sub_resource type="StandardMaterial3D" id="Spark"]
+albedo_color = Color(1, 0.38, 0.05, 1)
+roughness = 0.65
+emission_enabled = true
+emission = Color(1, 0.16, 0.015, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="StandardMaterial3D" id="White"]
+albedo_color = Color(1, 0.97, 0.87, 1)
+roughness = 0.65
+
+[sub_resource type="StandardMaterial3D" id="Ink"]
+albedo_color = Color(0.025, 0.025, 0.05, 1)
+roughness = 0.65
+
+[sub_resource type="CylinderMesh" id="Neck"]
+top_radius = 0.16
+bottom_radius = 0.21
+height = 0.18
+radial_segments = 8
+
+[sub_resource type="CylinderMesh" id="Wick"]
+top_radius = 0.045
+bottom_radius = 0.045
+height = 0.36
+radial_segments = 6
+
+[sub_resource type="SphereMesh" id="Ember"]
+radius = 0.1
+height = 0.2
+radial_segments = 6
+rings = 2
+
+[sub_resource type="SphereMesh" id="Eye"]
+radius = 0.13
+height = 0.30
+radial_segments = 8
+rings = 3
+
+[sub_resource type="SphereMesh" id="Pupil"]
+radius = 0.052
+height = 0.12
+radial_segments = 6
+rings = 2
+
+[sub_resource type="BoxMesh" id="Ray"]
+size = Vector3(0.045, 0.25, 0.045)
+
+[node name="CartoonBomb" type="Node3D"]
+
+
+[node name="Body" type="MeshInstance3D" parent="."]
+mesh = ExtResource("1_mesh")
+material_override = SubResource("Shell")
+
+[node name="Collar" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.54, 0)
+mesh = SubResource("Neck")
+material_override = SubResource("Collar")
+
+[node name="Fuse" type="MeshInstance3D" parent="."]
+position = Vector3(0.075, 0.73, 0)
+rotation = Vector3(0, 0, -0.4)
+mesh = SubResource("Wick")
+material_override = SubResource("Fuse")
+
+[node name="Spark" type="MeshInstance3D" parent="."]
+position = Vector3(0.15, 0.9, 0)
+mesh = SubResource("Ember")
+material_override = SubResource("Spark")
+
+[node name="EyeL" type="MeshInstance3D" parent="."]
+position = Vector3(-0.17, 0.13, 0.485)
+scale = Vector3(1, 1, 0.35)
+mesh = SubResource("Eye")
+material_override = SubResource("White")
+
+[node name="PupilL" type="MeshInstance3D" parent="."]
+position = Vector3(-0.158, 0.11, 0.533)
+scale = Vector3(1, 1, 0.45)
+mesh = SubResource("Pupil")
+material_override = SubResource("Ink")
+
+[node name="EyeR" type="MeshInstance3D" parent="."]
+position = Vector3(0.17, 0.13, 0.485)
+scale = Vector3(1, 1, 0.35)
+mesh = SubResource("Eye")
+material_override = SubResource("White")
+
+[node name="PupilR" type="MeshInstance3D" parent="."]
+position = Vector3(0.18200000000000002, 0.11, 0.533)
+scale = Vector3(1, 1, 0.45)
+mesh = SubResource("Pupil")
+material_override = SubResource("Ink")
+
+[node name="SparkRay0" type="MeshInstance3D" parent="."]
+position = Vector3(0.15, 1.1, 0)
+rotation = Vector3(0, 0, 0)
+mesh = SubResource("Ray")
+material_override = SubResource("Spark")
+
+[node name="SparkRay1" type="MeshInstance3D" parent="."]
+position = Vector3(0.3402113032590307, 0.9618033988749896, 0)
+rotation = Vector3(0, 0, -1.2566370614359172)
+mesh = SubResource("Ray")
+material_override = SubResource("Spark")
+
+[node name="SparkRay2" type="MeshInstance3D" parent="."]
+position = Vector3(0.26755705045849465, 0.7381966011250105, 0)
+rotation = Vector3(0, 0, -2.5132741228718345)
+mesh = SubResource("Ray")
+material_override = SubResource("Spark")
+
+[node name="SparkRay3" type="MeshInstance3D" parent="."]
+position = Vector3(0.03244294954150538, 0.7381966011250105, 0)
+rotation = Vector3(0, 0, -3.7699111843077517)
+mesh = SubResource("Ray")
+material_override = SubResource("Spark")
+
+[node name="SparkRay4" type="MeshInstance3D" parent="."]
+position = Vector3(-0.040211303259030745, 0.9618033988749894, 0)
+rotation = Vector3(0, 0, -5.026548245743669)
+mesh = SubResource("Ray")
+material_override = SubResource("Spark")

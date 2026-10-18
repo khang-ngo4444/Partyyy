@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://c7ghq1h27fpfq"]
+
+[ext_resource type="Script" uid="uid://wjcqxgbp22fl" path="res://minigame/paint/paint.gd" id="1_obvun"]
+[ext_resource type="PackedScene" uid="uid://d1t5wfiagj1uh" path="res://minigame/paint/paint_arena.tscn" id="2_uw6mx"]
+
+[node name="Paint" type="Node" unique_id=1744547497]
+script = ExtResource("1_obvun")
+san_scene = ExtResource("2_uw6mx")
+ket_thuc_khi_con_mot = false
+ten = "RẢI SƠN"

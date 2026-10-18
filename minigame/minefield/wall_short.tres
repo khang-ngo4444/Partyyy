@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://b5h7fuu2js712"]
+
+[ext_resource type="Shader" uid="uid://c8ola71qrei05" path="res://minigame/chung/wallpaper.gdshader" id="1_k8nj1"]
+[ext_resource type="Texture2D" uid="uid://co02jephgl2ya" path="res://minigame/chung/scenery/forest.png" id="2_373t2"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_k8nj1")
+shader_parameter/wallpaper = ExtResource("2_373t2")
+shader_parameter/wall_size = Vector2(12.8, 52)
+shader_parameter/wall_top = 36.0
+shader_parameter/artwork_height = 14.0
+shader_parameter/tint = Color(0.9137255, 0.9617647, 0.94215685, 1)
+shader_parameter/receive_lighting = false

@@ -1,0 +1,380 @@
+[gd_scene format=3 uid="uid://c73esr448mk7j"]
+
+[ext_resource type="PackedScene" uid="uid://di0exlqdantmm" path="res://asset/kenney_nature-kit/Models/GLTF format/tree_pineRoundC.glb" id="1_6gxwx"]
+[ext_resource type="PackedScene" uid="uid://bral1ouodajla" path="res://asset/kenney_nature-kit/Models/GLTF format/rock_tallH.glb" id="2_rscqk"]
+[ext_resource type="PackedScene" uid="uid://cbecy6u213i7v" path="res://asset/kenney_castle-kit/Models/GLB format/wall.glb" id="3_cgbs7"]
+[ext_resource type="PackedScene" uid="uid://b7mpxlglaqx3n" path="res://asset/kenney_nature-kit/Models/GLTF format/tree_palmShort.glb" id="4_godrs"]
+[ext_resource type="PackedScene" uid="uid://bsmlmpwfnhhyt" path="res://asset/kenney_furniture-kit/Models/GLTF format/bookcaseOpen.glb" id="5_7opma"]
+[ext_resource type="PackedScene" uid="uid://cjawxj1h7blwq" path="res://asset/kenney_furniture-kit/Models/GLTF format/books.glb" id="6_rscqk"]
+
+[sub_resource type="Environment" id="Environment_bohvx"]
+background_mode = 1
+background_color = Color(0.7764706, 0.8352941, 0.8862745, 1)
+ambient_light_source = 3
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.65
+
+[node name="SceneryBake" type="Node3D" unique_id=1947498760]
+
+[node name="Camera" type="Camera3D" parent="." unique_id=1513974532]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.5, 30)
+projection = 1
+current = true
+size = 11.0
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1500383169]
+transform = Transform3D(0.921061, 0.27935162, -0.27131036, 0, 0.6967067, 0.7173561, 0.38941833, -0.6607287, 0.6417094, 0, 0, 0)
+light_energy = 0.8
+
+[node name="Environment" type="WorldEnvironment" parent="." unique_id=1321617065]
+environment = SubResource("Environment_bohvx")
+
+[node name="Forest" type="Node3D" parent="." unique_id=328374433]
+
+[node name="Prop0" parent="Forest" unique_id=36126586 instance=ExtResource("1_6gxwx")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, -20.8, -0.4, 0)
+
+[node name="Prop1" parent="Forest" unique_id=2111136732 instance=ExtResource("1_6gxwx")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, -17.6, -0.4, 0)
+
+[node name="Prop2" parent="Forest" unique_id=993576151 instance=ExtResource("1_6gxwx")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, -14.4, -0.4, 0)
+
+[node name="Prop3" parent="Forest" unique_id=1739517878 instance=ExtResource("1_6gxwx")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, -11.2, -0.4, 0)
+
+[node name="Prop4" parent="Forest" unique_id=2059902528 instance=ExtResource("1_6gxwx")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, -8, -0.4, 0)
+
+[node name="Prop5" parent="Forest" unique_id=851356137 instance=ExtResource("1_6gxwx")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, -4.8, -0.4, 0)
+
+[node name="Prop6" parent="Forest" unique_id=643020504 instance=ExtResource("1_6gxwx")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, -1.6, -0.4, 0)
+
+[node name="Prop7" parent="Forest" unique_id=463468204 instance=ExtResource("1_6gxwx")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 1.6, -0.4, 0)
+
+[node name="Prop8" parent="Forest" unique_id=1863106637 instance=ExtResource("1_6gxwx")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 4.8, -0.4, 0)
+
+[node name="Prop9" parent="Forest" unique_id=2029378888 instance=ExtResource("1_6gxwx")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 8, -0.4, 0)
+
+[node name="Prop10" parent="Forest" unique_id=1756918484 instance=ExtResource("1_6gxwx")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 11.2, -0.4, 0)
+
+[node name="Prop11" parent="Forest" unique_id=1371565599 instance=ExtResource("1_6gxwx")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 14.4, -0.4, 0)
+
+[node name="Prop12" parent="Forest" unique_id=1863679114 instance=ExtResource("1_6gxwx")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 17.6, -0.4, 0)
+
+[node name="Prop13" parent="Forest" unique_id=1924855766 instance=ExtResource("1_6gxwx")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 20.8, -0.4, 0)
+
+[node name="Rocks" type="Node3D" parent="." unique_id=1896778341]
+visible = false
+
+[node name="Prop0" parent="Rocks" unique_id=1807649935 instance=ExtResource("2_rscqk")]
+transform = Transform3D(12, 0, 0, 0, 12, 0, 0, 0, 12, -20.8, -0.4, 0)
+
+[node name="Prop1" parent="Rocks" unique_id=518017886 instance=ExtResource("2_rscqk")]
+transform = Transform3D(12, 0, 0, 0, 12, 0, 0, 0, 12, -17.6, -0.4, 0)
+
+[node name="Prop2" parent="Rocks" unique_id=1034737458 instance=ExtResource("2_rscqk")]
+transform = Transform3D(12, 0, 0, 0, 12, 0, 0, 0, 12, -14.4, -0.4, 0)
+
+[node name="Prop3" parent="Rocks" unique_id=192311713 instance=ExtResource("2_rscqk")]
+transform = Transform3D(12, 0, 0, 0, 12, 0, 0, 0, 12, -11.2, -0.4, 0)
+
+[node name="Prop4" parent="Rocks" unique_id=1791375786 instance=ExtResource("2_rscqk")]
+transform = Transform3D(12, 0, 0, 0, 12, 0, 0, 0, 12, -8, -0.4, 0)
+
+[node name="Prop5" parent="Rocks" unique_id=2016765749 instance=ExtResource("2_rscqk")]
+transform = Transform3D(12, 0, 0, 0, 12, 0, 0, 0, 12, -4.8, -0.4, 0)
+
+[node name="Prop6" parent="Rocks" unique_id=1688919392 instance=ExtResource("2_rscqk")]
+transform = Transform3D(12, 0, 0, 0, 12, 0, 0, 0, 12, -1.6, -0.4, 0)
+
+[node name="Prop7" parent="Rocks" unique_id=1524928217 instance=ExtResource("2_rscqk")]
+transform = Transform3D(12, 0, 0, 0, 12, 0, 0, 0, 12, 1.6, -0.4, 0)
+
+[node name="Prop8" parent="Rocks" unique_id=775458840 instance=ExtResource("2_rscqk")]
+transform = Transform3D(12, 0, 0, 0, 12, 0, 0, 0, 12, 4.8, -0.4, 0)
+
+[node name="Prop9" parent="Rocks" unique_id=396002236 instance=ExtResource("2_rscqk")]
+transform = Transform3D(12, 0, 0, 0, 12, 0, 0, 0, 12, 8, -0.4, 0)
+
+[node name="Prop10" parent="Rocks" unique_id=437286385 instance=ExtResource("2_rscqk")]
+transform = Transform3D(12, 0, 0, 0, 12, 0, 0, 0, 12, 11.2, -0.4, 0)
+
+[node name="Prop11" parent="Rocks" unique_id=921876250 instance=ExtResource("2_rscqk")]
+transform = Transform3D(12, 0, 0, 0, 12, 0, 0, 0, 12, 14.4, -0.4, 0)
+
+[node name="Prop12" parent="Rocks" unique_id=665311688 instance=ExtResource("2_rscqk")]
+transform = Transform3D(12, 0, 0, 0, 12, 0, 0, 0, 12, 17.6, -0.4, 0)
+
+[node name="Prop13" parent="Rocks" unique_id=1085546313 instance=ExtResource("2_rscqk")]
+transform = Transform3D(12, 0, 0, 0, 12, 0, 0, 0, 12, 20.8, -0.4, 0)
+
+[node name="Castle" type="Node3D" parent="." unique_id=946056963]
+visible = false
+
+[node name="Prop0" parent="Castle" unique_id=1272652709 instance=ExtResource("3_cgbs7")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -20.8, 0, 0)
+
+[node name="Prop1" parent="Castle" unique_id=752233438 instance=ExtResource("3_cgbs7")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -17.6, 0, 0)
+
+[node name="Prop2" parent="Castle" unique_id=1983047812 instance=ExtResource("3_cgbs7")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -14.4, 0, 0)
+
+[node name="Prop3" parent="Castle" unique_id=1613695748 instance=ExtResource("3_cgbs7")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -11.2, 0, 0)
+
+[node name="Prop4" parent="Castle" unique_id=1485213461 instance=ExtResource("3_cgbs7")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -8, 0, 0)
+
+[node name="Prop5" parent="Castle" unique_id=260224738 instance=ExtResource("3_cgbs7")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -4.8, 0, 0)
+
+[node name="Prop6" parent="Castle" unique_id=1322485368 instance=ExtResource("3_cgbs7")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -1.6, 0, 0)
+
+[node name="Prop7" parent="Castle" unique_id=35627333 instance=ExtResource("3_cgbs7")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 1.6, 0, 0)
+
+[node name="Prop8" parent="Castle" unique_id=1393927388 instance=ExtResource("3_cgbs7")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 4.8, 0, 0)
+
+[node name="Prop9" parent="Castle" unique_id=1227425626 instance=ExtResource("3_cgbs7")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 8, 0, 0)
+
+[node name="Prop10" parent="Castle" unique_id=791030224 instance=ExtResource("3_cgbs7")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 11.2, 0, 0)
+
+[node name="Prop11" parent="Castle" unique_id=2080045731 instance=ExtResource("3_cgbs7")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 14.4, 0, 0)
+
+[node name="Prop12" parent="Castle" unique_id=866873612 instance=ExtResource("3_cgbs7")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 17.6, 0, 0)
+
+[node name="Prop13" parent="Castle" unique_id=1323019796 instance=ExtResource("3_cgbs7")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 20.8, 0, 0)
+
+[node name="Palms" type="Node3D" parent="." unique_id=1453221899]
+visible = false
+
+[node name="Prop0" parent="Palms" unique_id=304677873 instance=ExtResource("4_godrs")]
+transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, -20.8, -0.4, 0)
+
+[node name="Prop1" parent="Palms" unique_id=1659059310 instance=ExtResource("4_godrs")]
+transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, -17.6, -0.4, 0)
+
+[node name="Prop2" parent="Palms" unique_id=1882371399 instance=ExtResource("4_godrs")]
+transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, -14.4, -0.4, 0)
+
+[node name="Prop3" parent="Palms" unique_id=2051047390 instance=ExtResource("4_godrs")]
+transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, -11.2, -0.4, 0)
+
+[node name="Prop4" parent="Palms" unique_id=1578441915 instance=ExtResource("4_godrs")]
+transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, -8, -0.4, 0)
+
+[node name="Prop5" parent="Palms" unique_id=1219271589 instance=ExtResource("4_godrs")]
+transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, -4.8, -0.4, 0)
+
+[node name="Prop6" parent="Palms" unique_id=516147988 instance=ExtResource("4_godrs")]
+transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, -1.6, -0.4, 0)
+
+[node name="Prop7" parent="Palms" unique_id=785107681 instance=ExtResource("4_godrs")]
+transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, 1.6, -0.4, 0)
+
+[node name="Prop8" parent="Palms" unique_id=598626184 instance=ExtResource("4_godrs")]
+transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, 4.8, -0.4, 0)
+
+[node name="Prop9" parent="Palms" unique_id=1726124102 instance=ExtResource("4_godrs")]
+transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, 8, -0.4, 0)
+
+[node name="Prop10" parent="Palms" unique_id=101235827 instance=ExtResource("4_godrs")]
+transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, 11.2, -0.4, 0)
+
+[node name="Prop11" parent="Palms" unique_id=1693091175 instance=ExtResource("4_godrs")]
+transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, 14.4, -0.4, 0)
+
+[node name="Prop12" parent="Palms" unique_id=815315887 instance=ExtResource("4_godrs")]
+transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, 17.6, -0.4, 0)
+
+[node name="Prop13" parent="Palms" unique_id=381387955 instance=ExtResource("4_godrs")]
+transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, 20.8, -0.4, 0)
+
+[node name="Workshop" type="Node3D" parent="." unique_id=703623747]
+visible = false
+
+[node name="Prop0" parent="Workshop" unique_id=1915377279 instance=ExtResource("5_7opma")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, -22.4, -0.4, 0)
+
+[node name="Books0" parent="Workshop/Prop0" unique_id=1368143064 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.09, 0.04)
+
+[node name="Books1" parent="Workshop/Prop0" unique_id=1152261504 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.31, 0.04)
+
+[node name="Books2" parent="Workshop/Prop0" unique_id=1030893012 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.53, 0.04)
+
+[node name="Prop1" parent="Workshop" unique_id=155204669 instance=ExtResource("5_7opma")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, -19.2, -0.4, 0)
+
+[node name="Books0" parent="Workshop/Prop1" unique_id=953174970 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.09, 0.04)
+
+[node name="Books1" parent="Workshop/Prop1" unique_id=1644303409 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.31, 0.04)
+
+[node name="Books2" parent="Workshop/Prop1" unique_id=1045166315 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.53, 0.04)
+
+[node name="Prop2" parent="Workshop" unique_id=1820025056 instance=ExtResource("5_7opma")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, -16, -0.4, 0)
+
+[node name="Books0" parent="Workshop/Prop2" unique_id=172940615 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.09, 0.04)
+
+[node name="Books1" parent="Workshop/Prop2" unique_id=292566737 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.31, 0.04)
+
+[node name="Books2" parent="Workshop/Prop2" unique_id=1155949971 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.53, 0.04)
+
+[node name="Prop3" parent="Workshop" unique_id=1491707992 instance=ExtResource("5_7opma")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, -12.8, -0.4, 0)
+
+[node name="Books0" parent="Workshop/Prop3" unique_id=1758111887 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.09, 0.04)
+
+[node name="Books1" parent="Workshop/Prop3" unique_id=197021958 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.31, 0.04)
+
+[node name="Books2" parent="Workshop/Prop3" unique_id=1033620969 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.53, 0.04)
+
+[node name="Prop4" parent="Workshop" unique_id=1850256511 instance=ExtResource("5_7opma")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, -9.6, -0.4, 0)
+
+[node name="Books0" parent="Workshop/Prop4" unique_id=511381512 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.09, 0.04)
+
+[node name="Books1" parent="Workshop/Prop4" unique_id=1194722325 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.31, 0.04)
+
+[node name="Books2" parent="Workshop/Prop4" unique_id=301549141 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.53, 0.04)
+
+[node name="Prop5" parent="Workshop" unique_id=2111348148 instance=ExtResource("5_7opma")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, -6.4, -0.4, 0)
+
+[node name="Books0" parent="Workshop/Prop5" unique_id=784468566 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.09, 0.04)
+
+[node name="Books1" parent="Workshop/Prop5" unique_id=1403785006 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.31, 0.04)
+
+[node name="Books2" parent="Workshop/Prop5" unique_id=215035137 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.53, 0.04)
+
+[node name="Prop6" parent="Workshop" unique_id=307817145 instance=ExtResource("5_7opma")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, -3.2, -0.4, 0)
+
+[node name="Books0" parent="Workshop/Prop6" unique_id=2110414299 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.09, 0.04)
+
+[node name="Books1" parent="Workshop/Prop6" unique_id=562749520 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.31, 0.04)
+
+[node name="Books2" parent="Workshop/Prop6" unique_id=1778103601 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.53, 0.04)
+
+[node name="Prop7" parent="Workshop" unique_id=1299226525 instance=ExtResource("5_7opma")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 1.3322676e-15, -0.4, 0)
+
+[node name="Books0" parent="Workshop/Prop7" unique_id=875582705 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.09, 0.04)
+
+[node name="Books1" parent="Workshop/Prop7" unique_id=163482400 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.31, 0.04)
+
+[node name="Books2" parent="Workshop/Prop7" unique_id=537492348 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.53, 0.04)
+
+[node name="Prop8" parent="Workshop" unique_id=2098599810 instance=ExtResource("5_7opma")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 3.2, -0.4, 0)
+
+[node name="Books0" parent="Workshop/Prop8" unique_id=140720423 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.09, 0.04)
+
+[node name="Books1" parent="Workshop/Prop8" unique_id=1526768775 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.31, 0.04)
+
+[node name="Books2" parent="Workshop/Prop8" unique_id=433084207 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.53, 0.04)
+
+[node name="Prop9" parent="Workshop" unique_id=483571200 instance=ExtResource("5_7opma")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 6.4, -0.4, 0)
+
+[node name="Books0" parent="Workshop/Prop9" unique_id=1714787097 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.09, 0.04)
+
+[node name="Books1" parent="Workshop/Prop9" unique_id=930532186 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.31, 0.04)
+
+[node name="Books2" parent="Workshop/Prop9" unique_id=1670971279 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.53, 0.04)
+
+[node name="Prop10" parent="Workshop" unique_id=1073508867 instance=ExtResource("5_7opma")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 9.6, -0.4, 0)
+
+[node name="Books0" parent="Workshop/Prop10" unique_id=858842980 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.09, 0.04)
+
+[node name="Books1" parent="Workshop/Prop10" unique_id=339010622 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.31, 0.04)
+
+[node name="Books2" parent="Workshop/Prop10" unique_id=669587392 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.53, 0.04)
+
+[node name="Prop11" parent="Workshop" unique_id=965641004 instance=ExtResource("5_7opma")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 12.8, -0.4, 0)
+
+[node name="Books0" parent="Workshop/Prop11" unique_id=1461066675 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.09, 0.04)
+
+[node name="Books1" parent="Workshop/Prop11" unique_id=277079054 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.31, 0.04)
+
+[node name="Books2" parent="Workshop/Prop11" unique_id=1650276598 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.53, 0.04)
+
+[node name="Prop12" parent="Workshop" unique_id=1374920330 instance=ExtResource("5_7opma")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 16, -0.4, 0)
+
+[node name="Books0" parent="Workshop/Prop12" unique_id=57201753 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.09, 0.04)
+
+[node name="Books1" parent="Workshop/Prop12" unique_id=2024664793 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.31, 0.04)
+
+[node name="Books2" parent="Workshop/Prop12" unique_id=987288418 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.53, 0.04)
+
+[node name="Prop13" parent="Workshop" unique_id=1183942264 instance=ExtResource("5_7opma")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 19.2, -0.4, 0)
+
+[node name="Books0" parent="Workshop/Prop13" unique_id=1177783674 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.09, 0.04)
+
+[node name="Books1" parent="Workshop/Prop13" unique_id=661070228 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.31, 0.04)
+
+[node name="Books2" parent="Workshop/Prop13" unique_id=871625776 instance=ExtResource("6_rscqk")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0.08, 0.53, 0.04)

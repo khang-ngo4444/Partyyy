@@ -3,7 +3,7 @@ extends MiniGame
 ## Tank 1990 — đấu trường 2D, sống lâu nhất thắng; trúng một phát là ra.
 ## Chỉ gửi sự kiện (đổi hướng kèm toạ độ, bắn, trúng, phá gạch); người bị bắn tự nhận.
 
-const GIAY_VAN := 75.0
+const GIAY_VAN := MAX_ROUND_SECONDS
 const CO_DAN := 8.0
 
 ## Xe và đạn sinh giữa ván.
@@ -60,6 +60,10 @@ func dung_som() -> void:
 	_don_sach()
 
 
+func giay_con_lai() -> float:
+	return maxf(_het_luc - _gio(), 0.0) if _chay else -1.0
+
+
 # ─── vòng chơi ───
 
 func _process(delta: float) -> void:
@@ -69,7 +73,7 @@ func _process(delta: float) -> void:
 	for id: int in _xe:
 		_xe[id].chay(delta, _ban_do)
 	_cham_dan()
-	_dong_ho.text = "%d\"   còn %d xe" % [maxi(0, int(_het_luc - _gio())), _con_lai.size()]
+	_dong_ho.text = "%d xe" % _con_lai.size()
 	if _gio() >= _het_luc or _con_lai.size() <= 1:
 		_ket_thuc()
 

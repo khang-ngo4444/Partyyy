@@ -69,4 +69,4 @@ func vat_vien() -> Node3D:
 
 
 func loi_nhac() -> String:
-	return "Đang lái tàu — [W/S] ga/phanh  ·  [Q] xuống  ·  [ESC] menu"
+	return "W/S Lái · Q Xuống"

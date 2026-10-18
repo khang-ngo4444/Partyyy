@@ -1,6 +1,8 @@
 class_name MiniGame
 extends Node
 
+const MAX_ROUND_SECONDS := 60.0
+
 ## Hợp đồng chung của minigame: nhận danh sách người chơi (`bat_dau`), phát bảng xếp hạng (`xong`).
 ## Minigame chạy trên mọi máy và tự giữ đồng bộ; `xong` phải ra cùng một bảng ở mọi máy.
 
@@ -22,6 +24,11 @@ func bat_dau(_nguoi_choi: Array, _hat_giong: int) -> void:
 ## Dừng giữa chừng; lớp con dọn dẹp nếu cần.
 func dung_som() -> void:
 	pass
+
+
+## -1 = không có đồng hồ giới hạn; quản trò dùng chung cho mọi loại minigame.
+func giay_con_lai() -> float:
+	return -1.0
 
 
 # ─── ô điểm chung (QuanTroMiniGame vẽ ở đáy màn hình) ───

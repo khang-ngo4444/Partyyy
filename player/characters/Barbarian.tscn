@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://bcx60ubsv4d5s"]
+
+[ext_resource type="PackedScene" uid="uid://dueyjsmenhg5q" path="res://asset/KayKit_Adventurers_2.0_FREE/Characters/gltf/Barbarian.glb" id="1_4ge7i"]
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_pl7yq"]
+
+[node name="Barbarian" type="Node3D" unique_id=1747049311]
+
+[node name="Model" parent="." unique_id=40388770 instance=ExtResource("1_4ge7i")]
+transform = Transform3D(-0.6687, 0, -5.845961e-08, 0, 0.6687, 0, 5.845961e-08, 0, -0.6687, 0, 0, 0)
+
+[node name="PartyAnimationPlayer" type="AnimationPlayer" parent="Model" unique_id=123605921]
+libraries/ = SubResource("AnimationLibrary_pl7yq")

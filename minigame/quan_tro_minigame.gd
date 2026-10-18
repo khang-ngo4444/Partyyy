@@ -10,7 +10,7 @@ signal ket_thuc(xep_hang: Array)
 signal bat_dau()
 
 ## Đếm ngược trước khi bắt đầu (giây).
-const DEM_NGUOC := 3.0
+const DEM_NGUOC := 5.0
 
 ## Hiện kết quả bao lâu.
 const XEM_KET_QUA := 5.0
@@ -40,6 +40,7 @@ var _cho_diem := 0.0
 
 ## Dải điểm dùng chung ở đáy màn hình.
 @onready var _bang_diem: HBoxContainer = $Lop/BangDiem
+@onready var _dong_ho: Label = $Lop/Clock
 
 
 func _ready() -> void:
@@ -52,6 +53,10 @@ func dang_chay() -> bool:
 	return _dang_chay
 
 
+func ma_dang_choi() -> String:
+	return _game.scene_file_path.get_file().get_basename() if is_instance_valid(_game) else ""
+
+
 func danh_sach() -> PackedStringArray:
 	var ra := PackedStringArray()
 	for sc in tro_choi:
@@ -62,6 +67,28 @@ func danh_sach() -> PackedStringArray:
 
 func co_tro(ma: String) -> bool:
 	return _tim(ma) != null
+
+
+func _pool_state() -> Dictionary:
+	var ms := get_tree().get_first_node_in_group("match_state") as MatchState
+	if ms == null or ms.minigame_pool_json.strip_edges().is_empty():
+		return {}
+	var parser := JSON.new()
+	if parser.parse(ms.minigame_pool_json) != OK:
+		return {}
+	return parser.data if parser.data is Dictionary else {}
+
+
+func chon_tro_ngau_nhien(uu_tien: String = "") -> String:
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	return PoolMiniGame.chon(_pool_state(), danh_sach(), rng, uu_tien)
+
+
+func _ghi_tro_da_choi(ma: String) -> void:
+	var ms := get_tree().get_first_node_in_group("match_state") as MatchState
+	if ms != null and ms.sync.has_authority():
+		ms.minigame_pool_json = JSON.stringify(PoolMiniGame.da_choi(_pool_state(), danh_sach(), ma))
 
 
 func _tim(ma: String) -> PackedScene:
@@ -77,6 +104,9 @@ static func _ma(sc: PackedScene) -> String:
 
 ## Ai cũng gọi được; chỉ master phát lệnh và gieo hạt.
 func xin_chay(ma: String) -> void:
+	if $Session.supports(ma):
+		$Session.start_match(ma)
+		return
 	if _dang_chay:
 		return
 	var ids: Array = []
@@ -92,6 +122,7 @@ func _net_chay(ma: String, hat_giong: int, ids: Array) -> void:
 	if _dang_chay or scene == null:
 		return
 	_dang_chay = true
+	_ghi_tro_da_choi(ma)
 	bat_dau.emit()
 	_lop.visible = true
 	_ket_qua.text = ""
@@ -105,7 +136,7 @@ func _net_chay(ma: String, hat_giong: int, ids: Array) -> void:
 	_nen.visible = _game.che_nen
 
 	_tieu.text = _game.ten
-	_luat.text = "• " + _game.luat.replace(" · ", "\n• ")
+	_luat.text = HuongDanNhanh.tom_tat(ma)
 	_huong_dan.visible = true
 	_the_ket_qua.visible = false
 	%Mo.visible = false
@@ -125,17 +156,19 @@ func _net_chay(ma: String, hat_giong: int, ids: Array) -> void:
 ## Mỗi người một ô; trò không có điểm thì không hiện.
 func _dung_bang_diem() -> void:
 	for c in _bang_diem.get_children():
+		_bang_diem.remove_child(c)
 		c.queue_free()
-	if o_diem_scene == null or _ids.is_empty() or is_nan(_game.diem_cua(int(_ids[0]))):
+	if o_diem_scene == null or _ids.is_empty() or not HuongDanNhanh.co_diem_rieng(ma_dang_choi()) or is_nan(_game.diem_cua(int(_ids[0]))):
 		_bang_diem.visible = false
 		return
-	for i in _ids.size():
+	for i in mini(_ids.size(), 3):
 		_bang_diem.add_child(o_diem_scene.instantiate())
 	_bang_diem.visible = true
 	_ve_bang_diem()
 
 
 func _process(delta: float) -> void:
+	_ve_dong_ho()
 	if not _dang_chay or not _bang_diem.visible or _game == null or not is_instance_valid(_game):
 		return
 	_cho_diem -= delta
@@ -144,14 +177,33 @@ func _process(delta: float) -> void:
 		_ve_bang_diem()
 
 
+func _ve_dong_ho() -> void:
+	var seconds := _game.giay_con_lai() if is_instance_valid(_game) else -1.0
+	_dong_ho.visible = _dang_chay and not _huong_dan.visible and not _the_ket_qua.visible and seconds >= 0.0
+	if not _dong_ho.visible:
+		return
+	_dong_ho.text = dinh_dang_gio(seconds)
+	_dong_ho.modulate = Color(1, 0.3, 0.2) if seconds <= 10.0 else Color.WHITE
+
+
+static func dinh_dang_gio(seconds: float) -> String:
+	var whole := ceili(maxf(seconds, 0.0))
+	return "%02d:%02d" % [whole / 60, whole % 60]
+
+
 func _ve_bang_diem() -> void:
-	var xep := _xep_theo_diem()
+	var ranking := _xep_theo_diem()
+	var xep := HuongDanNhanh.hang_gon(ranking, NetManager.local_id())
 	var o := _bang_diem.get_children()
+	for i in o.size():
+		o[i].visible = i < xep.size()
 	for i in mini(xep.size(), o.size()):
 		var id := int(xep[i])
 		var p := _nguoi(id)
 		var mau := NetManager.color_for(p.color_index) if p != null else Color.GRAY
-		(o[i] as ODiem).dat(i + 1, Player.ten_theo_id(get_tree(), id), mau, _game.chu_diem(id),
+		if _game.has_method("mau_cua"):
+			mau = _game.mau_cua(id)
+		(o[i] as ODiem).dat(ranking.find(id) + 1, Player.ten_theo_id(get_tree(), id), mau, _game.chu_diem(id),
 				id == NetManager.local_id())
 
 
@@ -172,6 +224,7 @@ func _nguoi(id: int) -> Player:
 func _khi_xong(xep_hang: Array) -> void:
 	if not _dang_chay:
 		return
+	_dong_ho.visible = false
 	var dong := PackedStringArray()
 	for i in xep_hang.size():
 		var id := int(xep_hang[i])
@@ -185,9 +238,15 @@ func _khi_xong(xep_hang: Array) -> void:
 	_an_ui_tro()
 	_the_ket_qua.visible = true
 	UINav.dap(_the_ket_qua)
-	await get_tree().create_timer(XEM_KET_QUA).timeout
-	_don()
-	ket_thuc.emit(xep_hang)
+	var completed_game: MiniGame = _game
+	var seconds: float = XEM_KET_QUA
+	if _game is MiniGame3D and not (_game as MiniGame3D).shared_snapshot.is_empty():
+		var snapshot: Dictionary = (_game as MiniGame3D).shared_snapshot
+		seconds = maxf(float(snapshot["ended"]) + XEM_KET_QUA - Fusion.get_network_time(), 0.01)
+	await get_tree().create_timer(seconds).timeout
+	if _game == completed_game:
+		_don()
+		ket_thuc.emit(xep_hang)
 
 
 ## Ẩn lớp UI riêng của trò (CanvasLayer không ăn theo `visible` của node cha).
@@ -207,6 +266,7 @@ func huy() -> void:
 
 func _don() -> void:
 	_dang_chay = false
+	_dong_ho.visible = false
 	if _game != null and is_instance_valid(_game):
 		_game.dung_som()
 		_game.queue_free()
@@ -221,3 +281,34 @@ func _don() -> void:
 	%Mo.visible = false
 	# Trả chuột về cho game 3D.
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+func begin_shared_game(snapshot: Dictionary) -> void:
+	if _dang_chay:
+		_don()
+	var scene: PackedScene = _tim(str(snapshot["code"]))
+	if scene == null:
+		return
+	_dang_chay = true
+	_ghi_tro_da_choi(str(snapshot["code"]))
+	bat_dau.emit()
+	_lop.visible = true
+	_ket_qua.text = ""
+	_game = scene.instantiate() as MiniGame
+	_game.shared_snapshot = snapshot.duplicate(true)
+	_game.shared_session = $Session
+	_khung.add_child(_game)
+	_game.xong.connect(_khi_xong, CONNECT_ONE_SHOT)
+	_setup_shared_presentation(snapshot)
+
+
+func _setup_shared_presentation(snapshot: Dictionary) -> void:
+	_nen.visible = _game.che_nen
+	_tieu.text = _game.ten
+	_luat.text = HuongDanNhanh.tom_tat(str(snapshot["code"]))
+	_ids.clear()
+	for id: Variant in snapshot["ids"]:
+		_ids.append(int(id))
+	_game.bat_dau(_ids, int(snapshot["seed"]))
+	_dung_bang_diem()
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE

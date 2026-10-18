@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://bhvs8fjs68jx8"]
+
+[ext_resource type="PackedScene" uid="uid://dtmxjgep85pdw" path="res://asset/cartoon_props/water_gun/water_gun.tscn" id="1_vcq7n"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ejg6r"]
+albedo_color = Color(1, 0.88235295, 0.41960785, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7euuc"]
+size = Vector3(2.5, 0.3, 1.5)
+
+[node name="AssemblyBench" type="Node3D" unique_id=2044967114]
+
+[node name="Table" type="MeshInstance3D" parent="." unique_id=1393390486]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+material_override = SubResource("StandardMaterial3D_ejg6r")
+mesh = SubResource("BoxMesh_7euuc")
+
+[node name="Blueprint" parent="." unique_id=1805260 instance=ExtResource("1_vcq7n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 1.15, 0)
+
+[node name="Owner" type="Label3D" parent="." unique_id=1265375332]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 0)
+billboard = 1
+font_size = 48

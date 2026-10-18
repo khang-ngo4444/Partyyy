@@ -5,9 +5,9 @@ extends RefCounted
 ## Mỗi người kiếm ~`VANG_CA_VAN` vàng cả ván; hạng nhất hơn trung bình 30%, hạng chót kém 30%.
 
 const VANG_CA_VAN := 250.0
-## Một ván ~35 phút: lượt ~20 s, minigame ~90 s + 15 s chuyển cảnh.
+## Một ván ~35 phút: lượt ~20 s, minigame tối đa 60 s + 5 s đếm ngược + 5 s kết quả.
 const GIAY_MOI_VAN := 2100.0
-const GIAY_MINIGAME := 105.0
+const GIAY_MINIGAME := MiniGame.MAX_ROUND_SECONDS + 10.0
 const GIAY_MOI_LUOT := 20.0
 const HE_SO_NHAT := 1.3
 const HE_SO_CHOT := 0.7
@@ -27,7 +27,10 @@ static func so_vong(n: int, settings: Dictionary) -> int:
 ## Vàng minigame trung bình mỗi vòng = phần còn thiếu sau thu nhập từ ô tiền.
 static func vang_trung_binh(r: int, settings: Dictionary) -> float:
 	var tu_o := int(settings.get("tile_money", 25)) / 100.0 * int(settings.get("money_gain", 15))
-	return maxf(0.0, VANG_CA_VAN / maxi(r, 1) - tu_o)
+	var rounds := maxi(r, 1)
+	var bonus_rounds := mini(rounds, SO_VONG_CUOI)
+	var weighted_rounds := rounds + bonus_rounds * (NHAN_VONG_CUOI - 1.0)
+	return maxf(0.0, (VANG_CA_VAN - tu_o * rounds) / weighted_rounds)
 
 
 ## `hang` tính từ 0, làm tròn tới bội số 5.

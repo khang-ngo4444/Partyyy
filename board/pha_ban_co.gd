@@ -64,6 +64,9 @@ var settings: Dictionary = GameplaySettings.defaults()
 
 ## Trạng thái bàn: master giữ bản gốc, máy khác nhận nguyên gói.
 var tt: Dictionary = {}
+var _seen_reactions: Dictionary = {}
+var _reactions_ready := false
+var _death_waiting: Dictionary = {}
 var ban: BanDuong = null
 
 ## Scene hiệu ứng vừa được dựng cho gói này (do `DungDo` gán lúc phát `hieu_ung`). Quân cờ chỉ
@@ -218,10 +221,11 @@ func _net_trang_thai(json: String) -> void:
 		hieu_ung.emit(fx)
 	var cho := hieu_ung_dang_dien
 	hieu_ung_dang_dien = null
+	var reactions := _take_reactions(tt.get("animation_events", {}))
 	# Minigame đang phủ: chỉ nhận số liệu. Đang diễn đoạn đi thì không giật người về ô.
 	if not tam_dung:
 		_che_do_ban_co(true)
-		_sau_hieu_ung(cho)
+		_sau_hieu_ung(cho, reactions)
 	trang_thai_doi.emit(tt)
 	if tt.has("thang"):
 		var id := int(tt["thang"])
@@ -232,14 +236,29 @@ func _net_trang_thai(json: String) -> void:
 
 
 ## Có hiệu ứng thì chờ nó báo `cham`, rồi giật mọi người về ô theo gói và chuyển camera.
-func _sau_hieu_ung(cho: HieuUng) -> void:
+func _sau_hieu_ung(cho: HieuUng, reactions: Dictionary = {}) -> void:
 	if cho != null and not cho.da_cham:
 		await cho.cham
+	for key: String in reactions:
+		var player := nguoi(int(key))
+		if player != null and not tam_dung and dang_chay():
+			player.play_reaction(str(reactions[key]))
 	_dat_moi_nguoi_len_o()
 	# Camera ở lại chỗ hiệu ứng cho tới khi nó diễn xong.
 	if cho != null and not cho.da_xong:
 		await cho.xong
 	_cap_nhat_camera()
+
+
+func _take_reactions(events: Dictionary) -> Dictionary:
+	var result := {}
+	for key: String in events:
+		var event: Dictionary = events[key]
+		if _reactions_ready and int(event.serial) > int(_seen_reactions.get(key, 0)):
+			result[key] = event.kind
+		_seen_reactions[key] = event.serial
+	_reactions_ready = true
+	return result
 
 
 ## Giật mọi người về ô theo gói (đang diễn đoạn đi thì thôi).
@@ -285,7 +304,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			return
 	if not _den_luot_minh():
 		return
-	if event.is_action_pressed("jump") or event.is_action_pressed("interact"):
+	if event.is_action_pressed("jump"):
 		get_viewport().set_input_as_handled()
 		# Luôn gieo hai hột; hột thứ hai chỉ dùng khi có Hai hột xí ngầu.
 		Fusion.rpc(_net_tung, NetManager.local_id(), randi() % 6 + 1, randi() % 6 + 1)
@@ -447,7 +466,7 @@ func _cap_nhat_lua_chon() -> void:
 	var o := int(_bang("o").get(LuatBan.khoa(_id_dang_tung), 0))
 	ban.hien_mui_ten(o, _cac_huong, _lua_chon)
 	if _id_dang_tung == NetManager.local_id():
-		chon_huong_doi.emit("NGÃ RẼ — chọn hướng  %d/%d    [Z/X] đổi    [SPACE/E] đi" % [
+		chon_huong_doi.emit("Hướng %d/%d · Z/X, Space" % [
 				_lua_chon + 1, _cac_huong.size()])
 	else:
 		chon_huong_doi.emit("%s đang chọn hướng..." % Player.ten_theo_id(get_tree(),
@@ -514,7 +533,7 @@ func _bao_dam_cam_tu_do() -> void:
 	# Bắt đầu chếch phía sau-trên quân của mình, nhìn xuống ô đang đứng.
 	var toi := nguoi(NetManager.local_id())
 	var dich := toi.global_position if toi != null else cam_tu_do.tam
-	cam_tu_do.dat_nhin(dich + Vector3(0.0, 14.0, 12.0), dich)
+	cam_tu_do.dat_nhin(dich + Vector3(0.0, 11.5, 10.0), dich)
 
 
 ## Đổi qua lại camera tự do / gắn nhân vật.
@@ -919,7 +938,20 @@ func _di_theo_duong(id: int, duong: PackedInt32Array) -> void:
 func _dat_len_o(id: int, o: int) -> void:
 	var p := nguoi(id)
 	if p != null:
+		if p.animation_dying():
+			_finish_death_pose(id, p)
+			return
 		p.global_position = _cho_dung(id, o)
+
+
+func _finish_death_pose(id: int, player: Player) -> void:
+	if _death_waiting.has(id):
+		return
+	_death_waiting[id] = true
+	await get_tree().create_timer(player.animation_remaining() + 0.03).timeout
+	_death_waiting.erase(id)
+	if is_instance_valid(player) and is_instance_valid(ban) and dang_chay() and not tam_dung:
+		_dat_len_o(id, int(_bang("o").get(LuatBan.khoa(id), 0)))
 
 
 ## Chỗ đứng trên ô: rải quanh tâm theo thứ tự lượt để không chồng lên nhau.

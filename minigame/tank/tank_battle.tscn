@@ -1,25 +1,36 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene format=3 uid="uid://dlr7cjinxq621"]
 
-[ext_resource type="Script" path="res://minigame/tank/tank_battle.gd" id="1_tb"]
+[ext_resource type="Script" uid="uid://c2j1yl2ekrkb1" path="res://minigame/tank/tank_battle.gd" id="1_tb"]
 [ext_resource type="PackedScene" path="res://minigame/tank/ban_do_tank.tscn" id="2_bd"]
 [ext_resource type="PackedScene" path="res://minigame/tank/xe_tang.tscn" id="3_xt"]
+[ext_resource type="Texture2D" uid="uid://dlp2hmjo6lm3i" path="res://minigame/chung/scenery/castle.png" id="4_2hexe"]
 [ext_resource type="PackedScene" path="res://minigame/tank/dan.tscn" id="4_dan"]
 
-[node name="TankBattle" type="Node"]
+[node name="TankBattle" type="Node" unique_id=464998458]
 process_priority = 10
 script = ExtResource("1_tb")
 xe_scene = ExtResource("3_xt")
 dan_scene = ExtResource("4_dan")
 
-[node name="San" type="Node2D" parent="."]
+[node name="ScenicFrame" type="TextureRect" parent="." unique_id=1707625518]
+modulate = Color(0.39607844, 0.45882353, 0.5372549, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("4_2hexe")
+expand_mode = 1
+stretch_mode = 6
 
-[node name="BanDo" parent="San" instance=ExtResource("2_bd")]
+[node name="San" type="Node2D" parent="." unique_id=737889641]
 
-[node name="Xe" type="Node2D" parent="San"]
+[node name="BanDo" parent="San" unique_id=545136366 instance=ExtResource("2_bd")]
 
-[node name="Dan" type="Node2D" parent="San"]
+[node name="Xe" type="Node2D" parent="San" unique_id=109441726]
 
-[node name="Lop" type="Control" parent="."]
+[node name="Dan" type="Node2D" parent="San" unique_id=1175588127]
+
+[node name="Lop" type="Control" parent="." unique_id=556849345]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -28,7 +39,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="DongHo" type="Label" parent="Lop"]
+[node name="DongHo" type="Label" parent="Lop" unique_id=1946084568]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -44,6 +55,5 @@ grow_vertical = 0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 26
-text = ""
 horizontal_alignment = 1
 vertical_alignment = 1
