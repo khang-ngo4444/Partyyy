@@ -1,0 +1,13 @@
+%% Source baseline: 3c156b5, matching the reports.
+%% Continues after the board round in board_flow_detailed.mmd.
+flowchart TB
+    handoff(["Board round completed"]) --> launch["Master sends game, seed and player IDs"]
+    launch --> play["Suspend board input and play minigame"]
+    play --> ranking["Finalize ranking and show results for 5 seconds"]
+    ranking --> rewards["Award gold and items"]
+    rewards --> limit{"Final configured round?"}
+    limit -->|"No"| nextRound["Increase round; ranking becomes turn order"]
+    nextRound --> boardPort(["Return to board turns in A1"])
+    limit -->|"Yes"| winner["Compare Cups, then gold, then turn order"]
+    winner --> restart["Show winner for 6 seconds; clear board state"]
+    restart --> lobbyPort(["Return to lobby in A1"])

@@ -1,0 +1,8 @@
+%% Source baseline: 3c156b5, matching the reports.
+flowchart TB
+    main["main.gd"] --> room["NetManager and MatchState"]
+    main --> board["PhaBanCo"]
+    main --> manager["QuanTroMiniGame"]
+    room --> fusion["Photon Fusion"]
+    board --> rules["Board rules and economy"]
+    manager --> contract["MiniGame and MiniGame3D"]

@@ -1,0 +1,8 @@
+%% Source baseline: 3c156b5, matching the reports.
+flowchart LR
+    lobby["Lobby and ready"] --> board["Board turns"]
+    board --> game["Minigame"]
+    game --> rewards["Ranking and rewards"]
+    rewards -->|"More rounds"| board
+    rewards -->|"Final round"| results["Winner and restart"]
+    results --> lobby

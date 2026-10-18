@@ -1,0 +1,33 @@
+%% Source baseline: 3c156b5, matching the reports.
+%% Solid arrows identify responsibilities and dependencies, not a class inheritance hierarchy.
+flowchart TB
+    main["main.gd: scene flow and signal coordination"]
+
+    subgraph roomLayer["Room and connectivity"]
+        net["NetManager: identity and room connection"]
+        state["MatchState: phase, settings, light and music"]
+        fusion["Photon Fusion: replication, spawning and RPCs"]
+        net -->|"Connect, host and join"| fusion
+        state -->|"Replicated properties"| fusion
+    end
+
+    subgraph boardLayer["Board gameplay"]
+        board["PhaBanCo: turns and board state"]
+        rules["LuatBan, LuatDo, LuatBay, LuatRuong and KinhTe"]
+        presentation["Board scene, DungDo effects and HUD"]
+        board -->|"Resolve rules and rewards"| rules
+        board -->|"State and interaction signals"| presentation
+    end
+
+    subgraph gameLayer["Minigame framework"]
+        manager["QuanTroMiniGame: instructions, countdown and results"]
+        base["MiniGame contract and MiniGame3D support"]
+        games["Registered game scenes and game specific rules"]
+        manager -->|"Instantiate and start"| games
+        games -->|"Implement or extend"| base
+    end
+
+    main -->|"Connection signals"| net
+    main -->|"Spawn and observe"| state
+    main -->|"Open board and receive round end"| board
+    main -->|"Start challenge and receive ranking"| manager

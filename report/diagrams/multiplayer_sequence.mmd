@@ -1,0 +1,33 @@
+%% Source baseline: 3c156b5, matching the reports.
+%% Photon transports RPCs; it does not perform the board rule validation shown here.
+%% The 3D arena path is represented, not the separate Tank implementation.
+sequenceDiagram
+    autonumber
+    participant owner as Active client
+    participant board as Master control flow
+    participant clients as All clients
+    participant arena as Master 3D arena
+
+    owner->>clients: RPC roll request with player ID and dice
+    clients->>clients: Check active turn and input locks
+    clients->>board: Master branch of the roll handler
+    board->>board: Resolve routes and tile rules
+    board->>clients: RPC with full board state as JSON
+    clients->>clients: Apply world effects, positions and HUD
+
+    alt Board round has ended
+        board->>clients: Round completion event
+        board->>clients: Start game with seed and player IDs
+        clients->>clients: Lock board input and start game
+        owner->>clients: Broadcast locally detected elimination
+        arena->>arena: Finalize received elimination order
+        arena->>clients: RPC with final ranking
+        clients->>clients: Show results and emit completion
+        board->>board: Award rewards and check round limit
+        alt More rounds remain
+            board->>clients: RPC with new round and turn order
+        else Final round completed
+            board->>clients: RPC with winner in board state
+            clients->>clients: Show winner and reset to lobby
+        end
+    end

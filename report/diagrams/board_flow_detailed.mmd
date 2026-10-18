@@ -1,0 +1,14 @@
+%% Source baseline: 3c156b5, matching the reports.
+%% MatchState and PhaBanCo; continues into match_flow_detailed.mmd.
+flowchart TB
+    lobby(["Configured lobby"]) --> ready{"All players ready?"}
+    ready -->|"No"| lobby
+    ready -->|"Yes"| countdown["Shared countdown"]
+    countdown -->|"Player becomes unready"| lobby
+    countdown -->|"Countdown finishes"| turn["Active player may use one item"]
+    turn --> dice["Roll one die or use double dice"]
+    dice --> move["Choose routes and move through tiles"]
+    move --> resolve["Resolve traps, chests and tile effects"]
+    resolve --> complete{"All player turns complete?"}
+    complete -->|"No: next player"| turn
+    complete -->|"Yes"| resultPort(["Continue to minigame and result in A2"])
