@@ -328,7 +328,7 @@ func _begin_network_request(message: String) -> void:
 	var token := _request_token
 	_set_status(message, false)
 	_set_online_controls()
-	ManChuyen.che(message, "Đang kết nối máy chủ")
+	ManChuyen.che(message, "Đang kết nối máy chủ", ManChuyen.Kieu.SONG)
 	await get_tree().create_timer(NETWORK_TIMEOUT).timeout
 	if token != _request_token or not _busy or not is_inside_tree():
 		return

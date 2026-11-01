@@ -170,7 +170,7 @@ func _theo_pha(ms: MatchState) -> void:
 	if _da_het_van or _dang_vao_ban or ban_co.dang_chay() or quan_tro.dang_chay():
 		return
 	_dang_vao_ban = true
-	await ManChuyen.che("VÀO BÀN CỜ", "Đang xếp thứ tự lượt…")
+	await ManChuyen.che("VÀO BÀN CỜ", "Đang xếp thứ tự lượt…", ManChuyen.Kieu.O_CO)
 	_dang_vao_ban = false
 	_cho_ban_mo_man = true
 	# Vào pha chơi thì mở bàn party trước.
@@ -250,7 +250,7 @@ func _khi_thang(id: int) -> void:
 	var coc := int((ban_co.tt.get("coc", {}) as Dictionary).get(LuatBan.khoa(id), 0))
 	hud.bao_thang("%s THẮNG\n%d Cúp" % [Player.ten_theo_id(get_tree(), id), coc])
 	await get_tree().create_timer(GIAY_XEM_THANG).timeout
-	await ManChuyen.che("VỀ SẢNH", "Ván đã kết thúc")
+	await ManChuyen.che("VỀ SẢNH", "Ván đã kết thúc", ManChuyen.Kieu.SAO)
 	_da_het_van = true
 	hud.an_thang()
 	ban_co.dong()
@@ -307,7 +307,7 @@ func _vao_sanh() -> void:
 	if _lobby != null or _dang_vao_sanh:
 		return
 	_dang_vao_sanh = true
-	await ManChuyen.che("VÀO SẢNH", "Đang dựng sảnh…")
+	await ManChuyen.che("VÀO SẢNH", "Đang dựng sảnh…", ManChuyen.Kieu.REM)
 	# Rời phòng trong lúc che thì `_on_room_left` đã huỷ yêu cầu này.
 	if not _dang_vao_sanh:
 		return
@@ -672,7 +672,7 @@ func _spawn_set(m: int) -> void:
 
 
 func _on_room_left() -> void:
-	ManChuyen.che_ngay("VỀ MENU")
+	ManChuyen.che_ngay("VỀ MENU", "", ManChuyen.Kieu.SONG)
 	_dang_vao_sanh = false
 	_dang_vao_ban = false
 	_cho_ban_mo_man = false

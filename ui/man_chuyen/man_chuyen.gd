@@ -17,6 +17,18 @@ const DO_NAY_CHAM := -10.0
 
 enum Pha { MO, DANG_CHE, DA_CHE, DANG_LO }
 
+## Mỗi cảnh một kiểu: CHAM cho minigame (cả đi lẫn về), SONG cho chờ mạng và về menu,
+## REM vào sảnh, O_CO vào bàn cờ, SAO hết ván về sảnh.
+enum Kieu { CHAM, SONG, REM, O_CO, SAO }
+
+const BIEN_THE_THE := {
+	Kieu.CHAM: &"KhungVang",
+	Kieu.SONG: &"KhungTrang",
+	Kieu.REM: &"KhungVang",
+	Kieu.O_CO: &"KhungTrang",
+	Kieu.SAO: &"KhungVang",
+}
+
 signal da_che
 
 static var _ban: ManChuyen = null
@@ -29,7 +41,14 @@ var _luc_che_xong := 0.0
 var _phien := 0
 var _muon_lo := false
 
-@onready var _nen: ColorRect = $Nen
+@onready var _cac_nen: Dictionary = {
+	Kieu.CHAM: $NenCham,
+	Kieu.SONG: $NenSong,
+	Kieu.REM: $NenRem,
+	Kieu.O_CO: $NenOCo,
+	Kieu.SAO: $NenSao,
+}
+@onready var _nen: ColorRect = $NenCham
 @onready var _noi_dung: Control = $NoiDung
 @onready var _the: Control = %The
 @onready var _tieu_de: Label = %TieuDe
@@ -41,6 +60,7 @@ func _ready() -> void:
 	_ban = self
 	visible = false
 	_noi_dung.visible = false
+	_chon_kieu(Kieu.CHAM)
 	_dat_tien_do(0.0)
 
 
@@ -50,15 +70,15 @@ func _exit_tree() -> void:
 
 
 ## Che màn có hiệu ứng; đã che rồi thì chỉ đổi chữ.
-static func che(tieu_de: String, phu := "") -> void:
+static func che(tieu_de: String, phu := "", kieu := Kieu.CHAM) -> void:
 	if _ban != null:
-		await _ban._che(tieu_de, phu)
+		await _ban._che(tieu_de, phu, kieu)
 
 
 ## Che ngay trong khung này, dùng khi sắp dựng scene nặng mà chưa kịp diễn hiệu ứng.
-static func che_ngay(tieu_de: String, phu := "") -> void:
+static func che_ngay(tieu_de: String, phu := "", kieu := Kieu.CHAM) -> void:
 	if _ban != null:
-		_ban._che_ngay(tieu_de, phu)
+		_ban._che_ngay(tieu_de, phu, kieu)
 
 
 ## Lộ cảnh sau khi đã che đủ `GIAY_GIU`; đang che dở thì đợi che xong.
@@ -71,8 +91,8 @@ static func dang_phu() -> bool:
 	return _ban != null and _ban._pha != Pha.MO
 
 
-func _che(tieu_de: String, phu: String) -> void:
-	_nhan_yeu_cau_che(tieu_de, phu)
+func _che(tieu_de: String, phu: String, kieu: Kieu) -> void:
+	_nhan_yeu_cau_che(tieu_de, phu, kieu)
 	if _pha == Pha.DA_CHE:
 		return
 	if _pha != Pha.DANG_CHE:
@@ -81,8 +101,8 @@ func _che(tieu_de: String, phu: String) -> void:
 	await da_che
 
 
-func _che_ngay(tieu_de: String, phu: String) -> void:
-	_nhan_yeu_cau_che(tieu_de, phu)
+func _che_ngay(tieu_de: String, phu: String, kieu: Kieu) -> void:
+	_nhan_yeu_cau_che(tieu_de, phu, kieu)
 	if _pha == Pha.DA_CHE:
 		return
 	var dang_cho := _pha == Pha.DANG_CHE
@@ -93,13 +113,24 @@ func _che_ngay(tieu_de: String, phu: String) -> void:
 	_xong_che()
 
 
-func _nhan_yeu_cau_che(tieu_de: String, phu: String) -> void:
+func _nhan_yeu_cau_che(tieu_de: String, phu: String, kieu: Kieu) -> void:
+	_chon_kieu(kieu)
 	_tieu_de.text = tieu_de
 	_phu.text = phu
 	_phu.visible = not phu.is_empty()
 	_phien += 1
 	_muon_lo = false
 	_hen_luoi_an_toan(_phien)
+
+
+## Đổi kiểu giữa chừng giữ nguyên tiến độ; lúc che kín mọi kiểu đều đục nên không hở cảnh.
+func _chon_kieu(kieu: Kieu) -> void:
+	var tien_do := _tien_do()
+	_nen = _cac_nen[kieu]
+	for ma: Kieu in _cac_nen:
+		(_cac_nen[ma] as ColorRect).visible = ma == kieu
+	_dat_tien_do(tien_do)
+	_the.theme_type_variation = BIEN_THE_THE[kieu]
 
 
 func _hen_luoi_an_toan(phien: int) -> void:

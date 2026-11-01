@@ -31,6 +31,8 @@ func _run() -> void:
 		await _kiem_che_ngay()
 		await _kiem_che_ngay_dang_cho()
 		await _kiem_doi_chu()
+		await _kiem_cac_kieu()
+		await _kiem_doi_kieu_khi_da_che()
 	print("MAN CHUYEN RUNTIME: %d failures" % failures)
 	quit(1 if failures > 0 else 0)
 
@@ -112,6 +114,36 @@ func _kiem_che_ngay_dang_cho() -> void:
 	ManChuyen.mo()
 	await _cho(GIAY_DU_DIEN)
 	check(man._pha == ManChuyen.Pha.MO, "phải lộ lại sau che_ngay chen ngang")
+
+
+func _so_nen_dang_hien() -> int:
+	var dem := 0
+	for nen: ColorRect in man._cac_nen.values():
+		dem += 1 if nen.visible else 0
+	return dem
+
+
+func _kiem_cac_kieu() -> void:
+	check(man._cac_nen.size() == ManChuyen.Kieu.size(), "kiểu nào cũng phải có nền")
+	for kieu: ManChuyen.Kieu in ManChuyen.Kieu.values():
+		check(ManChuyen.BIEN_THE_THE.has(kieu), "kiểu %d thiếu màu thẻ" % kieu)
+		await ManChuyen.che("kiểu", "", kieu)
+		check(man._nen == man._cac_nen[kieu] and _so_nen_dang_hien() == 1, "kiểu %d phải hiện đúng một nền" % kieu)
+		check(man._tien_do() == 1.0, "kiểu %d phải che kín" % kieu)
+		check(man._nen.material is ShaderMaterial and (man._nen.material as ShaderMaterial).shader != null, "kiểu %d thiếu shader" % kieu)
+		ManChuyen.mo()
+		await _cho(GIAY_DU_DIEN)
+		check(man._pha == ManChuyen.Pha.MO and man._tien_do() == 0.0, "kiểu %d phải lộ xong" % kieu)
+
+
+## Chờ mạng bằng sóng rồi vào sảnh bằng rèm: lúc đổi vẫn phải che kín.
+func _kiem_doi_kieu_khi_da_che() -> void:
+	await ManChuyen.che("mạng", "", ManChuyen.Kieu.SONG)
+	await ManChuyen.che("sảnh", "", ManChuyen.Kieu.REM)
+	check(man._nen == man._cac_nen[ManChuyen.Kieu.REM], "phải đổi sang kiểu mới")
+	check(man._tien_do() == 1.0 and man._pha == ManChuyen.Pha.DA_CHE, "đổi kiểu không được hở cảnh")
+	ManChuyen.mo()
+	await _cho(GIAY_DU_DIEN)
 
 
 func _kiem_doi_chu() -> void:

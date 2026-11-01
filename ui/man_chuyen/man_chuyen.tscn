@@ -2,6 +2,10 @@
 
 [ext_resource type="Script" uid="uid://gdwcmlpcvraf" path="res://ui/man_chuyen/man_chuyen.gd" id="1_x5k2o"]
 [ext_resource type="Shader" uid="uid://v4p8wan2ryvm" path="res://ui/man_chuyen/man_chuyen.gdshader" id="2_h0aix"]
+[ext_resource type="Shader" uid="uid://c0mlpwlsamv14" path="res://ui/man_chuyen/man_chuyen_song.gdshader" id="3_2u3w8"]
+[ext_resource type="Shader" uid="uid://fuacp8hdak37" path="res://ui/man_chuyen/man_chuyen_rem.gdshader" id="4_c2xob"]
+[ext_resource type="Shader" uid="uid://b8hpcs0xbbqk2" path="res://ui/man_chuyen/man_chuyen_o_co.gdshader" id="5_g4oin"]
+[ext_resource type="Shader" uid="uid://cfeo2fioyoypn" path="res://ui/man_chuyen/man_chuyen_sao.gdshader" id="6_d43ig"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_c7fsq"]
 shader = ExtResource("2_h0aix")
@@ -15,13 +19,84 @@ shader_parameter/be_day_vien = 0.07
 shader_parameter/toc_do_soc = 1.5
 shader_parameter/so_soc = 18.0
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_x4t2c"]
+shader = ExtResource("3_2u3w8")
+shader_parameter/tien_do = 0.0
+shader_parameter/mau_nuoc = Color(0.102, 0.561, 0.776, 1)
+shader_parameter/mau_sau = Color(0.067, 0.416, 0.631, 1)
+shader_parameter/mau_bot = Color(0.925, 0.984, 1, 1)
+shader_parameter/mau_vien = Color(0.169, 0.106, 0.239, 1)
+shader_parameter/bien_do_song = 0.035
+shader_parameter/be_day_bot = 0.035
+shader_parameter/be_day_vien = 0.008
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ty4cx"]
+shader = ExtResource("4_c2xob")
+shader_parameter/tien_do = 0.0
+shader_parameter/mau_rem = Color(0.835, 0.184, 0.227, 1)
+shader_parameter/mau_nep = Color(0.612, 0.106, 0.173, 1)
+shader_parameter/mau_tua = Color(1, 0.835, 0.31, 1)
+shader_parameter/mau_vien = Color(0.169, 0.106, 0.239, 1)
+shader_parameter/so_nep = 34.0
+shader_parameter/be_day_tua = 0.014
+shader_parameter/be_day_vien = 0.005
+shader_parameter/do_gon_mep = 0.012
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_omux3"]
+shader = ExtResource("5_g4oin")
+shader_parameter/tien_do = 0.0
+shader_parameter/mau_o_sang = Color(0.953, 0.89, 0.737, 1)
+shader_parameter/mau_o_toi = Color(0.424, 0.753, 0.29, 1)
+shader_parameter/mau_vien = Color(0.169, 0.106, 0.239, 1)
+shader_parameter/so_o_doc = 8.0
+shader_parameter/be_rong_vet = 0.3
+shader_parameter/be_day_vien = 0.07
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ywxou"]
+shader = ExtResource("6_d43ig")
+shader_parameter/tien_do = 0.0
+shader_parameter/mau_dem = Color(0.169, 0.106, 0.239, 1)
+shader_parameter/mau_dem_sang = Color(0.247, 0.165, 0.341, 1)
+shader_parameter/mau_vang = Color(1, 0.835, 0.31, 1)
+shader_parameter/ban_kinh_lon_nhat = 1.9
+shader_parameter/be_day_vien = 0.03
+shader_parameter/so_cham_nen = 26.0
+
 [node name="ManChuyen" type="CanvasLayer" unique_id=96708639]
 process_mode = 3
 layer = 100
 script = ExtResource("1_x5k2o")
 
-[node name="Nen" type="ColorRect" parent="." unique_id=1508154035]
+[node name="NenCham" type="ColorRect" parent="." unique_id=1508154035]
 material = SubResource("ShaderMaterial_c7fsq")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="NenSong" type="ColorRect" parent="." unique_id=781777047]
+visible = false
+material = SubResource("ShaderMaterial_x4t2c")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="NenRem" type="ColorRect" parent="." unique_id=1127051699]
+visible = false
+material = SubResource("ShaderMaterial_ty4cx")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="NenOCo" type="ColorRect" parent="." unique_id=1129184997]
+visible = false
+material = SubResource("ShaderMaterial_omux3")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="NenSao" type="ColorRect" parent="." unique_id=1391094418]
+visible = false
+material = SubResource("ShaderMaterial_ywxou")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
