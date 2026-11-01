@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://drauc2oimyun6"]
+
+[ext_resource type="PackedScene" uid="uid://jmi2m3pymqvd" path="res://board/ban_party.tscn" id="1_i70su"]
+[ext_resource type="PackedScene" uid="uid://eg2mpjbnbedm" path="res://ui/hud.tscn" id="2_m2uhj"]
+
+[node name="SoiPhim" type="Node3D" unique_id=581308256]
+
+[node name="Ban" parent="." unique_id=675630417 instance=ExtResource("1_i70su")]
+
+[node name="Cam" type="Camera3D" parent="." unique_id=651436040]
+transform = Transform3D(1, 0, 0, 0, 0.7518057, 0.65938467, 0, -0.65938467, 0.7518057, 15.2, 11.15, 28.9)
+current = true
+
+[node name="Lop" type="CanvasLayer" parent="." unique_id=1076985136]
+
+[node name="HUD" parent="Lop" unique_id=1503416876 instance=ExtResource("2_m2uhj")]
