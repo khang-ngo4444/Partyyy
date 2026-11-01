@@ -18,6 +18,9 @@ signal cancelled
 static var _anh: Array[Texture2D] = []
 
 @export var nut_chon_scene: PackedScene = null
+const CO_TEN_TOI_DA := 46
+const CO_TEN_TOI_THIEU := 22
+
 ## Cùng thứ tự với `Player.models` và `CharacterVisual.ARCHETYPE_NAMES`.
 @export var models: Array[PackedScene] = []
 @export var o_mau_scene: PackedScene = null
@@ -68,6 +71,7 @@ func _ready() -> void:
 	%ZoomInBtn.pressed.connect(func(): _zoom_preview(1))
 	%ZoomOutBtn.pressed.connect(func(): _zoom_preview(-1))
 	viewport_container.gui_input.connect(_keo_xoay)
+	archetype_name.resized.connect(_vua_ten_nhan_vat)
 	visible = false
 	if _anh.is_empty():
 		_chup_anh.call_deferred()
@@ -304,6 +308,19 @@ func _rebuild_preview() -> void:
 	CharacterVisual.pose_for_preview(_preview)
 	_apply_preview_customization()
 	archetype_name.text = CharacterVisual.ARCHETYPE_NAMES[_model_index]
+	_vua_ten_nhan_vat()
+
+
+## Tên dài thì thu chữ cho vừa khung, không đẩy rộng bảng.
+func _vua_ten_nhan_vat() -> void:
+	var rong := archetype_name.size.x
+	if rong <= 0.0:
+		return
+	var font := archetype_name.get_theme_font("font")
+	var rong_chu := font.get_string_size(archetype_name.text, HORIZONTAL_ALIGNMENT_LEFT, -1, CO_TEN_TOI_DA).x
+	var vien := archetype_name.get_theme_constant("outline_size")
+	var co := floori(CO_TEN_TOI_DA * rong / (rong_chu + vien * 2.0))
+	archetype_name.add_theme_font_size_override("font_size", clampi(co, CO_TEN_TOI_THIEU, CO_TEN_TOI_DA))
 
 
 func _apply_preview_customization() -> void:
