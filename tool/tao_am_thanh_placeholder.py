@@ -73,12 +73,12 @@ HOP_AM_CHILL = (_FMAJ7, _EM7, _DM9, _CMAJ7, _AM7, _DM9, _G7SUS, _CMAJ7) * 2
 # Menu và bàn cờ chỉ có một bản, không có đếm ngược / kết quả.
 CHI_CO_BAN_CHOI = {"menu", "ban_co"}
 
-# Tiếng click gốc quá to so với mọi thứ còn lại nên hạ sẵn trong file.
-GIAM_DB_SFX = {"bam_nut": 9}
+# Tiếng bấm gốc quá to so với mọi thứ còn lại nên hạ sẵn trong file.
+GIAM_DB_SFX = {"bam_nut": 19}
 
 # tên SFX: file nguồn Kenney
 BO_SFX = {
-	"bam_nut": INTERFACE / "click_003.ogg",
+	"bam_nut": INTERFACE / "drop_003.ogg",
 	"chuyen_canh": INTERFACE / "maximize_008.ogg",
 	"xuc_xac": IMPACT / "impactWood_light_001.ogg",
 	"buoc_chan": IMPACT / "footstep_wood_000.ogg",
