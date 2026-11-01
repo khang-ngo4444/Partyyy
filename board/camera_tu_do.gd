@@ -8,6 +8,8 @@ extends Camera3D
 
 const PHIM_BAY_LEN := KEY_R
 const PHIM_BAY_XUONG := KEY_F
+## Ngắng/cúi tối đa. Chừa 2 độ so với thẳng đứng để hướng xoay không bị lật khi qua đỉnh.
+const GOC_NHIN_TOI_DA := deg_to_rad(88.0)
 
 @export var toc_do := 16.0
 @export var nhanh := 2.6
@@ -37,8 +39,12 @@ func dat_nhin(vi_tri: Vector3, diem: Vector3) -> void:
 	global_position = vi_tri
 	var huong := (diem - vi_tri).normalized()
 	_yaw = atan2(-huong.x, -huong.z)
-	_pitch = clampf(asin(huong.y), deg_to_rad(-88.0), deg_to_rad(10.0))
+	_pitch = kep_goc_nhin(asin(huong.y))
 	_ap_goc()
+
+
+static func kep_goc_nhin(pitch: float) -> float:
+	return clampf(pitch, -GOC_NHIN_TOI_DA, GOC_NHIN_TOI_DA)
 
 
 func _ap_goc() -> void:
@@ -50,8 +56,7 @@ func _input(event: InputEvent) -> void:
 		return
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		_yaw -= event.relative.x * do_nhay_chuot
-		_pitch = clampf(_pitch - event.relative.y * do_nhay_chuot,
-				deg_to_rad(-88.0), deg_to_rad(10.0))
+		_pitch = kep_goc_nhin(_pitch - event.relative.y * do_nhay_chuot)
 		_ap_goc()
 	elif event is InputEventMouseButton and event.pressed \
 			and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:

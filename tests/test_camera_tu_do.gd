@@ -9,6 +9,16 @@ func suite_name() -> String:
 	return "camera_tu_do"
 
 
+func test_can_look_up_at_the_sky_as_far_as_down() -> void:
+	assert_true(rad_to_deg(CameraTuDo.kep_goc_nhin(PI)) > 85.0)
+	assert_true(rad_to_deg(CameraTuDo.kep_goc_nhin(-PI)) < -85.0)
+
+
+func test_view_stops_before_flipping_over_vertical() -> void:
+	assert_true(CameraTuDo.kep_goc_nhin(PI) < PI * 0.5)
+	assert_true(CameraTuDo.kep_goc_nhin(-PI) > -PI * 0.5)
+
+
 func test_up_and_down_follow_world_axis_at_any_yaw() -> void:
 	assert_true(CameraTuDo.huong_bay(GOC_BAT_KY, 0.0, 0.0, 1.0).is_equal_approx(Vector3.UP))
 	assert_true(CameraTuDo.huong_bay(GOC_BAT_KY, 0.0, 0.0, -1.0).is_equal_approx(Vector3.DOWN))
