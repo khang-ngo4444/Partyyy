@@ -61,8 +61,7 @@ var _thanh_ti_le := ThanhTiLe.new()
 @onready var join_code_btn: Button = %JoinCodeBtn
 @onready var refresh_btn: Button = %RefreshBtn
 @onready var status: Label = %Status
-@onready var main_status: Label = %MainStatus
-@onready var status_dot: Panel = %StatusDot
+@onready var status_card: TheKetNoi = %StatusCard
 @onready var room_list: VBoxContainer = %RoomList
 @onready var empty_hint: Label = %EmptyHint
 @onready var quit_overlay: ColorRect = %QuitOverlay
@@ -128,7 +127,6 @@ func _ready() -> void:
 	_set_gameplay_values(GameplaySettings.defaults())
 
 	_show_main(false)
-	_set_connection_text("Đang kết nối tới máy chủ…", Color("F5B041"))
 	_set_online_controls()
 
 
@@ -347,7 +345,7 @@ func _on_room_joined() -> void:
 
 func _on_connected() -> void:
 	_connected = true
-	_set_connection_text("Đã kết nối · sẵn sàng chơi!", UIKit.LA)
+	status_card.da_ket_noi()
 	_set_status("Chọn phòng đang mở, nhập mã hoặc tạo phòng mới.", false)
 	_set_online_controls()
 
@@ -356,15 +354,10 @@ func _on_connect_failed(reason: String) -> void:
 	_connected = false
 	_busy = false
 	_request_token += 1
-	_set_connection_text("Không kết nối được máy chủ", UIKit.DO)
+	status_card.mat_ket_noi(reason)
 	_set_status("Lỗi kết nối: %s" % reason, true)
 	_set_online_controls()
 	ManChuyen.mo()
-
-
-func _set_connection_text(text: String, mau: Color) -> void:
-	main_status.text = text
-	status_dot.add_theme_stylebox_override("panel", UIKit.hop(mau, 999, 0, 3, 0))
 
 
 func _set_status(text: String, is_error: bool) -> void:
@@ -398,6 +391,7 @@ func _refresh_rooms(play_sound := true) -> void:
 
 func _rebuild_room_list(rooms: Array) -> void:
 	_rooms = rooms
+	status_card.cap_nhat_phong(rooms)
 	for child in room_list.get_children():
 		child.queue_free()
 	empty_hint.visible = rooms.is_empty()

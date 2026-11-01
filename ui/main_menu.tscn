@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bbs6qvdlierie"]
 
 [ext_resource type="Script" uid="uid://c30tttaqc6jlt" path="res://ui/main_menu.gd" id="1_menu"]
+[ext_resource type="Script" uid="uid://drrutj7rnv36t" path="res://ui/the_ket_noi.gd" id="4_arv2f"]
 [ext_resource type="PackedScene" uid="uid://dvper3iuvcixy" path="res://ui/character_creator.tscn" id="5_creator"]
 [ext_resource type="Script" uid="uid://d2qopo4wjeemx" path="res://ui/kit/trang_tri.gd" id="6_tt"]
 [ext_resource type="Texture2D" uid="uid://d3hbibuhg1cug" path="res://ui/icons/kenney/arrowLeft.png" id="7_back"]
@@ -68,34 +69,79 @@ theme_type_variation = &"ThePill"
 layout_mode = 2
 text = "Tiệc tùng cùng bạn bè trên Rumble Reef!"
 
-[node name="StatusPill" type="PanelContainer" parent="MainScreen" unique_id=947169168]
+[node name="StatusCard" type="PanelContainer" parent="MainScreen" unique_id=947169168]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 0)
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -420.0
+offset_left = -368.0
 offset_top = 36.0
 offset_right = -48.0
-offset_bottom = 80.0
+offset_bottom = 36.0
 grow_horizontal = 0
-theme_type_variation = &"ThePill"
+theme_type_variation = &"TheNho"
+script = ExtResource("4_arv2f")
 
-[node name="Row" type="HBoxContainer" parent="MainScreen/StatusPill" unique_id=1882169278]
+[node name="Rows" type="VBoxContainer" parent="MainScreen/StatusCard" unique_id=499428747]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="TopRow" type="HBoxContainer" parent="MainScreen/StatusCard/Rows" unique_id=1830869912]
 layout_mode = 2
 theme_override_constants/separation = 10
-alignment = 2
 
-[node name="StatusDot" type="Panel" parent="MainScreen/StatusPill/Row" unique_id=1619481369]
+[node name="StatusDot" type="Panel" parent="MainScreen/StatusCard/Rows/TopRow" unique_id=80476088]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(18, 18)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="MainStatus" type="Label" parent="MainScreen/StatusPill/Row" unique_id=1748325684]
+[node name="StatusTitle" type="Label" parent="MainScreen/StatusCard/Rows/TopRow" unique_id=2138856173]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 19
-text = "Đang kết nối tới máy chủ…"
+size_flags_horizontal = 3
+theme_type_variation = &"ChuNhan"
+theme_override_colors/font_color = Color(0.16862746, 0.105882354, 0.23921569, 1)
+theme_override_font_sizes/font_size = 20
+text = "ĐANG KẾT NỐI"
+
+[node name="PingBars" type="HBoxContainer" parent="MainScreen/StatusCard/Rows/TopRow" unique_id=293098482]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 3
+
+[node name="Bar1" type="Panel" parent="MainScreen/StatusCard/Rows/TopRow/PingBars" unique_id=74573015]
+custom_minimum_size = Vector2(6, 7)
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="Bar2" type="Panel" parent="MainScreen/StatusCard/Rows/TopRow/PingBars" unique_id=1316894145]
+custom_minimum_size = Vector2(6, 12)
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="Bar3" type="Panel" parent="MainScreen/StatusCard/Rows/TopRow/PingBars" unique_id=1652743699]
+custom_minimum_size = Vector2(6, 17)
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="PingValue" type="Label" parent="MainScreen/StatusCard/Rows/TopRow" unique_id=436580534]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ChuNhan"
+theme_override_colors/font_color = Color(0.16862746, 0.105882354, 0.23921569, 1)
+text = "— ms"
+
+[node name="StatusDetail" type="Label" parent="MainScreen/StatusCard/Rows" unique_id=2133664112]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ChuPhu"
+theme_override_font_sizes/font_size = 17
+text = "Máy chủ Asia…"
+text_overrun_behavior = 3
 
 [node name="TileRow" type="HBoxContainer" parent="MainScreen" unique_id=182644903]
 unique_name_in_owner = true
