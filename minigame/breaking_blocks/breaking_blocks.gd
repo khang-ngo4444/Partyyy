@@ -22,6 +22,10 @@ func _ready() -> void:
 	_warning_material = mat_bao.duplicate() as StandardMaterial3D
 
 
+func _kieu_di_cua_tro() -> Dictionary:
+	return {"idle": "balance"}
+
+
 func _dung_san() -> void:
 	# A solo practice round should reach the first wave instead of ending on spawn.
 	ket_thuc_khi_con_mot = _song.size() > 1

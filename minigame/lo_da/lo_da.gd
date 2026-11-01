@@ -119,6 +119,10 @@ func _ready() -> void:
 	giay_van = 60.0
 
 
+func _kieu_di_cua_tro() -> Dictionary:
+	return {"sprint": "panic_run"}
+
+
 func _dung_san() -> void:
 	_cam = san.get_node("Cam") as Camera3D
 	_lua = san.get_node("PhaBom/TuongLua") as Node3D

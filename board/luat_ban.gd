@@ -131,11 +131,14 @@ static func hieu_ung_o(tt: Dictionary, k: String, loai: int, settings: Dictionar
 			var sau := mini(truoc + int(settings.get("health_gain", 3)),
 					int(settings.get("max_health", 10)))
 			bang[k] = sau
+			if sau > truoc:
+				animation_event(tt, k, "cheer")
 			return "+%d máu" % (sau - truoc) if sau > truoc else "máu đã đầy"
 		BanDuong.Loai.TIEN:
 			var tien: Dictionary = _bang(tt, "tien")
 			var them := int(settings.get("money_gain", 15))
 			tien[k] = int(tien.get(k, 0)) + them
+			animation_event(tt, k, "cheer")
 			return "+%d vàng" % them
 	return ""
 

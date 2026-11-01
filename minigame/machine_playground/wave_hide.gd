@@ -147,6 +147,9 @@ func handle_shared_action(snapshot: Dictionary, id: int, action: String, _payloa
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_E:
+		var nguoi_day: Player = _nguoi(NetManager.local_id())
+		if nguoi_day != null:
+			nguoi_day.play_action("attack")
 		request_action("push")
 
 

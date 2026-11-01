@@ -331,6 +331,9 @@ func _net_chet(id: int, giay: float) -> void:
 		return
 	_song[id] = giay
 	_thu_tu_chet.append(id)
+	var nguoi_chet := _nguoi(id)
+	if nguoi_chet != null:
+		nguoi_chet.play_reaction("death")
 	_khi_ai_do_chet(id)
 
 
@@ -403,10 +406,16 @@ func ban_kinh_vao_san() -> float:
 
 
 ## Bật/tắt chế độ sân: camera sân, WASD theo trục thế giới.
+## Trò nào cần dáng đi riêng thì trả bảng đổi clip (xem `Player.dat_kieu_di`).
+func _kieu_di_cua_tro() -> Dictionary:
+	return {}
+
+
 func _che_do_san(bat: bool) -> void:
 	for p: Player in get_tree().get_nodes_in_group("players"):
 		# Phóng to hình mọi người (cục bộ).
 		p.model_root.scale = Vector3.ONE * (TO_HON if bat else 1.0)
+		p.dat_kieu_di(_kieu_di_cua_tro() if bat else {})
 		if not p.is_mine:
 			continue
 		p.che_do_san = bat
@@ -430,6 +439,8 @@ func _cam_san() -> Camera3D:
 
 
 func _nguoi(id: int) -> Player:
+	if not is_inside_tree():
+		return null
 	for p: Player in get_tree().get_nodes_in_group("players"):
 		if p.player_id() == id:
 			return p

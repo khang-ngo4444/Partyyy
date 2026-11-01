@@ -44,6 +44,7 @@ static func huong_phim(event: InputEvent) -> int:
 	return 0
 
 const CAO_BAN := 100.0
+const GIAY_NHAY_THANG_VAN := 6.0
 const GIAY_MOI_O := 0.22
 const NGHI_GIUA_LUOT := 0.8
 
@@ -229,6 +230,9 @@ func _net_trang_thai(json: String) -> void:
 	trang_thai_doi.emit(tt)
 	if tt.has("thang"):
 		var id := int(tt["thang"])
+		var nguoi_thang_van := nguoi(id)
+		if nguoi_thang_van != null:
+			nguoi_thang_van.play_reaction("dance", GIAY_NHAY_THANG_VAN)
 		van_thang.emit(id)
 		return
 	if str(tt.get("su_kien", "")) == "het_vong":
@@ -355,6 +359,9 @@ func _net_tung(id: int, so: int, so_2: int) -> void:
 	_dang_di = true
 	_dice_ready = false
 	_id_dang_tung = id
+	var nguoi_tung := nguoi(id)
+	if nguoi_tung != null:
+		nguoi_tung.play_action("throw")
 	so = clampi(so, 1, 6)
 	_so_dang_tung = so
 	if str(tt.get("hai_hot", "")) == LuatBan.khoa(id):

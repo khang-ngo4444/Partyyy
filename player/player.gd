@@ -121,6 +121,10 @@ var _meshes: Array[MeshInstance3D] = []
 var _dang_giau := false
 var _loaded_model := -1
 var _animation_state: RefCounted
+## Đang cầm vật ở khung trước; đổi trạng thái thì diễn nhặt/ném trên mọi máy.
+var _dang_cam := false
+## Minigame đổi dáng đi: {"sprint": "panic_run"} thay clip nền theo trạng thái di chuyển.
+var _kieu_di: Dictionary = {}
 var _visual_position := Vector3.ZERO
 var _visual_velocity := Vector3.ZERO
 
@@ -373,7 +377,11 @@ func _process(delta: float) -> void:
 
 	if _anim == null:
 		return
-	var want := _pick_anim()
+	if holding != _dang_cam:
+		_dang_cam = holding
+		if _animation_state != null:
+			_animation_state.request("pickup" if holding else "throw")
+	var want: String = _kieu_di.get(_pick_anim(), _pick_anim())
 	if holding and want == "idle":
 		want = "holding-right"
 	if _animation_state != null:
@@ -538,6 +546,11 @@ func _apply_name() -> void:
 func play_action(kind: String = "attack") -> void:
 	if _animation_state != null:
 		_animation_state.request(kind)
+
+
+## Rỗng là trả về dáng đi thường. Gọi trên mọi máy: dáng đi không replicate.
+func dat_kieu_di(kieu: Dictionary) -> void:
+	_kieu_di = kieu
 
 
 func play_reaction(kind: String, duration: float = 0.0) -> void:

@@ -47,6 +47,10 @@ func _ready() -> void:
 	giay_van = MAX_ROUND_SECONDS
 
 
+func _kieu_di_cua_tro() -> Dictionary:
+	return {"sprint": "panic_run"}
+
+
 func _dung_san() -> void:
 	_san_tron = san.get_node_or_null("SanTron") as Node3D
 	_nham = san.get_node_or_null("DungNham") as Node3D

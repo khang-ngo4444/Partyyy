@@ -1,6 +1,7 @@
 extends RefCounted
 
-const PRIORITY := {"attack": 10, "kick": 10, "shoot": 10, "land": 10,
+const PRIORITY := {"attack": 10, "kick": 10, "shoot": 10, "land": 5, "pickup": 10, "throw": 10, "interact": 10,
+	"cheer": 15, "dance": 15, "victory": 45, "defeat": 45,
 	"spawn": 20, "get_up": 20, "hit": 30, "knockdown": 40, "stun": 40, "death": 50}
 var animator: AnimationPlayer
 var _event := ""

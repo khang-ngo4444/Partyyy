@@ -4,6 +4,7 @@ extends MiniGame3D
 ## Không chết vì rơi (bị kẹp trong sàn). Đèn và độ sáng là hàm của `gio()` — 0 gói tin.
 
 ## Máu mất mỗi giây trong đèn (máu đầy 100).
+const KIEU_NONG_CHAN := {"idle": "hot_feet", "walk": "panic_run", "sprint": "panic_run"}
 const MAT_MAU_MOI_GIAY := 40.0
 
 ## Biên độ quỹ đạo Lissajous của đèn (giữ vệt sáng trong sàn và đèn chậm hơn người chạy).
@@ -186,6 +187,7 @@ func _ve_nhip(t: float) -> void:
 		# Đèn chưa tới lượt thì tắt hẳn.
 		_den[i].visible = i < n
 	_trang_thai.text = "%d spotlight" % n
+	_doi_dang_trong_den(n)
 	if _dau_toi != null:
 		var p := _nguoi(NetManager.local_id())
 		_dau_toi.visible = p != null and con_song(NetManager.local_id()) and do_sang(t) > 0.01
@@ -193,6 +195,18 @@ func _ve_nhip(t: float) -> void:
 			var cho := san.to_local(p.global_position)
 			_dau_toi.position = Vector3(cho.x, 0.26, cho.z)
 			_dau_toi.scale = Vector3.ONE * do_sang(t)
+
+
+## Ai đứng trong đèn thì nóng chân, nhảy loi choi hoặc chạy hoảng; ra khỏi đèn trả dáng thường.
+func _doi_dang_trong_den(n: int) -> void:
+	for p: Player in get_tree().get_nodes_in_group("players"):
+		var cho := san.to_local(p.global_position)
+		var bi_rang := false
+		for i in mini(n, _den.size()):
+			if cham_den(Vector2(cho.x, cho.z), Vector2(_den[i].position.x, _den[i].position.z)):
+				bi_rang = true
+				break
+		p.dat_kieu_di(KIEU_NONG_CHAN if bi_rang and con_song(p.player_id()) else {})
 
 
 ## Trừ máu nếu đứng trong vùng sáng của đèn đang bật.

@@ -113,6 +113,9 @@ func _input(event: InputEvent) -> void:
 	if not _chay or gio() < 0:
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_E:
+		var nguoi_lam: Player = _nguoi(NetManager.local_id())
+		if nguoi_lam != null:
+			nguoi_lam.play_action("interact")
 		request_action("interact")
 	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		var player: Player = _nguoi(NetManager.local_id())

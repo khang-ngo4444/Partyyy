@@ -9,7 +9,11 @@ signal detonation(center: Vector3, radius: float)
 @export var fuse_curve: Curve = null
 @export var pass_radius: float = 2.2
 @export var pass_delay: float = 0.9
+const KIEU_CAM_BOM := {"idle": "carry_idle", "walk": "carry_run", "sprint": "carry_run"}
+
 @export var holder_speed_bonus: float = 1.6
+
+var _nguoi_cam_truoc := 0
 
 var _bomb: Node3D = null
 var _base_speed: float = -1.0
@@ -53,6 +57,7 @@ func _luat_moi_nhip() -> void:
 	_bomb.present(_nguoi(holder), float(shared_snapshot.get("fuse_end", now)),
 		now >= float(shared_snapshot.get("pass_after", now)))
 	_set_holder_speed(holder == NetManager.local_id())
+	_doi_dang_nguoi_cam_bom(holder)
 	giu_trong_san(11.0)
 
 
@@ -90,6 +95,20 @@ func _set_holder_speed(holding: bool) -> void:
 	if _base_speed < 0.0:
 		_base_speed = player.speed
 	player.speed = _base_speed + holder_speed_bonus if holding else _base_speed
+
+
+## Người cầm bom đội bom lên đầu; người vừa chuyển bom diễn động tác ném.
+func _doi_dang_nguoi_cam_bom(holder: int) -> void:
+	if holder == _nguoi_cam_truoc:
+		return
+	var cu := _nguoi(_nguoi_cam_truoc)
+	if cu != null:
+		cu.dat_kieu_di({})
+		cu.play_action("throw")
+	var moi := _nguoi(holder)
+	if moi != null:
+		moi.dat_kieu_di(KIEU_CAM_BOM)
+	_nguoi_cam_truoc = holder
 
 
 func dung_som() -> void:

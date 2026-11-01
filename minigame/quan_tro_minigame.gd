@@ -221,10 +221,20 @@ func _nguoi(id: int) -> Player:
 	return null
 
 
+## Người nhất nhảy mừng, người còn lại ỉu xìu suốt lúc xem bảng kết quả.
+func _dien_ket_qua(xep_hang: Array) -> void:
+	for p: Player in get_tree().get_nodes_in_group("players"):
+		var hang := xep_hang.find(p.player_id())
+		if hang >= 0:
+			p.clear_reactions()
+			p.play_reaction("victory" if hang == 0 else "defeat", XEM_KET_QUA)
+
+
 func _khi_xong(xep_hang: Array) -> void:
 	if not _dang_chay:
 		return
 	_dong_ho.visible = false
+	_dien_ket_qua(xep_hang)
 	var dong := PackedStringArray()
 	for i in xep_hang.size():
 		var id := int(xep_hang[i])

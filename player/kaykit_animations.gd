@@ -1,6 +1,8 @@
 extends RefCounted
 
 const SOURCE_ROOT := "res://asset/KayKit_Character_Animations_1.1_FREE/Animations/gltf/Rig_Medium/"
+## Clip KayKit không có, dựng bằng `3d/hoat_anh/tao_hoat_anh.py`.
+const PARTY_SOURCE := "res://asset/generated/hoat_anh/Rig_Medium_Party.glb"
 const CLIPS := {
 	"idle": ["General", "Idle_A", true],
 	"walk": ["MovementBasic", "Walking_A", true],
@@ -12,7 +14,7 @@ const CLIPS := {
 	"kick": ["CombatMelee", "Melee_Unarmed_Attack_Kick", false],
 	"shoot": ["CombatRanged", "Ranged_Magic_Shoot", false],
 	"hit": ["General", "Hit_A", false],
-	"stun": ["General", "Hit_B", true],
+	"stun": ["Party", "dizzy", true],
 	"knockdown": ["General", "Death_B", false],
 	"death": ["General", "Death_A", false],
 	"death_pose": ["General", "Death_A_Pose", true],
@@ -23,6 +25,18 @@ const CLIPS := {
 	"holding-right": ["Tools", "Holding_A", true],
 	"holding-left": ["Tools", "Holding_B", true],
 	"holding-both": ["Tools", "Holding_C", true],
+	"pickup": ["General", "PickUp", false],
+	"throw": ["General", "Throw", false],
+	"interact": ["General", "Interact", false],
+	"cheer": ["Simulation", "Cheering", true],
+	"dance": ["Party", "dance", true],
+	"victory": ["Party", "victory", true],
+	"defeat": ["Party", "defeat", true],
+	"hot_feet": ["Party", "hot_feet", true],
+	"panic_run": ["Party", "panic_run", true],
+	"balance": ["Party", "balance", true],
+	"carry_idle": ["Party", "carry_idle", true],
+	"carry_run": ["Party", "carry_run", true],
 }
 static var _library: AnimationLibrary
 
@@ -45,7 +59,8 @@ static func library() -> AnimationLibrary:
 		var specification: Array = CLIPS[alias]
 		var category: String = specification[0]
 		if not sources.has(category):
-			var scene: PackedScene = load(SOURCE_ROOT + "Rig_Medium_" + category + ".glb")
+			var path := PARTY_SOURCE if category == "Party" else SOURCE_ROOT + "Rig_Medium_" + category + ".glb"
+			var scene: PackedScene = load(path)
 			sources[category] = scene.instantiate()
 		var source: Node = sources[category]
 		var animator := source.find_child("AnimationPlayer", true, false) as AnimationPlayer

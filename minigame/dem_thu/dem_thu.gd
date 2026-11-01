@@ -174,6 +174,9 @@ func _chot(vong: int, giay: float) -> void:
 func _net_tra_loi(id: int, vong: int, so: int, giay: float) -> void:
 	if not _diem.has(id) or vong < 0 or vong >= _lich.size():
 		return
+	var nguoi_chot := _nguoi(id)
+	if nguoi_chot != null:
+		nguoi_chot.play_action("interact")
 	var da: Array = _diem[id]
 	if da.size() > 2 and int(da[2]) >= vong:
 		return

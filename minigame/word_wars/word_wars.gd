@@ -90,6 +90,9 @@ func _unhandled_input(event: InputEvent) -> void:
 func _net_tien(id: int, so_tu: int, tien: int) -> void:
 	if not _chay or not _tien.has(id) or so_tu != int(_diem[id]) or tien != int(_tien[id]) + 1:
 		return
+	var nguoi_go := _nguoi(id)
+	if nguoi_go != null:
+		nguoi_go.play_action("interact")
 	if tien >= tu_hien_tai(id).length():
 		_diem[id] = int(_diem[id]) + 1
 		_tien[id] = 0

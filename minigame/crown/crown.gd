@@ -17,6 +17,9 @@ var _mien: Node3D = null
 var _vung: Area3D = null
 var _vong: Node3D = null
 
+## Vừa đội miện thì mừng ngắn rồi chạy tiếp được ngay.
+const GIAY_MUNG_DOI_MIEN := 0.9
+
 ## 0 = miện nằm đất. Chỉ đổi qua `_net_giu`.
 var _ai_giu := 0
 ## Chỗ miện nằm khi không ai giữ (toạ độ trong sân).
@@ -143,6 +146,9 @@ func _xin_roi(ai: int) -> void:
 func _net_giu(ai: int, cho: Vector3) -> void:
 	_ai_giu = ai
 	_cho_toi = gio() + NGHI_CUOP
+	var nguoi_doi := _nguoi(ai)
+	if nguoi_doi != null:
+		nguoi_doi.play_reaction("cheer", GIAY_MUNG_DOI_MIEN)
 	if ai == 0:
 		_cho_nam = cho
 
