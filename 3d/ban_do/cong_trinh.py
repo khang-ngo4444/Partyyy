@@ -431,7 +431,7 @@ def den_thap():
         q = dinh + (np.sin(g) * 2.1, 0, np.cos(g) * 2.1)
         lo.them("da", tien([(.42, 0), (.34, .2), (.26, .4), (.22, 2.6), (.34, 2.8), (.44, 3.0)], 14).doi_mau(mau("#e2d6ba")), bien_doi(q))
     lo.them("da", tien([(2.85, 3.0), (2.85, 3.4), (2.2, 3.7), (1.3, 4.5), (.3, 5.2), (0, 5.3)], 32).doi_mau(mau("#c4a65c")), bien_doi(dinh))
-    lo.them("da", nap(2.85, 3.0, 32, len_tren=False).doi_mau(mau("#a8904f")), bien_doi(dinh))
+    lo.them("da", nap(2.85, 3.0, 32, len_tren=False).doi_mau(mau("#d8ccb4")), bien_doi(dinh))
     # Tượng canh, chậu lửa.
     for x, z in ((10.5, -5.0), (10.5, 5.0)):
         q = p + (x, 0, z)

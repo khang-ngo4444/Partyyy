@@ -21,19 +21,19 @@
 [ext_resource type="ArrayMesh" uid="uid://d2enxmb6jamtu" path="res://asset/generated/dao_lon/mesh/chim.res" id="19_cnmtk"]
 [ext_resource type="Material" uid="uid://yhe3ypwrco8n" path="res://materials/dao_lon/khoi.tres" id="20_hvfqm"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bv43o"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_hvfqm"]
 sky_top_color = Color(0.18431373, 0.49803922, 0.8392157, 1)
 sky_horizon_color = Color(0.7490196, 0.9019608, 0.9490196, 1)
-ground_bottom_color = Color(0.16470589, 0.49803922, 0.6039216, 1)
-ground_horizon_color = Color(0.6627451, 0.85882354, 0.9019608, 1)
+ground_bottom_color = Color(0.56078434, 0.5411765, 0.4862745, 1)
+ground_horizon_color = Color(0.7607843, 0.78431374, 0.7411765, 1)
 sun_curve = 0.12
 
-[sub_resource type="Sky" id="Sky_gcqdk"]
-sky_material = SubResource("ProceduralSkyMaterial_bv43o")
+[sub_resource type="Sky" id="Sky_1aqk5"]
+sky_material = SubResource("ProceduralSkyMaterial_hvfqm")
 
-[sub_resource type="Environment" id="Environment_hvfqm"]
+[sub_resource type="Environment" id="Environment_10k0o"]
 background_mode = 2
-sky = SubResource("Sky_gcqdk")
+sky = SubResource("Sky_1aqk5")
 ambient_light_source = 3
 ambient_light_energy = 0.85
 reflected_light_source = 2
@@ -48,8 +48,8 @@ glow_bloom = 0.04
 glow_hdr_threshold = 1.1
 fog_enabled = true
 fog_light_color = Color(0.8117647, 0.90588236, 0.9411765, 1)
-fog_density = 0.0016
-fog_sky_affect = 0.15
+fog_density = 0.0006
+fog_sky_affect = 0.1
 adjustment_enabled = true
 adjustment_contrast = 1.04
 adjustment_saturation = 1.12
@@ -96,7 +96,7 @@ size = Vector2(0.25, 0.25)
 script = ExtResource("1_i2q01")
 
 [node name="RumbleReefEnvironment" type="WorldEnvironment" parent="." unique_id=1807618986]
-environment = SubResource("Environment_hvfqm")
+environment = SubResource("Environment_10k0o")
 
 [node name="MatTroi" type="DirectionalLight3D" parent="." unique_id=678851064]
 transform = Transform3D(0.73168886, 0.44946215, -0.51245993, 0, 0.7518057, 0.65938467, 0.6816388, -0.4824644, 0.55008787, 0, 0, 0)
@@ -236,9 +236,9 @@ omni_range = 22.0
 
 [node name="AnhTinhThe" type="OmniLight3D" parent="." unique_id=1340069904]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -46, 15, -5)
-light_color = Color(0.36078432, 0.9490196, 1, 1)
-light_energy = 0.6
-omni_range = 12.0
+light_color = Color(0.84705883, 0.95686275, 1, 1)
+light_energy = 0.4
+omni_range = 7.0
 
 [node name="KhoiNuiLua" type="GPUParticles3D" parent="." unique_id=908932728]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 35, 0)
