@@ -103,6 +103,11 @@ func _ve_su_kien() -> void:
 	_su_kien_cu = su
 
 
+## Mép trên thanh đáy (toạ độ màn hình); âm nếu thanh đang ẩn.
+func dinh_thanh_duoi() -> float:
+	return _thanh_duoi.get_global_rect().position.y if _thanh_duoi.is_visible_in_tree() else -1.0
+
+
 func _ve_thanh_duoi() -> void:
 	var tui: Array = (_tt.get("do", {}) as Dictionary).get(
 			LuatBan.khoa(NetManager.local_id()), []) as Array

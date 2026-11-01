@@ -5,8 +5,8 @@ extends Control
 
 signal thue_da_chon(loai: int)
 
-const THUE := [["ĐẤT", "dat", "home"], ["MÁU", "mau", "plus"],
-		["TIỀN", "tien", "star"], ["TRANG BỊ", "trang_bi", "shoppingBasket"]]
+const THUE := [["ĐẤT\nLấy 1 ô đất", "dat", "home"], ["MÁU\nHút máu", "mau", "plus"],
+		["TIỀN\nLấy vàng", "tien", "star"], ["TRANG BỊ\nLấy 1 món", "trang_bi", "shoppingBasket"]]
 
 var _id_luot_cu := -1
 
@@ -22,7 +22,7 @@ func _ready() -> void:
 	for i in THUE.size():
 		var b := Button.new()
 		var nen: Color = UIKit.MAU_O[THUE[i][1]]
-		UIKit.the_nut(b, THUE[i][0], THUE[i][2], &"NutTrang", Vector2(150, 150), 64, 24)
+		UIKit.the_nut(b, THUE[i][0], THUE[i][2], &"NutTrang", Vector2(150, 150), 56, 20)
 		b.add_theme_stylebox_override("normal", UIKit.hop(nen, 22, 6, 4, 12))
 		b.add_theme_stylebox_override("hover", UIKit.hop(nen.lightened(0.2), 22, 8, 4, 12))
 		b.add_theme_stylebox_override("pressed", UIKit.hop(nen.darkened(0.1), 22, 2, 4, 12))
@@ -59,6 +59,10 @@ func cap_nhat(tt: Dictionary) -> void:
 		(_cac_thue.get_child(2) as Control).grab_focus()
 	elif not mo_thue:
 		_menu_thue.visible = false
+
+
+func dang_chon_thue() -> bool:
+	return _menu_thue.visible
 
 
 func _chon_thue(loai: int) -> void:

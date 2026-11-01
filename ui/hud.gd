@@ -12,6 +12,7 @@ signal doi_cho_do(a: int, b: int)
 signal muc_tieu_da_chon(i: int)
 
 const STATUS_REFRESH := 0.2
+const KHOANG_HO_THANH_DUOI := 10.0
 
 ## Nhãn hành động poker (chỉ vẽ lựa chọn hợp lệ).
 const TEN_HD := {0: "[1] CHECK", 1: "[2] THEO", 2: "[3] TỐ", 3: "[4] BỎ", 4: "[5] ALL-IN"}
@@ -133,8 +134,7 @@ func _cap_nhat_hien_thi() -> void:
 	hint_row.visible = false
 	cam_tu_do_hint.visible = false
 	ping_label.visible = _hien_ping
-	dai_phim.hien(_phim_theo_tinh_huong(qt, minigame),
-			DaiPhim.CACH_DAY_MINIGAME if minigame else DaiPhim.CACH_DAY_THUONG)
+	dai_phim.hien(_phim_theo_tinh_huong(qt, minigame), _cach_day_dai_phim(minigame))
 	if minigame:
 		ready_card.visible = false
 		countdown.visible = false
@@ -143,11 +143,23 @@ func _cap_nhat_hien_thi() -> void:
 	trang_thai_ca_nhan.modulate.a = 0.0 if minigame else 1.0
 
 
+## Dải phím đứng trên dải ô điểm của minigame và thanh đáy của bàn party.
+func _cach_day_dai_phim(minigame: bool) -> float:
+	if minigame:
+		return DaiPhim.CACH_DAY_MINIGAME
+	var dinh: float = trang_thai_ca_nhan.dinh_thanh_duoi() if _tren_ban else -1.0
+	if dinh < 0.0:
+		return DaiPhim.CACH_DAY_THUONG
+	return get_viewport_rect().size.y - dinh + KHOANG_HO_THANH_DUOI
+
+
 ## Bàn bài và ghế ngồi đã có dòng nhắc riêng nên không chồng thêm bảng phím.
 func _phim_theo_tinh_huong(qt: Node, minigame: bool) -> Array:
 	if minigame:
 		return qt.phim_dang_choi()
 	if _tren_ban:
+		if bang_ban.dang_chon_thue():
+			return DaiPhim.PHIM_THUE
 		return DaiPhim.PHIM_CHON_HUONG if _dang_chon_huong else DaiPhim.PHIM_BAN
 	if card_prompt.text != "" or poker_bar.visible:
 		return []

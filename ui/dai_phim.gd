@@ -1,27 +1,29 @@
 class_name DaiPhim
 extends PanelContainer
 
-## Bảng nhỏ góc màn hình nhắc phím theo tình huống. F1 thu gọn còn đúng một chip.
+## Dải một hàng ở giữa đáy màn hình, nhắc các phím không tự giải thích được.
+## Phím đã ghi sẵn trên giao diện (ô đồ, nút tung xúc xắc) thì không lặp lại.
+## F1 thu gọn còn đúng một chip.
 
 const CO_CHU := 14
 const PHIM_THU_GON := KEY_F1
-const DO_DUC := 0.93
+const DO_DUC := 0.95
 const CACH_DAY_THUONG := 14.0
 ## Minigame có dải ô điểm ở đáy màn hình: đứng trên dải đó.
 const CACH_DAY_MINIGAME := 86.0
 
-const PHIM_SANH := [["WASD", "Đi"], ["Space", "Nhảy"], ["E", "Tương tác"], ["M", "Đổi nhân vật"],
+const PHIM_SANH := [["WASD", "Đi"], ["Space", "Nhảy"], ["E", "Dùng"], ["M", "Nhân vật"],
 	["Enter", "Chat"], ["Esc", "Menu"]]
 const PHIM_CAM_DO := [["WASD", "Đi"], ["Giữ E", "Ném"], ["Q", "Đặt xuống"], ["Esc", "Menu"]]
-const PHIM_BAN := [["Space", "Tung xúc xắc"], ["1 – 5", "Dùng đồ"], ["Tab", "Túi đồ"], ["C", "Đổi camera"],
-	["V", "Theo dõi"], ["Enter", "Chat"], ["Esc", "Menu"]]
-const PHIM_CHON_HUONG := [["Z / X", "Đổi lựa chọn"], ["Space", "Chốt"], ["Esc", "Menu"]]
+const PHIM_BAN := [["C", "Camera"], ["V", "Theo dõi"], ["Enter", "Chat"], ["Esc", "Menu"]]
+const PHIM_CHON_HUONG := [["Z / X", "Đổi lựa chọn"], ["Space", "Chốt"]]
+const PHIM_THUE := [["1", "Lấy đất"], ["2", "Hút máu"], ["3", "Lấy vàng"], ["4", "Lấy đồ"]]
 const PHIM_ESC := ["Esc", "Menu"]
 
 var _thu_gon := false
 var _dang_hien: Array = []
 
-@onready var _cot: VBoxContainer = %CotPhim
+@onready var _hang: HBoxContainer = %HangPhim
 
 
 func _ready() -> void:
@@ -30,7 +32,7 @@ func _ready() -> void:
 	visible = false
 
 
-## Rỗng = ẩn bảng. Chỉ dựng lại khi danh sách đổi.
+## Rỗng = ẩn dải. Chỉ dựng lại khi danh sách đổi.
 func hien(ds: Array, cach_day := CACH_DAY_THUONG) -> void:
 	visible = not ds.is_empty()
 	offset_bottom = -cach_day
@@ -49,11 +51,10 @@ func _unhandled_key_input(event: InputEvent) -> void:
 
 
 func _dung_lai() -> void:
-	for c in _cot.get_children():
-		_cot.remove_child(c)
+	for c in _hang.get_children():
+		_hang.remove_child(c)
 		c.queue_free()
-	_cot.add_child(UIKit.chip_phim("F1", "Hiện phím" if _thu_gon else "Ẩn", false, CO_CHU))
-	if _thu_gon:
-		return
-	for muc: Array in _dang_hien:
-		_cot.add_child(UIKit.chip_phim(muc[0], muc[1], false, CO_CHU))
+	if not _thu_gon:
+		for muc: Array in _dang_hien:
+			_hang.add_child(UIKit.chip_phim(muc[0], muc[1], false, CO_CHU))
+	_hang.add_child(UIKit.chip_phim("F1", "Hiện phím" if _thu_gon else "Ẩn", false, CO_CHU))

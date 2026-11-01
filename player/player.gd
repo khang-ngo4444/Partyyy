@@ -8,6 +8,9 @@ extends CharacterBody3D
 const VIEN_GHI := preload("res://player/vien_ghi.gdshader")
 const VIEN_VANH := preload("res://player/vien_vanh.gdshader")
 const AnimationState = preload("res://player/animation_state.gd")
+## Dời xa hơn chừng này trong một khung là dịch chuyển tức thời, không phải đang chạy.
+const DO_DOI_DICH_CHUYEN := 8.0
+const TOC_LOC_VAN_TOC := 14.0
 
 ## Thân quay theo hướng chạy nhanh cỡ nào (rad/s).
 const XOAY_THEO_HUONG := 12.0
@@ -362,7 +365,7 @@ func _process(delta: float) -> void:
 	var was_falling := _visual_velocity.y < -1.0
 	var displacement := global_position - _visual_position
 	_visual_position = global_position
-	_visual_velocity = displacement / maxf(delta, 0.001) if displacement.length() < 8.0 else Vector3.ZERO
+	_visual_velocity = loc_van_toc(_visual_velocity, displacement, delta)
 	var holding := carried() != null
 	if is_mine:
 		nhin_doc = rig.rotation.x
@@ -546,6 +549,15 @@ func _apply_name() -> void:
 func play_action(kind: String = "attack") -> void:
 	if _animation_state != null:
 		_animation_state.request(kind)
+
+
+## Làm mượt vận tốc nhìn thấy. Màn hình vẽ nhanh hơn nhịp vật lý và nhịp mạng nên nhiều khung
+## không có độ dời; không lọc thì clip đổi qua lại rồi chơi lại từ đầu, nhân vật như đứng hình.
+static func loc_van_toc(hien_tai: Vector3, do_doi: Vector3, delta: float) -> Vector3:
+	if do_doi.length() >= DO_DOI_DICH_CHUYEN:
+		return Vector3.ZERO
+	var tuc_thoi := do_doi / maxf(delta, 0.001)
+	return hien_tai.lerp(tuc_thoi, 1.0 - exp(-TOC_LOC_VAN_TOC * delta))
 
 
 ## Rỗng là trả về dáng đi thường. Gọi trên mọi máy: dáng đi không replicate.
