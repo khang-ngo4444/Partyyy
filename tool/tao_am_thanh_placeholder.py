@@ -55,6 +55,21 @@ BO_NHAC = {
 	"paint": (72, 136, THANG_TRUONG, "tam_giac"),
 }
 
+# Bài chill của sảnh: nghe lâu nên viết riêng, không dùng chiptune chung.
+BPM_CHILL = 72
+PHACH_MOI_O_NHIP = 4
+CHAT_LUONG_CHILL = "3"
+# Tiếng kick chiếm đỉnh nên phải nâng biên độ thì bài mới to ngang các bản chiptune.
+BIEN_DO_CHILL = 0.62
+# (nốt gốc MIDI, các nốt hợp âm so với gốc, các bậc giai điệu so với gốc)
+_FMAJ7 = (53, (12, 16, 19, 23), (12, 16, 19, 24))
+_EM7 = (52, (12, 15, 19, 22), (12, 15, 19, 22))
+_DM9 = (50, (12, 15, 19, 22, 26), (14, 17, 19, 24))
+_CMAJ7 = (48, (12, 16, 19, 23), (16, 19, 24, 26))
+_AM7 = (45, (12, 15, 19, 22), (15, 19, 22, 24))
+_G7SUS = (43, (12, 17, 19, 22), (17, 19, 24, 26))
+HOP_AM_CHILL = (_FMAJ7, _EM7, _DM9, _CMAJ7, _AM7, _DM9, _G7SUS, _CMAJ7) * 2
+
 # Menu và bàn cờ chỉ có một bản, không có đếm ngược / kết quả.
 CHI_CO_BAN_CHOI = {"menu", "ban_co"}
 
@@ -150,9 +165,82 @@ def ket_qua(goc: int, thang: tuple, dang: str) -> list:
 	return dem
 
 
-def ghi_ogg(dem: list, dich: Path) -> None:
+def not_dien_piano(dem: list, bat_dau: int, giay: float, midi: int, am_luong: float) -> None:
+	"""Tiếng electric piano ấm: hoà âm bậc thấp tắt nhanh hơn âm gốc, gói vòng để lặp liền mạch."""
+	hz = tan_so(midi)
+	so_mau = int(giay * TAN_SO_MAU)
+	buoc = 2.0 * math.pi * hz / TAN_SO_MAU
+	for i in range(so_mau):
+		t = i / TAN_SO_MAU
+		tan = math.exp(-1.6 * t) * min(1.0, i / 220.0) * min(1.0, (so_mau - i) / 1500.0)
+		goc = buoc * i
+		mau = math.sin(goc + 0.35 * math.exp(-5.0 * t) * math.sin(goc * 2.0)) + 0.12 * math.exp(-3.0 * t) * math.sin(goc * 2.0)
+		dem[(bat_dau + i) % len(dem)] += am_luong * tan * mau
+
+
+def tieng_kick(dem: list, bat_dau: int, am_luong: float) -> None:
+	for i in range(int(0.22 * TAN_SO_MAU)):
+		t = i / TAN_SO_MAU
+		pha = 2.0 * math.pi * (52.0 * t + 1.4 * (1.0 - math.exp(-30.0 * t)))
+		dem[(bat_dau + i) % len(dem)] += am_luong * math.exp(-16.0 * t) * math.sin(pha)
+
+
+def tieng_nhieu(dem: list, bat_dau: int, giay: float, am_luong: float, ngau_nhien: random.Random) -> None:
+	"""Tiếng hi-hat/snare chổi: nhiễu ngắn, tắt nhanh."""
+	so_mau = int(giay * TAN_SO_MAU)
+	for i in range(so_mau):
+		dem[(bat_dau + i) % len(dem)] += am_luong * math.exp(-6.0 * i / so_mau) * ngau_nhien.uniform(-1.0, 1.0)
+
+
+def loc_thap_vong(dem: list, he_so: float) -> list:
+	"""Lọc thông thấp một cực, chạy hai vòng để đầu và cuối bản khớp nhau khi lặp."""
+	ra = [0.0] * len(dem)
+	truoc = 0.0
+	for _ in range(2):
+		for i, mau in enumerate(dem):
+			truoc += he_so * (mau - truoc)
+			ra[i] = truoc
+	return ra
+
+
+def nhac_chill_sanh() -> list:
+	"""Lo-fi chậm: hợp âm 7 trầm ấm, bass mềm, trống chổi, vài nốt giai điệu thưa."""
+	ngau_nhien = random.Random("sanh-chill")
+	mau_moi_phach = int(TAN_SO_MAU * 60.0 / BPM_CHILL)
+	mau_moi_o = mau_moi_phach // 2
+	so_o = len(HOP_AM_CHILL) * PHACH_MOI_O_NHIP * 2
+	nhac = [0.0] * (so_o * mau_moi_o)
+	trong = [0.0] * len(nhac)
+	for nhip, (goc, not_hop_am, thang) in enumerate(HOP_AM_CHILL):
+		dau_nhip = nhip * PHACH_MOI_O_NHIP * 2 * mau_moi_o
+		# Rải nhẹ từ thấp lên để nghe như đánh tay, không dập đều một lúc.
+		for i, nc in enumerate(not_hop_am):
+			not_dien_piano(nhac, dau_nhip + i * int(0.018 * TAN_SO_MAU), 2.4, goc + nc, 0.2)
+		if nhip % 2 == 1:
+			not_dien_piano(nhac, dau_nhip + 5 * mau_moi_o, 1.2, goc + not_hop_am[1], 0.11)
+		not_dien_piano(nhac, dau_nhip, 1.3, goc - 12, 0.3)
+		not_dien_piano(nhac, dau_nhip + 5 * mau_moi_o, 0.8, goc - 12 + not_hop_am[2], 0.2)
+		for phach in range(PHACH_MOI_O_NHIP):
+			dau_phach = dau_nhip + phach * mau_moi_phach
+			if phach in (0, 2):
+				tieng_kick(trong, dau_phach, 0.32)
+			if phach in (1, 3):
+				tieng_nhieu(trong, dau_phach, 0.14, 0.07, ngau_nhien)
+			# Swing nhẹ: nhịp móc đến trễ hơn một chút.
+			tieng_nhieu(trong, dau_phach, 0.035, 0.022, ngau_nhien)
+			tieng_nhieu(trong, dau_phach + int(mau_moi_o * 1.16), 0.03, 0.015, ngau_nhien)
+		# Giai điệu thưa, chừa khoảng trống; ô nhịp cuối để nghỉ cho vòng lặp thở.
+		if nhip < len(HOP_AM_CHILL) - 1:
+			for o in (2, 3, 6):
+				if ngau_nhien.random() < 0.42:
+					not_dien_piano(nhac, dau_nhip + o * mau_moi_o, 1.5, 12 + goc + ngau_nhien.choice(thang), 0.13)
+	nhac = loc_thap_vong(nhac, 0.3)
+	return [a + b for a, b in zip(nhac, trong)]
+
+
+def ghi_ogg(dem: list, dich: Path, chat_luong: str = CHAT_LUONG_VORBIS, bien_do: float = BIEN_DO) -> None:
 	lon_nhat = max(max(abs(m) for m in dem), 1e-6)
-	du_lieu = struct.pack("<%dh" % len(dem), *(int(m / lon_nhat * BIEN_DO * 32767) for m in dem))
+	du_lieu = struct.pack("<%dh" % len(dem), *(int(m / lon_nhat * bien_do * 32767) for m in dem))
 	dich.parent.mkdir(parents=True, exist_ok=True)
 	with tempfile.TemporaryDirectory() as tam:
 		wav = Path(tam) / "nhac.wav"
@@ -162,11 +250,15 @@ def ghi_ogg(dem: list, dich: Path) -> None:
 			f.setframerate(TAN_SO_MAU)
 			f.writeframes(du_lieu)
 		subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(wav),
-				"-c:a", "libvorbis", "-q:a", CHAT_LUONG_VORBIS, str(dich)], check=True)
+				"-c:a", "libvorbis", "-q:a", chat_luong, str(dich)], check=True)
 
 
 def sinh_nhac(ghi_de: bool) -> int:
 	so_file = 0
+	dich_sanh = THU_MUC_NHAC / "sanh" / "choi.ogg"
+	if ghi_de or not dich_sanh.exists():
+		ghi_ogg(nhac_chill_sanh(), dich_sanh, CHAT_LUONG_CHILL, BIEN_DO_CHILL)
+		so_file += 1
 	for ma, (goc, bpm, thang, dang) in BO_NHAC.items():
 		# Hạt giống cố định theo mã: chạy lại ra đúng giai điệu cũ.
 		ngau_nhien = random.Random(ma)

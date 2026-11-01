@@ -10,6 +10,7 @@ const DUOI_FILE: Array[String] = ["ogg", "mp3", "wav"]
 
 ## Thư mục nhạc của menu chính và bàn cờ chính; minigame dùng mã trò (tên file scene).
 const MA_MENU := "menu"
+const MA_SANH := "sanh"
 const MA_BAN_CO := "ban_co"
 
 const PHA_DEM_NGUOC := "dem_nguoc"
@@ -54,14 +55,16 @@ const TAT_CA_SFX: Array[StringName] = [
 ]
 
 
-## "mã/pha" của bản cần phát; "" = không phát (phòng chờ nghe máy nhạc của sảnh).
+## "mã/pha" của bản cần phát; "" = không phát (sảnh đang nghe máy nhạc của người chơi).
 ## Minigame phủ lên bàn nên được ưu tiên.
-static func khoa_nhac(menu_dang_mo: bool, ban_dang_chay: bool, ma_minigame: String, pha_minigame: String) -> String:
+static func khoa_nhac(menu_dang_mo: bool, sanh_can_nhac: bool, ban_dang_chay: bool, ma_minigame: String, pha_minigame: String) -> String:
 	if not ma_minigame.is_empty() and not pha_minigame.is_empty():
 		return "%s/%s" % [ma_minigame, pha_minigame]
 	if ban_dang_chay:
 		return "%s/%s" % [MA_BAN_CO, PHA_CHOI]
-	return "%s/%s" % [MA_MENU, PHA_CHOI] if menu_dang_mo else ""
+	if menu_dang_mo:
+		return "%s/%s" % [MA_MENU, PHA_CHOI]
+	return "%s/%s" % [MA_SANH, PHA_CHOI] if sanh_can_nhac else ""
 
 
 ## Bảng kết quả là câu nhạc ngắn, phát một lần.

@@ -11,24 +11,32 @@ func suite_name() -> String:
 	return "am_thanh"
 
 
-func test_lobby_leaves_the_speaker_alone() -> void:
-	assert_eq(BangAmThanh.khoa_nhac(false, false, "", ""), "")
+func test_lobby_yields_to_the_music_box() -> void:
+	assert_eq(BangAmThanh.khoa_nhac(false, false, false, "", ""), "")
+
+
+func test_idle_lobby_plays_its_own_music() -> void:
+	assert_eq(BangAmThanh.khoa_nhac(false, true, false, "", ""), "sanh/choi")
 
 
 func test_menu_plays_its_own_music() -> void:
-	assert_eq(BangAmThanh.khoa_nhac(true, false, "", ""), "menu/choi")
+	assert_eq(BangAmThanh.khoa_nhac(true, false, false, "", ""), "menu/choi")
 
 
 func test_board_plays_its_own_music() -> void:
-	assert_eq(BangAmThanh.khoa_nhac(false, true, "", ""), "ban_co/choi")
+	assert_eq(BangAmThanh.khoa_nhac(false, false, true, "", ""), "ban_co/choi")
+
+
+func test_board_overrides_lobby_music() -> void:
+	assert_eq(BangAmThanh.khoa_nhac(false, true, true, "", ""), "ban_co/choi")
 
 
 func test_minigame_overrides_board_music() -> void:
-	assert_eq(BangAmThanh.khoa_nhac(false, true, "paint", BangAmThanh.PHA_CHOI), "paint/choi")
+	assert_eq(BangAmThanh.khoa_nhac(false, false, true, "paint", BangAmThanh.PHA_CHOI), "paint/choi")
 
 
 func test_minigame_started_from_lobby_has_music() -> void:
-	assert_eq(BangAmThanh.khoa_nhac(false, false, "crown", BangAmThanh.PHA_DEM_NGUOC), "crown/dem_nguoc")
+	assert_eq(BangAmThanh.khoa_nhac(false, true, false, "crown", BangAmThanh.PHA_DEM_NGUOC), "crown/dem_nguoc")
 
 
 func test_only_result_sting_does_not_loop() -> void:
@@ -61,7 +69,8 @@ func test_every_minigame_has_a_full_music_set() -> void:
 			assert_eq(BangAmThanh.tim_file(BangAmThanh.ung_vien_nhac(khoa)), "res://asset/audio/nhac/%s.ogg" % khoa)
 
 
-func test_board_and_menu_have_music() -> void:
+func test_board_menu_and_lobby_have_music() -> void:
+	assert_eq(BangAmThanh.tim_file(BangAmThanh.ung_vien_nhac("sanh/choi")), "res://asset/audio/nhac/sanh/choi.ogg")
 	assert_eq(BangAmThanh.tim_file(BangAmThanh.ung_vien_nhac("ban_co/choi")), "res://asset/audio/nhac/ban_co/choi.ogg")
 	assert_eq(BangAmThanh.tim_file(BangAmThanh.ung_vien_nhac("menu/choi")), "res://asset/audio/nhac/menu/choi.ogg")
 

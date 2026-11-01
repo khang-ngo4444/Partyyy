@@ -57,6 +57,7 @@ var _da_het_van := false
 @onready var picker: Control = $UILayer/CharacterPicker
 @onready var light_picker: Control = $UILayer/LightPicker
 @onready var music_picker: Control = $UILayer/MusicPicker
+@onready var music_box: MusicBox = $MusicBox
 @onready var quan_tro: QuanTroMiniGame = $QuanTro
 @onready var ban_co: PhaBanCo = $BanCo
 @onready var dung_do: DungDo = $BanCo/DungDo
@@ -112,7 +113,9 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	AmThanh.dat_nhac(BangAmThanh.khoa_nhac(menu.visible, ban_co.dang_chay(), quan_tro.ma_dang_choi(), quan_tro.pha_nhac()))
+	# Máy nhạc của sảnh có bài đang kêu thì nhạc nền nhường, không phát chồng.
+	var sanh_can_nhac := _lobby != null and (music_box.dang_phat.is_empty() or music_box.dang_tam_dung())
+	AmThanh.dat_nhac(BangAmThanh.khoa_nhac(menu.visible, sanh_can_nhac, ban_co.dang_chay(), quan_tro.ma_dang_choi(), quan_tro.pha_nhac()))
 
 
 ## M ở phòng chờ: mở bảng chọn nhân vật.

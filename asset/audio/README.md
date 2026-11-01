@@ -22,6 +22,7 @@ Thiếu `dem_nguoc` hoặc `ket_qua` thì trò dùng `choi`; thiếu cả `choi`
 | Thư mục | Nội dung |
 |---|---|
 | `menu` | Menu chính, gồm cả màn tạo phòng (chỉ cần `choi.ogg`) |
+| `sanh` | Sảnh chờ, tự nhường khi máy nhạc của sảnh đang phát (chỉ cần `choi.ogg`) |
 | `ban_co` | Bàn cờ chính (chỉ cần `choi.ogg`) |
 | `tank_battle`, `breaking_blocks`, `laser_leap`, `spotlights`, `explosive`, `magma`, `crown` | Minigame |
 | `word_wars`, `dem_thu`, `lo_da`, `toy_factory`, `wave_hide`, `minefield`, `paint` | Minigame |
