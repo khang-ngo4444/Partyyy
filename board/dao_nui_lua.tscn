@@ -48,9 +48,9 @@
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5jhoo"]
 sky_top_color = Color(0.18431373, 0.56078434, 0.9019608, 1)
-sky_horizon_color = Color(0.6509804, 0.9019608, 0.9607843, 1)
-ground_bottom_color = Color(0.37254903, 0.76862746, 0.8392157, 1)
-ground_horizon_color = Color(0.6509804, 0.9019608, 0.9607843, 1)
+sky_horizon_color = Color(0.45, 0.8, 0.96, 1)
+ground_bottom_color = Color(0.1, 0.55, 0.72, 1)
+ground_horizon_color = Color(0.45, 0.8, 0.96, 1)
 ground_curve = 0.04
 sun_curve = 0.12
 
@@ -61,7 +61,7 @@ sky_material = SubResource("ProceduralSkyMaterial_5jhoo")
 background_mode = 2
 sky = SubResource("Sky_yapni")
 ambient_light_source = 3
-ambient_light_energy = 1.05
+ambient_light_energy = 1.2
 reflected_light_source = 2
 tonemap_mode = 2
 tonemap_white = 1.4
@@ -72,12 +72,8 @@ glow_enabled = true
 glow_intensity = 0.55
 glow_bloom = 0.04
 glow_hdr_threshold = 1.1
-fog_enabled = true
-fog_light_color = Color(0.7490196, 0.91764706, 0.9607843, 1)
-fog_density = 0.0003
-fog_sky_affect = 0.1
 adjustment_enabled = true
-adjustment_saturation = 1.27
+adjustment_saturation = 1.1
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1aqk5"]
 size = Vector2(2600, 2600)

@@ -79,7 +79,8 @@ void fragment() {
 	ALBEDO = ket_qua * 0.02;
 	EMISSION = ket_qua * 0.98 * (1.0 - bot * 0.3);
 	float fresnel = pow(1.0 - clamp(dot(normalize(NORMAL), normalize(VIEW)), 0.0, 1.0), 4.0);
-	EMISSION += vec3(0.55, 0.78, 0.95) * fresnel * 0.35;
+	// Giữ nhẹ: mạnh quá thì biển xa bạc đi và tan vào trời như có sương mù.
+	EMISSION += vec3(0.3, 0.7, 0.95) * fresnel * 0.1;
 	METALLIC = 0.0;
 	ROUGHNESS = mix(0.07, 0.6, bot);
 	SPECULAR = 0.55;
