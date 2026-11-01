@@ -38,8 +38,10 @@ func diem_cua(_id: int) -> float:
 	return NAN
 
 
+## "" = trò không có điểm, bảng kết quả chỉ hiện tên.
 func chu_diem(id: int) -> String:
-	return "%.0f" % diem_cua(id)
+	var diem := diem_cua(id)
+	return "" if is_nan(diem) else "%.0f" % diem
 
 
 ## Phím của trò để HUD nhắc lúc chơi: [["WASD", "Chạy"], ...].

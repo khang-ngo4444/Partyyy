@@ -50,3 +50,9 @@ func test_disconnected_players_are_removed_from_living_roster() -> void:
 	var snapshot: Dictionary = {"ids": [1, 2, 3], "alive": {"1": 0.0, "2": -1.0, "3": 2.0}}
 	assert_eq(session.living_ids(snapshot), [2])
 	session.free()
+
+
+func test_game_without_scores_has_no_result_score_text() -> void:
+	var game := MiniGame.new()
+	assert_eq(game.chu_diem(1), "")
+	game.free()
