@@ -84,6 +84,7 @@ def den_duong(lo, rng, vi_tri, mau_den="#ffd27a"):
     lo.them("kim", cot.doi_mau(mau("#39352f")), bien_doi(vi_tri))
     lo.them("phat_sang", cuc(rng, 2, 0).doi_mau(mau(mau_den)), bien_doi(vi_tri + np.array([0, 2.42, 0]), ty_le=(.17, .22, .17)))
     lo.them("kim", tien([(.2, 2.6), (.05, 2.78), (0, 2.8)], 10).doi_mau(mau("#39352f")), bien_doi(vi_tri))
+    lo.them("kim", nap(.2, 2.6, 10, len_tren=False).doi_mau(mau("#39352f")), bien_doi(vi_tri))
 
 
 def hai_dang():
@@ -107,6 +108,7 @@ def hai_dang():
         a = k / 8 * TAU
         lo.them("kim", hop(.09, 2.2, .09).doi_mau(mau("#39352f")), tang @ bien_doi((np.sin(a) * 1.02, 1.45, np.cos(a) * 1.02)))
     lo.them("mau", tien([(1.42, 2.5), (1.3, 2.68), (.45, 3.5), (.16, 3.72), (.1, 4.3), (0, 4.42)], 32).doi_mau(DO), tang)
+    lo.them("mau", nap(1.42, 2.5, 32, len_tren=False).doi_mau(mau("#8f2a20")), tang)
     lo.them("kim", cuc(rng, 2, 0).doi_mau(VANG), tang @ bien_doi((0, 4.5, 0), ty_le=.22))
     for k in range(6):
         y0 = 4 + k * 3
@@ -349,6 +351,7 @@ def _leu_lon(lo, rng, p, r, cao, m1, m2):
     than = tien([(r, 0), (r, cao * .35)], n, mau_goc=sọc)
     mai = tien([(r * 1.1, cao * .35), (r * .55, cao * .63), (r * .25, cao * .82), (.1, cao), (0, cao + .1)], n, mau_goc=sọc)
     lo.them("mau", ghep([than, mai]), bien_doi(p))
+    lo.them("mau", nap(r * 1.1, cao * .35, n, len_tren=False).doi_mau(m2), bien_doi(p))
     for k in range(so_soc * 2):
         a = k / (so_soc * 2) * TAU
         lo.them("mau", cuc(rng, 1, 0).doi_mau(VANG), bien_doi(p + (np.sin(a) * r * 1.1, cao * .33, np.cos(a) * r * 1.1), ty_le=(.17, .24, .17)))
@@ -428,6 +431,7 @@ def den_thap():
         q = dinh + (np.sin(g) * 2.1, 0, np.cos(g) * 2.1)
         lo.them("da", tien([(.42, 0), (.34, .2), (.26, .4), (.22, 2.6), (.34, 2.8), (.44, 3.0)], 14).doi_mau(mau("#e2d6ba")), bien_doi(q))
     lo.them("da", tien([(2.85, 3.0), (2.85, 3.4), (2.2, 3.7), (1.3, 4.5), (.3, 5.2), (0, 5.3)], 32).doi_mau(mau("#c4a65c")), bien_doi(dinh))
+    lo.them("da", nap(2.85, 3.0, 32, len_tren=False).doi_mau(mau("#a8904f")), bien_doi(dinh))
     # Tượng canh, chậu lửa.
     for x, z in ((10.5, -5.0), (10.5, 5.0)):
         q = p + (x, 0, z)
@@ -441,8 +445,9 @@ def den_thap():
         q = p + (np.sin(g) * rng.uniform(10, 11.5), .35, np.cos(g) * rng.uniform(10, 11.5))
         if q[0] - p[0] > 6 and abs(q[2] - p[2]) < 3:
             continue
-        lo.them("da", tien([(.42, 0), (.38, 2.8 * rng.uniform(.5, 1)), (.0, 3.0)], 12).doi_mau(mau("#b8ab8e")),
-                bien_doi(q, rng.uniform(0, TAU), 1.0, xoay_x=rng.uniform(1.2, 1.57)))
+        m = bien_doi(q, rng.uniform(0, TAU), 1.0, xoay_x=rng.uniform(1.2, 1.57))
+        lo.them("da", tien([(.42, 0), (.38, 2.8 * rng.uniform(.5, 1)), (.0, 3.0)], 12).doi_mau(mau("#b8ab8e")), m)
+        lo.them("da", nap(.42, 0, 12, len_tren=False).doi_mau(mau("#b8ab8e")), m)
     return lo
 
 
@@ -515,6 +520,7 @@ def coi_xay(ten):
     lo.them("mau", tien(np.column_stack([3.1 - s * 1.3, s * 9.0]), 28, mau_hang=np.tile(mau("#f0e6cf"), (13, 1))).toi_day(.8), bien_doi(p))
     lo.them("da", tien([(3.3, 0), (3.28, 1.0), (3.1, 1.05)], 28).doi_mau(DA_XAM), bien_doi(p))
     lo.them("mau", tien([(1.95, 9.0), (2.0, 9.15), (1.5, 10.2), (.8, 11.1), (0, 11.5)], 28).doi_mau(mau("#a83a2a")), bien_doi(p))
+    lo.them("mau", nap(1.95, 9.0, 28, len_tren=False).doi_mau(mau("#7d2a1f")), bien_doi(p))
     lo.them("mau", hop(1.1, 1.8, .2, .04).doi_mau(GO), bien_doi(p + (0, 1.1, 3.0)))
     for y in (3.8, 6.3):
         lo.them("phat_sang", hop(.6, .8, .12).doi_mau(mau("#ffd27a")), bien_doi(p + (0, y, 3.05 - y * .13)))

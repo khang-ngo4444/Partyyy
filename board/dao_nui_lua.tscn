@@ -237,7 +237,7 @@ omni_range = 22.0
 [node name="AnhTinhThe" type="OmniLight3D" parent="." unique_id=1340069904]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -46, 15, -5)
 light_color = Color(0.36078432, 0.9490196, 1, 1)
-light_energy = 2.0
+light_energy = 0.6
 omni_range = 12.0
 
 [node name="KhoiNuiLua" type="GPUParticles3D" parent="." unique_id=908932728]

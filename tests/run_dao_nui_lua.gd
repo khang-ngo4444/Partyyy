@@ -6,6 +6,7 @@ const SO_O := 56
 const SO_VAT_CHUYEN_DONG_TOI_THIEU := 13
 const O_RE_NHANH := 4
 const O_DAU_DUONG_TAT := 40
+const SO_KHUNG_CHO_CHUYEN_DONG := 10
 
 var failures := 0
 
@@ -18,6 +19,18 @@ func check(ok: bool, message: String) -> void:
 	if not ok:
 		failures += 1
 		push_error(message)
+
+
+func _kiem_tra_chuyen_dong(map_model: Node) -> void:
+	var vat_dong := map_model.find_children("*", "VatChuyenDong", true, false)
+	var truoc: Array[Transform3D] = []
+	for vat: Node3D in vat_dong:
+		truoc.append(vat.transform)
+	for _khung in SO_KHUNG_CHO_CHUYEN_DONG:
+		await process_frame
+	for i in vat_dong.size():
+		var vat: Node3D = vat_dong[i]
+		check(not vat.transform.is_equal_approx(truoc[i]), "%s moves at runtime" % vat.name)
 
 
 func _run() -> void:
@@ -37,5 +50,6 @@ func _run() -> void:
 	for mesh_node: MeshInstance3D in dia_hinh.get_children():
 		check(mesh_node.mesh != null and mesh_node.mesh.resource_path.begins_with("res://asset/generated/dao_lon/mesh/"),
 				"Terrain chunk uses its extracted mesh")
+	await _kiem_tra_chuyen_dong(map_model)
 	print("DAO NUI LUA: %d failures" % failures)
 	quit(failures)

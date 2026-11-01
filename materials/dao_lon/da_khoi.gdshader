@@ -1,4 +1,5 @@
 shader_type spatial;
+render_mode cull_disabled;
 // Đá công trình: texture đá triplanar nhuộm màu đỉnh, không kéo giãn khi co giãn mesh.
 uniform sampler2D tex_da : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
 uniform float ti_le = 0.28;

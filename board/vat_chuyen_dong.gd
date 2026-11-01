@@ -1,7 +1,9 @@
+@tool
 class_name VatChuyenDong
-extends Node3D
+extends MeshInstance3D
 
-## Chuyển động trang trí của đảo: gắn lên node nào cần xoay, nhấp nhô, bay vòng hoặc trôi.
+## Chuyển động trang trí của đảo: gắn lên mesh nào cần xoay, nhấp nhô, bay vòng hoặc trôi.
+## Trong editor chỉ xem trước qua RenderingServer, không đổi transform nên scene không bị bẩn.
 
 enum Kieu { XOAY, NHAP_NHO, BAY_VONG, TROI }
 
@@ -19,27 +21,42 @@ const MEP_TROI := 280.0
 @export var pha := 0.0
 
 var _thoi_gian := 0.0
-var _y_goc := 0.0
+var _goc := Transform3D.IDENTITY
 
 
 func _ready() -> void:
-	_y_goc = position.y
+	_goc = transform
 
 
 func _process(delta: float) -> void:
 	_thoi_gian += delta
+	if Engine.is_editor_hint():
+		_xem_truoc_trong_editor()
+	else:
+		transform = _bien_doi_luc_nay()
+
+
+func _xem_truoc_trong_editor() -> void:
+	_goc = transform
+	var cha := global_transform * transform.affine_inverse()
+	RenderingServer.instance_set_transform(get_instance(), cha * _bien_doi_luc_nay())
+
+
+func _bien_doi_luc_nay() -> Transform3D:
+	var ra := _goc
 	match kieu:
 		Kieu.XOAY:
-			rotation.y += delta * toc
+			ra.basis = _goc.basis * Basis(Vector3.UP, _thoi_gian * toc)
 		Kieu.NHAP_NHO:
-			position.y = _y_goc + sin(_thoi_gian * toc + pha) * bien_do
-			rotation.z = sin(_thoi_gian * TOC_NGHIENG_NHAP_NHO + pha) * GOC_NGHIENG_NHAP_NHO
+			ra.origin.y += sin(_thoi_gian * toc + pha) * bien_do
+			var nghieng := sin(_thoi_gian * TOC_NGHIENG_NHAP_NHO + pha) * GOC_NGHIENG_NHAP_NHO
+			ra.basis = _goc.basis * Basis(Vector3.BACK, nghieng)
 		Kieu.BAY_VONG:
 			var goc := pha + _thoi_gian * toc
-			position = Vector3(cos(goc) * ban_kinh, _y_goc + sin(goc * 2.0) * BIEN_DO_LUON_BAY,
+			ra.origin = Vector3(cos(goc) * ban_kinh, _goc.origin.y + sin(goc * 2.0) * BIEN_DO_LUON_BAY,
 					sin(goc) * ban_kinh)
-			rotation.y = -goc
+			ra.basis = Basis(Vector3.UP, -goc)
 		Kieu.TROI:
-			position.x += delta * toc
-			if position.x > MEP_TROI:
-				position.x = -MEP_TROI
+			var chieu_dai := MEP_TROI * 2.0
+			ra.origin.x = fposmod(_goc.origin.x + _thoi_gian * toc + MEP_TROI, chieu_dai) - MEP_TROI
+	return ra
