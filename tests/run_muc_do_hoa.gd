@@ -48,12 +48,14 @@ func _kiem_tra_can_bang(quan_ly: Node, map_model: Node) -> void:
 	quan_ly.set_graphics_mode(CAN_BANG)
 	check(is_equal_approx(root.scaling_3d_scale, 1.0), "CAN BANG renders at native resolution")
 	check(root.msaa_3d == Viewport.MSAA_2X, "CAN BANG uses MSAA 2x")
+	check(root.screen_space_aa == Viewport.SCREEN_SPACE_AA_DISABLED and not root.use_taa, "CAN BANG keeps the picture sharp")
 	check(map_model.get_node("CoVaHoa").visible, "CAN BANG shows grass")
 
 
 func _kiem_tra_dep(quan_ly: Node, map_model: Node) -> void:
 	quan_ly.set_graphics_mode(DEP)
-	check(root.msaa_3d == Viewport.MSAA_4X and root.use_taa, "DEP uses the strongest anti-aliasing")
+	check(root.msaa_3d == Viewport.MSAA_4X, "DEP uses the strongest anti-aliasing")
+	check(root.screen_space_aa == Viewport.SCREEN_SPACE_AA_DISABLED and not root.use_taa, "DEP keeps the picture sharp")
 	check(root.anisotropic_filtering_level == Viewport.ANISOTROPY_16X, "DEP filters textures at 16x")
 	check(map_model.get_node("MatTroi").directional_shadow_max_distance
 			> 100.0, "DEP draws shadows further")

@@ -3,6 +3,7 @@ extends Node
 ## Các mức đồ hoạ cho cảnh 3D (UI giữ độ phân giải gốc). Mỗi mức một mục đích:
 ##   MƯỢT: máy yếu, đổi hình lấy FPS. CÂN BẰNG: nét gốc, khử răng cưa vừa, chạy nhẹ.
 ##   ĐẸP: khử răng cưa mạnh, bóng xa và mịn, đủ chi tiết. TỰ ĐỘNG: tự đổi mức để giữ 60 FPS.
+##   TAA và FXAA làm cảnh xa nhoè như depth of field nên chỉ MƯỢT (không có MSAA) mới dùng FXAA.
 ## Scene 3D đọc `thong_so()` khi nhận `graphics_mode_changed` để bật tắt phần của mình.
 
 signal render_scale_changed(scale: float)
@@ -22,22 +23,22 @@ const THONG_SO := {
 		"mo_ta": "Máy yếu: render 75%, khử răng cưa FXAA, tắt cỏ, ánh sáng phụ và bớt hiệu ứng.",
 	},
 	GraphicsMode.BALANCED: {
-		"ti_le_3d": 1.0, "msaa": Viewport.MSAA_2X, "fxaa": true, "taa": false,
+		"ti_le_3d": 1.0, "msaa": Viewport.MSAA_2X, "fxaa": false, "taa": false,
 		"loc_di_huong": Viewport.ANISOTROPY_8X, "lod": 1.5, "co_bong": 4096,
 		"loc_bong": RenderingServer.SHADOW_QUALITY_SOFT_LOW,
 		"ssao": true, "chat_luong_ssao": RenderingServer.ENV_SSAO_QUALITY_LOW, "glow": true,
 		"xa_bong": 100.0, "che_do_bong": DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS,
 		"chi_tiet_cao": true, "ti_le_hat": 0.7,
-		"mo_ta": "Máy tầm trung: nét 100%, MSAA 2x + FXAA, bóng vừa, đủ cỏ và tàu thuyền.",
+		"mo_ta": "Máy tầm trung: nét 100%, MSAA 2x, bóng vừa, đủ cỏ và tàu thuyền.",
 	},
 	GraphicsMode.QUALITY: {
-		"ti_le_3d": 1.0, "msaa": Viewport.MSAA_4X, "fxaa": false, "taa": true,
+		"ti_le_3d": 1.0, "msaa": Viewport.MSAA_4X, "fxaa": false, "taa": false,
 		"loc_di_huong": Viewport.ANISOTROPY_16X, "lod": 0.75, "co_bong": 8192,
 		"loc_bong": RenderingServer.SHADOW_QUALITY_SOFT_HIGH,
 		"ssao": true, "chat_luong_ssao": RenderingServer.ENV_SSAO_QUALITY_HIGH, "glow": true,
 		"xa_bong": 170.0, "che_do_bong": DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS,
 		"chi_tiet_cao": true, "ti_le_hat": 1.0,
-		"mo_ta": "Máy mạnh: MSAA 4x + TAA hết răng cưa, bóng xa và mịn, chi tiết tối đa.",
+		"mo_ta": "Máy mạnh: MSAA 4x nét và mịn cạnh, bóng xa và mịn, chi tiết tối đa.",
 	},
 }
 const MO_TA_TU_DONG := "Tự đổi mức theo sức máy để giữ 60 FPS. Đang dùng: %s."
