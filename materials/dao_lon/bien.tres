@@ -5,9 +5,9 @@
 [resource]
 render_priority = 0
 shader = ExtResource("1_j73ks")
-shader_parameter/mau_nong = Color(0.13, 0.88, 0.82, 1)
-shader_parameter/mau_giua = Color(0.02, 0.52, 0.72, 1)
-shader_parameter/mau_sau = Color(0.006, 0.17, 0.42, 1)
+shader_parameter/mau_nong = Color(0.28, 0.92, 0.82, 1)
+shader_parameter/mau_giua = Color(0.04, 0.66, 0.74, 1)
+shader_parameter/mau_sau = Color(0.02, 0.36, 0.58, 1)
 shader_parameter/mau_bot = Color(0.96, 1, 0.98, 1)
 shader_parameter/cao_song = 0.34
 shader_parameter/toc_song = 0.7
