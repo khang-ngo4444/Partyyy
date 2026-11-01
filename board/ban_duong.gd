@@ -181,7 +181,8 @@ func duong_thang(o: int, chieu: int, n: int) -> PackedInt32Array:
 
 
 ## Một mũi tên cho mỗi hướng; hướng `chon` sáng lên. `cac_huong` rỗng = cất hết.
-func hien_mui_ten(o: int, cac_huong: PackedInt32Array, chon: int) -> void:
+## `duong_chon` ({ô: true nếu dừng ở đó}, xem `LuatBay.du_bao_duong`) tô cả đoạn sắp đi.
+func hien_mui_ten(o: int, cac_huong: PackedInt32Array, chon: int, duong_chon := {}) -> void:
 	_bao_dam_do_thi()
 	for oo in _o:
 		oo.dat_noi_bat(0)
@@ -191,6 +192,8 @@ func hien_mui_ten(o: int, cac_huong: PackedInt32Array, chon: int) -> void:
 			continue
 		_mui_ten[i].dat(vi_tri(o), vi_tri(int(cac_huong[i])), i == chon)
 		_o[_chi_so(int(cac_huong[i]))].dat_noi_bat(2 if i == chon else 1)
+	for o_tren_duong in duong_chon:
+		_o[_chi_so(int(o_tren_duong))].dat_noi_bat(3 if duong_chon[o_tren_duong] else 2)
 
 
 ## {ô: sát thương} theo khoảng cách: bậc 0 là tâm, bậc 1 là ô kề...

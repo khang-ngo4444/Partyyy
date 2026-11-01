@@ -52,6 +52,39 @@ static func giam_bay(tt: Dictionary, k: String, o: int, con: int, settings: Dict
 	return {"con": ceili(con / 2.0), "su": su, "o_cuoi": o_cuoi}
 
 
+## Ô `k` sẽ giẫm nếu rời `o` sang `toi` với `con` bước còn lại: {ô: true nếu có thể dừng ở đó}.
+## Theo đúng rào/bẫy đang đặt; gặp ngã rẽ nữa thì gồm mọi nhánh. Chỉ đọc, không đổi `tt`.
+static func du_bao_duong(tt: Dictionary, k: String, ban: BanDuong, o: int, toi: int, con: int) -> Dictionary:
+	var ra := {}
+	_buoc_du_bao(tt, k, ban, o, toi, int(_bang(tt, "chieu").get(k, 0)), con, ra)
+	return ra
+
+
+static func _buoc_du_bao(tt: Dictionary, k: String, ban: BanDuong, o: int, toi: int, chieu: int,
+		con: int, ra: Dictionary) -> void:
+	if _cua_nguoi_khac(tt, "rao", k, toi):
+		ra[o] = true
+		return
+	con -= 1
+	if _cua_nguoi_khac(tt, "bay", k, toi):
+		con = ceili(con / 2.0)
+	if chieu == 0:
+		chieu = ban.chieu_toi(o, toi)
+	var huong := ban.huong_di(toi, chieu)
+	if con <= 0 or huong.is_empty():
+		ra[toi] = true
+		return
+	ra[toi] = ra.get(toi, false)
+	for tiep in huong:
+		_buoc_du_bao(tt, k, ban, toi, int(tiep), chieu, con, ra)
+
+
+static func _cua_nguoi_khac(tt: Dictionary, ten: String, k: String, o: int) -> bool:
+	var bang := _bang(tt, ten)
+	var ko := str(o)
+	return bang.has(ko) and str(bang[ko]) != k
+
+
 static func _dat(tt: Dictionary, ten: String, k: String) -> void:
 	if not (tt.get(ten) is Dictionary):
 		tt[ten] = {}

@@ -57,7 +57,7 @@ func hien_trang_thai(loai_moi: int, chu_dat: String, thue_dat: String, co_ruong:
 	_chu.text = "\n".join(dong)
 
 
-## 0 = thường, 1 = hướng có thể chọn, 2 = hướng đang chọn.
+## 0 = thường, 1 = hướng có thể chọn, 2 = trên đường đang chọn, 3 = ô sẽ dừng.
 func dat_noi_bat(muc: int) -> void:
 	if not is_node_ready() or _rim_mat == null:
 		return
@@ -70,10 +70,16 @@ func dat_noi_bat(muc: int) -> void:
 			_chu.modulate = Color("#ffd9ff")
 		2:
 			scale = Vector3.ONE * 1.085
-			_rim_mat.albedo_color = Color("#33fff0")
-			_rim_mat.emission = Color("#13cfc3")
-			_rim_mat.emission_energy_multiplier = 2.6
-			_chu.modulate = Color("#d9fffb")
+			_rim_mat.albedo_color = Color.WHITE
+			_rim_mat.emission = Color.WHITE
+			_rim_mat.emission_energy_multiplier = 3.2
+			_chu.modulate = Color.WHITE
+		3:
+			scale = Vector3.ONE * 1.16
+			_rim_mat.albedo_color = Color.WHITE
+			_rim_mat.emission = Color.WHITE
+			_rim_mat.emission_energy_multiplier = 3.2
+			_chu.modulate = Color.WHITE
 		_:
 			scale = Vector3.ONE
 			_rim_mat.albedo_color = Color("#ff9c1f")

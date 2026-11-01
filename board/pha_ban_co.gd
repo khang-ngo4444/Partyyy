@@ -85,6 +85,8 @@ var _so_dang_tung := 0
 ## Các hướng ở ngã rẽ đang chờ chọn.
 var _cac_huong := PackedInt32Array()
 var _lua_chon := 0
+## Số bước còn lại tính từ ngã rẽ (master gửi kèm đoạn đi).
+var _buoc_tu_nga_re := 0
 
 ## Đang diễn một đoạn đi; đoạn sau phải chờ.
 var _dang_dien := false
@@ -424,7 +426,7 @@ func _di_tiep(id: int, chon: int) -> void:
 				_buoc_con = 0
 				break
 	_duong_luot.append_array(doan.slice(1))
-	Fusion.rpc(_net_di_doan, id, JSON.stringify({"doan": doan, "huong": Array(_cho_master)}))
+	Fusion.rpc(_net_di_doan, id, JSON.stringify({"doan": doan, "huong": Array(_cho_master), "con": _buoc_con}))
 
 
 ## Người tới lượt chọn hướng ở ngã rẽ.
@@ -462,6 +464,7 @@ func _net_di_doan(id: int, json: String) -> void:
 	if not huong.is_empty():
 		_cac_huong = huong
 		_lua_chon = 0
+		_buoc_tu_nga_re = int(raw.get("con", 0))
 		_dang_chon = true
 		_cap_nhat_lua_chon()
 		return
@@ -476,12 +479,16 @@ func _net_di_doan(id: int, json: String) -> void:
 func _cap_nhat_lua_chon() -> void:
 	if ban == null or _cac_huong.is_empty():
 		return
-	var o := int(_bang("o").get(LuatBan.khoa(_id_dang_tung), 0))
-	ban.hien_mui_ten(o, _cac_huong, _lua_chon)
+	var k := LuatBan.khoa(_id_dang_tung)
+	var o := int(_bang("o").get(k, 0))
 	if _id_dang_tung == NetManager.local_id():
+		ban.hien_mui_ten(o, _cac_huong, _lua_chon, LuatBay.du_bao_duong(tt, k, ban, o,
+				int(_cac_huong[_lua_chon]), _buoc_tu_nga_re))
 		chon_huong_doi.emit("Hướng %d/%d · Z/X, Space" % [
 				_lua_chon + 1, _cac_huong.size()])
 	else:
+		# Máy khác không biết người chơi đang chọn hướng nào nên chỉ thấy mũi tên.
+		ban.hien_mui_ten(o, _cac_huong, _lua_chon)
 		chon_huong_doi.emit("%s đang chọn hướng..." % Player.ten_theo_id(get_tree(),
 				_id_dang_tung))
 
