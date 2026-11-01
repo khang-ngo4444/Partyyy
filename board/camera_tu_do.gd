@@ -2,8 +2,12 @@ class_name CameraTuDo
 extends Camera3D
 
 ## Camera tự do ở bàn party — chỉ tồn tại trên máy này, không replicate, không ai khác điều khiển.
-## Chuột (đang khoá) xoay nhìn · WASD/mũi tên bay ngang · lăn chuột tiến/lùi theo hướng nhìn ·
-## Shift đi nhanh. (Chọn hướng / mục tiêu trên bàn dùng Z/X nên không đụng WASD.)
+## Chuột (đang khoá) xoay nhìn · WASD/mũi tên bay ngang · R/F bay lên/xuống · lăn chuột tiến/lùi
+## theo hướng nhìn · Shift đi nhanh. (Chọn hướng / mục tiêu trên bàn dùng Z/X nên không đụng WASD;
+## Space và E đang là tung xúc xắc nên không dùng để bay lên.)
+
+const PHIM_BAY_LEN := KEY_R
+const PHIM_BAY_XUONG := KEY_F
 
 @export var toc_do := 16.0
 @export var nhanh := 2.6
@@ -60,6 +64,9 @@ func _input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	if not current or Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
+	# Đang gõ chat thì R/F/WASD là chữ, không phải lệnh bay.
+	if get_viewport().gui_get_focus_owner() is LineEdit:
+		return
 	var tien := 0.0
 	var ngang := 0.0
 	if Input.is_key_pressed(KEY_UP) or (cho_wasd and Input.is_action_pressed("move_forward")):
@@ -70,15 +77,25 @@ func _process(delta: float) -> void:
 		ngang += 1.0
 	if Input.is_key_pressed(KEY_LEFT) or (cho_wasd and Input.is_action_pressed("move_left")):
 		ngang -= 1.0
-	if tien == 0.0 and ngang == 0.0:
+	var doc := 0.0
+	if Input.is_key_pressed(PHIM_BAY_LEN):
+		doc += 1.0
+	if Input.is_key_pressed(PHIM_BAY_XUONG):
+		doc -= 1.0
+	if tien == 0.0 and ngang == 0.0 and doc == 0.0:
 		return
-	# Bay song song mặt bàn để không chúi xuống đất khi đang nhìn xuống.
-	var truoc := Vector3(-sin(_yaw), 0.0, -cos(_yaw))
-	var phai := Vector3(cos(_yaw), 0.0, -sin(_yaw))
-	var v := (truoc * tien + phai * ngang).normalized() * toc_do
+	var v := huong_bay(_yaw, tien, ngang, doc) * toc_do
 	if Input.is_key_pressed(KEY_SHIFT):
 		v *= nhanh
 	_di(v * delta)
+
+
+## Hướng bay đơn vị. Tiến/ngang song song mặt bàn để không chúi xuống đất khi đang nhìn xuống;
+## lên/xuống theo trục dọc thế giới, không phụ thuộc hướng nhìn.
+static func huong_bay(yaw: float, tien: float, ngang: float, doc: float) -> Vector3:
+	var truoc := Vector3(-sin(yaw), 0.0, -cos(yaw))
+	var phai := Vector3(cos(yaw), 0.0, -sin(yaw))
+	return (truoc * tien + phai * ngang + Vector3.UP * doc).normalized()
 
 
 func _di(buoc: Vector3) -> void:

@@ -16,7 +16,8 @@ const PHIM_SANH := [["WASD", "Đi"], ["Space", "Nhảy"], ["E", "Dùng"], ["M", 
 	["Enter", "Chat"], ["Esc", "Menu"]]
 const PHIM_CAM_DO := [["WASD", "Đi"], ["Giữ E", "Ném"], ["Q", "Đặt xuống"], ["Esc", "Menu"]]
 const PHIM_BAN := [["C", "Camera"], ["V", "Theo dõi"], ["Enter", "Chat"], ["Esc", "Menu"]]
-const PHIM_CHON_HUONG := [["Z / X", "Đổi lựa chọn"], ["Space", "Chốt"]]
+const PHIM_CAM_TU_DO := [["WASD", "Bay"], ["R / F", "Lên / xuống"], ["C", "Camera"], ["V", "Theo dõi"], ["Esc", "Menu"]]
+const PHIM_CHON_HUONG :=[["Z / X", "Đổi lựa chọn"], ["Space", "Chốt"]]
 const PHIM_THUE := [["1", "Lấy đất"], ["2", "Hút máu"], ["3", "Lấy vàng"], ["4", "Lấy đồ"]]
 const PHIM_ESC := ["Esc", "Menu"]
 

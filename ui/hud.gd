@@ -160,7 +160,9 @@ func _phim_theo_tinh_huong(qt: Node, minigame: bool) -> Array:
 	if _tren_ban:
 		if bang_ban.dang_chon_thue():
 			return DaiPhim.PHIM_THUE
-		return DaiPhim.PHIM_CHON_HUONG if _dang_chon_huong else DaiPhim.PHIM_BAN
+		if _dang_chon_huong:
+			return DaiPhim.PHIM_CHON_HUONG
+		return DaiPhim.PHIM_CAM_TU_DO if get_viewport().get_camera_3d() is CameraTuDo else DaiPhim.PHIM_BAN
 	if card_prompt.text != "" or poker_bar.visible:
 		return []
 	if _local_player != null and is_instance_valid(_local_player) and _local_player.carried() != null:
