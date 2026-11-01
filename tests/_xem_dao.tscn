@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://cnixtrj1ma7hx"]
+
+[ext_resource type="PackedScene" uid="uid://jmi2m3pymqvd" path="res://board/ban_party.tscn" id="1_76h32"]
+
+[node name="Xem" type="Node3D" unique_id=40265277]
+
+[node name="Ban" parent="." unique_id=675630417 instance=ExtResource("1_76h32")]
+
+[node name="Cam" type="Camera3D" parent="." unique_id=1599479591]
+transform = Transform3D(0.9004471, 0.013047008, 0.43476978, 0, 0.99955004, -0.029995497, -0.4349655, 0.02700936, 0.90004194, 30, 42, 62)
+current = true
+fov = 65.0
+
+[node name="Ban2" parent="." unique_id=1455472967 instance=ExtResource("1_76h32")]
+
+[node name="Cam2" type="Camera3D" parent="." unique_id=1331187701]

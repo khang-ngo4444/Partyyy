@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://cc7nheo4s2qne"]
+
+[ext_resource type="PackedScene" uid="uid://jmi2m3pymqvd" path="res://board/ban_party.tscn" id="1_ce58o"]
+
+[node name="Soi" type="Node3D" unique_id=2109567530]
+
+[node name="Ban" parent="." unique_id=675630417 instance=ExtResource("1_ce58o")]
+
+[node name="Cam" type="Camera3D" parent="." unique_id=1040391787]
+transform = Transform3D(1, 0, 0, 0, 0.7518057, 0.65938467, 0, -0.65938467, 0.7518057, 15.2, 11.15, 28.9)
+current = true
+fov = 60.0
