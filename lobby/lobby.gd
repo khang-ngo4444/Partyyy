@@ -66,6 +66,7 @@ func _ready() -> void:
 	performance_manager.connect("graphics_mode_changed", _apply_graphics_quality)
 	_apply_graphics_quality(int(performance_manager.get("muc_hieu_luc")))
 	$ClockTower/Loa.add_to_group("loa_nhac")
+	$ClockTower/Loa.bus = AmThanh.BUS_LOA_SANH
 	_retint_decor()
 	# Mặt trời trôi chậm để bóng sườn vòm quét qua sàn; mỗi máy tự chạy.
 	var t := create_tween().set_loops()

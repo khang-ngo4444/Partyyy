@@ -105,6 +105,10 @@ func _ready() -> void:
 	NetManager.connect_to_photon()
 
 
+func _process(_delta: float) -> void:
+	AmThanh.dat_nhac(BangAmThanh.khoa_nhac(menu.visible, ban_co.dang_chay(), quan_tro.ma_dang_choi(), quan_tro.pha_nhac()))
+
+
 ## M ở phòng chờ: mở bảng chọn nhân vật.
 func _input(event: InputEvent) -> void:
 	if not event.is_action_pressed("change_model") or _lobby == null or picker.visible:

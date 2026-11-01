@@ -26,6 +26,8 @@ var _game: MiniGame = null
 var _dang_chay := false
 var _ids: Array = []
 var _cho_diem := 0.0
+var _pha_truoc := ""
+var _so_dem_truoc := ""
 
 @onready var _lop: CanvasLayer = $Lop
 @onready var _nen: ColorRect = $Lop/Nen
@@ -62,6 +64,15 @@ func dang_chay() -> bool:
 
 func ma_dang_choi() -> String:
 	return _game.scene_file_path.get_file().get_basename() if is_instance_valid(_game) else ""
+
+
+## Pha để chọn nhạc; suy từ thứ đang hiện nên đúng cho cả hai đường chạy (RPC và session chung).
+func pha_nhac() -> String:
+	if not _dang_chay:
+		return ""
+	if _the_ket_qua.visible:
+		return BangAmThanh.PHA_KET_QUA
+	return BangAmThanh.PHA_DEM_NGUOC if _huong_dan.visible else BangAmThanh.PHA_CHOI
 
 
 func danh_sach() -> PackedStringArray:
@@ -176,12 +187,26 @@ func _dung_bang_diem() -> void:
 
 func _process(delta: float) -> void:
 	_ve_dong_ho()
+	_keu_theo_dem_nguoc()
 	if not _dang_chay or not _bang_diem.visible or _game == null or not is_instance_valid(_game):
 		return
 	_cho_diem -= delta
 	if _cho_diem <= 0.0:
 		_cho_diem = NHIP_DIEM
 		_ve_bang_diem()
+
+
+## Tích mỗi lần số đếm đổi, kèm tiếng hiệu lệnh lúc thẻ luật vừa tắt.
+func _keu_theo_dem_nguoc() -> void:
+	var pha := pha_nhac()
+	if pha == BangAmThanh.PHA_DEM_NGUOC and _dem.text != _so_dem_truoc:
+		_so_dem_truoc = _dem.text
+		AmThanh.phat(BangAmThanh.SFX_DEM_NGUOC)
+	elif pha == BangAmThanh.PHA_CHOI and _pha_truoc == BangAmThanh.PHA_DEM_NGUOC:
+		AmThanh.phat(BangAmThanh.SFX_BAT_DAU)
+	if pha != BangAmThanh.PHA_DEM_NGUOC:
+		_so_dem_truoc = ""
+	_pha_truoc = pha
 
 
 func _ve_dong_ho() -> void:
@@ -242,6 +267,9 @@ func _khi_xong(xep_hang: Array) -> void:
 		return
 	_dong_ho.visible = false
 	_dien_ket_qua(xep_hang)
+	var hang_cua_minh := xep_hang.find(NetManager.local_id())
+	if hang_cua_minh >= 0:
+		AmThanh.phat(BangAmThanh.SFX_THANG if hang_cua_minh == 0 else BangAmThanh.SFX_THUA)
 	var dong := PackedStringArray()
 	for i in xep_hang.size():
 		var id := int(xep_hang[i])
