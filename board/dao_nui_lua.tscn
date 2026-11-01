@@ -25,7 +25,8 @@
 sky_top_color = Color(0.18431373, 0.49803922, 0.8392157, 1)
 sky_horizon_color = Color(0.7490196, 0.9019608, 0.9490196, 1)
 ground_bottom_color = Color(0.56078434, 0.5411765, 0.4862745, 1)
-ground_horizon_color = Color(0.7607843, 0.78431374, 0.7411765, 1)
+ground_horizon_color = Color(0.56078434, 0.7411765, 0.8156863, 1)
+ground_curve = 0.04
 sun_curve = 0.12
 
 [sub_resource type="Sky" id="Sky_1aqk5"]
