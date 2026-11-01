@@ -1,17 +1,17 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://cafodtalbrtxe"]
 
-[ext_resource type="PackedScene" path="res://board/ban_party.tscn" id="1_board"]
-[ext_resource type="Script" path="res://ui/menu_background.gd" id="2_script"]
+[ext_resource type="PackedScene" uid="uid://jmi2m3pymqvd" path="res://board/ban_party.tscn" id="1_board"]
+[ext_resource type="Script" uid="uid://cywtl8dlwt06d" path="res://ui/menu_background.gd" id="2_script"]
 
-[node name="MenuBackground" type="Node3D"]
+[node name="MenuBackground" type="Node3D" unique_id=534495585]
 script = ExtResource("2_script")
 
-[node name="BanPartyPreview" parent="." instance=ExtResource("1_board")]
+[node name="BanPartyPreview" parent="." unique_id=1192897806 instance=ExtResource("1_board")]
 
-[node name="CameraRig" type="Node3D" parent="."]
+[node name="CameraRig" type="Node3D" parent="." unique_id=592692397]
 
-[node name="MenuCamera" type="Camera3D" parent="CameraRig"]
+[node name="MenuCamera" type="Camera3D" parent="CameraRig" unique_id=1756708321]
 current = true
 fov = 54.0
 near = 0.2
-far = 350.0
+far = 3000.0
