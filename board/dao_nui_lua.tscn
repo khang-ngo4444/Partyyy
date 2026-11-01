@@ -46,20 +46,20 @@
 [ext_resource type="PackedScene" uid="uid://pv1u5674shub" path="res://board/hieu_ung_dao/suong_thac.tscn" id="44_k1dv1"]
 [ext_resource type="PackedScene" uid="uid://ywx2murla3qa" path="res://board/hieu_ung_dao/khoi_ong_khoi.tscn" id="45_2ls4n"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_hvfqm"]
-sky_top_color = Color(0.18431373, 0.49803922, 0.8392157, 1)
-sky_horizon_color = Color(0.7490196, 0.9019608, 0.9490196, 1)
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5jhoo"]
+sky_top_color = Color(0.101960786, 0.4392157, 0.9019608, 1)
+sky_horizon_color = Color(0.54901963, 0.8509804, 0.96862745, 1)
 ground_bottom_color = Color(0.56078434, 0.5411765, 0.4862745, 1)
 ground_horizon_color = Color(0.56078434, 0.7411765, 0.8156863, 1)
 ground_curve = 0.04
 sun_curve = 0.12
 
-[sub_resource type="Sky" id="Sky_1aqk5"]
-sky_material = SubResource("ProceduralSkyMaterial_hvfqm")
+[sub_resource type="Sky" id="Sky_yapni"]
+sky_material = SubResource("ProceduralSkyMaterial_5jhoo")
 
-[sub_resource type="Environment" id="Environment_10k0o"]
+[sub_resource type="Environment" id="Environment_hc0bd"]
 background_mode = 2
-sky = SubResource("Sky_1aqk5")
+sky = SubResource("Sky_yapni")
 ambient_light_source = 3
 ambient_light_energy = 0.85
 reflected_light_source = 2
@@ -73,12 +73,12 @@ glow_intensity = 0.55
 glow_bloom = 0.04
 glow_hdr_threshold = 1.1
 fog_enabled = true
-fog_light_color = Color(0.8117647, 0.90588236, 0.9411765, 1)
-fog_density = 0.0006
+fog_light_color = Color(0.65882355, 0.8627451, 0.96862745, 1)
+fog_density = 0.00025
 fog_sky_affect = 0.1
 adjustment_enabled = true
-adjustment_contrast = 1.04
-adjustment_saturation = 1.12
+adjustment_contrast = 1.08
+adjustment_saturation = 1.35
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1aqk5"]
 size = Vector2(2600, 2600)
@@ -128,7 +128,7 @@ size = Vector2(0.25, 0.25)
 script = ExtResource("1_5jhoo")
 
 [node name="RumbleReefEnvironment" type="WorldEnvironment" parent="." unique_id=1807618986]
-environment = SubResource("Environment_10k0o")
+environment = SubResource("Environment_hc0bd")
 
 [node name="MatTroi" type="DirectionalLight3D" parent="." unique_id=678851064]
 transform = Transform3D(0.73168886, 0.44946215, -0.51245993, 0, 0.7518057, 0.65938467, 0.6816388, -0.4824644, 0.55008787, 0, 0, 0)

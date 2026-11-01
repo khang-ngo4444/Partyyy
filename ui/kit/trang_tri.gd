@@ -1,15 +1,22 @@
 extends Control
 
-## Trang trí nền kiểu ảnh mẫu: sao 4 cánh lấp lánh + gạch đứt đoạn trôi nhẹ.
+## Trang trí nền kiểu ảnh mẫu: sao 4 cánh và chấm màu bay lên, đung đưa, lấp lánh.
 ## Vẽ thủ công, không texture. Tắt chuyển động khi UINav.giam_chuyen_dong.
 
-@export var so_sao := 14
-@export var so_gach := 8
-@export var mau_sao := Color(1, 1, 1, 0.95)
-@export var mau_gach := Color("F58A2C")
+const BIEN_DO_DUNG_DUA := 14.0
+const TAN_SO_DUNG_DUA := 0.7
+const TAN_SO_LAP_LANH := 2.2
+## Hạt mờ dần trong khoảng này ở đỉnh và đáy (tỉ lệ chiều cao), không bật ra đột ngột.
+const VUNG_MO := 0.12
 
-var _sao: Array = []   # [vị trí tỉ lệ, cỡ, pha]
-var _gach: Array = []  # [vị trí tỉ lệ, dài, pha]
+@export var so_sao := 14
+@export var so_cham := 12
+@export var mau_sao := Color(1, 1, 1, 0.95)
+@export var mau_cham: Array[Color] = [
+	Color("FFD54F", 0.85), Color("F78FA7", 0.8), Color("4FC3F7", 0.8), Color("FFFFFF", 0.75),
+]
+
+var _hat: Array[Dictionary] = []
 var _t := 0.0
 
 
@@ -18,9 +25,16 @@ func _ready() -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 7
 	for i in so_sao:
-		_sao.append([Vector2(rng.randf(), rng.randf()), rng.randf_range(8, 22), rng.randf() * TAU])
-	for i in so_gach:
-		_gach.append([Vector2(rng.randf(), rng.randf()), rng.randf_range(30, 70), rng.randf() * TAU])
+		_hat.append(_tao_hat(rng, true, rng.randf_range(8, 22), mau_sao))
+	for i in so_cham:
+		_hat.append(_tao_hat(rng, false, rng.randf_range(3, 8), mau_cham[i % mau_cham.size()]))
+
+
+func _tao_hat(rng: RandomNumberGenerator, la_sao: bool, co: float, mau: Color) -> Dictionary:
+	return {
+		"x": rng.randf(), "y": rng.randf(), "co": co, "pha": rng.randf() * TAU, "mau": mau, "la_sao": la_sao,
+		"toc_do": rng.randf_range(0.015, 0.05),
+	}
 
 
 func _process(delta: float) -> void:
@@ -31,22 +45,23 @@ func _process(delta: float) -> void:
 
 
 func _draw() -> void:
-	for s in _sao:
-		var p: Vector2 = s[0] * size
-		var k: float = s[1] * (0.75 + 0.25 * sin(_t * 2.2 + s[2]))
-		_ve_sao(p, k)
-	for g in _gach:
-		var p: Vector2 = g[0] * size + Vector2(sin(_t * 0.6 + g[2]) * 6.0, 0)
-		var dai: float = g[1]
-		for i in 3:
-			var x := p.x + i * (dai * 0.45)
-			draw_line(Vector2(x, p.y), Vector2(x + dai * 0.28, p.y), mau_gach, 5.0, true)
+	for hat: Dictionary in _hat:
+		# Bay lên rồi quay lại từ đáy.
+		var y := fposmod(float(hat.y) - _t * float(hat.toc_do), 1.0)
+		var vi_tri := Vector2(float(hat.x) * size.x + sin(_t * TAN_SO_DUNG_DUA + float(hat.pha)) * BIEN_DO_DUNG_DUA, y * size.y)
+		var mau: Color = hat.mau
+		mau.a *= minf(smoothstep(0.0, VUNG_MO, y), smoothstep(0.0, VUNG_MO, 1.0 - y))
+		var co := float(hat.co) * (0.75 + 0.25 * sin(_t * TAN_SO_LAP_LANH + float(hat.pha)))
+		if hat.la_sao:
+			_ve_sao(vi_tri, co, mau)
+		else:
+			draw_circle(vi_tri, co, mau, true, -1.0, true)
 
 
-func _ve_sao(p: Vector2, r: float) -> void:
+func _ve_sao(p: Vector2, r: float, mau: Color) -> void:
 	var diem := PackedVector2Array()
 	for i in 8:
 		var goc := i * PI / 4.0
 		var rr := r if i % 2 == 0 else r * 0.28
 		diem.append(p + Vector2(cos(goc), sin(goc)) * rr)
-	draw_colored_polygon(diem, mau_sao)
+	draw_colored_polygon(diem, mau)

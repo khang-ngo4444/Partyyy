@@ -32,7 +32,6 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("2_tt")
 so_sao = 10
-so_gach = 5
 
 [node name="Center" type="CenterContainer" parent="."]
 layout_mode = 1
