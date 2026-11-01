@@ -209,6 +209,7 @@ func _net_ban(id: int, tu: Vector3, huong: Vector3) -> void:
 	var source := _nguoi(id)
 	if source != null:
 		source.play_action("shoot")
+	AmThanh.phat(BangAmThanh.SFX_BAN)
 	var c := cau_lua_scene.instantiate() as CauLua
 	san.add_child(c)
 	# Bù nửa RTT cho cầu của người khác (tối đa 0,15 s).

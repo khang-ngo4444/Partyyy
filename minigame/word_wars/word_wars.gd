@@ -93,7 +93,10 @@ func _net_tien(id: int, so_tu: int, tien: int) -> void:
 	var nguoi_go := _nguoi(id)
 	if nguoi_go != null:
 		nguoi_go.play_action("interact")
-	if tien >= tu_hien_tai(id).length():
+	var xong_tu := tien >= tu_hien_tai(id).length()
+	if id == NetManager.local_id():
+		AmThanh.phat(BangAmThanh.SFX_TRA_LOI if xong_tu else BangAmThanh.SFX_GO_CHU)
+	if xong_tu:
 		_diem[id] = int(_diem[id]) + 1
 		_tien[id] = 0
 	else:

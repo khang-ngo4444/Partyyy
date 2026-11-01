@@ -209,9 +209,13 @@ func _net_trang_thai(json: String) -> void:
 	var g = JSON.parse_string(json)
 	if not (g is Dictionary):
 		return
+	var tt_cu: Dictionary = tt
 	tt = g
 	if not dang_chay():
 		return
+	if not tam_dung:
+		for tieng: StringName in BangAmThanh.su_kien_ban(tt_cu, tt):
+			AmThanh.phat(tieng)
 	_bao_dam_co_ban()
 	_ap_mat_ban()
 	# Hiệu ứng diễn trước khi quân cờ bị dời (Cần câu: móc bay tới, kéo về rồi mới chốt ô).
@@ -233,6 +237,7 @@ func _net_trang_thai(json: String) -> void:
 		var nguoi_thang_van := nguoi(id)
 		if nguoi_thang_van != null:
 			nguoi_thang_van.play_reaction("dance", GIAY_NHAY_THANG_VAN)
+		AmThanh.phat(BangAmThanh.SFX_THANG_VAN)
 		van_thang.emit(id)
 		return
 	if str(tt.get("su_kien", "")) == "het_vong":
@@ -362,6 +367,7 @@ func _net_tung(id: int, so: int, so_2: int) -> void:
 	var nguoi_tung := nguoi(id)
 	if nguoi_tung != null:
 		nguoi_tung.play_action("throw")
+	AmThanh.phat(BangAmThanh.SFX_XUC_XAC)
 	so = clampi(so, 1, 6)
 	_so_dang_tung = so
 	if str(tt.get("hai_hot", "")) == LuatBan.khoa(id):
@@ -933,6 +939,7 @@ func _di_theo_duong(id: int, duong: PackedInt32Array) -> void:
 	var p := nguoi(id)
 	for i in range(1, duong.size()):
 		_bang("o")[k] = int(duong[i])
+		AmThanh.phat(BangAmThanh.SFX_BUOC_CHAN)
 		if p != null:
 			var tw := create_tween()
 			tw.tween_property(p, "global_position", _cho_dung(id, int(_bang("o")[k])),

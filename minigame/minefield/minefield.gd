@@ -106,6 +106,7 @@ func _consume_events(state: Dictionary, elapsed: float) -> void:
 		_seen_events[key] = event.serial
 		var player := _nguoi(int(key))
 		if player != null and elapsed - float(event.time) < 2:
+			AmThanh.phat(BangAmThanh.SFX_NO if event.kind == "mine" else BangAmThanh.SFX_MAT_MAU)
 			if player.has_method("play_reaction"):
 				player.play_reaction("hit", 0.75)
 			if player.is_mine:

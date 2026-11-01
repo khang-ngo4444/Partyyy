@@ -4,7 +4,7 @@ extends Node
 ## UINav (autoload tên "UINavHook"): "juice" chung cho mọi nút + helper hoạt hình UI.
 ## Tự gắn vào mọi BaseButton được thêm vào cây (không cần sửa từng scene).
 ## - Rê chuột vào nút = nhận focus (ẩn viền) → chỉ một nút sáng, phím mũi tên đi tiếp từ đó.
-## - Focus/hover: phóng to + nghiêng nhẹ. Bấm: lún xuống. Có âm tick.
+## - Focus/hover: phóng to + nghiêng nhẹ. Bấm: lún xuống. Có âm tick khi rê, âm click khi bấm.
 ## Đặt meta "khong_nay" trên nút để bỏ qua.
 
 const SETTINGS_PATH := "user://party_settings.cfg"
@@ -21,12 +21,14 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_tick.stream = load("res://asset/kenney_interface-sounds/Audio/tick_002.ogg")
 	_tick.volume_db = -14.0
+	_tick.bus = AmThanh.BUS_SFX
 	add_child(_tick)
 	var cfg := ConfigFile.new()
 	if cfg.load(SETTINGS_PATH) == OK:
 		giam_chuyen_dong = bool(cfg.get_value("display", "reduce_motion", false))
 		ap_co_ui(float(cfg.get_value("display", "ui_scale", 1.0)))
 	get_tree().node_added.connect(_on_node_added)
+	_gan_tieng_ca_cay(get_tree().root)
 
 
 static func ap_co_ui(he_so: float) -> void:
@@ -34,8 +36,30 @@ static func ap_co_ui(he_so: float) -> void:
 
 
 func _on_node_added(n: Node) -> void:
+	_gan_tieng_bam(n)
 	if n is BaseButton and not n.has_meta("khong_nay"):
 		_gan_nut(n)
+
+
+## Scene chính vào cây trước `_ready` của autoload nên `node_added` đã lỡ mất các nút của nó.
+func _gan_tieng_ca_cay(goc: Node) -> void:
+	_gan_tieng_bam(goc)
+	for con in goc.get_children():
+		_gan_tieng_ca_cay(con)
+
+
+func _gan_tieng_bam(n: Node) -> void:
+	if n is BaseButton:
+		(n as BaseButton).pressed.connect(_keu_bam)
+	elif n is TabContainer:
+		# `tab_changed` để đổi tab bằng phím (Q/E) cũng kêu.
+		(n as TabContainer).tab_changed.connect(func(_tab: int): _keu_bam())
+	elif n is ItemList:
+		(n as ItemList).item_clicked.connect(func(_muc: int, _vi_tri: Vector2, _nut: int): _keu_bam())
+
+
+func _keu_bam() -> void:
+	AmThanh.phat(BangAmThanh.SFX_BAM_NUT)
 
 
 func _gan_nut(b: BaseButton) -> void:

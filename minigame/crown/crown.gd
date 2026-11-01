@@ -149,6 +149,7 @@ func _net_giu(ai: int, cho: Vector3) -> void:
 	var nguoi_doi := _nguoi(ai)
 	if nguoi_doi != null:
 		nguoi_doi.play_reaction("cheer", GIAY_MUNG_DOI_MIEN)
+		AmThanh.phat(BangAmThanh.SFX_DOI_MIEN)
 	if ai == 0:
 		_cho_nam = cho
 

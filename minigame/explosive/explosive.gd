@@ -108,6 +108,7 @@ func _doi_dang_nguoi_cam_bom(holder: int) -> void:
 	var moi := _nguoi(holder)
 	if moi != null:
 		moi.dat_kieu_di(KIEU_CAM_BOM)
+		AmThanh.phat(BangAmThanh.SFX_CHUYEN_BOM)
 	_nguoi_cam_truoc = holder
 
 

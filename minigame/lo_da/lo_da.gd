@@ -362,6 +362,7 @@ func co_the_ve_dich(id: int) -> bool:
 func _net_da_ve(id: int) -> void:
 	if _chay and con_song(id) and not _ve_dich.has(id):
 		_ve_dich.append(id)
+		AmThanh.phat(BangAmThanh.SFX_VE_DICH)
 		if id == NetManager.local_id():
 			_da_ve = true
 

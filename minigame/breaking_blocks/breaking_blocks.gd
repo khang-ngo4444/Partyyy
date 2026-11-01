@@ -62,6 +62,8 @@ func _present_floor(elapsed: float) -> void:
 		# The visual sinks while its authored collider disconnects immediately.
 		# Returning floors cannot catch a player who has already fallen below them.
 		var body := tile.get_node("Than") as StaticBody3D
+		if body.collision_layer != 0 and not bool(sample.solid):
+			AmThanh.phat(BangAmThanh.SFX_VO)
 		body.collision_layer = 1 if bool(sample.solid) else 0
 		tile.son(_warning_material if bool(sample.warning) else mat_lanh)
 

@@ -94,6 +94,7 @@ func _doi(huong: int) -> void:
 	value = value + huong * step * k
 	if not is_equal_approx(cu, value):
 		UINav.nay(_so, 1.3)
+		AmThanh.phat(BangAmThanh.SFX_BAM_NUT)
 
 
 func _gui_input(event: InputEvent) -> void:

@@ -384,6 +384,7 @@ func _diem_o(o: int) -> Vector3:
 ## Mọi máy: dựng scene hiệu ứng của món từ gói `fx` (người dùng, mục tiêu, ô, đường đi... do
 ## master gửi) và báo cho bàn chờ nó — quân cờ chỉ bị giật về ô khi hiệu ứng báo `cham`.
 func _chieu_hieu_ung(fx: Dictionary) -> void:
+	AmThanh.phat(BangAmThanh.SFX_DUNG_DO)
 	var mon := str(fx.get("mon", ""))
 	var hinh := danh_muc.tim(mon) if danh_muc != null else null
 	var nguoi_tu := ban_co.nguoi(int(fx.get("tu", -1)))

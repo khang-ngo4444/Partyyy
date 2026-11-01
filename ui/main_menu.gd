@@ -69,7 +69,6 @@ var _thanh_ti_le := ThanhTiLe.new()
 @onready var quit_panel: Control = %QuitPanel
 @onready var quit_cancel_btn: Button = %QuitCancelBtn
 @onready var quit_confirm_btn: Button = %QuitConfirmBtn
-@onready var click_sound: AudioStreamPlayer = $ClickSound
 @onready var character_creator: CharacterCreator = %CharacterCreator
 @onready var setup_room: Label = %SetupRoom
 @onready var setup_role: Label = %SetupRole
@@ -546,5 +545,6 @@ func _save_profile() -> void:
 	config.save(SETTINGS_PATH)
 
 
+## Cho thao tác không qua nút (phím tắt, Esc); nút bấm đã có UINav lo, trùng thì AmThanh gộp lại.
 func _play_click() -> void:
-	click_sound.play()
+	AmThanh.phat(BangAmThanh.SFX_BAM_NUT)

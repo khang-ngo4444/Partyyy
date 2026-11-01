@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://bbs6qvdlierie"]
 
 [ext_resource type="Script" uid="uid://c30tttaqc6jlt" path="res://ui/main_menu.gd" id="1_menu"]
-[ext_resource type="AudioStream" uid="uid://cloaii5w132nd" path="res://asset/kenney_interface-sounds/Audio/click_003.ogg" id="4_click"]
 [ext_resource type="PackedScene" uid="uid://dvper3iuvcixy" path="res://ui/character_creator.tscn" id="5_creator"]
 [ext_resource type="Script" uid="uid://d2qopo4wjeemx" path="res://ui/kit/trang_tri.gd" id="6_tt"]
 [ext_resource type="Texture2D" uid="uid://d3hbibuhg1cug" path="res://ui/icons/kenney/arrowLeft.png" id="7_back"]
@@ -558,10 +557,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"NutDo"
 text = "THOÁT"
-
-[node name="ClickSound" type="AudioStreamPlayer" parent="." unique_id=1859172669]
-stream = ExtResource("4_click")
-volume_db = -9.0
 
 [node name="CharacterCreator" parent="." unique_id=743469635 instance=ExtResource("5_creator")]
 unique_name_in_owner = true

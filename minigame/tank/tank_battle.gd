@@ -161,6 +161,7 @@ func _net_ban(id: int, vi: Vector2, h: Vector2i) -> void:
 	d.huong = Vector2(h)
 	d.chu = id
 	_lop_dan.add_child(d)
+	AmThanh.phat(BangAmThanh.SFX_BAN)
 	if _xe.has(id):
 		_xe[id].ghi_ban(_gio())
 
@@ -170,6 +171,7 @@ func _net_trung(id: int) -> void:
 	if not _xe.has(id) or not _xe[id].song:
 		return
 	_xe[id].chet()
+	AmThanh.phat(BangAmThanh.SFX_NO)
 	_chet_theo.append(id)
 	_con_lai.erase(id)
 
@@ -177,6 +179,7 @@ func _net_trung(id: int) -> void:
 @rpc("any_peer", "call_local")
 func _net_pha(ix: int) -> void:
 	_ban_do.pha(ix)
+	AmThanh.phat(BangAmThanh.SFX_VO)
 
 
 func _chi_so_mau(id: int) -> int:

@@ -4,6 +4,7 @@ const Rules = preload("res://minigame/machine_playground/wave_rules.gd")
 const SHELTER_DISTANCE := 4.2
 const PUSH_STRENGTH := 8.0
 var _seen_event := 0
+var _da_bao_song := false
 
 
 func initial_shared_state(ids: Array, _seed: int) -> Dictionary:
@@ -38,6 +39,10 @@ func _present_shared_players() -> void:
 	wave.position = Vector3(direction.x, 0, direction.y) * float(sample.front)
 	wave.rotation.y = atan2(direction.x, direction.y)
 	wave.visible = bool(sample.active) and _chay and gio() >= 0
+	var dang_bao_song := bool(sample.warning) and _chay and gio() >= 0
+	if dang_bao_song and not _da_bao_song:
+		AmThanh.phat(BangAmThanh.SFX_SONG)
+	_da_bao_song = dang_bao_song
 	var covers := san.get_node("Shelters").get_children()
 	var rocks := san.get_node("Rocks").get_children()
 	var index := 0

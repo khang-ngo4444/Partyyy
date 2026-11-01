@@ -42,6 +42,7 @@ func _luat_moi_nhip() -> void:
 	var elapsed := gio()
 	while _wave + 1 < _schedule.size() and elapsed >= float(_schedule[_wave + 1].start) - telegraph_seconds:
 		_wave += 1
+		AmThanh.phat(BangAmThanh.SFX_LASER)
 	if _wave < 0:
 		return
 	var wave: Dictionary = _schedule[_wave]

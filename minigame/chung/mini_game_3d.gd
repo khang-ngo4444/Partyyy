@@ -263,6 +263,7 @@ func _net_danh(ke_danh: int, nan: int, huong: Vector3, loai: int) -> void:
 	var forward := Vector3(-source.global_basis.z.x, 0, -source.global_basis.z.z).normalized()
 	if delta.length() < 0.001 or delta.length() > float(TAM_DON[loai]) or forward.dot(delta.normalized()) < float(GOC_DON[loai]):
 		return
+	AmThanh.phat(BangAmThanh.SFX_CHUONG if loai == DON_CHUONG else BangAmThanh.SFX_DANH)
 	source.play_action("kick" if loai == DON_CHUONG else "attack")
 	target.play_reaction("knockdown" if loai == DON_CHUONG else "stun", GIAY_CHOANG)
 	if nan == NetManager.local_id():
@@ -331,6 +332,7 @@ func _net_chet(id: int, giay: float) -> void:
 		return
 	_song[id] = giay
 	_thu_tu_chet.append(id)
+	AmThanh.phat(BangAmThanh.SFX_LOAI)
 	var nguoi_chet := _nguoi(id)
 	if nguoi_chet != null:
 		nguoi_chet.play_reaction("death")
@@ -470,10 +472,15 @@ func network_parameters() -> Dictionary:
 
 func apply_shared_state(snapshot: Dictionary) -> void:
 	shared_snapshot = snapshot.duplicate(true)
+	var so_song_truoc := so_con_song()
+	var da_co_nguoi := not _song.is_empty()
 	_song.clear()
 	var alive: Dictionary = snapshot["alive"]
 	for key: Variant in alive:
 		_song[int(key)] = float(alive[key])
+	# Trò dùng session chung không đi qua `_net_chet`.
+	if da_co_nguoi and so_con_song() < so_song_truoc:
+		AmThanh.phat(BangAmThanh.SFX_LOAI)
 	if snapshot["phase"] == "ENDED" and not _da_chot:
 		_het_luc = float(snapshot["ended"]) - float(snapshot["start"])
 		_da_chot = true

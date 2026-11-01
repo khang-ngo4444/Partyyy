@@ -53,6 +53,8 @@ func _consume_swings(state: Dictionary) -> void:
 		if int(event.serial) <= int(_seen_events.get(seen_key, 0)):
 			continue
 		_seen_events[seen_key] = int(event.serial)
+		if gio() - float(event.time) <= EVENT_GRACE:
+			AmThanh.phat(BangAmThanh.SFX_SON)
 		var player := _nguoi(int(key))
 		if player != null and not player.is_mine and gio() - float(event.time) <= EVENT_GRACE:
 			player.play_action()

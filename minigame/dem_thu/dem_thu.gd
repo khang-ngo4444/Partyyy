@@ -180,6 +180,8 @@ func _net_tra_loi(id: int, vong: int, so: int, giay: float) -> void:
 	var da: Array = _diem[id]
 	if da.size() > 2 and int(da[2]) >= vong:
 		return
+	if id == NetManager.local_id():
+		AmThanh.phat(BangAmThanh.SFX_TRA_LOI)
 	var dung := int(da[0]) + (1 if so == int(_lich[vong]["dap_an"]) else 0)
 	_diem[id] = [dung, float(da[1]) + clampf(giay, 0.0, GIAY_TRA_LOI), vong]
 

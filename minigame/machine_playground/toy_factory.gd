@@ -12,6 +12,7 @@ const GUN_SCENE = preload("res://asset/cartoon_props/water_gun/water_gun.tscn")
 const PART_NAMES := ["Thân", "Bình", "Bơm", "Ống", "Vòi"]
 const SHOT_RANGE := 13.0
 const AIM_DOT := 0.94
+var _giay_tia_da_keu := -1.0
 var _items: Array[Node3D] = []
 var _benches: Dictionary = {}
 var _guns: Dictionary = {}
@@ -101,6 +102,9 @@ func _present_shot(state: Dictionary) -> void:
 	var shot: Dictionary = state.shots.back()
 	if gio() - float(shot.time) > 0.18:
 		return
+	if float(shot.time) != _giay_tia_da_keu:
+		_giay_tia_da_keu = float(shot.time)
+		AmThanh.phat(BangAmThanh.SFX_PHUN)
 	var origin := Vector3(float(shot.origin[0]), 1.1, float(shot.origin[1]))
 	var direction := Vector3(float(shot.direction[0]), 0, float(shot.direction[1]))
 	spray.position = origin + direction * SHOT_RANGE * 0.5
