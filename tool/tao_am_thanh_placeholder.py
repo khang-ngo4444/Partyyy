@@ -1,0 +1,209 @@
+"""Sinh nhạc + SFX placeholder vào asset/audio/ (xem asset/audio/README.md).
+
+Chạy: python tool/tao_am_thanh_placeholder.py  (từ gốc project, cần ffmpeg trên PATH)
+File đã có thì BỎ QUA để không đè file thật bạn đã thay; thêm --ghi-de để sinh lại hết.
+
+Nhạc: tổng hợp chiptune đơn giản, mỗi trò một giọng/nhịp để nghe là biết đang phát đúng bộ.
+SFX: chép từ bộ Kenney CC0 có sẵn trong asset/.
+"""
+import argparse
+import math
+import random
+import shutil
+import struct
+import subprocess
+import tempfile
+import wave
+from pathlib import Path
+
+GOC = Path(__file__).resolve().parent.parent
+THU_MUC_NHAC = GOC / "asset" / "audio" / "nhac"
+THU_MUC_SFX = GOC / "asset" / "audio" / "sfx"
+IMPACT = GOC / "asset" / "kenney_impact-sounds" / "Audio"
+INTERFACE = GOC / "asset" / "kenney_interface-sounds" / "Audio"
+
+TAN_SO_MAU = 22050
+CHAT_LUONG_VORBIS = "1"
+MIDI_LA4 = 69
+HZ_LA4 = 440.0
+SO_NOT_MOI_NHIP = 4
+SO_NHIP_VONG_LAP = 8
+GIAY_KET_QUA = 3.5
+BIEN_DO = 0.32
+THANG_TRUONG = (0, 2, 4, 5, 7, 9, 11)
+THANG_THU = (0, 2, 3, 5, 7, 8, 10)
+HOA_AM_TIEN_TRINH = (0, 3, 4, 3)
+
+# ma: (nốt gốc MIDI, nhịp/phút, thang âm, dạng sóng)
+BO_NHAC = {
+	"menu": (62, 104, THANG_TRUONG, "tam_giac"),
+	"ban_co": (60, 96, THANG_TRUONG, "tam_giac"),
+	"tank_battle": (50, 132, THANG_THU, "vuong"),
+	"breaking_blocks": (57, 124, THANG_THU, "tam_giac"),
+	"laser_leap": (62, 148, THANG_THU, "rang_cua"),
+	"spotlights": (53, 88, THANG_THU, "tam_giac"),
+	"explosive": (55, 156, THANG_THU, "vuong"),
+	"magma": (48, 112, THANG_THU, "rang_cua"),
+	"crown": (65, 120, THANG_TRUONG, "vuong"),
+	"word_wars": (67, 108, THANG_TRUONG, "tam_giac"),
+	"dem_thu": (64, 100, THANG_TRUONG, "vuong"),
+	"lo_da": (52, 140, THANG_THU, "tam_giac"),
+	"toy_factory": (69, 128, THANG_TRUONG, "rang_cua"),
+	"wave_hide": (59, 92, THANG_TRUONG, "tam_giac"),
+	"minefield": (47, 104, THANG_THU, "vuong"),
+	"paint": (72, 136, THANG_TRUONG, "tam_giac"),
+}
+
+# Menu và bàn cờ chỉ có một bản, không có đếm ngược / kết quả.
+CHI_CO_BAN_CHOI = {"menu", "ban_co"}
+
+# Tiếng click gốc quá to so với mọi thứ còn lại nên hạ sẵn trong file.
+GIAM_DB_SFX = {"bam_nut": 9}
+
+# tên SFX: file nguồn Kenney
+BO_SFX = {
+	"bam_nut": INTERFACE / "click_003.ogg",
+	"xuc_xac": IMPACT / "impactWood_light_001.ogg",
+	"buoc_chan": IMPACT / "footstep_wood_000.ogg",
+	"luot_moi": INTERFACE / "select_002.ogg",
+	"nhan_tien": INTERFACE / "confirmation_001.ogg",
+	"mat_mau": IMPACT / "impactSoft_medium_000.ogg",
+	"nhan_cup": INTERFACE / "maximize_003.ogg",
+	"dung_do": INTERFACE / "open_002.ogg",
+	"thang_van": INTERFACE / "confirmation_004.ogg",
+	"dem_nguoc": INTERFACE / "tick_001.ogg",
+	"bat_dau": INTERFACE / "maximize_006.ogg",
+	"thang": INTERFACE / "confirmation_002.ogg",
+	"thua": INTERFACE / "error_006.ogg",
+	"danh": IMPACT / "impactPunch_medium_000.ogg",
+	"chuong": IMPACT / "impactPunch_heavy_000.ogg",
+	"loai": IMPACT / "impactSoft_heavy_000.ogg",
+	"ban": IMPACT / "impactMetal_heavy_000.ogg",
+	"no": IMPACT / "impactPlate_heavy_000.ogg",
+	"vo": IMPACT / "impactMining_000.ogg",
+	"chuyen_bom": INTERFACE / "pluck_001.ogg",
+	"doi_mien": INTERFACE / "bong_001.ogg",
+	"go_chu": INTERFACE / "tick_004.ogg",
+	"tra_loi": INTERFACE / "select_005.ogg",
+	"ve_dich": INTERFACE / "confirmation_003.ogg",
+	"phun": INTERFACE / "scratch_002.ogg",
+	"laser": INTERFACE / "glitch_002.ogg",
+	"song": INTERFACE / "question_002.ogg",
+	"son": INTERFACE / "drop_002.ogg",
+}
+
+
+def tan_so(midi: int) -> float:
+	return HZ_LA4 * 2.0 ** ((midi - MIDI_LA4) / 12.0)
+
+
+def mau_song(dang: str, pha: float) -> float:
+	pha %= 1.0
+	if dang == "vuong":
+		return 1.0 if pha < 0.5 else -1.0
+	if dang == "rang_cua":
+		return 2.0 * pha - 1.0
+	return 4.0 * abs(pha - 0.5) - 1.0
+
+
+def not_thang(goc: int, thang: tuple, bac: int) -> int:
+	quang_tam, trong_thang = divmod(bac, len(thang))
+	return goc + 12 * quang_tam + thang[trong_thang]
+
+
+def them_not(dem: list, bat_dau: int, do_dai: int, midi: int, dang: str, am_luong: float) -> None:
+	"""Cộng một nốt vào bộ đệm; fade đầu/cuối để không kêu tách, gói vòng để lặp liền mạch."""
+	hz = tan_so(midi)
+	fade = min(TAN_SO_MAU // 200, do_dai // 2)
+	for i in range(do_dai):
+		bao = min(1.0, i / fade, (do_dai - i) / fade) * math.exp(-1.8 * i / do_dai)
+		vi_tri = (bat_dau + i) % len(dem)
+		dem[vi_tri] += am_luong * bao * mau_song(dang, hz * i / TAN_SO_MAU)
+
+
+def vong_lap(goc: int, bpm: int, thang: tuple, dang: str, ngau_nhien: random.Random, so_nhip: int) -> list:
+	mau_moi_not = int(TAN_SO_MAU * 60.0 / bpm / SO_NOT_MOI_NHIP * 2)
+	so_not = so_nhip * SO_NOT_MOI_NHIP
+	dem = [0.0] * (mau_moi_not * so_not)
+	for vi_tri in range(so_not):
+		hop_am = HOA_AM_TIEN_TRINH[vi_tri // SO_NOT_MOI_NHIP % len(HOA_AM_TIEN_TRINH)]
+		bat_dau = vi_tri * mau_moi_not
+		if vi_tri % SO_NOT_MOI_NHIP == 0:
+			them_not(dem, bat_dau, mau_moi_not * SO_NOT_MOI_NHIP, not_thang(goc - 12, thang, hop_am), "tam_giac", 0.6)
+		if ngau_nhien.random() < 0.75:
+			bac = hop_am + ngau_nhien.choice((0, 2, 4, 7))
+			them_not(dem, bat_dau, mau_moi_not, not_thang(goc + 12, thang, bac), dang, 0.3)
+	return dem
+
+
+def ket_qua(goc: int, thang: tuple, dang: str) -> list:
+	"""Câu nhạc ngắn đi lên rồi ngân, không lặp."""
+	dem = [0.0] * int(TAN_SO_MAU * GIAY_KET_QUA)
+	mau_moi_not = TAN_SO_MAU // 6
+	for i, bac in enumerate((0, 2, 4, 7)):
+		them_not(dem, i * mau_moi_not, mau_moi_not, not_thang(goc + 12, thang, bac), dang, 0.45)
+	bat_dau_ngan = 4 * mau_moi_not
+	for bac in (0, 2, 4):
+		them_not(dem, bat_dau_ngan, len(dem) - bat_dau_ngan, not_thang(goc, thang, bac + 7), "tam_giac", 0.4)
+	return dem
+
+
+def ghi_ogg(dem: list, dich: Path) -> None:
+	lon_nhat = max(max(abs(m) for m in dem), 1e-6)
+	du_lieu = struct.pack("<%dh" % len(dem), *(int(m / lon_nhat * BIEN_DO * 32767) for m in dem))
+	dich.parent.mkdir(parents=True, exist_ok=True)
+	with tempfile.TemporaryDirectory() as tam:
+		wav = Path(tam) / "nhac.wav"
+		with wave.open(str(wav), "wb") as f:
+			f.setnchannels(1)
+			f.setsampwidth(2)
+			f.setframerate(TAN_SO_MAU)
+			f.writeframes(du_lieu)
+		subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(wav),
+				"-c:a", "libvorbis", "-q:a", CHAT_LUONG_VORBIS, str(dich)], check=True)
+
+
+def sinh_nhac(ghi_de: bool) -> int:
+	so_file = 0
+	for ma, (goc, bpm, thang, dang) in BO_NHAC.items():
+		# Hạt giống cố định theo mã: chạy lại ra đúng giai điệu cũ.
+		ngau_nhien = random.Random(ma)
+		bo = {"choi": lambda: vong_lap(goc, bpm, thang, dang, ngau_nhien, SO_NHIP_VONG_LAP)}
+		if ma not in CHI_CO_BAN_CHOI:
+			bo["dem_nguoc"] = lambda: vong_lap(goc - 5, bpm, thang, "tam_giac", ngau_nhien, 2)
+			bo["ket_qua"] = lambda: ket_qua(goc, thang, dang)
+		for pha, tao in bo.items():
+			dich = THU_MUC_NHAC / ma / (pha + ".ogg")
+			if dich.exists() and not ghi_de:
+				continue
+			ghi_ogg(tao(), dich)
+			so_file += 1
+	return so_file
+
+
+def chep_sfx(ghi_de: bool) -> int:
+	THU_MUC_SFX.mkdir(parents=True, exist_ok=True)
+	so_file = 0
+	for ten, nguon in BO_SFX.items():
+		dich = THU_MUC_SFX / (ten + ".ogg")
+		if dich.exists() and not ghi_de:
+			continue
+		if ten in GIAM_DB_SFX:
+			subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(nguon), "-af",
+					"volume=-%ddB" % GIAM_DB_SFX[ten], "-c:a", "libvorbis", str(dich)], check=True)
+		else:
+			shutil.copyfile(nguon, dich)
+		so_file += 1
+	return so_file
+
+
+def main() -> None:
+	doc = argparse.ArgumentParser(description=__doc__)
+	doc.add_argument("--ghi-de", action="store_true", help="sinh lại cả file đã có (mất file bạn đã thay)")
+	tham_so = doc.parse_args()
+	print("Nhạc mới: %d file" % sinh_nhac(tham_so.ghi_de))
+	print("SFX mới: %d file" % chep_sfx(tham_so.ghi_de))
+
+
+if __name__ == "__main__":
+	main()

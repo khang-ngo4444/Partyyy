@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://b5akvcg0bx7cg"]
+
+[ext_resource type="Script" uid="uid://f7v2iiyeg64k" path="res://autoload/am_thanh.gd" id="1_ddyfi"]
+
+[node name="AmThanh" type="Node" unique_id=1619995449]
+process_mode = 3
+script = ExtResource("1_ddyfi")
+
+[node name="NhacA" type="AudioStreamPlayer" parent="." unique_id=1618652618]
+
+[node name="NhacB" type="AudioStreamPlayer" parent="." unique_id=1463765351]
+
+[node name="Sfx" type="Node" parent="." unique_id=1920991710]
+
+[node name="Loa1" type="AudioStreamPlayer" parent="Sfx" unique_id=1263547242]
+
+[node name="Loa2" type="AudioStreamPlayer" parent="Sfx" unique_id=1004484681]
+
+[node name="Loa3" type="AudioStreamPlayer" parent="Sfx" unique_id=755649104]
+
+[node name="Loa4" type="AudioStreamPlayer" parent="Sfx" unique_id=377086394]
+
+[node name="Loa5" type="AudioStreamPlayer" parent="Sfx" unique_id=1537557965]
+
+[node name="Loa6" type="AudioStreamPlayer" parent="Sfx" unique_id=2082082712]
+
+[node name="Loa7" type="AudioStreamPlayer" parent="Sfx" unique_id=125452909]
+
+[node name="Loa8" type="AudioStreamPlayer" parent="Sfx" unique_id=1747897602]

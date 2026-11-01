@@ -9,6 +9,9 @@ signal camera_motion_changed(enabled: bool)
 signal closed
 
 const SETTINGS_PATH := "user://party_settings.cfg"
+const AM_LUONG_TONG_MAC_DINH := 80.0
+const AM_LUONG_NHAC_MAC_DINH := 70.0
+const AM_LUONG_SFX_MAC_DINH := 100.0
 const CHAT_LUONG := [
 	[0, "TỰ ĐỘNG", "Tự giữ 60 FPS", "wrench"],
 	[1, "MƯỢT", "Cho máy yếu", "fastForward"],
@@ -28,6 +31,10 @@ var _dang_nap := false
 @onready var tabs: TabContainer = %Tabs
 @onready var volume_slider: HSlider = %VolumeSlider
 @onready var volume_value: Label = %VolumeValue
+@onready var nhac_slider: HSlider = %NhacSlider
+@onready var nhac_value: Label = %NhacValue
+@onready var sfx_slider: HSlider = %SfxSlider
+@onready var sfx_value: Label = %SfxValue
 @onready var fullscreen_check: CheckButton = %FullscreenCheck
 @onready var camera_motion_check: CheckButton = %CameraMotionCheck
 @onready var reduce_motion_check: CheckButton = %ReduceMotionCheck
@@ -62,7 +69,9 @@ func _ready() -> void:
 		var lb := Label.new()
 		lb.text = p[1]
 		bang_phim.add_child(lb)
-	volume_slider.value_changed.connect(_set_volume)
+	volume_slider.value_changed.connect(_dat_am_luong.bind(AmThanh.BUS_MASTER, volume_value))
+	nhac_slider.value_changed.connect(_dat_am_luong.bind(AmThanh.BUS_NHAC, nhac_value))
+	sfx_slider.value_changed.connect(_dat_am_luong.bind(AmThanh.BUS_SFX, sfx_value))
 	ui_scale_slider.value_changed.connect(_set_ui_scale)
 	fullscreen_check.toggled.connect(_set_fullscreen)
 	camera_motion_check.toggled.connect(func(on): camera_motion_changed.emit(on); _luu())
@@ -114,13 +123,11 @@ func _input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 
-func _set_volume(value: float) -> void:
-	var linear := value / 100.0
-	AudioServer.set_bus_volume_db(0, linear_to_db(linear) if linear > 0.0 else -80.0)
-	AudioServer.set_bus_mute(0, value <= 0.0)
-	volume_value.text = "%d%%" % roundi(value)
+func _dat_am_luong(value: float, bus: StringName, nhan: Label) -> void:
+	AmThanh.dat_am_luong(bus, value)
+	nhan.text = "%d%%" % roundi(value)
 	if not _dang_nap:
-		UINav.nay(volume_value, 1.15)
+		UINav.nay(nhan, 1.15)
 
 
 func _set_ui_scale(value: float) -> void:
@@ -148,7 +155,9 @@ func _chat_luong_hien_tai() -> int:
 
 
 func _mac_dinh() -> void:
-	volume_slider.value = 80
+	volume_slider.value = AM_LUONG_TONG_MAC_DINH
+	nhac_slider.value = AM_LUONG_NHAC_MAC_DINH
+	sfx_slider.value = AM_LUONG_SFX_MAC_DINH
 	ui_scale_slider.value = 100
 	fullscreen_check.button_pressed = false
 	camera_motion_check.button_pressed = true
@@ -160,15 +169,22 @@ func _nap() -> void:
 	_dang_nap = true
 	var cfg := ConfigFile.new()
 	cfg.load(SETTINGS_PATH)
-	var volume := float(cfg.get_value("audio", "master_volume", 80.0))
+	var volume := float(cfg.get_value("audio", "master_volume", AM_LUONG_TONG_MAC_DINH))
+	var nhac := float(cfg.get_value("audio", "music_volume", AM_LUONG_NHAC_MAC_DINH))
+	var sfx := float(cfg.get_value("audio", "sfx_volume", AM_LUONG_SFX_MAC_DINH))
 	var fullscreen := bool(cfg.get_value("display", "fullscreen",
 			DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN))
 	var motion := bool(cfg.get_value("display", "menu_camera_motion", true))
 	var giam := bool(cfg.get_value("display", "reduce_motion", false))
 	var co := float(cfg.get_value("display", "ui_scale", 1.0))
 	var mode := clampi(int(cfg.get_value("display", "graphics_mode", 0)), 0, 3)
+	# Gọi tay vì đổi thanh trượt về đúng giá trị cũ thì không phát signal.
 	volume_slider.value = volume
-	_set_volume(volume)
+	_dat_am_luong(volume, AmThanh.BUS_MASTER, volume_value)
+	nhac_slider.value = nhac
+	_dat_am_luong(nhac, AmThanh.BUS_NHAC, nhac_value)
+	sfx_slider.value = sfx
+	_dat_am_luong(sfx, AmThanh.BUS_SFX, sfx_value)
 	ui_scale_slider.value = co * 100.0
 	fullscreen_check.button_pressed = fullscreen
 	_set_fullscreen(fullscreen)
@@ -188,6 +204,8 @@ func _luu() -> void:
 	var cfg := ConfigFile.new()
 	cfg.load(SETTINGS_PATH)
 	cfg.set_value("audio", "master_volume", volume_slider.value)
+	cfg.set_value("audio", "music_volume", nhac_slider.value)
+	cfg.set_value("audio", "sfx_volume", sfx_slider.value)
 	cfg.set_value("display", "fullscreen", fullscreen_check.button_pressed)
 	cfg.set_value("display", "menu_camera_motion", camera_motion_check.button_pressed)
 	cfg.set_value("display", "reduce_motion", reduce_motion_check.button_pressed)

@@ -103,6 +103,58 @@ theme_type_variation = &"ChuPhu"
 text = "←/→ chỉnh khi đang chọn thanh trượt. Kéo về 0 để tắt tiếng."
 autowrap_mode = 3
 
+[node name="NhacTitle" type="Label" parent="Center/Panel/VBox/Tabs/ÂM THANH" unique_id=902707334]
+layout_mode = 2
+theme_type_variation = &"ChuDauMuc"
+text = "Nhạc nền"
+
+[node name="NhacRow" type="HBoxContainer" parent="Center/Panel/VBox/Tabs/ÂM THANH" unique_id=1968669665]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="NhacSlider" type="HSlider" parent="Center/Panel/VBox/Tabs/ÂM THANH/NhacRow" unique_id=1922248775]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+step = 5.0
+value = 80.0
+
+[node name="NhacValue" type="Label" parent="Center/Panel/VBox/Tabs/ÂM THANH/NhacRow" unique_id=1609540532]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+theme_type_variation = &"ChuDauMuc"
+text = "80%"
+horizontal_alignment = 2
+
+[node name="SfxTitle" type="Label" parent="Center/Panel/VBox/Tabs/ÂM THANH" unique_id=1829606006]
+layout_mode = 2
+theme_type_variation = &"ChuDauMuc"
+text = "Hiệu ứng"
+
+[node name="SfxRow" type="HBoxContainer" parent="Center/Panel/VBox/Tabs/ÂM THANH" unique_id=868962505]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SfxSlider" type="HSlider" parent="Center/Panel/VBox/Tabs/ÂM THANH/SfxRow" unique_id=1464452744]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+step = 5.0
+value = 80.0
+
+[node name="SfxValue" type="Label" parent="Center/Panel/VBox/Tabs/ÂM THANH/SfxRow" unique_id=1615645435]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+theme_type_variation = &"ChuDauMuc"
+text = "80%"
+horizontal_alignment = 2
+
 [node name="HÌNH ẢNH" type="VBoxContainer" parent="Center/Panel/VBox/Tabs" unique_id=1789242411]
 visible = false
 layout_mode = 2

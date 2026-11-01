@@ -21,6 +21,7 @@ NetManager="*res://autoload/net_manager.gd"
 PerformanceManager="*res://autoload/performance_manager.gd"
 UINavHook="*res://autoload/ui_dieu_huong.gd"
 _mcp_game_helper="*res://addons/godot_ai/runtime/game_helper.gd"
+AmThanhHook="*res://autoload/am_thanh.tscn"
 
 [display]
 
