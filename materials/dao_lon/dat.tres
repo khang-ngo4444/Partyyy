@@ -1,0 +1,20 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://b2v2c8fobgjnf"]
+
+[ext_resource type="Shader" uid="uid://4y4sqvawsfct" path="res://materials/dao_lon/dat_dao.gdshader" id="1_eficx"]
+[ext_resource type="Texture2D" uid="uid://cnow2umu27rxb" path="res://asset/generated/rumble_reef/sand_albedo.png" id="2_0cij1"]
+[ext_resource type="Texture2D" uid="uid://b4rjcnyp0el5i" path="res://asset/generated/rumble_reef/grass_albedo.png" id="2_vhevn"]
+[ext_resource type="Texture2D" uid="uid://rroohr0irmel" path="res://asset/generated/rumble_reef/cliff_albedo.png" id="4_iw71w"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_eficx")
+shader_parameter/tex_cat = ExtResource("2_0cij1")
+shader_parameter/tex_co = ExtResource("2_vhevn")
+shader_parameter/tex_da = ExtResource("4_iw71w")
+shader_parameter/mau_dat_duong = Color(0.6, 0.43, 0.27, 1)
+shader_parameter/mau_da_tuoi = Color(1.25, 1.12, 0.95, 1)
+shader_parameter/mau_nui_lua = Color(0.13, 0.11, 0.12, 1)
+shader_parameter/muc_nuoc = -4.0
+shader_parameter/ti_le_co = 0.17
+shader_parameter/ti_le_da = 0.09
+shader_parameter/ti_le_cat = 0.14

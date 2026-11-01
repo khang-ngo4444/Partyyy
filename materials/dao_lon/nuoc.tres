@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://dp6jsfi28ttdl"]
+
+[ext_resource type="Shader" uid="uid://bif4uqxln4grv" path="res://materials/dao_lon/nuoc_chay.gdshader" id="1_pllfd"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_pllfd")
+shader_parameter/mau_nuoc = Color(0.1, 0.7, 0.78, 1)
+shader_parameter/mau_bot = Color(0.93, 0.99, 1, 1)
+shader_parameter/toc_chay = 2.4

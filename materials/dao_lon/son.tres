@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://b0ed0tifceax2"]
+
+[ext_resource type="Shader" uid="uid://cj52ara1c82sm" path="res://materials/dao_lon/da_khoi.gdshader" id="1_f5o6o"]
+[ext_resource type="Texture2D" uid="uid://rroohr0irmel" path="res://asset/generated/rumble_reef/cliff_albedo.png" id="2_l7gxu"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_f5o6o")
+shader_parameter/tex_da = ExtResource("2_l7gxu")
+shader_parameter/ti_le = 0.8
+shader_parameter/do_tuong_phan = 0.22

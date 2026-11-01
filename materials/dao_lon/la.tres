@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://s0hx46boaa0d"]
+
+[ext_resource type="Shader" uid="uid://cyocjuvm5t7rf" path="res://materials/dao_lon/la_gio.gdshader" id="1_7n7ka"]
+[ext_resource type="Texture2D" uid="uid://b4rjcnyp0el5i" path="res://asset/generated/rumble_reef/grass_albedo.png" id="2_q6wu1"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_7n7ka")
+shader_parameter/tex_la = ExtResource("2_q6wu1")
+shader_parameter/ti_le_la = 0.55
+shader_parameter/cuong_do_gio = 0.09
+shader_parameter/toc_gio = 1.4
+shader_parameter/xuyen_la = Color(0.55, 0.75, 0.2, 1)

@@ -1,0 +1,110 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://mqfwinmpkaf"
+path="res://.godot/imported/dao_xa.glb-c951abbbb0dc94f4e75d12e4cbba99ff.scn"
+
+[deps]
+
+source_file="res://asset/generated/dao_lon/dao_xa.glb"
+dest_files=["res://.godot/imported/dao_xa.glb-c951abbbb0dc94f4e75d12e4cbba99ff.scn"]
+
+[params]
+
+nodes/root_type=""
+nodes/root_name=""
+nodes/root_script=null
+mesh_library/use_node_names_as_mesh_names=false
+array_mesh/deduplicate_surfaces=true
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=true
+nodes/use_node_type_suffixes=true
+meshes/ensure_tangents=false
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=false
+animation/remove_immutable_tracks=true
+animation/import_rest_as_RESET=false
+import_script/path=""
+materials/extract=0
+materials/extract_format=0
+materials/extract_path=""
+_subresources={
+"materials": {
+"da": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://materials/dao_lon/da.tres",
+"use_external/path": "uid://c3duyjbqd41w8"
+},
+"dat": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://materials/dao_lon/dat.tres",
+"use_external/path": "uid://b2v2c8fobgjnf"
+},
+"dung_nham": {
+"use_external/enabled": true,
+"use_external/path": "res://materials/dao_lon/dung_nham.tres"
+},
+"kim": {
+"use_external/enabled": true,
+"use_external/path": "res://materials/dao_lon/kim.tres"
+},
+"la": {
+"use_external/enabled": true,
+"use_external/path": "res://materials/dao_lon/la.tres"
+},
+"mau": {
+"use_external/enabled": true,
+"use_external/path": "res://materials/dao_lon/son.tres"
+},
+"may": {
+"use_external/enabled": true,
+"use_external/path": "res://materials/dao_lon/may.tres"
+},
+"nuoc": {
+"use_external/enabled": true,
+"use_external/path": "res://materials/dao_lon/nuoc.tres"
+},
+"phat_sang": {
+"use_external/enabled": true,
+"use_external/path": "res://materials/dao_lon/phat_sang.tres"
+},
+"tia_sang": {
+"use_external/enabled": true,
+"use_external/path": "res://materials/dao_lon/tia_sang.tres"
+}
+},
+"meshes": {
+"dao_xa_cot_da": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://asset/generated/dao_lon/mesh/cot_da.res",
+"save_to_file/path": "uid://byl3x2knhbqab"
+},
+"dao_xa_dao_xa": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://asset/generated/dao_lon/mesh/dao_xa.res",
+"save_to_file/path": "uid://diukbpwvs36pf"
+}
+}
+}
+gltf/naming_version=2
+gltf/embedded_image_handling=1
+gltf/texture_map_mode=1

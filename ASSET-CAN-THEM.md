@@ -290,7 +290,7 @@ chỉ còn logic. Sửa hình thì mở scene trong editor.
 
 | Scene | Ghi chú |
 |---|---|
-| `board/ban_party_map.tscn` (quần đảo Rumble Reef, ~1370 node) | Vật chuyển động thuộc group `ban_do_xoay` / `ban_do_nhap_nho` / `ban_do_bay_vong` / `ban_do_troi`, thông số ở metadata. Lối gỗ `Boardwalk_*` và chân ô `TilePedestal_*` đặt theo vị trí ô lúc lưu — dời ô trong `ban_party.tscn` thì kéo chúng theo |
+| `board/dao_nui_lua.tscn` (đảo núi lửa) | Mesh sinh bằng `python 3d/ban_do/tao_ban_do.py` theo vị trí ô trong `ban_party.tscn` (đường, bệ ô, sông, cây bám ô). Dời ô thì chạy lại script, rồi `3d/ban_do/va_import.py` và reimport. Vật chuyển động dùng script `VatChuyenDong` |
 | `board/xuc_xac_3d.tscn` | Thân ngà, 12 cạnh vàng, 21 chấm, vòng sáng, chữ |
 | `player/characters/*.tscn` + `player/kaykit_animations.gd` | `AnimationPlayer` đặt sẵn; runtime nạp clip gốc KayKit Character Animations 1.1 và chuẩn hoá tên, bone path, loop; đã bỏ thư viện cũ `hoat_anh_rig_medium.res` |
 | `ui/character_picker.tscn` → `AnhViewport` | SubViewport + camera + 2 đèn chụp ảnh nhân vật |

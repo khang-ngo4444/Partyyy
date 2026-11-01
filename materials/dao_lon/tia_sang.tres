@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://cxw1x376qoo3n"]
+
+[ext_resource type="Shader" uid="uid://bpyulrrcskrxc" path="res://materials/dao_lon/tia_sang.gdshader" id="1_yj5dp"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_yj5dp")
+shader_parameter/mau_tia = Color(1, 0.9, 0.62, 1)

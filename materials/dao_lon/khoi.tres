@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://yhe3ypwrco8n"]
+
+[ext_resource type="Texture2D" uid="uid://wwrc46noud6c" path="res://materials/dao_lon/cham_mem.tres" id="1_rd5v1"]
+
+[resource]
+transparency = 1
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.49019608, 0.47843137, 0.47058824, 1)
+albedo_texture = ExtResource("1_rd5v1")
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false

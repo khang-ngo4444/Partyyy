@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://c2ppi4xhwlosy"]
+
+[ext_resource type="Shader" uid="uid://chhh0hdrpfdej" path="res://materials/dao_lon/may.gdshader" id="1_gkktt"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_gkktt")
+shader_parameter/mau_vien = Color(1, 0.96, 0.86, 1)

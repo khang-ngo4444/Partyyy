@@ -1,0 +1,16 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://bn6qwbpoti1tg"]
+
+[ext_resource type="Shader" uid="uid://drlv83qhi15d8" path="res://materials/rumble_reef_ocean.gdshader" id="1_j73ks"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_j73ks")
+shader_parameter/mau_nong = Color(0.13, 0.88, 0.82, 1)
+shader_parameter/mau_giua = Color(0.02, 0.52, 0.72, 1)
+shader_parameter/mau_sau = Color(0.006, 0.17, 0.42, 1)
+shader_parameter/mau_bot = Color(0.96, 1, 0.98, 1)
+shader_parameter/cao_song = 0.34
+shader_parameter/toc_song = 0.7
+shader_parameter/sau_nong = 2.4
+shader_parameter/sau_toi_da = 5.0
+shader_parameter/rong_bot = 0.85

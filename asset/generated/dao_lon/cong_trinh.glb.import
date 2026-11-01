@@ -1,0 +1,176 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://01jtp7l3igg7"
+path="res://.godot/imported/cong_trinh.glb-da9ec66cd9e0991742f715ea0955627c.scn"
+
+[deps]
+
+source_file="res://asset/generated/dao_lon/cong_trinh.glb"
+dest_files=["res://.godot/imported/cong_trinh.glb-da9ec66cd9e0991742f715ea0955627c.scn"]
+
+[params]
+
+nodes/root_type=""
+nodes/root_name=""
+nodes/root_script=null
+mesh_library/use_node_names_as_mesh_names=false
+array_mesh/deduplicate_surfaces=true
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=true
+nodes/use_node_type_suffixes=true
+meshes/ensure_tangents=false
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=false
+animation/remove_immutable_tracks=true
+animation/import_rest_as_RESET=false
+import_script/path=""
+materials/extract=0
+materials/extract_format=0
+materials/extract_path=""
+_subresources={
+"materials": {
+"da": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://materials/dao_lon/da.tres",
+"use_external/path": "uid://c3duyjbqd41w8"
+},
+"dat": {
+"use_external/enabled": true,
+"use_external/path": "res://materials/dao_lon/dat.tres"
+},
+"dung_nham": {
+"use_external/enabled": true,
+"use_external/path": "res://materials/dao_lon/dung_nham.tres"
+},
+"kim": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://materials/dao_lon/kim.tres",
+"use_external/path": "uid://dhhytmc8ajylp"
+},
+"la": {
+"use_external/enabled": true,
+"use_external/path": "res://materials/dao_lon/la.tres"
+},
+"mau": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://materials/dao_lon/son.tres",
+"use_external/path": "uid://b0ed0tifceax2"
+},
+"may": {
+"use_external/enabled": true,
+"use_external/path": "res://materials/dao_lon/may.tres"
+},
+"nuoc": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://materials/dao_lon/nuoc.tres",
+"use_external/path": "uid://dp6jsfi28ttdl"
+},
+"phat_sang": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://materials/dao_lon/phat_sang.tres",
+"use_external/path": "uid://ebrhawbatjrp"
+},
+"tia_sang": {
+"use_external/enabled": true,
+"use_external/path": "res://materials/dao_lon/tia_sang.tres"
+}
+},
+"meshes": {
+"cong_trinh_cang": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://asset/generated/dao_lon/mesh/cang.res",
+"save_to_file/path": "uid://dtajwrsc1wqim"
+},
+"cong_trinh_coi_xay_dong": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://asset/generated/dao_lon/mesh/coi_xay_dong.res",
+"save_to_file/path": "uid://be370jdvv6feh"
+},
+"cong_trinh_coi_xay_tay": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://asset/generated/dao_lon/mesh/coi_xay_tay.res",
+"save_to_file/path": "uid://bl3essl782vvp"
+},
+"cong_trinh_den_thap": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://asset/generated/dao_lon/mesh/den_thap.res",
+"save_to_file/path": "uid://ci8i87ljsiu4v"
+},
+"cong_trinh_den_ven_duong": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://asset/generated/dao_lon/mesh/den_ven_duong.res",
+"save_to_file/path": "uid://bkeomkb6cqoby"
+},
+"cong_trinh_hai_dang": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://asset/generated/dao_lon/mesh/hai_dang.res",
+"save_to_file/path": "uid://cb1sy5j10stgb"
+},
+"cong_trinh_hoi_cho": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://asset/generated/dao_lon/mesh/hoi_cho.res",
+"save_to_file/path": "uid://bgjoh8xdqljbt"
+},
+"cong_trinh_lang_nam": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://asset/generated/dao_lon/mesh/lang_nam.res",
+"save_to_file/path": "uid://l5l0hgjtrfnk"
+},
+"cong_trinh_vinh_cuop": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://asset/generated/dao_lon/mesh/vinh_cuop.res",
+"save_to_file/path": "uid://bxg4e0264l4td"
+}
+}
+}
+gltf/naming_version=2
+gltf/embedded_image_handling=1
+gltf/texture_map_mode=1

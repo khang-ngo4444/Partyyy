@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://ebrhawbatjrp"]
+
+[ext_resource type="Shader" uid="uid://dbjavcgcbhrcy" path="res://materials/dao_lon/phat_sang.gdshader" id="1_xoq7s"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_xoq7s")
+shader_parameter/do_sang = 2.4
