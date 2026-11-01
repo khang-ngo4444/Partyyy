@@ -307,7 +307,8 @@ func _vao_sanh() -> void:
 	if _lobby != null or _dang_vao_sanh:
 		return
 	_dang_vao_sanh = true
-	await ManChuyen.che("VÀO SẢNH", "Đang dựng sảnh…", ManChuyen.Kieu.REM)
+	await ManChuyen.che("ĐANG CHUẨN BỊ PHÒNG", "Phòng %s · Đang dựng sảnh…" % NetManager.room_name, ManChuyen.Kieu.REM)
+	await ManChuyen.cho_hien_chu()
 	# Rời phòng trong lúc che thì `_on_room_left` đã huỷ yêu cầu này.
 	if not _dang_vao_sanh:
 		return
@@ -362,7 +363,7 @@ func _vao_sanh() -> void:
 	if mb != null:
 		mb.dong_bo_vao_muon()
 	_dang_vao_sanh = false
-	ManChuyen.mo()
+	ManChuyen.mo(ManChuyen.GIAY_DOC_BANG)
 
 
 func _vat_mang(ten: String) -> PackedScene:

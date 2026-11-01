@@ -10,6 +10,7 @@ extends Node
 const SETTINGS_PATH := "user://party_settings.cfg"
 const PHONG := Vector2(1.07, 1.07)
 const LUN := Vector2(0.93, 0.93)
+const GIAY_DAP := 0.28
 ## Chừa chỗ thanh tiêu đề: cỡ cửa sổ của hệ điều hành không tính phần này.
 const CAO_THANH_TIEU_DE := 40
 
@@ -198,7 +199,7 @@ static func dap(c: Control) -> void:
 	c.offset_transform_scale = Vector2(2.2, 2.2)
 	c.modulate.a = 0.0
 	var tw := c.create_tween().set_parallel()
-	tw.tween_property(c, "offset_transform_scale", Vector2.ONE, 0.28) \
+	tw.tween_property(c, "offset_transform_scale", Vector2.ONE, GIAY_DAP) \
 			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tw.tween_property(c, "modulate:a", 1.0, 0.1)
 

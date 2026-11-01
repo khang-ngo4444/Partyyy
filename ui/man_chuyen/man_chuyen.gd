@@ -9,6 +9,10 @@ const GIAY_CHE := 0.45
 const GIAY_LO := 0.45
 ## Che kín tối thiểu bao lâu: đủ đọc chữ và giấu khựng hình lúc dựng scene.
 const GIAY_GIU := 0.6
+## Cho bảng có câu dài, cần người chơi kịp đọc.
+const GIAY_DOC_BANG := 1.5
+## Số khung vẽ đợi để chữ mới và bố cục thẻ lên màn hình thật.
+const SO_KHUNG_VE_CHU := 3
 ## Lưới an toàn: mạng rớt mà không ai gọi `mo` thì cũng không kẹt màn.
 const GIAY_TOI_DA := 15.0
 const GIAY_RAT_NGAN := 0.01
@@ -40,6 +44,7 @@ var _luc_che_xong := 0.0
 ## Tăng mỗi lần có yêu cầu che mới; lịch lộ màn và lưới an toàn cũ tự huỷ khi lệch phiên.
 var _phien := 0
 var _muon_lo := false
+var _giay_giu := GIAY_GIU
 
 @onready var _cac_nen: Dictionary = {
 	Kieu.CHAM: $NenCham,
@@ -82,13 +87,30 @@ static func che_ngay(tieu_de: String, phu := "", kieu := Kieu.CHAM) -> void:
 
 
 ## Lộ cảnh sau khi đã che đủ `GIAY_GIU`; đang che dở thì đợi che xong.
-static func mo() -> void:
+static func mo(giay_giu := GIAY_GIU) -> void:
 	if _ban != null:
+		_ban._giay_giu = giay_giu
 		_ban._yeu_cau_lo()
+
+
+## Chờ thẻ chữ hiện hẳn trên màn. Gọi trước khi dựng scene nặng, vì lúc khựng hình
+## khung cuối cùng được vẽ sẽ đứng yên suốt, mà ngay sau `che` thẻ vẫn còn trong suốt.
+static func cho_hien_chu() -> void:
+	if _ban != null:
+		await _ban._cho_hien_chu()
 
 
 static func dang_phu() -> bool:
 	return _ban != null and _ban._pha != Pha.MO
+
+
+func _cho_hien_chu() -> void:
+	var con_lai := UINav.GIAY_DAP - (Time.get_ticks_msec() / 1000.0 - _luc_che_xong)
+	if con_lai > 0.0 and not UINav.giam_chuyen_dong:
+		await get_tree().create_timer(con_lai, true).timeout
+	# Không dùng `frame_post_draw`: cửa sổ thu nhỏ không vẽ thì sẽ chờ mãi.
+	for i in SO_KHUNG_VE_CHU:
+		await get_tree().process_frame
 
 
 func _che(tieu_de: String, phu: String, kieu: Kieu) -> void:
@@ -120,6 +142,7 @@ func _nhan_yeu_cau_che(tieu_de: String, phu: String, kieu: Kieu) -> void:
 	_phu.visible = not phu.is_empty()
 	_phien += 1
 	_muon_lo = false
+	_giay_giu = GIAY_GIU
 	_hen_luoi_an_toan(_phien)
 
 
@@ -171,7 +194,7 @@ func _yeu_cau_lo() -> void:
 
 
 func _lo_sau_khi_giu(phien: int) -> void:
-	var con_lai := GIAY_GIU - (Time.get_ticks_msec() / 1000.0 - _luc_che_xong)
+	var con_lai := _giay_giu - (Time.get_ticks_msec() / 1000.0 - _luc_che_xong)
 	if con_lai > 0.0:
 		await get_tree().create_timer(_giay(con_lai), true).timeout
 	if phien != _phien or _pha != Pha.DA_CHE:

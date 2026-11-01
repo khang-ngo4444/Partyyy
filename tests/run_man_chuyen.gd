@@ -33,6 +33,8 @@ func _run() -> void:
 		await _kiem_doi_chu()
 		await _kiem_cac_kieu()
 		await _kiem_doi_kieu_khi_da_che()
+		await _kiem_cho_hien_chu()
+		await _kiem_giu_lau_de_doc()
 	print("MAN CHUYEN RUNTIME: %d failures" % failures)
 	quit(1 if failures > 0 else 0)
 
@@ -144,6 +146,31 @@ func _kiem_doi_kieu_khi_da_che() -> void:
 	check(man._tien_do() == 1.0 and man._pha == ManChuyen.Pha.DA_CHE, "đổi kiểu không được hở cảnh")
 	ManChuyen.mo()
 	await _cho(GIAY_DU_DIEN)
+
+
+## Lúc dựng scene nặng, khung vẽ cuối đứng yên: thẻ phải đã rõ hẳn từ trước đó.
+func _kiem_cho_hien_chu() -> void:
+	await ManChuyen.che("L", "", ManChuyen.Kieu.REM)
+	var the: Control = man.get_node("%The")
+	check(the.modulate.a < 1.0, "thiếu điều kiện test: ngay sau che thẻ còn đang hiện dần")
+	await ManChuyen.cho_hien_chu()
+	check(is_equal_approx(the.modulate.a, 1.0), "thẻ phải rõ hẳn sau cho_hien_chu")
+	check(is_equal_approx(the.offset_transform_scale.x, 1.0), "thẻ phải đúng cỡ sau cho_hien_chu")
+	ManChuyen.mo()
+	await _cho(GIAY_DU_DIEN)
+
+
+func _kiem_giu_lau_de_doc() -> void:
+	await ManChuyen.che("M", "", ManChuyen.Kieu.REM)
+	ManChuyen.mo(ManChuyen.GIAY_DOC_BANG)
+	await _cho(ManChuyen.GIAY_GIU + ManChuyen.GIAY_LO)
+	check(man._pha == ManChuyen.Pha.DA_CHE, "bảng cần đọc phải giữ lâu hơn mức thường")
+	await _cho(ManChuyen.GIAY_DOC_BANG - ManChuyen.GIAY_GIU + 0.25)
+	check(man._pha == ManChuyen.Pha.MO, "hết giờ đọc phải lộ lại")
+	await ManChuyen.che("N")
+	ManChuyen.mo()
+	await _cho(ManChuyen.GIAY_GIU + ManChuyen.GIAY_LO + 0.25)
+	check(man._pha == ManChuyen.Pha.MO, "lần che sau phải về mức giữ thường")
 
 
 func _kiem_doi_chu() -> void:
