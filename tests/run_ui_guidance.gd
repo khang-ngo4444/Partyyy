@@ -43,7 +43,11 @@ func _run() -> void:
 	var hud: Control = load("res://ui/hud.tscn").instantiate()
 	root.add_child(hud)
 	hud._cap_nhat_hien_thi()
-	check(not hud.hint_row.visible and not hud.get_node("%CamHint").visible, "Permanent notes should be hidden")
+	check(not hud.hint_row.visible, "Permanent notes should be hidden")
+	hud.cap_nhat_camera(NhanCamera.tu_do("An"))
+	check(hud.cam_label.text == "CAM TỰ DO" and hud.cam_detail.text == "Lượt của An", "Camera card should name mode and turn")
+	hud.cap_nhat_camera({})
+	check(hud.cam_label.text.is_empty(), "Empty camera info should clear the card")
 	controller._dang_chay = true
 	hud._nhac_bai()
 	hud._nhac_poker()

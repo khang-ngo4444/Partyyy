@@ -13,6 +13,8 @@ signal muc_tieu_da_chon(i: int)
 
 const STATUS_REFRESH := 0.2
 const KHOANG_HO_THANH_DUOI := 10.0
+const CAM_BADGE_BO_GOC := 12
+const CAM_BADGE_LE := 5
 
 ## Nhãn hành động poker (chỉ vẽ lựa chọn hợp lệ).
 const TEN_HD := {0: "[1] CHECK", 1: "[2] THEO", 2: "[3] TỐ", 3: "[4] BỎ", 4: "[5] ALL-IN"}
@@ -51,8 +53,9 @@ var _dang_chon_huong := false
 @onready var bang_chon: BangChon = $BangChon
 @onready var kho_do: KhoDo = $KhoDo
 @onready var cam_pill: Control = %CamPill
+@onready var cam_badge: PanelContainer = %CamBadge
 @onready var cam_label: Label = %CamLabel
-@onready var cam_tu_do_hint: Label = %CamTuDoHint
+@onready var cam_detail: Label = %CamDetail
 @onready var dai_phim: DaiPhim = $DaiPhim
 @onready var performance_manager: Node = get_node("/root/PerformanceManager")
 
@@ -62,7 +65,6 @@ func _ready() -> void:
 	bang_ban.thue_da_chon.connect(func(loai: int): thue_da_chon.emit(loai))
 	bang_chon.da_chon.connect(func(i: int): muc_tieu_da_chon.emit(i))
 	kho_do.doi_cho.connect(func(a: int, b: int): doi_cho_do.emit(a, b))
-	%CamHint.visible = false
 	NetManager.room_joined.connect(_on_room_joined)
 	NetManager.peer_joined.connect(func(_id, _uid): _refresh_peers())
 	NetManager.peer_left.connect(func(_id, _inactive): _refresh_peers())
@@ -132,7 +134,6 @@ func _cap_nhat_hien_thi() -> void:
 		kho_do.dong()
 	lobby_info.visible = not _tren_ban and not minigame
 	hint_row.visible = false
-	cam_tu_do_hint.visible = false
 	ping_label.visible = _hien_ping
 	dai_phim.hien(_phim_theo_tinh_huong(qt, minigame), _cach_day_dai_phim(minigame))
 	if minigame:
@@ -308,12 +309,16 @@ func mo_bang_chon(tieu_de: String, nhan: PackedStringArray) -> void:
 	bang_chon.mo(tieu_de, nhan)
 
 
-## Nhãn chế độ camera bàn ("" = ẩn).
-func cap_nhat_camera(nhan: String) -> void:
-	if nhan != cam_label.text and nhan != "":
+## Thẻ camera bàn theo `NhanCamera` (rỗng = ẩn).
+func cap_nhat_camera(thong_tin: Dictionary) -> void:
+	var tieu_de: String = thong_tin.get("tieu_de", "")
+	if tieu_de != cam_label.text and tieu_de != "":
 		UINav.nay(cam_pill, 1.08)
-	cam_label.text = nhan
-	cam_tu_do_hint.visible = false
+	cam_label.text = tieu_de
+	cam_detail.text = thong_tin.get("chi_tiet", "")
+	if thong_tin.has("mau"):
+		cam_badge.add_theme_stylebox_override("panel",
+				UIKit.hop(thong_tin["mau"], CAM_BADGE_BO_GOC, 0, 3, CAM_BADGE_LE))
 
 
 func _hien_hoat_dong_sanh() -> bool:

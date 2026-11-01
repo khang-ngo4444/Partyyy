@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" path="res://ui/trang_thai_ca_nhan.tscn" id="6_personal"]
 [ext_resource type="PackedScene" path="res://ui/bang_chon.tscn" id="7_chon"]
 [ext_resource type="Texture2D" uid="uid://cwvn40snqtoqq" path="res://ui/icons/kenney/home.png" id="8_home"]
+[ext_resource type="Texture2D" uid="uid://dkq3kcmlmn04i" path="res://ui/icons/kenney/video.png" id="8_m0eg6"]
 [ext_resource type="Texture2D" uid="uid://d3xysgxurs86j" path="res://ui/icons/kenney/multiplayer.png" id="9_mp"]
 [ext_resource type="PackedScene" uid="uid://drdnaotm4ycog" path="res://ui/dai_phim.tscn" id="10_ff8ar"]
 [ext_resource type="PackedScene" path="res://ui/kho_do.tscn" id="10_kho"]
@@ -354,6 +355,7 @@ layout_mode = 1
 [node name="CamPill" type="PanelContainer" parent="." unique_id=1507318933]
 unique_name_in_owner = true
 visible = false
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -366,31 +368,47 @@ grow_horizontal = 0
 mouse_filter = 2
 theme_type_variation = &"TheNho"
 
-[node name="Cot" type="VBoxContainer" parent="CamPill" unique_id=134046734]
+[node name="Hang" type="HBoxContainer" parent="CamPill" unique_id=593469134]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 10
 
-[node name="CamLabel" type="Label" parent="CamPill/Cot" unique_id=350978107]
+[node name="CamBadge" type="PanelContainer" parent="CamPill/Hang" unique_id=134013660]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="CamIcon" type="TextureRect" parent="CamPill/Hang/CamBadge" unique_id=1857003808]
+modulate = Color(0.16862746, 0.105882354, 0.23921569, 1)
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("8_m0eg6")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Cot" type="VBoxContainer" parent="CamPill/Hang" unique_id=134046734]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="CamLabel" type="Label" parent="CamPill/Hang/Cot" unique_id=350978107]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"ChuDauMuc"
 theme_override_font_sizes/font_size = 18
 text = "CAM TỰ DO"
+text_overrun_behavior = 3
 
-[node name="CamHint" type="HBoxContainer" parent="CamPill/Cot" unique_id=1553733335]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 10
-
-[node name="CamTuDoHint" type="Label" parent="CamPill/Cot" unique_id=1012426791]
+[node name="CamDetail" type="Label" parent="CamPill/Hang/Cot" unique_id=7295009]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"ChuPhu"
-theme_override_font_sizes/font_size = 15
-text = "Chuột xoay · WASD/mũi tên bay · Lăn chuột tiến/lùi · Shift nhanh"
-autowrap_mode = 3
+theme_override_font_sizes/font_size = 16
+text = "Lượt của bạn"
+text_overrun_behavior = 3
 
 [node name="KhoDo" parent="." unique_id=1180853949 instance=ExtResource("10_kho")]
 layout_mode = 1

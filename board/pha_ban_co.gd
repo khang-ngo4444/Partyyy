@@ -20,8 +20,8 @@ signal hieu_ung(fx: Dictionary)
 ## Hết ván (cờ `thang` trong gói); `main.gd` đóng bàn.
 signal van_thang(id: int)
 
-## Chế độ camera của máy này vừa đổi (HUD vẽ nhãn).
-signal camera_doi(nhan: String)
+## Chế độ camera của máy này vừa đổi (HUD vẽ thẻ theo `NhanCamera`; rỗng = ẩn).
+signal camera_doi(thong_tin: Dictionary)
 
 ## Camera bàn — riêng từng máy, không replicate.
 ## TU_DO: bay tự do (mặc định khi vào bàn). GAN: gắn nhân vật — mình hoặc người đang theo dõi.
@@ -176,7 +176,7 @@ func dong() -> void:
 	muc_theo = 0
 	_ep_cam_toi = false
 	cam_tu_do = null
-	camera_doi.emit("")
+	camera_doi.emit({})
 	chon_huong_doi.emit("")
 	tam_dung = false
 	_camera_cua_toi()
@@ -509,10 +509,16 @@ func _cap_nhat_camera() -> void:
 func _id_theo_doi() -> int:
 	if muc_theo != 0 and nguoi(muc_theo) != null:
 		return muc_theo
+	var id := _id_dang_luot()
+	return id if id >= 0 else NetManager.local_id()
+
+
+## Id người đang tới lượt (-1 = chưa có lượt).
+func _id_dang_luot() -> int:
 	var ds := _thu_tu()
 	var luot := int(tt.get("luot", -1))
 	if luot < 0 or luot >= ds.size():
-		return NetManager.local_id()
+		return -1
 	return int(ds[luot])
 
 
@@ -579,12 +585,20 @@ func doi_nguoi_theo_doi() -> void:
 
 
 func _bao_camera() -> void:
-	if che_do_cam == CheDoCam.TU_DO and not _ep_cam_toi:
-		camera_doi.emit("CAM TỰ DO")
-		return
-	var id := _id_theo_doi()
-	var ten_nguoi := "BẠN" if id == NetManager.local_id() else Player.ten_theo_id(get_tree(), id)
-	camera_doi.emit(("THEO LƯỢT · %s" if muc_theo == 0 else "THEO · %s") % ten_nguoi)
+	var id_luot := _id_dang_luot()
+	var ten_luot := "" if id_luot < 0 else _ten_tren_the(id_luot)
+	if _ep_cam_toi:
+		camera_doi.emit(NhanCamera.ngam_do())
+	elif che_do_cam == CheDoCam.TU_DO:
+		camera_doi.emit(NhanCamera.tu_do(ten_luot))
+	elif muc_theo == 0:
+		camera_doi.emit(NhanCamera.theo_luot(_ten_tren_the(_id_theo_doi())))
+	else:
+		camera_doi.emit(NhanCamera.theo_nguoi(_ten_tren_the(_id_theo_doi()), ten_luot))
+
+
+func _ten_tren_the(id: int) -> String:
+	return "bạn" if id == NetManager.local_id() else Player.ten_theo_id(get_tree(), id)
 
 
 ## Camera về đúng chỗ theo lượt hiện tại (sau khi camera bàn bám mục tiêu / hiệu ứng).
