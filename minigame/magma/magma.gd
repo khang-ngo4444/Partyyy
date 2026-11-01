@@ -278,3 +278,7 @@ func _cho_vao(i: int, tong: int) -> Vector3:
 	var position := super(i, tong)
 	position.y = cao_san(Vector2(position.x, position.z).length())
 	return position
+
+
+func _phim_rieng() -> Array:
+	return [["Chuột", "Ngắm"], ["Giữ chuột trái", "Bắn"]]

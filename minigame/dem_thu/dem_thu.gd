@@ -241,3 +241,7 @@ func _chot_ket_qua() -> void:
 			return int(_diem[a][0]) > int(_diem[b][0])
 		return float(_diem[a][1]) < float(_diem[b][1]))
 	Fusion.rpc(_net_xep_hang, xep)
+
+
+func phim_cua_tro() -> Array:
+	return [["W / S", "Chỉnh số"], ["Space", "Chốt"]]

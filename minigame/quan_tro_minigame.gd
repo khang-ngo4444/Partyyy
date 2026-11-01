@@ -49,6 +49,13 @@ func _ready() -> void:
 	_lop.visible = false
 
 
+## Phím của trò đang chơi; không nhắc lúc đọc luật hay xem kết quả.
+func phim_dang_choi() -> Array:
+	if not _dang_chay or _huong_dan.visible or _the_ket_qua.visible or not is_instance_valid(_game):
+		return []
+	return _game.phim_cua_tro() + [DaiPhim.PHIM_ESC]
+
+
 func dang_chay() -> bool:
 	return _dang_chay
 

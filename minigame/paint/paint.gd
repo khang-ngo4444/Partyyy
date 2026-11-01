@@ -181,3 +181,7 @@ func dung_som() -> void:
 	_name_colors.clear()
 	_view = null
 	super()
+
+
+func _phim_rieng() -> Array:
+	return [["Chuột trái", "Đánh"]]

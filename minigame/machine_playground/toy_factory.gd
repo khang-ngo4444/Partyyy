@@ -196,3 +196,7 @@ func diem_cua(id: int) -> float:
 func chu_diem(id: int) -> String:
 	var finished: Dictionary = shared_snapshot.get("objective", {}).get("finished", {})
 	return "%.1fs" % float(finished[str(id)]) if finished.has(str(id)) else "%d/5" % int(diem_cua(id))
+
+
+func _phim_rieng() -> Array:
+	return [["E", "Nhặt / lắp"], ["Chuột trái", "Bắn"]]

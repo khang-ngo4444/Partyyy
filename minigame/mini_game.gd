@@ -40,3 +40,8 @@ func diem_cua(_id: int) -> float:
 
 func chu_diem(id: int) -> String:
 	return "%.0f" % diem_cua(id)
+
+
+## Phím của trò để HUD nhắc lúc chơi: [["WASD", "Chạy"], ...].
+func phim_cua_tro() -> Array:
+	return []

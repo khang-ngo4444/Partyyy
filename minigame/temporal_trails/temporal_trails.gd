@@ -175,3 +175,7 @@ func _vat_lieu_mau(chi_so_mau: int) -> Material:
 		m.emission = mau
 		_vat_lieu[chi_so_mau] = m
 	return _vat_lieu[chi_so_mau]
+
+
+func _phim_di_chuyen() -> Array:
+	return [["A / D", "Rẽ"]]

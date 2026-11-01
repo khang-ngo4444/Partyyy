@@ -63,7 +63,7 @@ static func gan_phim(c: Control, phim: String) -> Control:
 
 
 ## Chip gợi ý phím: [Space] Tung xúc xắc.
-static func chip_phim(phim: String, mo_ta: String, noi := true) -> HBoxContainer:
+static func chip_phim(phim: String, mo_ta: String, noi := true, co_chu := 19) -> HBoxContainer:
 	var hb := HBoxContainer.new()
 	hb.add_theme_constant_override("separation", 8)
 	hb.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -73,14 +73,14 @@ static func chip_phim(phim: String, mo_ta: String, noi := true) -> HBoxContainer
 	pill.add_theme_stylebox_override("panel", _hop_phim())
 	var k := Label.new()
 	k.text = phim
-	k.add_theme_font_size_override("font_size", 18)
+	k.add_theme_font_size_override("font_size", co_chu - 1)
 	k.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	pill.add_child(k)
 	hb.add_child(pill)
 	var lb := Label.new()
 	lb.text = mo_ta
 	lb.theme_type_variation = &"ChuNoi" if noi else &""
-	lb.add_theme_font_size_override("font_size", 19)
+	lb.add_theme_font_size_override("font_size", co_chu)
 	hb.add_child(lb)
 	return hb
 

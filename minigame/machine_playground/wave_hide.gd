@@ -163,3 +163,7 @@ func diem_cua(id: int) -> float:
 
 func chu_diem(id: int) -> String:
 	return "%d/6" % int(diem_cua(id))
+
+
+func _phim_rieng() -> Array:
+	return [["E", "Đẩy"]]

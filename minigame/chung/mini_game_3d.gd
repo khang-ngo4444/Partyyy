@@ -567,3 +567,21 @@ func _restore_jump_policy() -> void:
 		if _saved_jumps.has(key):
 			player.so_lan_nhay = int(_saved_jumps[key])
 	_saved_jumps.clear()
+
+
+## Di chuyển + phím riêng của trò, cộng nhảy và đòn tay không nếu trò cho phép.
+func phim_cua_tro() -> Array:
+	var ds := _phim_di_chuyen() + _phim_rieng()
+	if allows_jump():
+		ds.append(["Space", "Nhảy"])
+	if co_danh:
+		ds.append_array([["Chuột trái", "Đánh"], ["Chuột phải", "Chưởng"]])
+	return ds
+
+
+func _phim_di_chuyen() -> Array:
+	return [["WASD", "Chạy"]]
+
+
+func _phim_rieng() -> Array:
+	return []

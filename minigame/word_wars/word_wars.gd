@@ -215,3 +215,7 @@ static func tu_cua_chi_so(giong: int, so_xong: int) -> int:
 ## Chữ đã gõ thành `•`.
 static func hien_tu(tu: String, tien: int) -> String:
 	return "•".repeat(tien) + tu.substr(tien)
+
+
+func _phim_rieng() -> Array:
+	return [["E", "Gõ chữ"]]

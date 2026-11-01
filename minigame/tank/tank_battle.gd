@@ -185,3 +185,7 @@ func _chi_so_mau(id: int) -> int:
 
 static func _gio() -> float:
 	return Time.get_ticks_msec() / 1000.0
+
+
+func phim_cua_tro() -> Array:
+	return [["WASD", "Di chuyển"], ["Space / J", "Bắn"]]

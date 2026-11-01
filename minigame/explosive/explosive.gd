@@ -144,3 +144,7 @@ func _fuse_durations() -> Array[float]:
 		var duration: float = lerpf(fuse_first, fuse_last, fraction)
 		durations.append(minf(duration, durations.back()) if not durations.is_empty() else duration)
 	return durations
+
+
+func _phim_rieng() -> Array:
+	return [["E", "Chuyền bom"]]

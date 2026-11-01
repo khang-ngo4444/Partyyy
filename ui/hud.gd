@@ -23,6 +23,7 @@ var _tren_ban := false
 var _dem_cu := -1
 var _ready_cu := ""
 var _hien_ping := false
+var _dang_chon_huong := false
 
 @onready var room_label: Label = %RoomLabel
 @onready var role_pill: Control = %RolePill
@@ -51,6 +52,7 @@ var _hien_ping := false
 @onready var cam_pill: Control = %CamPill
 @onready var cam_label: Label = %CamLabel
 @onready var cam_tu_do_hint: Label = %CamTuDoHint
+@onready var dai_phim: DaiPhim = $DaiPhim
 @onready var performance_manager: Node = get_node("/root/PerformanceManager")
 
 
@@ -131,12 +133,27 @@ func _cap_nhat_hien_thi() -> void:
 	hint_row.visible = false
 	cam_tu_do_hint.visible = false
 	ping_label.visible = _hien_ping
+	dai_phim.hien(_phim_theo_tinh_huong(qt, minigame),
+			DaiPhim.CACH_DAY_MINIGAME if minigame else DaiPhim.CACH_DAY_THUONG)
 	if minigame:
 		ready_card.visible = false
 		countdown.visible = false
 	# Bảng bàn tự bật/tắt theo trạng thái; chỉ che tạm lúc minigame.
 	bang_ban.modulate.a = 0.0 if minigame else 1.0
 	trang_thai_ca_nhan.modulate.a = 0.0 if minigame else 1.0
+
+
+## Bàn bài và ghế ngồi đã có dòng nhắc riêng nên không chồng thêm bảng phím.
+func _phim_theo_tinh_huong(qt: Node, minigame: bool) -> Array:
+	if minigame:
+		return qt.phim_dang_choi()
+	if _tren_ban:
+		return DaiPhim.PHIM_CHON_HUONG if _dang_chon_huong else DaiPhim.PHIM_BAN
+	if card_prompt.text != "" or poker_bar.visible:
+		return []
+	if _local_player != null and is_instance_valid(_local_player) and _local_player.carried() != null:
+		return DaiPhim.PHIM_CAM_DO
+	return DaiPhim.PHIM_SANH
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
@@ -268,6 +285,7 @@ func cap_nhat_giao_dien_ban(hien: bool, chon: int, duoc_dung: bool) -> void:
 
 
 func cap_nhat_chon_huong(noi_dung: String, tieu_de := "") -> void:
+	_dang_chon_huong = noi_dung != ""
 	trang_thai_ca_nhan.dat_chon_huong(noi_dung, tieu_de)
 
 
