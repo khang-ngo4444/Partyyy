@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://jmi2m3pymqvd"]
 
 [ext_resource type="Script" uid="uid://djcche2g26fq2" path="res://board/ban_duong.gd" id="1_bd"]
-[ext_resource type="PackedScene" path="res://board/o_ban.tscn" id="2_o"]
+[ext_resource type="PackedScene" uid="uid://3vag5gfcynec" path="res://board/o_ban.tscn" id="2_o"]
 [ext_resource type="PackedScene" uid="uid://c3hhft32s2phr" path="res://board/ruong_bau.tscn" id="4_ruong"]
 [ext_resource type="PackedScene" path="res://board/cho_ngao.tscn" id="5_cho"]
 [ext_resource type="PackedScene" path="res://board/mui_ten.tscn" id="6_mt"]
