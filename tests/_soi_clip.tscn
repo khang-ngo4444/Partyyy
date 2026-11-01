@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://b1a8iyowqtnyl"]
+
+[node name="SoiClip" type="Node3D" unique_id=1234561555]
+
+[node name="Cam" type="Camera3D" parent="." unique_id=1769578941]
+transform = Transform3D(1, 0, 0, 0, 0.99280864, 0.119712204, 0, -0.119712204, 0.99280864, 0, 2.2, 9.5)
+current = true
+
+[node name="Den" type="DirectionalLight3D" parent="." unique_id=81601150]
+transform = Transform3D(0.87758255, -0.34391883, 0.334019, 0, 0.6967067, 0.7173561, -0.47942555, -0.6295392, 0.61141765, 0, 0, 0)
