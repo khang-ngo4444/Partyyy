@@ -34,6 +34,7 @@ func _run() -> void:
 		_kiem_gom_bus()
 		await _kiem_nut_bam(am_thanh)
 		await _kiem_cai_dat()
+		await _kiem_roi_cua_so(am_thanh)
 	print("AM THANH RUNTIME: %d failures" % failures)
 	quit(1 if failures > 0 or int(results.get("failed", 0)) > 0 else 0)
 
@@ -170,6 +171,42 @@ func _cho_het_tieng_bam(am_thanh: AmThanh) -> void:
 	for loa: AudioStreamPlayer in am_thanh.get_node("Sfx").get_children():
 		loa.stop()
 	await create_timer(AmThanh.GIAY_CHONG_LAP_SFX * 2.0).timeout
+
+
+func _kiem_roi_cua_so(am_thanh: AmThanh) -> void:
+	var master := AudioServer.get_bus_index(AmThanh.BUS_MASTER)
+	var bang: Control = load("res://ui/bang_cai_dat.tscn").instantiate()
+	root.add_child(bang)
+	await process_frame
+	# Không ghi đè cài đặt thật của người chạy test.
+	bang._dang_nap = true
+	var tuy_chon: CheckButton = bang.tat_tieng_check
+	var ban_dau := tuy_chon.button_pressed
+	var am_luong_cu: float = bang.volume_slider.value
+	bang.volume_slider.value = 80.0
+
+	tuy_chon.button_pressed = true
+	am_thanh.notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
+	check(AudioServer.is_bus_mute(master), "bật tùy chọn thì rời cửa sổ phải tắt tiếng")
+	am_thanh.notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN)
+	check(not AudioServer.is_bus_mute(master), "quay lại phải bật tiếng")
+
+	tuy_chon.button_pressed = false
+	am_thanh.notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
+	check(not AudioServer.is_bus_mute(master), "tắt tùy chọn thì rời cửa sổ vẫn có tiếng")
+	tuy_chon.button_pressed = true
+	check(AudioServer.is_bus_mute(master), "bật tùy chọn lúc đang ở ngoài phải có hiệu lực ngay")
+	am_thanh.notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN)
+
+	bang.volume_slider.value = 0.0
+	am_thanh.notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
+	am_thanh.notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN)
+	check(AudioServer.is_bus_mute(master), "thanh tổng về 0 thì quay lại vẫn im")
+
+	bang.volume_slider.value = am_luong_cu
+	tuy_chon.button_pressed = ban_dau
+	bang.queue_free()
+	await process_frame
 
 
 func _kiem_cai_dat() -> void:

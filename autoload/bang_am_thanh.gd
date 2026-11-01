@@ -93,6 +93,12 @@ static func tim_file(ung_vien: PackedStringArray) -> String:
 	return ""
 
 
+## Bus Master im khi thanh âm lượng về 0, hoặc khi người chơi rời cửa sổ mà có bật tùy chọn.
+## Quay lại cửa sổ không được bật tiếng lên nếu thanh vẫn ở 0.
+static func tat_master(thanh_ve_khong: bool, tuy_chon_bat: bool, dang_roi_cua_so: bool) -> bool:
+	return thanh_ve_khong or (tuy_chon_bat and dang_roi_cua_so)
+
+
 ## SFX ứng với thay đổi trạng thái bàn (mọi máy nhận cùng gói nên kêu giống nhau).
 static func su_kien_ban(cu: Dictionary, moi: Dictionary) -> Array[StringName]:
 	var ra: Array[StringName] = []

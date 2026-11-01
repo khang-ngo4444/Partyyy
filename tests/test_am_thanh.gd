@@ -80,6 +80,17 @@ func test_every_sfx_has_a_file() -> void:
 		assert_eq(BangAmThanh.tim_file(BangAmThanh.ung_vien_sfx(ten)), "res://asset/audio/sfx/%s.ogg" % ten)
 
 
+func test_leaving_window_mutes_only_when_option_is_on() -> void:
+	assert_true(BangAmThanh.tat_master(false, true, true))
+	assert_false(BangAmThanh.tat_master(false, false, true))
+	assert_false(BangAmThanh.tat_master(false, true, false))
+
+
+func test_returning_to_window_keeps_zero_volume_muted() -> void:
+	assert_true(BangAmThanh.tat_master(true, true, false))
+	assert_true(BangAmThanh.tat_master(true, false, false))
+
+
 func test_first_board_state_is_silent() -> void:
 	assert_eq(BangAmThanh.su_kien_ban({}, {"luot": 0, "tien": {"p1": 5}}), [] as Array[StringName])
 

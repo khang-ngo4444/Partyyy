@@ -35,6 +35,7 @@ var _dang_nap := false
 @onready var nhac_value: Label = %NhacValue
 @onready var sfx_slider: HSlider = %SfxSlider
 @onready var sfx_value: Label = %SfxValue
+@onready var tat_tieng_check: CheckButton = %TatTiengCheck
 @onready var fullscreen_check: CheckButton = %FullscreenCheck
 @onready var camera_motion_check: CheckButton = %CameraMotionCheck
 @onready var reduce_motion_check: CheckButton = %ReduceMotionCheck
@@ -72,6 +73,7 @@ func _ready() -> void:
 	volume_slider.value_changed.connect(_dat_am_luong.bind(AmThanh.BUS_MASTER, volume_value))
 	nhac_slider.value_changed.connect(_dat_am_luong.bind(AmThanh.BUS_NHAC, nhac_value))
 	sfx_slider.value_changed.connect(_dat_am_luong.bind(AmThanh.BUS_SFX, sfx_value))
+	tat_tieng_check.toggled.connect(func(on): AmThanh.dat_tat_khi_roi_cua_so(on); _luu())
 	ui_scale_slider.value_changed.connect(_set_ui_scale)
 	fullscreen_check.toggled.connect(_set_fullscreen)
 	camera_motion_check.toggled.connect(func(on): camera_motion_changed.emit(on); _luu())
@@ -158,6 +160,7 @@ func _mac_dinh() -> void:
 	volume_slider.value = AM_LUONG_TONG_MAC_DINH
 	nhac_slider.value = AM_LUONG_NHAC_MAC_DINH
 	sfx_slider.value = AM_LUONG_SFX_MAC_DINH
+	tat_tieng_check.button_pressed = true
 	ui_scale_slider.value = 100
 	fullscreen_check.button_pressed = false
 	camera_motion_check.button_pressed = true
@@ -185,6 +188,9 @@ func _nap() -> void:
 	_dat_am_luong(nhac, AmThanh.BUS_NHAC, nhac_value)
 	sfx_slider.value = sfx
 	_dat_am_luong(sfx, AmThanh.BUS_SFX, sfx_value)
+	var tat_tieng := bool(cfg.get_value("audio", "mute_when_unfocused", true))
+	tat_tieng_check.set_pressed_no_signal(tat_tieng)
+	AmThanh.dat_tat_khi_roi_cua_so(tat_tieng)
 	ui_scale_slider.value = co * 100.0
 	fullscreen_check.button_pressed = fullscreen
 	_set_fullscreen(fullscreen)
@@ -206,6 +212,7 @@ func _luu() -> void:
 	cfg.set_value("audio", "master_volume", volume_slider.value)
 	cfg.set_value("audio", "music_volume", nhac_slider.value)
 	cfg.set_value("audio", "sfx_volume", sfx_slider.value)
+	cfg.set_value("audio", "mute_when_unfocused", tat_tieng_check.button_pressed)
 	cfg.set_value("display", "fullscreen", fullscreen_check.button_pressed)
 	cfg.set_value("display", "menu_camera_motion", camera_motion_check.button_pressed)
 	cfg.set_value("display", "reduce_motion", reduce_motion_check.button_pressed)

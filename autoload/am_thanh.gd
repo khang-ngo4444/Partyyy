@@ -16,6 +16,9 @@ const GIAY_CHONG_LAP_SFX := 0.05
 const DO_LECH_CAO_DO := 0.04
 
 static var _ban: AmThanh = null
+static var _master_ve_khong := false
+static var _tat_khi_roi_cua_so := true
+static var _dang_roi_cua_so := false
 
 var _khoa_nhac := ""
 var _sfx_da_nap: Dictionary = {}  # StringName -> AudioStream (null = không có file)
@@ -59,7 +62,28 @@ static func dat_am_luong(bus: StringName, phan_tram: float) -> void:
 		push_warning("AmThanh: không có bus %s" % bus)
 		return
 	AudioServer.set_bus_volume_db(chi_so, linear_to_db(phan_tram / 100.0) if phan_tram > 0.0 else -80.0)
-	AudioServer.set_bus_mute(chi_so, phan_tram <= 0.0)
+	if bus == BUS_MASTER:
+		_master_ve_khong = phan_tram <= 0.0
+		_ap_tat_master()
+	else:
+		AudioServer.set_bus_mute(chi_so, phan_tram <= 0.0)
+
+
+## Tùy chọn trong Cài đặt: rời cửa sổ game thì tắt toàn bộ âm thanh.
+static func dat_tat_khi_roi_cua_so(bat: bool) -> void:
+	_tat_khi_roi_cua_so = bat
+	_ap_tat_master()
+
+
+static func _ap_tat_master() -> void:
+	AudioServer.set_bus_mute(AudioServer.get_bus_index(BUS_MASTER),
+			BangAmThanh.tat_master(_master_ve_khong, _tat_khi_roi_cua_so, _dang_roi_cua_so))
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_APPLICATION_FOCUS_IN:
+		_dang_roi_cua_so = what == NOTIFICATION_APPLICATION_FOCUS_OUT
+		_ap_tat_master()
 
 
 ## Tiếng đặt sẵn trong scene (bom, sảnh...) mặc định ở Master: gom về SFX để theo thanh trượt.
