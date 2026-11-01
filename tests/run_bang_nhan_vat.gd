@@ -4,7 +4,7 @@ extends SceneTree
 
 const SO_KHUNG_CHO_BO_CUC := 3
 const SAI_SO_BE_RONG := 0.5
-const KICH_THUOC_MAN := Vector2i(1280, 720)
+const KICH_THUOC_MAN := Vector2i(1920, 1080)
 
 var failures := 0
 

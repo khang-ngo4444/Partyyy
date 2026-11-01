@@ -2,7 +2,7 @@ extends SceneTree
 
 ## Bảng phím phải gọn, đúng góc màn hình và mỗi minigame phải nói được phím của mình.
 
-const KICH_THUOC_MAN := Vector2i(1280, 720)
+const KICH_THUOC_MAN := Vector2i(1920, 1080)
 const CAO_TOI_DA := 56.0
 const RONG_TOI_DA := 760.0
 const SO_KHUNG_BO_CUC := 3

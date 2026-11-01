@@ -10,6 +10,8 @@ extends Node
 const SETTINGS_PATH := "user://party_settings.cfg"
 const PHONG := Vector2(1.07, 1.07)
 const LUN := Vector2(0.93, 0.93)
+## Chừa chỗ thanh tiêu đề: cỡ cửa sổ của hệ điều hành không tính phần này.
+const CAO_THANH_TIEU_DE := 40
 
 static var giam_chuyen_dong := false
 
@@ -19,6 +21,7 @@ static var _tweens: Dictionary = {}  # Control -> Tween
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	_vua_cua_so_voi_man_hinh()
 	_tick.stream = load("res://asset/kenney_interface-sounds/Audio/tick_002.ogg")
 	_tick.volume_db = -14.0
 	_tick.bus = AmThanh.BUS_SFX
@@ -29,6 +32,26 @@ func _ready() -> void:
 		ap_co_ui(float(cfg.get_value("display", "ui_scale", 1.0)))
 	get_tree().node_added.connect(_on_node_added)
 	_gan_tieng_ca_cay(get_tree().root)
+
+
+## Cỡ cửa sổ vừa vùng dùng được của màn hình, giữ tỉ lệ; đã vừa thì giữ nguyên.
+static func co_vua_man_hinh(cua_so: Vector2i, vung_dung: Vector2i) -> Vector2i:
+	var chua_duoc := vung_dung - Vector2i(0, CAO_THANH_TIEU_DE)
+	var ti_le := minf(float(chua_duoc.x) / cua_so.x, float(chua_duoc.y) / cua_so.y)
+	return cua_so if ti_le >= 1.0 else Vector2i(Vector2(cua_so) * ti_le)
+
+
+## Màn hình nhỏ hơn cỡ cửa sổ mặc định thì co lại, không để tràn ra ngoài.
+func _vua_cua_so_voi_man_hinh() -> void:
+	if Engine.is_embedded_in_editor() or DisplayServer.window_get_mode() != DisplayServer.WINDOW_MODE_WINDOWED:
+		return
+	var man := DisplayServer.window_get_current_screen()
+	var vung := DisplayServer.screen_get_usable_rect(man)
+	var cu := DisplayServer.window_get_size()
+	var moi := co_vua_man_hinh(cu, vung.size)
+	if moi != cu:
+		DisplayServer.window_set_size(moi)
+		DisplayServer.window_set_position(vung.position + (vung.size - moi) / 2)
 
 
 static func ap_co_ui(he_so: float) -> void:

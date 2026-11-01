@@ -5,6 +5,8 @@ extends MiniGame
 
 const GIAY_VAN := MAX_ROUND_SECONDS
 const CO_DAN := 8.0
+## Chiều cao bản đồ so với chiều cao màn hình.
+const TI_LE_CAO_BAN_DO := 0.76
 
 ## Xe và đạn sinh giữa ván.
 @export var xe_scene: PackedScene
@@ -30,8 +32,12 @@ func _ready() -> void:
 	Fusion.register_broadcast_receiver(self)
 	# Phải gỡ đăng ký RPC khi rời cây (mỗi ván tạo mới).
 	tree_exiting.connect(func(): Fusion.unregister_broadcast_receiver(self))
-	# Canh giữa màn hình theo kích thước bản đồ.
-	_san.position = (get_viewport().get_visible_rect().size - _ban_do.kich_thuoc()) * 0.5
+	# Bản đồ tính bằng pixel cố định: phóng cho chiếm cùng tỉ lệ màn hình rồi canh giữa.
+	var man := get_viewport().get_visible_rect().size
+	var ban_do := _ban_do.kich_thuoc()
+	var ti_le := minf(man.y * TI_LE_CAO_BAN_DO / ban_do.y, man.x / ban_do.x)
+	_san.scale = Vector2.ONE * ti_le
+	_san.position = (man - ban_do * ti_le) * 0.5
 	set_process(false)
 
 

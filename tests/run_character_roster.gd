@@ -11,7 +11,7 @@ func check(ok: bool, message: String) -> void:
 		push_error(message)
 
 func _run() -> void:
-	root.size = Vector2i(1280, 720)
+	root.size = Vector2i(1920, 1080)
 	var creator_script: Script = load("res://ui/character_creator.gd")
 	if DisplayServer.get_name() == "headless":
 		creator_script._anh.resize(10)
@@ -58,7 +58,7 @@ func _run() -> void:
 	creator.open()
 	check(creator.preview_camera.fov == initial_fov, "Reopening resets preview zoom")
 	await create_timer(0.2).timeout
-	check(creator.confirm_btn.get_global_rect().end.y <= 720, "Choices must not push confirm off screen at 720p")
+	check(creator.confirm_btn.get_global_rect().end.y <= root.size.y, "Choices must not push confirm off screen")
 	if OS.get_cmdline_user_args().has("--capture"):
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png("res://tests/runtime/character_roster.png")
