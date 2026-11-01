@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ch5tp0onfi05j"]
 
-[ext_resource type="Script" uid="uid://bssv1duuj6eu0" path="res://board/ban_party_map.gd" id="1_i2q01"]
+[ext_resource type="Script" uid="uid://doncbx8hdlngt" path="res://board/dao_nui_lua.gd" id="1_5jhoo"]
 [ext_resource type="Material" uid="uid://bn6qwbpoti1tg" path="res://materials/dao_lon/bien.tres" id="2_4wu0g"]
 [ext_resource type="PackedScene" uid="uid://531wvw47gb6e" path="res://asset/generated/dao_lon/dia_hinh.glb" id="3_kuq6f"]
 [ext_resource type="PackedScene" uid="uid://d5e5wgnsj4af" path="res://asset/generated/dao_lon/nuoc.glb" id="4_cwi8v"]
@@ -125,7 +125,7 @@ material = SubResource("StandardMaterial3D_qryf5")
 size = Vector2(0.25, 0.25)
 
 [node name="BanDoDaoNuiLua" type="Node3D" unique_id=1038564835]
-script = ExtResource("1_i2q01")
+script = ExtResource("1_5jhoo")
 
 [node name="RumbleReefEnvironment" type="WorldEnvironment" parent="." unique_id=1807618986]
 environment = SubResource("Environment_10k0o")
@@ -151,7 +151,7 @@ mesh = SubResource("PlaneMesh_1aqk5")
 
 [node name="CayVaDa" parent="." unique_id=475315989 instance=ExtResource("6_oph3x")]
 
-[node name="CoVaHoa" parent="." unique_id=590237166 instance=ExtResource("7_l4wde")]
+[node name="CoVaHoa" parent="." unique_id=590237166 groups=["chi_tiet_cao"] instance=ExtResource("7_l4wde")]
 
 [node name="CongTrinh" parent="." unique_id=1050572915 instance=ExtResource("8_nagcw")]
 
@@ -450,7 +450,7 @@ ban_kinh = 121.0
 pha = 2.2
 toc_nhap = 0.8
 
-[node name="TauCuopXa" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=811399082]
+[node name="TauCuopXa" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=811399082 groups=["chi_tiet_cao"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
 mesh = ExtResource("21_yapni")
 script = ExtResource("11_hvfqm")
@@ -461,7 +461,7 @@ pha = 1.0
 lech_vong = 8.0
 toc_nhap = 0.8
 
-[node name="TauChienXa0" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=218942900]
+[node name="TauChienXa0" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=218942900 groups=["chi_tiet_cao"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
 mesh = ExtResource("20_5jhoo")
 script = ExtResource("11_hvfqm")
@@ -472,7 +472,7 @@ pha = 3.2
 lech_vong = 10.0
 toc_nhap = 0.8
 
-[node name="TauChienXa1" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=959609227]
+[node name="TauChienXa1" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=959609227 groups=["chi_tiet_cao"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
 mesh = ExtResource("20_5jhoo")
 script = ExtResource("11_hvfqm")
@@ -527,7 +527,7 @@ pha = 2.0
 lech_vong = 1.5
 toc_nhap = 0.8
 
-[node name="BuonXa" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=1972096185]
+[node name="BuonXa" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=1972096185 groups=["chi_tiet_cao"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
 mesh = ExtResource("14_l56w4")
 script = ExtResource("11_hvfqm")
@@ -663,7 +663,7 @@ tam = Vector2(-3.5, 37.5)
 pha = 5.0
 toc_nhap = 9.0
 
-[node name="Cua0" type="MeshInstance3D" parent="ChuyenDong" unique_id=1799525896]
+[node name="Cua0" type="MeshInstance3D" parent="ChuyenDong" unique_id=1799525896 groups=["chi_tiet_cao"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.62, 0)
 mesh = ExtResource("29_bepoa")
 script = ExtResource("11_hvfqm")
@@ -674,7 +674,7 @@ ban_kinh = 0.8
 tam = Vector2(-15.11, -33.88)
 toc_nhap = 9.0
 
-[node name="Cua1" type="MeshInstance3D" parent="ChuyenDong" unique_id=1001782134]
+[node name="Cua1" type="MeshInstance3D" parent="ChuyenDong" unique_id=1001782134 groups=["chi_tiet_cao"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.91, 0)
 mesh = ExtResource("29_bepoa")
 script = ExtResource("11_hvfqm")
@@ -685,7 +685,7 @@ ban_kinh = 0.8
 tam = Vector2(4.55, -32.97)
 toc_nhap = 9.0
 
-[node name="Cua2" type="MeshInstance3D" parent="ChuyenDong" unique_id=802386932]
+[node name="Cua2" type="MeshInstance3D" parent="ChuyenDong" unique_id=802386932 groups=["chi_tiet_cao"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.12, 0)
 mesh = ExtResource("29_bepoa")
 script = ExtResource("11_hvfqm")
@@ -696,7 +696,7 @@ ban_kinh = 0.8
 tam = Vector2(-44.82, 12.84)
 toc_nhap = 9.0
 
-[node name="Cua3" type="MeshInstance3D" parent="ChuyenDong" unique_id=1710341825]
+[node name="Cua3" type="MeshInstance3D" parent="ChuyenDong" unique_id=1710341825 groups=["chi_tiet_cao"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 mesh = ExtResource("29_bepoa")
 script = ExtResource("11_hvfqm")
@@ -707,7 +707,7 @@ ban_kinh = 0.8
 tam = Vector2(52.16, 5.26)
 toc_nhap = 9.0
 
-[node name="Buom0" type="MeshInstance3D" parent="ChuyenDong" unique_id=1835429807]
+[node name="Buom0" type="MeshInstance3D" parent="ChuyenDong" unique_id=1835429807 groups=["chi_tiet_cao"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, 0)
 mesh = ExtResource("30_d6ho1")
 script = ExtResource("11_hvfqm")
@@ -718,7 +718,7 @@ ban_kinh = 1.7
 tam = Vector2(-17.81, -8.94)
 toc_nhap = 3.5
 
-[node name="Buom1" type="MeshInstance3D" parent="ChuyenDong" unique_id=233412722]
+[node name="Buom1" type="MeshInstance3D" parent="ChuyenDong" unique_id=233412722 groups=["chi_tiet_cao"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, 0)
 mesh = ExtResource("31_a7q64")
 script = ExtResource("11_hvfqm")
@@ -729,7 +729,7 @@ ban_kinh = 1.7
 tam = Vector2(29.35, 6.12)
 toc_nhap = 3.5
 
-[node name="Buom2" type="MeshInstance3D" parent="ChuyenDong" unique_id=1265677385]
+[node name="Buom2" type="MeshInstance3D" parent="ChuyenDong" unique_id=1265677385 groups=["chi_tiet_cao"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, 0)
 mesh = ExtResource("32_tiin7")
 script = ExtResource("11_hvfqm")
@@ -740,7 +740,7 @@ ban_kinh = 1.7
 tam = Vector2(-19.4, 9.91)
 toc_nhap = 3.5
 
-[node name="Buom3" type="MeshInstance3D" parent="ChuyenDong" unique_id=1671471462]
+[node name="Buom3" type="MeshInstance3D" parent="ChuyenDong" unique_id=1671471462 groups=["chi_tiet_cao"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, 0)
 mesh = ExtResource("33_afc8r")
 script = ExtResource("11_hvfqm")
@@ -751,7 +751,7 @@ ban_kinh = 1.7
 tam = Vector2(0.72, 19.89)
 toc_nhap = 3.5
 
-[node name="Buom4" type="MeshInstance3D" parent="ChuyenDong" unique_id=2001178358]
+[node name="Buom4" type="MeshInstance3D" parent="ChuyenDong" unique_id=2001178358 groups=["chi_tiet_cao"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, 0)
 mesh = ExtResource("34_l56dg")
 script = ExtResource("11_hvfqm")
@@ -762,7 +762,7 @@ ban_kinh = 1.7
 tam = Vector2(14.18, 10.48)
 toc_nhap = 3.5
 
-[node name="Buom5" type="MeshInstance3D" parent="ChuyenDong" unique_id=213399372]
+[node name="Buom5" type="MeshInstance3D" parent="ChuyenDong" unique_id=213399372 groups=["chi_tiet_cao"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, 0)
 mesh = ExtResource("30_d6ho1")
 script = ExtResource("11_hvfqm")
@@ -871,7 +871,7 @@ draw_pass_1 = SubResource("QuadMesh_akco3")
 
 [node name="HieuUng" type="Node3D" parent="." unique_id=744565765]
 
-[node name="PhanHoa" parent="HieuUng" unique_id=314540881 instance=ExtResource("40_7k0vk")]
+[node name="PhanHoa" parent="HieuUng" unique_id=314540881 groups=["chi_tiet_cao"] instance=ExtResource("40_7k0vk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, 0)
 
 [node name="TanLua" parent="HieuUng" unique_id=1969241709 instance=ExtResource("41_ifvkh")]

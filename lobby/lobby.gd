@@ -64,7 +64,7 @@ func _ready() -> void:
 	_nho_mau_den()
 	var performance_manager := get_node("/root/PerformanceManager")
 	performance_manager.connect("graphics_mode_changed", _apply_graphics_quality)
-	_apply_graphics_quality(int(performance_manager.get("graphics_mode")))
+	_apply_graphics_quality(int(performance_manager.get("muc_hieu_luc")))
 	$ClockTower/Loa.add_to_group("loa_nhac")
 	_retint_decor()
 	# Mặt trời trôi chậm để bóng sườn vòm quét qua sàn; mỗi máy tự chạy.

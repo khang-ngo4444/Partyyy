@@ -10,10 +10,10 @@ signal closed
 
 const SETTINGS_PATH := "user://party_settings.cfg"
 const CHAT_LUONG := [
-	[0, "TỰ ĐỘNG", "Giữ 60 FPS", "wrench"],
-	[1, "MƯỢT", "Ưu tiên FPS", "fastForward"],
-	[2, "CÂN BẰNG", "Vừa đẹp vừa nhanh", "contrast"],
-	[3, "ĐẸP", "Ưu tiên hình ảnh", "star"],
+	[0, "TỰ ĐỘNG", "Tự giữ 60 FPS", "wrench"],
+	[1, "MƯỢT", "Cho máy yếu", "fastForward"],
+	[2, "CÂN BẰNG", "Nét, chạy nhẹ", "contrast"],
+	[3, "ĐẸP", "Cho máy mạnh", "star"],
 ]
 const PHIM := [
 	["W A S D", "Di chuyển"], ["Space", "Nhảy / tung xúc xắc"], ["E", "Tương tác / dùng đồ"],
@@ -34,6 +34,7 @@ var _dang_nap := false
 @onready var ui_scale_slider: HSlider = %UiScaleSlider
 @onready var ui_scale_value: Label = %UiScaleValue
 @onready var chat_luong_hang: HBoxContainer = %ChatLuongHang
+@onready var chat_luong_mo_ta: Label = %ChatLuongMoTa
 @onready var bang_phim: GridContainer = %BangPhim
 @onready var xong_btn: Button = %XongBtn
 @onready var mac_dinh_btn: Button = %MacDinhBtn
@@ -69,6 +70,9 @@ func _ready() -> void:
 	xong_btn.pressed.connect(dong)
 	mac_dinh_btn.pressed.connect(_mac_dinh)
 	tabs.tab_changed.connect(func(_i): _focus_dau_tab())
+	# TỰ ĐỘNG có thể đổi mức bất cứ lúc nào: giữ câu mô tả đúng mức đang dùng.
+	performance_manager.connect("graphics_mode_changed", func(_muc):
+		chat_luong_mo_ta.text = performance_manager.call("mo_ta", _chat_luong_hien_tai()))
 	_nap()
 
 
@@ -131,6 +135,7 @@ func _set_fullscreen(enabled: bool) -> void:
 
 func _dat_chat_luong(id: int) -> void:
 	performance_manager.call("set_graphics_mode", id)
+	chat_luong_mo_ta.text = performance_manager.call("mo_ta", id)
 	if not _dang_nap:
 		_luu()
 
@@ -171,7 +176,7 @@ func _nap() -> void:
 	reduce_motion_check.set_pressed_no_signal(giam)
 	UINav.giam_chuyen_dong = giam
 	_chat_luong_nut[mode].button_pressed = true
-	performance_manager.call("set_graphics_mode", mode)
+	_dat_chat_luong(mode)
 	# Node cha nối signal sau `_ready` của con — phát trễ để giữ trạng thái đã lưu.
 	camera_motion_changed.emit.bind(motion).call_deferred()
 	_dang_nap = false
