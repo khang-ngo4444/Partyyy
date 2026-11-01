@@ -41,6 +41,14 @@ materials/extract_format=0
 materials/extract_path=""
 _subresources={
 "materials": {
+"canh": {
+"use_external/enabled": true,
+"use_external/path": "res://materials/dao_lon/canh.tres"
+},
+"canh_buom": {
+"use_external/enabled": true,
+"use_external/path": "res://materials/dao_lon/canh_buom.tres"
+},
 "da": {
 "use_external/enabled": true,
 "use_external/fallback_path": "res://materials/dao_lon/da.tres",
@@ -82,6 +90,14 @@ _subresources={
 "tia_sang": {
 "use_external/enabled": true,
 "use_external/path": "res://materials/dao_lon/tia_sang.tres"
+},
+"vai": {
+"use_external/enabled": true,
+"use_external/path": "res://materials/dao_lon/vai.tres"
+},
+"vet_tau": {
+"use_external/enabled": true,
+"use_external/path": "res://materials/dao_lon/vet_tau.tres"
 }
 },
 "meshes": {

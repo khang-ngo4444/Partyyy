@@ -19,7 +19,32 @@
 [ext_resource type="ArrayMesh" uid="uid://b82owiwmlffjs" path="res://asset/generated/dao_lon/mesh/may_1.res" id="17_pa68v"]
 [ext_resource type="ArrayMesh" uid="uid://cgr4ihwcjutvx" path="res://asset/generated/dao_lon/mesh/may_2.res" id="18_2jlp3"]
 [ext_resource type="ArrayMesh" uid="uid://d2enxmb6jamtu" path="res://asset/generated/dao_lon/mesh/chim.res" id="19_cnmtk"]
-[ext_resource type="Material" uid="uid://yhe3ypwrco8n" path="res://materials/dao_lon/khoi.tres" id="20_hvfqm"]
+[ext_resource type="ArrayMesh" uid="uid://koopddws8pff" path="res://asset/generated/dao_lon/mesh/tau_chien.res" id="20_5jhoo"]
+[ext_resource type="ArrayMesh" uid="uid://dt0q7awog153k" path="res://asset/generated/dao_lon/mesh/tau_cuop.res" id="21_yapni"]
+[ext_resource type="ArrayMesh" uid="uid://by5cj0g8o672t" path="res://asset/generated/dao_lon/mesh/thuyen_buom_nho.res" id="22_hc0bd"]
+[ext_resource type="ArrayMesh" uid="uid://ywlwkfylyu88" path="res://asset/generated/dao_lon/mesh/thuyen_nho.res" id="23_4qsq6"]
+[ext_resource type="ArrayMesh" uid="uid://b7emkn5ap6j2y" path="res://asset/generated/dao_lon/mesh/thuyen_thung.res" id="24_xr7y8"]
+[ext_resource type="ArrayMesh" uid="uid://c434hbm5cmv7c" path="res://asset/generated/dao_lon/mesh/ca_heo.res" id="25_3wxd8"]
+[ext_resource type="ArrayMesh" uid="uid://mibhbumk28av" path="res://asset/generated/dao_lon/mesh/nguoi_0.res" id="26_nmql8"]
+[ext_resource type="ArrayMesh" uid="uid://dxqy8nfvee4li" path="res://asset/generated/dao_lon/mesh/nguoi_1.res" id="27_ecpxw"]
+[ext_resource type="ArrayMesh" uid="uid://1i41txhdidu0" path="res://asset/generated/dao_lon/mesh/nguoi_2.res" id="28_uanxh"]
+[ext_resource type="ArrayMesh" uid="uid://c2v8wywyvpfi1" path="res://asset/generated/dao_lon/mesh/cua.res" id="29_bepoa"]
+[ext_resource type="ArrayMesh" uid="uid://hkadfsf74ud8" path="res://asset/generated/dao_lon/mesh/buom_0.res" id="30_d6ho1"]
+[ext_resource type="ArrayMesh" uid="uid://b1n3anfjlrm18" path="res://asset/generated/dao_lon/mesh/buom_1.res" id="31_a7q64"]
+[ext_resource type="ArrayMesh" uid="uid://jxdqpshkwwqy" path="res://asset/generated/dao_lon/mesh/buom_2.res" id="32_tiin7"]
+[ext_resource type="ArrayMesh" uid="uid://cjmgjbm755hrc" path="res://asset/generated/dao_lon/mesh/buom_3.res" id="33_afc8r"]
+[ext_resource type="ArrayMesh" uid="uid://bfvsx80q5seta" path="res://asset/generated/dao_lon/mesh/buom_4.res" id="34_l56dg"]
+[ext_resource type="ArrayMesh" uid="uid://deg86i5o5ehko" path="res://asset/generated/dao_lon/mesh/khi_cau_do.res" id="35_m1ycb"]
+[ext_resource type="ArrayMesh" uid="uid://kks14aj27f3a" path="res://asset/generated/dao_lon/mesh/khi_cau_xanh.res" id="36_2j2m2"]
+[ext_resource type="ArrayMesh" uid="uid://dw5fwal7fmise" path="res://asset/generated/dao_lon/mesh/vong_ngua.res" id="37_d07wk"]
+[ext_resource type="ArrayMesh" uid="uid://yrxu0hbdgj82" path="res://asset/generated/dao_lon/mesh/phao.res" id="38_tc5hs"]
+[ext_resource type="Material" uid="uid://pwri30e7eb31" path="res://materials/dao_lon/khoi_mem.tres" id="39_5jhoo"]
+[ext_resource type="PackedScene" uid="uid://chfb7vp8y60k6" path="res://board/hieu_ung_dao/phan_hoa.tscn" id="40_7k0vk"]
+[ext_resource type="PackedScene" uid="uid://cgdilb28jwp4p" path="res://board/hieu_ung_dao/tan_lua.tscn" id="41_ifvkh"]
+[ext_resource type="PackedScene" uid="uid://cpawbelx4db3f" path="res://board/hieu_ung_dao/tia_nuoc.tscn" id="42_aiwdt"]
+[ext_resource type="PackedScene" uid="uid://boayvwhl6w6qw" path="res://board/hieu_ung_dao/lua_chau.tscn" id="43_bnjl7"]
+[ext_resource type="PackedScene" uid="uid://pv1u5674shub" path="res://board/hieu_ung_dao/suong_thac.tscn" id="44_k1dv1"]
+[ext_resource type="PackedScene" uid="uid://ywx2murla3qa" path="res://board/hieu_ung_dao/khoi_ong_khoi.tscn" id="45_2ls4n"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_hvfqm"]
 sky_top_color = Color(0.18431373, 0.49803922, 0.8392157, 1)
@@ -60,24 +85,30 @@ size = Vector2(2600, 2600)
 subdivide_width = 340
 subdivide_depth = 340
 
-[sub_resource type="Gradient" id="Gradient_621sw"]
-offsets = PackedFloat32Array(0, 0.25, 0.75, 1)
-colors = PackedColorArray(0.3, 0.3, 0.3, 0, 0.35, 0.35, 0.35, 0.7, 0.2, 0.2, 0.2, 0.5, 0.1, 0.1, 0.1, 0)
+[sub_resource type="Gradient" id="Gradient_5jhoo"]
+offsets = PackedFloat32Array(0, 0.1, 0.5, 1)
+colors = PackedColorArray(0.22745098, 0.20784314, 0.20392157, 0, 0.22745098, 0.20784314, 0.20392157, 0.9607843, 0.5411765, 0.52156866, 0.5137255, 0.84705883, 0.8627451, 0.84705883, 0.83137256, 0)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_vj7dw"]
-gradient = SubResource("Gradient_621sw")
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_yapni"]
+gradient = SubResource("Gradient_5jhoo")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_p4k22"]
 emission_shape = 1
-emission_sphere_radius = 0.4
+emission_sphere_radius = 2.2
+angle_max = 360.0
 direction = Vector3(0, 1, 0)
 spread = 20.0
-initial_velocity_min = 2.0
-initial_velocity_max = 4.0
+initial_velocity_min = 3.0
+initial_velocity_max = 5.0
 gravity = Vector3(0, 0.2, 0)
-scale_min = 3.0
-scale_max = 6.0
-color_ramp = SubResource("GradientTexture1D_vj7dw")
+scale_min = 16.0
+scale_max = 34.0
+color_ramp = SubResource("GradientTexture1D_yapni")
+turbulence_enabled = true
+turbulence_noise_strength = 2.0
+turbulence_noise_scale = 6.0
+turbulence_influence_min = 0.05
+turbulence_influence_max = 0.12
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qryf5"]
 transparency = 1
@@ -229,6 +260,593 @@ toc = 0.17
 ban_kinh = 44.0
 pha = 4.2
 
+[node name="Thuyen" type="Node3D" parent="ChuyenDong" unique_id=1377201306]
+
+[node name="TauChienDau" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=206258769]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("20_5jhoo")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.026
+ban_kinh = 127.0
+pha = 0.4
+lech_vong = 1.5
+toc_nhap = 0.8
+
+[node name="TauChien1" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=1558424401]
+transform = Transform3D(0.85, 0, 0, 0, 0.85, 0, 0, 0, 0.85, 0, -4.2, 0)
+mesh = ExtResource("20_5jhoo")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.026
+ban_kinh = 127.0
+pha = 2.7
+toc_nhap = 0.8
+
+[node name="TauChien2" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=162887197]
+transform = Transform3D(0.85, 0, 0, 0, 0.85, 0, 0, 0, 0.85, 0, -4.2, 0)
+mesh = ExtResource("20_5jhoo")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = -0.03
+ban_kinh = 115.0
+pha = 4.4
+toc_nhap = 0.8
+
+[node name="TauChien3" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=1378922816]
+transform = Transform3D(0.85, 0, 0, 0, 0.85, 0, 0, 0, 0.85, 0, -4.2, 0)
+mesh = ExtResource("20_5jhoo")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = -0.03
+ban_kinh = 115.0
+pha = 1.3
+toc_nhap = 0.8
+
+[node name="TauCuop" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=331354700]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("21_yapni")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.034
+ban_kinh = 121.0
+pha = 5.6
+toc_nhap = 0.8
+
+[node name="Buom0" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=729908515]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("22_hc0bd")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.055
+bien_do = 0.13
+ban_kinh = 97.0
+pha = 2.0
+toc_nhap = 1.3
+
+[node name="Buom1" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=2138675654]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("22_hc0bd")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.055
+bien_do = 0.13
+ban_kinh = 97.0
+pha = 4.7
+toc_nhap = 1.3
+
+[node name="Buom2" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=1227795450]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("22_hc0bd")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = -0.045
+bien_do = 0.13
+ban_kinh = 103.0
+pha = 5.2
+toc_nhap = 1.3
+
+[node name="Nho0" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=2117472990]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("23_4qsq6")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.03
+bien_do = 0.13
+ban_kinh = 100.0
+pha = 0.2
+toc_nhap = 1.3
+
+[node name="Nho1" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=1930534948]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("23_4qsq6")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.03
+bien_do = 0.13
+ban_kinh = 100.0
+pha = 3.0
+toc_nhap = 1.3
+
+[node name="Thung0" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=445809882]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("24_xr7y8")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.05
+bien_do = 0.13
+ban_kinh = 1.6
+tam = Vector2(16.96, 53.23)
+pha = 0.2
+toc_nhap = 1.3
+
+[node name="Thung1" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=1626064745]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("24_xr7y8")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.05
+bien_do = 0.13
+ban_kinh = 1.6
+tam = Vector2(-25.41, 48.08)
+pha = 0.2
+toc_nhap = 1.3
+
+[node name="Thung2" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=1367425879]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("24_xr7y8")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.05
+bien_do = 0.13
+ban_kinh = 1.6
+tam = Vector2(40.94, -50.59)
+pha = 0.2
+toc_nhap = 1.3
+
+[node name="CaHeo0" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=1598482530]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.7, 0)
+mesh = ExtResource("25_3wxd8")
+script = ExtResource("11_hvfqm")
+kieu = 4
+toc = 0.055
+bien_do = 1.7
+ban_kinh = 92.0
+pha = 0.2
+toc_nhap = 1.3
+so_cu_nhay = 70.0
+
+[node name="CaHeo1" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=508595792]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.7, 0)
+mesh = ExtResource("25_3wxd8")
+script = ExtResource("11_hvfqm")
+kieu = 4
+toc = 0.055
+bien_do = 1.7
+ban_kinh = 92.0
+pha = 2.4
+toc_nhap = 1.3
+so_cu_nhay = 70.0
+
+[node name="CaHeo2" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=957677207]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.7, 0)
+mesh = ExtResource("25_3wxd8")
+script = ExtResource("11_hvfqm")
+kieu = 4
+toc = 0.055
+bien_do = 1.7
+ban_kinh = 92.0
+pha = 4.6
+toc_nhap = 1.3
+so_cu_nhay = 70.0
+
+[node name="TauCuop1" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=1399247084]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("21_yapni")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.034
+ban_kinh = 121.0
+pha = 2.2
+toc_nhap = 0.8
+
+[node name="TauCuopXa" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=811399082]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("21_yapni")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.012
+ban_kinh = 340.0
+pha = 1.0
+lech_vong = 8.0
+toc_nhap = 0.8
+
+[node name="TauChienXa0" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=218942900]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("20_5jhoo")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = -0.01
+ban_kinh = 345.0
+pha = 3.2
+lech_vong = 10.0
+toc_nhap = 0.8
+
+[node name="TauChienXa1" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=959609227]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("20_5jhoo")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = -0.01
+ban_kinh = 345.0
+pha = 5.2
+lech_vong = 10.0
+toc_nhap = 0.8
+
+[node name="Buon0" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=975446996]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("14_l56w4")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = -0.02
+ban_kinh = 133.0
+pha = 3.6
+lech_vong = 1.5
+toc_nhap = 0.8
+
+[node name="Buon1" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=1708351705]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("14_l56w4")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = -0.02
+ban_kinh = 133.0
+pha = 0.9
+lech_vong = 1.5
+toc_nhap = 0.8
+
+[node name="Buon2" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=920343998]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("14_l56w4")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.04
+ban_kinh = 109.0
+pha = 5.0
+lech_vong = 1.5
+toc_nhap = 0.8
+
+[node name="Buon3" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=409963952]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("14_l56w4")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.04
+ban_kinh = 109.0
+pha = 2.0
+lech_vong = 1.5
+toc_nhap = 0.8
+
+[node name="BuonXa" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=1972096185]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("14_l56w4")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.011
+ban_kinh = 355.0
+pha = 0.4
+lech_vong = 12.0
+toc_nhap = 0.8
+
+[node name="Buom3" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=598238750]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("22_hc0bd")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = -0.045
+bien_do = 0.13
+ban_kinh = 103.0
+pha = 1.0
+toc_nhap = 1.3
+
+[node name="Buom4" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=39308368]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("22_hc0bd")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = -0.045
+bien_do = 0.13
+ban_kinh = 103.0
+pha = 3.2
+toc_nhap = 1.3
+
+[node name="Buom5" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=317190314]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("22_hc0bd")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.055
+bien_do = 0.13
+ban_kinh = 97.0
+pha = 0.2
+toc_nhap = 1.3
+
+[node name="Nho2" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=1565464055]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("23_4qsq6")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.03
+bien_do = 0.13
+ban_kinh = 100.0
+pha = 5.0
+toc_nhap = 1.3
+
+[node name="Nho3" type="MeshInstance3D" parent="ChuyenDong/Thuyen" unique_id=379072637]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0)
+mesh = ExtResource("23_4qsq6")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.03
+bien_do = 0.13
+ban_kinh = 100.0
+pha = 1.6
+toc_nhap = 1.3
+
+[node name="Nguoi0" type="MeshInstance3D" parent="ChuyenDong" unique_id=962933700]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.03, 0)
+mesh = ExtResource("26_nmql8")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.16
+bien_do = 0.05
+ban_kinh = 3.1
+tam = Vector2(43, 9)
+toc_nhap = 9.0
+
+[node name="Nguoi1" type="MeshInstance3D" parent="ChuyenDong" unique_id=593937122]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.03, 0)
+mesh = ExtResource("27_ecpxw")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.16
+bien_do = 0.05
+ban_kinh = 3.1
+tam = Vector2(43, 9)
+pha = 2.1
+toc_nhap = 9.0
+
+[node name="Nguoi2" type="MeshInstance3D" parent="ChuyenDong" unique_id=255558087]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.03, 0)
+mesh = ExtResource("28_uanxh")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.16
+bien_do = 0.05
+ban_kinh = 3.1
+tam = Vector2(43, 9)
+pha = 4.2
+toc_nhap = 9.0
+
+[node name="Nguoi3" type="MeshInstance3D" parent="ChuyenDong" unique_id=562129107]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.03, 0)
+mesh = ExtResource("27_ecpxw")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = -0.13
+bien_do = 0.05
+ban_kinh = 3.5
+tam = Vector2(-3.5, 37.5)
+toc_nhap = 9.0
+
+[node name="Nguoi4" type="MeshInstance3D" parent="ChuyenDong" unique_id=1737071534]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.03, 0)
+mesh = ExtResource("28_uanxh")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = -0.13
+bien_do = 0.05
+ban_kinh = 3.5
+tam = Vector2(-3.5, 37.5)
+pha = 2.8
+toc_nhap = 9.0
+
+[node name="Nguoi5" type="MeshInstance3D" parent="ChuyenDong" unique_id=2012511124]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.03, 0)
+mesh = ExtResource("26_nmql8")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = -0.13
+bien_do = 0.05
+ban_kinh = 3.5
+tam = Vector2(-3.5, 37.5)
+pha = 5.0
+toc_nhap = 9.0
+
+[node name="Cua0" type="MeshInstance3D" parent="ChuyenDong" unique_id=1799525896]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.62, 0)
+mesh = ExtResource("29_bepoa")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.5
+bien_do = 0.01
+ban_kinh = 0.8
+tam = Vector2(-15.11, -33.88)
+toc_nhap = 9.0
+
+[node name="Cua1" type="MeshInstance3D" parent="ChuyenDong" unique_id=1001782134]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.91, 0)
+mesh = ExtResource("29_bepoa")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = -0.45
+bien_do = 0.01
+ban_kinh = 0.8
+tam = Vector2(4.55, -32.97)
+toc_nhap = 9.0
+
+[node name="Cua2" type="MeshInstance3D" parent="ChuyenDong" unique_id=802386932]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.12, 0)
+mesh = ExtResource("29_bepoa")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.5
+bien_do = 0.01
+ban_kinh = 0.8
+tam = Vector2(-44.82, 12.84)
+toc_nhap = 9.0
+
+[node name="Cua3" type="MeshInstance3D" parent="ChuyenDong" unique_id=1710341825]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+mesh = ExtResource("29_bepoa")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = -0.5
+bien_do = 0.01
+ban_kinh = 0.8
+tam = Vector2(52.16, 5.26)
+toc_nhap = 9.0
+
+[node name="Buom0" type="MeshInstance3D" parent="ChuyenDong" unique_id=1835429807]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, 0)
+mesh = ExtResource("30_d6ho1")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 1.0
+bien_do = 0.3
+ban_kinh = 1.7
+tam = Vector2(-17.81, -8.94)
+toc_nhap = 3.5
+
+[node name="Buom1" type="MeshInstance3D" parent="ChuyenDong" unique_id=233412722]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, 0)
+mesh = ExtResource("31_a7q64")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 1.0
+bien_do = 0.3
+ban_kinh = 1.7
+tam = Vector2(29.35, 6.12)
+toc_nhap = 3.5
+
+[node name="Buom2" type="MeshInstance3D" parent="ChuyenDong" unique_id=1265677385]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, 0)
+mesh = ExtResource("32_tiin7")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 1.0
+bien_do = 0.3
+ban_kinh = 1.7
+tam = Vector2(-19.4, 9.91)
+toc_nhap = 3.5
+
+[node name="Buom3" type="MeshInstance3D" parent="ChuyenDong" unique_id=1671471462]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, 0)
+mesh = ExtResource("33_afc8r")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 1.0
+bien_do = 0.3
+ban_kinh = 1.7
+tam = Vector2(0.72, 19.89)
+toc_nhap = 3.5
+
+[node name="Buom4" type="MeshInstance3D" parent="ChuyenDong" unique_id=2001178358]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, 0)
+mesh = ExtResource("34_l56dg")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 1.0
+bien_do = 0.3
+ban_kinh = 1.7
+tam = Vector2(14.18, 10.48)
+toc_nhap = 3.5
+
+[node name="Buom5" type="MeshInstance3D" parent="ChuyenDong" unique_id=213399372]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, 0)
+mesh = ExtResource("30_d6ho1")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 1.0
+bien_do = 0.3
+ban_kinh = 1.7
+tam = Vector2(6.78, 28.22)
+toc_nhap = 3.5
+
+[node name="KhiCauDo" type="MeshInstance3D" parent="ChuyenDong" unique_id=1178247680]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 26, 0)
+mesh = ExtResource("35_m1ycb")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.04
+bien_do = 1.2
+ban_kinh = 22.0
+tam = Vector2(-2, 37)
+toc_nhap = 0.35
+
+[node name="KhiCauXanh" type="MeshInstance3D" parent="ChuyenDong" unique_id=684163404]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 34, 0)
+mesh = ExtResource("36_2j2m2")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = -0.025
+bien_do = 1.2
+ban_kinh = 44.0
+pha = 2.0
+toc_nhap = 0.35
+
+[node name="ChimCang0" type="MeshInstance3D" parent="ChuyenDong" unique_id=1092518427]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 22, 0)
+mesh = ExtResource("19_cnmtk")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.28
+ban_kinh = 15.0
+tam = Vector2(50, 8)
+
+[node name="ChimCang1" type="MeshInstance3D" parent="ChuyenDong" unique_id=1535841135]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 22, 0)
+mesh = ExtResource("19_cnmtk")
+script = ExtResource("11_hvfqm")
+kieu = 2
+toc = 0.28
+ban_kinh = 15.0
+tam = Vector2(50, 8)
+pha = 2.5
+
+[node name="VongNgua" type="MeshInstance3D" parent="ChuyenDong" unique_id=826969050]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 3, 37.5)
+mesh = ExtResource("37_d07wk")
+script = ExtResource("11_hvfqm")
+toc = 0.55
+bien_do = 0.28
+
+[node name="Phao0" type="MeshInstance3D" parent="ChuyenDong" unique_id=669953235]
+transform = Transform3D(0.87758255, 0, 0.47942555, 0, 1, 0, -0.47942555, 0, 0.87758255, 80, -4.2, 3)
+mesh = ExtResource("38_tc5hs")
+script = ExtResource("11_hvfqm")
+kieu = 1
+toc = 1.3
+bien_do = 0.18
+
+[node name="Phao1" type="MeshInstance3D" parent="ChuyenDong" unique_id=1191203840]
+transform = Transform3D(0.87758255, 0, 0.47942555, 0, 1, 0, -0.47942555, 0, 0.87758255, 82, -4.2, 17)
+mesh = ExtResource("38_tc5hs")
+script = ExtResource("11_hvfqm")
+kieu = 1
+toc = 1.3
+bien_do = 0.18
+pha = 2.0
+
+[node name="Phao2" type="MeshInstance3D" parent="ChuyenDong" unique_id=2005805164]
+transform = Transform3D(0.87758255, 0, 0.47942555, 0, 1, 0, -0.47942555, 0, 0.87758255, 8, -4.2, 66)
+mesh = ExtResource("38_tc5hs")
+script = ExtResource("11_hvfqm")
+kieu = 1
+toc = 1.3
+bien_do = 0.18
+pha = 4.0
+
 [node name="AnhNuiLua" type="OmniLight3D" parent="." unique_id=1426046324]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 37, 0)
 light_color = Color(1, 0.41568628, 0.16470589, 1)
@@ -243,8 +861,69 @@ omni_range = 7.0
 
 [node name="KhoiNuiLua" type="GPUParticles3D" parent="." unique_id=908932728]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 35, 0)
-material_override = ExtResource("20_hvfqm")
-amount = 60
-lifetime = 8.0
+material_override = ExtResource("39_5jhoo")
+amount = 110
+lifetime = 12.0
+preprocess = 12.0
+visibility_aabb = AABB(-30, -2, -30, 60, 90, 60)
 process_material = SubResource("ParticleProcessMaterial_p4k22")
 draw_pass_1 = SubResource("QuadMesh_akco3")
+
+[node name="HieuUng" type="Node3D" parent="." unique_id=744565765]
+
+[node name="PhanHoa" parent="HieuUng" unique_id=314540881 instance=ExtResource("40_7k0vk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, 0)
+
+[node name="TanLua" parent="HieuUng" unique_id=1969241709 instance=ExtResource("41_ifvkh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 34, 0)
+
+[node name="DaiPhun" parent="HieuUng" unique_id=1395376955 instance=ExtResource("42_aiwdt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43, 5.5, 9)
+
+[node name="LuaDen0" parent="HieuUng" unique_id=1034214743 instance=ExtResource("43_bnjl7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.5, 6.75, -12.2)
+
+[node name="LuaDen1" parent="HieuUng" unique_id=1629435967 instance=ExtResource("43_bnjl7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.5, 6.75, 2.2)
+
+[node name="Suong0" parent="HieuUng" unique_id=413032864 instance=ExtResource("44_k1dv1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 62.22, -3.6, 7.38)
+
+[node name="Suong1" parent="HieuUng" unique_id=1140902245 instance=ExtResource("44_k1dv1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -60.53, -3.6, 8.07)
+
+[node name="Suong2" parent="HieuUng" unique_id=1081537396 instance=ExtResource("44_k1dv1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.14, -3.6, -41.21)
+
+[node name="Khoi0" parent="HieuUng" unique_id=1270960584 instance=ExtResource("45_2ls4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.1, 13.2, -30.7)
+
+[node name="Khoi1" parent="HieuUng" unique_id=84372833 instance=ExtResource("45_2ls4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.29, 7.7, 3.04)
+
+[node name="Khoi2" parent="HieuUng" unique_id=140213879 instance=ExtResource("45_2ls4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.16, 7.74, 1.93)
+
+[node name="Khoi3" parent="HieuUng" unique_id=591948307 instance=ExtResource("45_2ls4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43.61, 8.33, 1.41)
+
+[node name="Khoi4" parent="HieuUng" unique_id=1092105244 instance=ExtResource("45_2ls4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.16, 7.78, 7.13)
+
+[node name="Khoi5" parent="HieuUng" unique_id=1164343661 instance=ExtResource("45_2ls4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.7, 8.48, 11.72)
+
+[node name="Khoi6" parent="HieuUng" unique_id=1927840061 instance=ExtResource("45_2ls4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.22, 7.74, 14.92)
+
+[node name="Khoi7" parent="HieuUng" unique_id=57786198 instance=ExtResource("45_2ls4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42.01, 8.52, 16.63)
+
+[node name="Khoi8" parent="HieuUng" unique_id=1348615281 instance=ExtResource("45_2ls4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 46.81, 8.53, 16.29)
+
+[node name="Khoi9" parent="HieuUng" unique_id=1221573835 instance=ExtResource("45_2ls4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.22, 7.8, 32.74)
+
+[node name="Khoi10" parent="HieuUng" unique_id=1618049823 instance=ExtResource("45_2ls4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.73, 8, 35.88)

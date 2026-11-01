@@ -7,6 +7,7 @@ const SO_VAT_CHUYEN_DONG_TOI_THIEU := 13
 const O_RE_NHANH := 4
 const O_DAU_DUONG_TAT := 40
 const SO_KHUNG_CHO_CHUYEN_DONG := 10
+const SO_THUYEN_TOI_THIEU := 24
 
 var failures := 0
 
@@ -45,6 +46,7 @@ func _run() -> void:
 	check(map_model.get_node_or_null("RumbleReefEnvironment") != null, "Island brings its environment")
 	check(map_model.find_children("*", "VatChuyenDong", true, false).size() >= SO_VAT_CHUYEN_DONG_TOI_THIEU,
 			"Decorative movers are authored")
+	check(map_model.get_node("ChuyenDong/Thuyen").get_child_count() >= SO_THUYEN_TOI_THIEU, "Boats fill the sea around the island")
 	var dia_hinh := map_model.get_node("DiaHinh")
 	check(dia_hinh.get_child_count() > 0, "Terrain meshes are imported")
 	for mesh_node: MeshInstance3D in dia_hinh.get_children():

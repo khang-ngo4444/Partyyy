@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://pwri30e7eb31"]
+
+[ext_resource type="Shader" uid="uid://d0s2ykld6tth" path="res://materials/dao_lon/khoi_mem.gdshader" id="1_jxba1"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_jxba1")
+shader_parameter/do_day = 0.85
+shader_parameter/khoang_mo_cham = 1.2
+shader_parameter/to_luc_dau = 0.45
+shader_parameter/to_luc_cuoi = 1.5

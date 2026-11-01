@@ -3,7 +3,10 @@ import numpy as np
 
 from dia_hinh import DIA_DIEM, MUC_NUOC
 from hinh import Hinh, Lo, TAU, bang, bien_doi, cuc, ghep, hop, mau, nap, nan_duong, ong, tien
+from thuyen import co_duoi_nheo, tau_buom
 
+# Vị trí đỉnh ống khói, ghi ra để đặt khói trong scene.
+ONG_KHOI = []
 DA_SANG = mau("#d8ccb4")
 DA_XAM = mau("#9b9384")
 GO = mau("#8a5a33")
@@ -60,6 +63,7 @@ def nha(lo, rng, vi_tri, goc, mau_tuong, mau_mai, rong=3.2, sau=4.0, cao=2.6):
         lo.them("phat_sang", hop(.1, .68, .56), m @ bien_doi((rong * .5 + .03, 1.8, z)), mau("#ffd27a"))
     # Ống khói.
     lo.them("da", hop(.5, 1.5, .5, .05), m @ bien_doi((rong * .25, cao + 1.15, -sau * .25)), mau("#a0614a"))
+    ONG_KHOI.append((m @ np.array([rong * .25, cao + 2.0, -sau * .25, 1.0]))[:3].tolist())
 
 
 def _thung(lo, rng, vi_tri, r=.34, cao=.85):
@@ -217,88 +221,6 @@ def _cau_tau(lo, rng, p):
     _thung_go(lo, rng, c + (3.4, 2.0, 0), .95)
 
 
-def tau_buom():
-    """Thuyền buồm lớn, tâm ở mặt nước. Mũi hướng +z."""
-    lo = Lo()
-    rng = np.random.default_rng(13)
-    s = np.linspace(-1, 1, 25)
-    tiet = []
-    for t in s:
-        z = t * 8.5
-        rong = 2.5 * (1 - abs(t) ** 2.6) ** .7 + .02
-        day = -1.5 + 1.0 * abs(t) ** 2
-        mep = 1.6 + 1.9 * abs(t) ** 2.4 + (.5 if t < -.55 else 0)
-        a = np.linspace(-np.pi * .5, np.pi * .5, 11)
-        x = np.sin(a) * rong
-        y = day + (np.cos(a) ** .0) * 0 + (mep - day) * (1 - np.cos(a) ** 1.5)
-        tiet.append(np.stack([x, y, np.full_like(x, z)], 1))
-    tiet = np.array(tiet)
-    n_a = tiet.shape[1]
-    tam = []
-    for r in range(len(tiet) - 1):
-        for k in range(n_a - 1):
-            p = r * n_a + k
-            tam += [[p, p + 1, p + n_a], [p + 1, p + n_a + 1, p + n_a]]
-    t_mau = np.array([mau("#7b4322") if (r % 3) else mau("#5e331a") for r in range(len(tiet)) for _ in range(n_a)])
-    y_ = tiet[..., 1].ravel()
-    t_mau[y_ > 1.5] = mau("#d9b45a")
-    t_mau[y_ < -.05] = mau("#3a2a22")
-    than = Hinh(tiet.reshape(-1, 3), tam, c=t_mau)
-    # Tam giác trên đang quay vào trong với x+: lấy theo pháp tuyến hướng ra.
-    if np.mean(np.sum(than.n * (than.v - than.v.mean(0)), 1)) < 0:
-        than = Hinh(than.v, than.i[:, [0, 2, 1]], c=than.c)
-    lo.them("mau", than)
-    for t in (.72, .1, -.55):
-        z = t * 8.5
-        boong = hop(4.4 * (1 - abs(t) ** 2.6) ** .7, .15, 2.4 if t != .1 else 8.2)
-        lo.them("mau", boong.doi_mau(mau("#a87747")), bien_doi((0, 1.7 + (.45 if t < -.4 else 0) + (.1 if t > .6 else 0), z)))
-    cuoi = bien_doi((0, 2.6, -6.2))
-    lo.them("mau", hop(3.8, 1.5, 3.2, .1).doi_mau(mau("#6c3a1f")), cuoi)
-    for x in (-1.1, 0, 1.1):
-        lo.them("phat_sang", hop(.5, .55, .08).doi_mau(mau("#ffd27a")), cuoi @ bien_doi((x, .1, -1.62)))
-    for z, cao, rong in ((4.3, 13.0, 4.2), (-1.0, 16.0, 5.3), (-5.2, 11.0, 3.3)):
-        lo.them("mau", ong([(0, 1.5, z), (0, cao, z)], np.linspace(.2, .07, 2), 10).doi_mau(GO_TOI))
-        for y0, ti in ((cao * .47, 1.0), (cao * .8, .7)):
-            lo.them("mau", ong([(-rong * ti * .55, y0 + 1.8, z), (rong * ti * .55, y0 + 1.8, z)], .06, 6).doi_mau(GO))
-            lo.them("mau", _buom(rong * ti, 3.6 * ti), bien_doi((0, y0 - 1.2 * ti, z + .14)))
-    lo.them("mau", ong([(0, 2.3, 8.5), (0, 4.3, 12.5)], .09, 6).doi_mau(GO_TOI))
-    lo.them("mau", _co_duoi_nheo(), bien_doi((0, 16.0, -1.0)))
-    for z, y in ((8.5, 2.3),):
-        for x in (-.8, .8):
-            lo.them("kim", ong([(0, 4.2, 12.3), (x * 2.2, 2.0, 6)], .018, 4).doi_mau(mau("#6a5f4d")))
-    for x in (-1, 1):
-        for k in range(5):
-            lo.them("kim", ong([(x * 2.05, 1.05, -1.0 + k * 1.3), (x * 2.65, 1.1, -1.0 + k * 1.3)], .09, 8).doi_mau(mau("#2c2926")))
-    lo.them("kim", ong([(0, 1.6, -1), (2.6, 8.2, -1)], .017, 4).doi_mau(mau("#6a5f4d")))
-    lo.them("kim", ong([(0, 1.6, -1), (-2.6, 8.2, -1)], .017, 4).doi_mau(mau("#6a5f4d")))
-    return lo
-
-
-def _buom(rong, cao):
-    """Buồm phồng, kẻ sọc."""
-    nu, nv = 13, 7
-    u, v = np.meshgrid(np.linspace(-1, 1, nu), np.linspace(0, 1, nv))
-    b = (1 - u ** 2) * np.sin(v * np.pi)
-    x = u * rong * .5 * (1 - .12 * (1 - v))
-    p = np.stack([x, v * cao, b * .75], 2)
-    p[..., 1] -= (1 - np.abs(u)) * 0
-    tam = []
-    for r in range(nv - 1):
-        for k in range(nu - 1):
-            a = r * nu + k
-            tam += [[a, a + 1, a + nu], [a + 1, a + nu + 1, a + nu]]
-    c = np.where((np.floor((u + 1) * 3.5).astype(int) % 2 == 0)[..., None], TRANG[None, None], DO[None, None])
-    h = Hinh(p.reshape(-1, 3), tam, c=c.reshape(-1, 4))
-    hai_mat = Hinh(h.v, h.i[:, [0, 2, 1]], -h.n, h.c)
-    return ghep([h, hai_mat])
-
-
-def _co_duoi_nheo():
-    a = np.array([(0, 0, 0), (0, -.8, 0), (2.2, -.4, 0)], float)
-    h = Hinh(a, [[0, 2, 1]], c=np.tile(DO, (3, 1)))
-    return ghep([h, Hinh(a, [[0, 1, 2]], c=np.tile(DO, (3, 1)))])
-
-
 def hoi_cho():
     lo = Lo()
     rng = np.random.default_rng(14)
@@ -356,7 +278,7 @@ def _leu_lon(lo, rng, p, r, cao, m1, m2):
         a = k / (so_soc * 2) * TAU
         lo.them("mau", cuc(rng, 1, 0).doi_mau(VANG), bien_doi(p + (np.sin(a) * r * 1.1, cao * .33, np.cos(a) * r * 1.1), ty_le=(.17, .24, .17)))
     lo.them("kim", ong([p + (0, cao, 0), p + (0, cao + 1.3, 0)], .05, 6).doi_mau(mau("#4a463f")))
-    lo.them("mau", _co_duoi_nheo(), bien_doi(p + (0, cao + 1.3, 0), ty_le=.6))
+    lo.them("vai", co_duoi_nheo(), bien_doi(p + (0, cao + 1.3, 0), ty_le=.6))
 
 
 def _day_co(lo, rng, a, b):
@@ -367,9 +289,9 @@ def _day_co(lo, rng, a, b):
     goc = np.arctan2((b - a)[0], (b - a)[2])
     for k, c in enumerate(q[:-1]):
         tg = np.array([(-.13, 0, 0), (.13, 0, 0), (0, -.34, 0)], float)
-        h = Hinh(tg, [[0, 2, 1]], c=np.tile(mau(mang[k % 5]), (3, 1)))
-        h2 = Hinh(tg, [[0, 1, 2]], c=h.c)
-        lo.them("mau", ghep([h, h2]), bien_doi(c, goc + np.pi / 2))
+        mau_co = np.tile(mau(mang[k % 5]), (3, 1))
+        mau_co[:, 3] = (0.0, 0.0, 1.0)
+        lo.them("vai", Hinh(tg, [[0, 2, 1]], c=mau_co), bien_doi(c, goc + np.pi / 2))
 
 
 def vong_quay():

@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://bhv8aq02blk3d"]
+
+[ext_resource type="Shader" uid="uid://cf7ym15l20x6v" path="res://materials/dao_lon/vai_gio.gdshader" id="1_wr1br"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_wr1br")
+shader_parameter/bien_do = 0.09
+shader_parameter/toc_do = 5.0

@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://pv1u5674shub"]
+
+[ext_resource type="Material" uid="uid://pwri30e7eb31" path="res://materials/dao_lon/khoi_mem.tres" id="1_3b4bp"]
+
+[sub_resource type="Gradient" id="Gradient_3b4bp"]
+offsets = PackedFloat32Array(0, 0.2, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.5019608, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_86dh3"]
+gradient = SubResource("Gradient_3b4bp")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1gsfi"]
+emission_shape = 1
+emission_sphere_radius = 1.2
+angle_max = 360.0
+direction = Vector3(0, 1, 0)
+spread = 55.0
+initial_velocity_min = 0.8
+initial_velocity_max = 2.0
+gravity = Vector3(0, 0.2, 0)
+scale_min = 8.0
+scale_max = 16.0
+color_ramp = SubResource("GradientTexture1D_86dh3")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a3y8c"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_sh5dm"]
+material = SubResource("StandardMaterial3D_a3y8c")
+size = Vector2(0.25, 0.25)
+
+[node name="SuongThac" type="Node3D" unique_id=413032864]
+
+[node name="Hat" type="GPUParticles3D" parent="." unique_id=1136568160]
+material_override = ExtResource("1_3b4bp")
+amount = 22
+lifetime = 2.8
+preprocess = 3.0
+visibility_aabb = AABB(-6, -2, -6, 12, 10, 12)
+process_material = SubResource("ParticleProcessMaterial_1gsfi")
+draw_pass_1 = SubResource("QuadMesh_sh5dm")

@@ -12,7 +12,8 @@ GOC = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 THU_MUC = os.path.join(GOC, "asset", "generated", "dao_lon")
 # Tên vật liệu trong .glb -> tên file .tres trong materials/dao_lon.
 VAT_LIEU = {"dat": "dat", "la": "la", "nuoc": "nuoc", "dung_nham": "dung_nham", "da": "da", "tia_sang": "tia_sang",
-        "may": "may", "mau": "son", "kim": "kim", "phat_sang": "phat_sang"}
+        "may": "may", "mau": "son", "kim": "kim", "phat_sang": "phat_sang", "vai": "vai", "canh": "canh",
+        "canh_buom": "canh_buom", "vet_tau": "vet_tau"}
 CAN_TANGENT = {"nuoc.glb"}
 
 

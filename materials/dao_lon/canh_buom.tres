@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://h1ecn2w6q2rd"]
+
+[ext_resource type="Shader" uid="uid://dn17vdb6r523a" path="res://materials/dao_lon/canh_vo.gdshader" id="1_sgje6"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_sgje6")
+shader_parameter/toc_vo = 24.0
+shader_parameter/bien_do = 0.9

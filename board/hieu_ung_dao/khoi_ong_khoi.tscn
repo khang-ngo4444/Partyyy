@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://ywx2murla3qa"]
+
+[ext_resource type="Material" uid="uid://pwri30e7eb31" path="res://materials/dao_lon/khoi_mem.tres" id="1_483ir"]
+
+[sub_resource type="Gradient" id="Gradient_483ir"]
+offsets = PackedFloat32Array(0, 0.15, 0.7, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.6901961, 1, 1, 1, 0.3764706, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_mnxvi"]
+gradient = SubResource("Gradient_483ir")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1bt02"]
+emission_shape = 1
+emission_sphere_radius = 0.12
+angle_max = 360.0
+direction = Vector3(0, 1, 0)
+spread = 10.0
+initial_velocity_min = 0.5
+initial_velocity_max = 0.9
+gravity = Vector3(0, 0.2, 0)
+scale_min = 2.2
+scale_max = 4.0
+color_ramp = SubResource("GradientTexture1D_mnxvi")
+turbulence_enabled = true
+turbulence_noise_strength = 1.5
+turbulence_noise_scale = 4.0
+turbulence_influence_min = 0.03
+turbulence_influence_max = 0.08
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_14c7a"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_1ww4v"]
+material = SubResource("StandardMaterial3D_14c7a")
+size = Vector2(0.25, 0.25)
+
+[node name="KhoiOngKhoi" type="Node3D" unique_id=1270960584]
+
+[node name="Hat" type="GPUParticles3D" parent="." unique_id=2000024708]
+material_override = ExtResource("1_483ir")
+amount = 16
+lifetime = 5.0
+preprocess = 5.0
+process_material = SubResource("ParticleProcessMaterial_1bt02")
+draw_pass_1 = SubResource("QuadMesh_1ww4v")

@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://il8i4fwalswn"]
+
+[ext_resource type="Shader" uid="uid://cl6vcfgbehh4e" path="res://materials/dao_lon/vet_tau.gdshader" id="1_ywc2x"]
+
+[resource]
+render_priority = 1
+shader = ExtResource("1_ywc2x")
