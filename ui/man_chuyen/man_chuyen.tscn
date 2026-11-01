@@ -1,0 +1,79 @@
+[gd_scene format=3 uid="uid://debjpbqrl0her"]
+
+[ext_resource type="Script" uid="uid://gdwcmlpcvraf" path="res://ui/man_chuyen/man_chuyen.gd" id="1_x5k2o"]
+[ext_resource type="Shader" uid="uid://v4p8wan2ryvm" path="res://ui/man_chuyen/man_chuyen.gdshader" id="2_h0aix"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_c7fsq"]
+shader = ExtResource("2_h0aix")
+shader_parameter/tien_do = 0.0
+shader_parameter/mau_nen = Color(0.557, 0.361, 0.969, 1)
+shader_parameter/mau_soc = Color(0.647, 0.478, 0.984, 1)
+shader_parameter/mau_vien = Color(0.169, 0.106, 0.239, 1)
+shader_parameter/so_cham_doc = 11.0
+shader_parameter/be_rong_vet = 0.35
+shader_parameter/be_day_vien = 0.07
+shader_parameter/toc_do_soc = 1.5
+shader_parameter/so_soc = 18.0
+
+[node name="ManChuyen" type="CanvasLayer" unique_id=96708639]
+process_mode = 3
+layer = 100
+script = ExtResource("1_x5k2o")
+
+[node name="Nen" type="ColorRect" parent="." unique_id=1508154035]
+material = SubResource("ShaderMaterial_c7fsq")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="NoiDung" type="CenterContainer" parent="." unique_id=2075411033]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="The" type="PanelContainer" parent="NoiDung" unique_id=23870000]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 2
+theme_type_variation = &"KhungVang"
+
+[node name="Cot" type="VBoxContainer" parent="NoiDung/The" unique_id=354123581]
+layout_mode = 2
+alignment = 1
+
+[node name="TieuDe" type="Label" parent="NoiDung/The/Cot" unique_id=674184931]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ChuTieuDe"
+text = "ĐANG TẢI"
+horizontal_alignment = 1
+
+[node name="Phu" type="Label" parent="NoiDung/The/Cot" unique_id=1480307716]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ChuDauMuc"
+horizontal_alignment = 1
+
+[node name="KhungCham" type="CenterContainer" parent="NoiDung/The/Cot" unique_id=129652562]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+
+[node name="Cham" type="HBoxContainer" parent="NoiDung/The/Cot/KhungCham" unique_id=1104821437]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Cham1" type="Panel" parent="NoiDung/The/Cot/KhungCham/Cham" unique_id=1458026217]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+theme_type_variation = &"ThePillMuc"
+
+[node name="Cham2" type="Panel" parent="NoiDung/The/Cot/KhungCham/Cham" unique_id=1658520458]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+theme_type_variation = &"ThePillMuc"
+
+[node name="Cham3" type="Panel" parent="NoiDung/The/Cot/KhungCham/Cham" unique_id=666942055]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+theme_type_variation = &"ThePillMuc"

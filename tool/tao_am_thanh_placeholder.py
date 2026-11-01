@@ -12,6 +12,7 @@ import random
 import shutil
 import struct
 import subprocess
+import sys
 import tempfile
 import wave
 from pathlib import Path
@@ -63,6 +64,7 @@ GIAM_DB_SFX = {"bam_nut": 9}
 # tên SFX: file nguồn Kenney
 BO_SFX = {
 	"bam_nut": INTERFACE / "click_003.ogg",
+	"chuyen_canh": INTERFACE / "maximize_008.ogg",
 	"xuc_xac": IMPACT / "impactWood_light_001.ogg",
 	"buoc_chan": IMPACT / "footstep_wood_000.ogg",
 	"luot_moi": INTERFACE / "select_002.ogg",
@@ -198,6 +200,8 @@ def chep_sfx(ghi_de: bool) -> int:
 
 
 def main() -> None:
+	# Console Windows mặc định cp1252, in tiếng Việt sẽ văng lỗi.
+	sys.stdout.reconfigure(encoding="utf-8")
 	doc = argparse.ArgumentParser(description=__doc__)
 	doc.add_argument("--ghi-de", action="store_true", help="sinh lại cả file đã có (mất file bạn đã thay)")
 	tham_so = doc.parse_args()

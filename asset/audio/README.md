@@ -31,6 +31,7 @@ Thiếu `dem_nguoc` hoặc `ket_qua` thì trò dùng `choi`; thiếu cả `choi`
 | File | Khi phát |
 |---|---|
 | `bam_nut` | Bấm nút, tab, mục danh sách ở mọi giao diện |
+| `chuyen_canh` | Màn chuyển bắt đầu che |
 | `xuc_xac` | Tung xúc xắc |
 | `buoc_chan` | Quân đi một ô |
 | `luot_moi` | Sang lượt người khác |
