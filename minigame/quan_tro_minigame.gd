@@ -18,6 +18,8 @@ const XEM_KET_QUA := 5.0
 ## Sắp lại dải điểm mỗi chừng này giây.
 const NHIP_DIEM := 0.25
 
+const CHU_DANG_DUNG_TRO := "MINIGAME"
+
 ## Các minigame (kéo scene vào Inspector). Mã của trò = tên file scene.
 @export var tro_choi: Array[PackedScene] = []
 @export var o_diem_scene: PackedScene = null
@@ -147,11 +149,13 @@ func _net_chay(ma: String, hat_giong: int, ids: Array) -> void:
 	# Thả chuột để bấm được UI.
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
+	ManChuyen.che_ngay(CHU_DANG_DUNG_TRO)
 	_game = scene.instantiate() as MiniGame
 	_khung.add_child(_game)
 	_game.xong.connect(_khi_xong, CONNECT_ONE_SHOT)
 	# Trò 3D dựng sân thật — không che nền.
 	_nen.visible = _game.che_nen
+	_lo_tro_vua_dung()
 
 	_tieu.text = _game.ten
 	_luat.text = HuongDanNhanh.tom_tat(ma)
@@ -288,7 +292,11 @@ func _khi_xong(xep_hang: Array) -> void:
 	if _game is MiniGame3D and not (_game as MiniGame3D).shared_snapshot.is_empty():
 		var snapshot: Dictionary = (_game as MiniGame3D).shared_snapshot
 		seconds = maxf(float(snapshot["ended"]) + XEM_KET_QUA - Fusion.get_network_time(), 0.01)
-	await get_tree().create_timer(seconds).timeout
+	# Che sớm đúng bằng thời gian diễn để bàn vẫn nhận kết quả đúng hạn như mọi máy.
+	await get_tree().create_timer(maxf(seconds - ManChuyen.GIAY_CHE, 0.01)).timeout
+	if _game != completed_game:
+		return
+	await ManChuyen.che("VỀ BÀN CỜ", "Đang tính thưởng…")
 	if _game == completed_game:
 		_don()
 		ket_thuc.emit(xep_hang)
@@ -339,12 +347,20 @@ func begin_shared_game(snapshot: Dictionary) -> void:
 	bat_dau.emit()
 	_lop.visible = true
 	_ket_qua.text = ""
+	ManChuyen.che_ngay(CHU_DANG_DUNG_TRO)
 	_game = scene.instantiate() as MiniGame
 	_game.shared_snapshot = snapshot.duplicate(true)
 	_game.shared_session = $Session
 	_khung.add_child(_game)
 	_game.xong.connect(_khi_xong, CONNECT_ONE_SHOT)
 	_setup_shared_presentation(snapshot)
+	_lo_tro_vua_dung()
+
+
+## Hiện tên trò trên màn chuyển rồi lộ thẻ luật + đếm ngược.
+func _lo_tro_vua_dung() -> void:
+	ManChuyen.che_ngay(_game.ten, CHU_DANG_DUNG_TRO)
+	ManChuyen.mo()
 
 
 func _setup_shared_presentation(snapshot: Dictionary) -> void:

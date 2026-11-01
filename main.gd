@@ -42,6 +42,11 @@ var _lobby: Lobby = null
 ## ponytail: cờ cục bộ từng máy; hai máy bấm cùng lúc vẫn lọt.
 var _dang_xep := false
 var _dang_vao_sanh := false
+var _dang_vao_ban := false
+var _cho_ban_mo_man := false
+
+## Bàn đã đóng sau khi thắng nhưng pha phòng chưa kịp về sảnh: đừng vào bàn lại.
+var _da_het_van := false
 
 @onready var spawner: FusionSpawner = $FusionSpawner
 @onready var scene_root: Node3D = $SceneRoot
@@ -75,6 +80,7 @@ func _ready() -> void:
 	ban_co.het_vong.connect(_khi_het_vong)
 	ban_co.van_thang.connect(_khi_thang)
 	ban_co.trang_thai_doi.connect(hud.cap_nhat_ban)
+	ban_co.trang_thai_doi.connect(_khi_ban_doi)
 	ban_co.chon_huong_doi.connect(hud.cap_nhat_chon_huong)
 	ban_co.camera_doi.connect(hud.cap_nhat_camera)
 	dung_do.giao_dien_doi.connect(hud.cap_nhat_giao_dien_ban)
@@ -157,11 +163,26 @@ func _dong_bo_phong() -> void:
 
 ## Pha phòng → minigame/bàn party. CHỈ master gọi `xin_chay` (nó tự phát RPC).
 func _theo_pha(ms: MatchState) -> void:
-	if ms.phase != MatchState.PHASE_PLAYING or not NetManager.is_master():
+	if ms.phase != MatchState.PHASE_PLAYING:
+		# Về sảnh rồi thì ván sau được phép vào bàn lại.
+		_da_het_van = false
 		return
+	if _da_het_van or _dang_vao_ban or ban_co.dang_chay() or quan_tro.dang_chay():
+		return
+	_dang_vao_ban = true
+	await ManChuyen.che("VÀO BÀN CỜ", "Đang xếp thứ tự lượt…")
+	_dang_vao_ban = false
+	_cho_ban_mo_man = true
 	# Vào pha chơi thì mở bàn party trước.
-	if not ban_co.dang_chay() and not quan_tro.dang_chay():
+	if NetManager.is_master() and ms.phase == MatchState.PHASE_PLAYING and not ban_co.dang_chay() and not quan_tro.dang_chay():
 		ban_co.xin_mo([])
+
+
+## Gói trạng thái bàn đầu tiên tới là cảnh đã sẵn sàng để lộ.
+func _khi_ban_doi(_tt_moi: Dictionary) -> void:
+	if _cho_ban_mo_man:
+		_cho_ban_mo_man = false
+		ManChuyen.mo()
 
 
 ## Thi hành lệnh chat. Chạy trên mọi máy; chỉ master đã phát lệnh mới thi hành.
@@ -202,10 +223,16 @@ func _lenh_minigame(doi_so: PackedStringArray) -> void:
 
 ## Hết vòng: rút trong pool chưa chơi. Còi chỉ ưu tiên trò còn trong pool.
 func _khi_het_vong(_thu_tu_cu: Array) -> void:
+	if quan_tro.dang_chay():
+		return
+	# Mọi máy cùng che; máy khách giữ màn tới khi minigame của master tới.
+	await ManChuyen.che("HẾT VÒNG", "Đang chọn minigame…")
 	if NetManager.is_master() and not quan_tro.dang_chay():
 		var coi := str(ban_co.tt.get("coi", ""))
 		var ma := quan_tro.chon_tro_ngau_nhien(coi)
-		if not ma.is_empty():
+		if ma.is_empty():
+			ManChuyen.mo()
+		else:
 			quan_tro.xin_chay(ma)
 
 
@@ -213,6 +240,7 @@ func _khi_het_vong(_thu_tu_cu: Array) -> void:
 func _khi_xong_minigame(xep_hang: Array) -> void:
 	ban_co.tam_dung = false
 	ban_co.xin_thu_tu_moi(xep_hang)
+	ManChuyen.mo()
 
 
 ## Hết ván: hiện bảng thắng, đóng bàn, về phòng chờ (mọi máy; master đặt lại pha phòng).
@@ -222,12 +250,15 @@ func _khi_thang(id: int) -> void:
 	var coc := int((ban_co.tt.get("coc", {}) as Dictionary).get(LuatBan.khoa(id), 0))
 	hud.bao_thang("%s THẮNG\n%d Cúp" % [Player.ten_theo_id(get_tree(), id), coc])
 	await get_tree().create_timer(GIAY_XEM_THANG).timeout
+	await ManChuyen.che("VỀ SẢNH", "Ván đã kết thúc")
+	_da_het_van = true
 	hud.an_thang()
 	ban_co.dong()
 	_ve_phong_cho()
 	var ms := get_tree().get_first_node_in_group("match_state") as MatchState
 	if ms != null and NetManager.is_master():
 		ms.phase = MatchState.PHASE_LOBBY
+	ManChuyen.mo()
 
 
 ## Đưa nhân vật của máy này về chỗ xuất phát trong phòng chờ.
@@ -276,6 +307,10 @@ func _vao_sanh() -> void:
 	if _lobby != null or _dang_vao_sanh:
 		return
 	_dang_vao_sanh = true
+	await ManChuyen.che("VÀO SẢNH", "Đang dựng sảnh…")
+	# Rời phòng trong lúc che thì `_on_room_left` đã huỷ yêu cầu này.
+	if not _dang_vao_sanh:
+		return
 	_show_menu(false)
 
 	_lobby = lobby_scene.instantiate()
@@ -327,6 +362,7 @@ func _vao_sanh() -> void:
 	if mb != null:
 		mb.dong_bo_vao_muon()
 	_dang_vao_sanh = false
+	ManChuyen.mo()
 
 
 func _vat_mang(ten: String) -> PackedScene:
@@ -636,7 +672,11 @@ func _spawn_set(m: int) -> void:
 
 
 func _on_room_left() -> void:
+	ManChuyen.che_ngay("VỀ MENU")
 	_dang_vao_sanh = false
+	_dang_vao_ban = false
+	_cho_ban_mo_man = false
+	_da_het_van = false
 	ban_co.dong()
 	quan_tro.huy()
 	picker.visible = false
@@ -646,6 +686,7 @@ func _on_room_left() -> void:
 	if _lobby != null:
 		_lobby.queue_free()
 		_lobby = null
+	ManChuyen.mo()
 
 
 ## Đang ở sảnh chờ (được đổi nhân vật).

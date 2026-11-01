@@ -328,10 +328,12 @@ func _begin_network_request(message: String) -> void:
 	var token := _request_token
 	_set_status(message, false)
 	_set_online_controls()
+	ManChuyen.che(message, "Đang kết nối máy chủ")
 	await get_tree().create_timer(NETWORK_TIMEOUT).timeout
 	if token != _request_token or not _busy or not is_inside_tree():
 		return
 	_busy = false
+	ManChuyen.mo()
 	_set_status("Yêu cầu mất quá nhiều thời gian. Hãy kiểm tra mã phòng hoặc thử lại.", true)
 	_set_online_controls()
 
@@ -340,6 +342,7 @@ func _on_room_joined() -> void:
 	_busy = false
 	_request_token += 1
 	_save_profile()
+	ManChuyen.mo()
 
 
 func _on_connected() -> void:
@@ -356,6 +359,7 @@ func _on_connect_failed(reason: String) -> void:
 	_set_connection_text("Không kết nối được máy chủ", UIKit.DO)
 	_set_status("Lỗi kết nối: %s" % reason, true)
 	_set_online_controls()
+	ManChuyen.mo()
 
 
 func _set_connection_text(text: String, mau: Color) -> void:
